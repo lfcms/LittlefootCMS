@@ -1,0 +1,1 @@
+<?php echo $this->apploader('blog', $_app['ini']); ?>

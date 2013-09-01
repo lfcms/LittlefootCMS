@@ -1,0 +1,230 @@
+﻿11/November/2011 V1.1 Final
+  fixed a security bug where allow attached to execute arbitrary php code
+  introduce a way to protect any unwanted scripts from being accessed directly. 
+  introduce much restrict filter to protect the system
+  thanks for Zenphoto team and EgiX 
+   
+19/March/2011 V1.0 Final
+  fixed an bug when JPEG not supported in php5.3. (suggested by corriou)
+  Fixed an bug where the Https not supported. (suggested by radovar)
+  Upgraded the ajax file uploader to Version 2.0, which enable the uploader to work on IE9 browser
+  Upgraded the jquery to 1.5.1
+  fixed invalid aspect ratio calculation  (suggested by paddymt)
+  fixed an issue on enabling folder browser
+  fixed an issue which stoping to switch cross different view on IE
+  remove unneeded inline style (suggested by josha) 
+  fixed an issue 
+  restructe the css style to have the base style for all 
+  Show the Image Dimension information (suggested by josha)
+  Make the file/folder name clickable in details view (suggested by josha)
+  Make the newly uploaded file clickable (suggested by sk12)
+  add a flag (CONFIG_OPTIONS_SEARCH) to control if allow the user to have the search functionality on the screen. (suggested by andreus) 
+  moved the close button to top right corner. 
+  
+  moved the file/folder information box to the bottom on right panel (suggested by andreus)
+  fixed issue on toggling the select box on different view (suggested by josha)
+  fixed issue where it is unable to download file in IE9
+		
+V1.0 RC5 
+	Fixed an bug when integrating with FCKEditor, (suggested by versusms)
+	Fixed an bug which may cause the client browser reloading (found by nobarcode)
+	Fixed an bug where it willl submit the form when Enter key pressed (found by nobarcode)
+	Fixed an bug where may create too many upload instance (suggged by nobarcode)
+	Fixed an undefined error in the js when deleting files (sugged by nobarcode)
+	Fixed an bug when deleted files with Safari (suggested by nobarcode)
+	Fixed an bug when showing the details of selected file (suggested by nobarcode)
+	Forced to clear up the folder name filed when creating a new folder (suggested by nobarcode)
+	Fixed an undefined varilable in class.file.php (suggested by nobarcode)
+	Removed the recalculation on the fiel size and date (suggested by nobarcode)
+	Fixed an bug when retrieving the modify time  (suggested by nobarcode)
+	Fixed a misspelled align in ajax_get_details_listing.php (suggested by nobarcode)
+	Forced to clear up the file name when renaming a image (suggested by nobarcode)	
+	fixed a bug on rotating image (suggested by nobarcode)
+	fixed a bug on showing the selected file information (suggested by pith phunsaint)
+	fixed a bug which was introduced by PHP5.3+ when managing images
+	fixed a bug on the style sheet
+	fixed a inconsistent php short cut issue
+
+
+V1.0 RC4 fixed issues introduced by RC2, RC3
+V1.0 RC3 
+ Fixed a bug of calculating the pagination offset and limit (found by Steven)
+ Updated the javascript to fckeditor
+ amended those <? to be <?php (found by neo314)
+ ammened those unclosed by ; (found by neo314)
+ fixed some css bugs (found by neo314)
+ enhance the function finding file real path (suggested by mygoggie2)
+ fixed a bug when passing query string language (found by Debug )
+ included a fix on the style for IE6 browser (fixed by Shavas)
+ fixed the thickbox width which is too small to hold all texts when viewing small images(found by neo314)
+ corrected the search function
+V1.0 RC2
+  added another flag CONFIG_LOAD_DOC_LATTER, it will load up documents after the whole html appears if on (suggested by mygoggie2)
+  compressed all javascripts file into one file, large speed improvment on first load
+  moved the clause of including class.auth.php file  on top of config
+  fixed a bug of moving uploaded folder/files
+  fixed a bug of determine the file type when moving folder
+  fixed a bug of duplicate new folder input tag with same id when creating folder
+  fixed a bug of misassigning element id when uploading files
+  misconfig on rename functionality (found by mygoggie2)
+  disabled clicking on Enter key to submit any forms  
+  missconfiging element id when renaming upload files
+  Unable to save edited image by Save As
+  foced to set en as the default language if the specified language does not exist (suggested by mygoggie2)
+  added another flag CONFIG_SYS_THUMBNAIL_VIEW_ENABLE in to remove thumbnail (suggested by Shavas)
+  fixed an issue on rotating images under certain php5 env
+  minor css changed to remove the unneeded X-scrollbar
+  
+
+**** v 0.7.0.1 ****
+- in multiple file mode, it's now possible to cancel the 'EA_file_close_callback' function. if the callback return false, the edited file won't be closed 
+- bug fix: if no syntax was defined in the main init() function in multifile mode, the first time the text was not highlighted
+
+
+**** v 0.7 ****
+- it's now possible to edit multiple files into one instance of EditArea. This (sponsored by Jupiter) feature comes with: 
+	* new EditAreaLoader.init()'s option: "is_multi_files": true
+	* new editAreaLoader's functions: editAreaLoader.getCurrentFile(editArea_id), editAreaLoader.getFile(editArea_id, file_id), editAreaLoader.getAllFiles(editArea_id), editAreaLoader.openFile(editArea_id, file_infos), editAreaLoader.closeFile(editArea_id, file_id), editAreaLoader.setFileEditedMode(editArea_id, file_id, edited_mode)
+	* new callabacks: EA_file_switch_on_callback, EA_file_switch_off_callback, EA_file_close_callback
+- look likes Safari 3 is working with EditArea
+- add spanish translation (thanks Garito)
+- add slovak translation (thanks Gabriel Schwardy)
+- add SQL syntax definition file (thanks to Philippe Lewicki)
+- the syntax selection plugin has been integrated to editarea core and load only needed files (the plugins was loading all the possible syntax files...). Toolbar button name: "syntax_selection", comma separated available syntax list: "syntax_selection_allow"
+- add a 'compression' option in edit_area_compressor.php that allow to set where the code should be compressed or just packed (simple packed mode usefull for debugging)
+- the yellow area that indicate the current edited line is now blue
+- bug fix: parenthesis matching was not working correctly if there where an "<" between parenthesis 
+v1.0 RC1
+  fixed unable to edit text/images (found by mygoggie2)
+  added a standalone select button (suggested by Rosomak) 
+  shorterlong name of new created/uploaded documents
+  fixed the long name of directories break the search drown down menus (found by mygoggie2) 
+  fixed the constructor function for session which may cause system dead (found by mygoggie2)
+  remove no more used DIR_SESSION (suggested by mygoggie2)
+  fixed the feature of CONFIG_SYS_VIEW_ONLY which doesn't function correctly (found by mygoggie2)
+  ensure warning message issues shown up before any files get deleted
+  ensure only one instance of popup window (suggested by mygoggie2)
+  fixed the wrongly returned search results (fixed by Andr�� Silva)
+  fixed the preview of any pdf in thickbox (fixed by Andr�� Silva)
+v1.0 beta2
+  fixed some misspelling issues (found by mygoggie2)
+  add detailed comments to config.base.php (contributed by mygoggie2)
+  fixed undefined DIR_SESSION (found by mygoggie2)
+  fixed the change icon don't reflesh the corresponding status (found by mygoggie2)
+  fixed treating file without extension as folder
+  fixed don't stay on same page after hitting refresh (found by mygoggie2)
+  fixed new folder css class misassignment
+  reorganised the left column items (suggested by Andr�� Silva)
+  fixed the issue of loading animation indicator missing when reading any folders (found by Andr�� Silva)
+  fixed the issue of search don't change the information of subdir and files (found by Andr�� Silva)
+  added permission config to disable individual actions, e.g. edit, delete, reanme (suggested by Andr�� Silva)
+  fixed the issue the mouse over in new folder and upload file dont reflesh it as a hand (found by Andr�� Silva)
+  changed isInvalidPattern function (contributed by Andr�� Silva)
+  changed getFolderListing function (contributed by Andr�� Silva)
+  other minor changes
+V1.0 beta1
+	changed the preg expression function to eregi() and supported mutliple regular expression -separated by ',' (suggested by shavas)
+	replaced preview box with search box
+	fixed a security bug
+	rebuilt the html template and skin (contributed by Gabriel at 4v.com.br>)
+	two views supported (details and thumbnails)
+	context menu supported
+	right-click to preview those supported fille types, otherwise force to download it
+	double click to return the file url and close the window if integration with third party editors otherwise force to download it.
+	multiple files uploadable	
+	enhance the file download (by Andr�� Silva & iback)
+	
+8/Nov/2007 v0.9 
+	files are sorted case-insensitive (found by asozzi)
+	fixed a security bug with text editor (found by mygoggie2)
+	add CONFIG_SYS_PATTERN_FORMAT switch to support regular expression pattern or comma delimited lists in config.base.php (suggested by mygoggie2)
+	fixed a issue of all folders renamed as Uploaded under certain php version (great thanks to Shavas)	
+	slideshow of a folder's images supported
+8/Aug/2007 v0.8.8
+	cleared up javascripts
+7/Aug/2007 v0.8
+	fxied a misspelling in english language pack (found by Hansemans)
+	fixed the issue which the new created folders' name is unable to be updated
+	add the ability to carry variables via url query string, which enable us to custom the file manager setting 						     according to passed variables (suggested by shavas).
+	added save as function (suggested by shavas).
+	replaced CONFIG_URL_PREVIEW_ROOT with CONFIG_WEBSITE_DOCUMENT_ROOT
+	enhance the ability of finding real path of any files
+	add the ability to preview images in thumbnail rather than the original image (suggested by Hardy)
+	fixed bugs in class.image php 
+	fixed a bug when finding file extension in class.manager.php(found by owl)
+	fixed a security bug which will let users to remove hidden files (found by owl)
+	fixed a bug of validating uploaded file name in opera (suggested by Unknown)
+	added class.auth.php as a kind of interface class for ease of customization.  
+	added left click to preview and dobule click to download features
+	media type of files (e.g movies, music) previewable
+	text and source code files are editable now. 
+	a large changes have been make  to config.base.php
+		&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+		&&	another wonderful javascript text editor (edit area ) has been interated to implement text modification
+		&&	official site: http://www.cdolivet.net/index.php?page=editArea
+		&&	the developer welcomes any kinds of contributions
+		&&	contact the developer now if you are good at javascript coding or willing to make your contribution
+		&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+	lots of changes have been made toward to version 1.0
+	compressed all javascripts(reduced 400% in size) and combined them into one single file (reduced lots of requests). 
+	
+	 
+10/July/2007 v0.7.10
+	runable when short_open_tag is off (suggested by qube)
+	upgrade jquery to 1.1.3.1
+	fixed a bug with two nasty Double quotes in html (found by Valentin)
+	
+8/July/2007 v0.7.8
+	added the ability to force the folder show on the top of list. see CONFIG_SYS_FOLDER_SHOWN_ON_TOP in config.base.php
+	fixed the problem which the system does not recognise uppercase file extensions.
+	fixed the undefined DIR_SESSION constant
+	
+2/July/2007 v0.7
+       enhace the function to calculate the site root url
+       fixed a bug with normal tinymce image selection (found by voloda)
+       updated jquery to 1.1.3(released on 2/July/2007)
+		according to the jquery changed notes:
+		it imporved the prefomance 800% times
+
+       minor changes
+			 
+12/June/2007 v0.6.12
+       fixed a security bug which is allowed any users to manage uploaded files outside of the defined system root folder
+
+
+2/June/2007 v0.6
+	a lot of improvements and features added
+	rewrite and clean up most of functions
+	advanced ajax image editor added
+	theme supported
+	multiple javascript content editors supported
+	
+	
+7/May/2007 
+v0.5.7
+	fixed a security bug which is allowed any users to change files to unexpected extensions
+  
+	1. function.base.php
+  	
+	2. ajax_save_image_name.php
+  	
+	3. language files
+
+
+5/May/2007 
+v0.5.5      
+	fixed a security bug which is allowed any users to manage any files out of the system root folder
+      	fixed a bug which unable to recursively delete folders
+     
+	make the popup window bigger to fix the silly IE toolbar
+      
+	files changed:
+     
+	 1. function.base.php
+     
+	 2. class.file.php
+      
+	 3. test.php
+ 
+ 
+1/May/2007 first release v0.5

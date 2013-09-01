@@ -1,0 +1,21 @@
+.nav li ul { /* asdf 1234*/
+    display: none;
+    width: 100px;
+}
+
+.nav li:hover > ul {
+    display: block;
+    border-left: 1px solid #000;
+    background: #FFF;
+    float: left;
+    position: relative;
+    top: -26px;
+    left: 90px;
+    bottom: 200px;
+    margin-bottom: -200px;
+}
+
+.nav li:hover > a {
+    background: #EEE;
+}
+.nav {padding: 0; margin: 0; }

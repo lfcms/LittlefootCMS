@@ -1,0 +1,1 @@
+<?php echo $this->request->api('getuid') == 0 ? 'Access Denied' : $this->request->mvc('hq');

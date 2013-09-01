@@ -1,0 +1,111 @@
+[26-Mar-2013 21:50:30 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 21:53:24 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 21:53:27 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 21:55:21 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 22:04:00 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 22:30:07 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 22:52:34 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 22:54:51 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[26-Mar-2013 22:54:58 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[27-Mar-2013 05:21:43 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[27-Mar-2013 05:28:02 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[27-Mar-2013 23:06:24 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[27-Mar-2013 23:37:45 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[28-Mar-2013 20:56:08 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[30-Mar-2013 05:06:07 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[31-Mar-2013 12:34:43 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[02-Apr-2013 22:13:42 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[02-Apr-2013 22:16:31 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 00:41:54 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 00:41:57 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 00:42:39 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 00:43:57 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 00:44:44 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:41:48 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:41:55 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:49:03 Europe/Moscow] PHP Fatal error:  Call to undefined method calendar::api() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 44
+[11-Apr-2013 01:49:04 Europe/Moscow] PHP Fatal error:  Call to undefined method calendar::api() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 44
+[11-Apr-2013 01:49:05 Europe/Moscow] PHP Fatal error:  Call to undefined method calendar::api() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 44
+[11-Apr-2013 01:49:05 Europe/Moscow] PHP Fatal error:  Call to undefined method calendar::api() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 44
+[11-Apr-2013 01:49:39 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:49:41 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:49:42 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:49:46 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 01:49:48 Europe/Moscow] PHP Warning:  mysql_fetch_assoc() expects parameter 1 to be resource, boolean given in /home/greenswa/public_html/lf/system/db.class.php on line 47
+[11-Apr-2013 02:04:58 Europe/Moscow] PHP Warning:  Invalid argument supplied for foreach() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 9
+[11-Apr-2013 02:05:23 Europe/Moscow] PHP Parse error:  syntax error, unexpected T_ECHO, expecting ',' or ';' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 9
+[11-Apr-2013 02:05:24 Europe/Moscow] PHP Parse error:  syntax error, unexpected T_ECHO, expecting ',' or ';' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 9
+[11-Apr-2013 02:10:56 Europe/Moscow] PHP Warning:  file_get_contents(/home/greenswa/public_html/lf//js.html) [<a href='function.file-get-contents'>function.file-get-contents</a>]: failed to open stream: No such file or directory in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 31
+[11-Apr-2013 02:51:48 Europe/Moscow] PHP Fatal error:  Call to undefined method calendar_admin::fetch() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 56
+[11-Apr-2013 03:00:49 Europe/Moscow] PHP Parse error:  syntax error, unexpected T_ECHO in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 97
+[11-Apr-2013 03:00:50 Europe/Moscow] PHP Parse error:  syntax error, unexpected T_ECHO in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 97
+[11-Apr-2013 03:00:51 Europe/Moscow] PHP Parse error:  syntax error, unexpected T_ECHO in /home/greenswa/public_html/lf/apps/calendar/controller/calendar_admin.php on line 97
+[11-Apr-2013 05:40:00 Europe/Moscow] PHP Warning:  Invalid argument supplied for foreach() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 116
+[11-Apr-2013 05:52:46 Europe/Moscow] PHP Fatal error:  Class 'calendar' not found in /home/greenswa/public_html/lf/system/littlefoot.php on line 683
+[11-Apr-2013 05:56:10 Europe/Moscow] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 112
+[11-Apr-2013 05:58:43 Europe/Moscow] PHP Fatal error:  Class 'calendar' not found in /home/greenswa/public_html/lf/system/littlefoot.php on line 689
+[11-Apr-2013 06:00:45 Europe/Moscow] PHP Parse error:  syntax error, unexpected '=' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 127
+[11-Apr-2013 06:00:45 Europe/Moscow] PHP Parse error:  syntax error, unexpected '=' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 127
+[11-Apr-2013 06:00:46 Europe/Moscow] PHP Parse error:  syntax error, unexpected '=' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 127
+[11-Apr-2013 06:00:48 Europe/Moscow] PHP Parse error:  syntax error, unexpected '=' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 127
+[11-Apr-2013 06:00:50 Europe/Moscow] PHP Warning:  Unterminated comment starting line 7 in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 7
+[11-Apr-2013 06:00:50 Europe/Moscow] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 20
+[11-Apr-2013 06:01:45 Europe/Moscow] PHP Parse error:  syntax error, unexpected ';' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 129
+[11-Apr-2013 06:01:50 Europe/Moscow] PHP Parse error:  syntax error, unexpected ';' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 129
+[11-Apr-2013 06:33:52 Europe/Moscow] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 126
+[11-Apr-2013 22:05:17 America/New_York] PHP Parse error:  syntax error, unexpected '(', expecting ')' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 66
+[11-Apr-2013 22:05:18 America/New_York] PHP Parse error:  syntax error, unexpected '(', expecting ')' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 66
+[11-Apr-2013 22:05:38 America/New_York] PHP Fatal error:  Call to undefined function showcalendar2() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 76
+[11-Apr-2013 22:05:39 America/New_York] PHP Fatal error:  Call to undefined function showcalendar2() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 76
+[11-Apr-2013 22:05:40 America/New_York] PHP Fatal error:  Call to undefined function showcalendar2() in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 76
+[11-Apr-2013 22:05:50 America/New_York] PHP Parse error:  syntax error, unexpected $end, expecting T_VARIABLE or T_DOLLAR_OPEN_CURLY_BRACES or T_CURLY_OPEN in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 133
+[12-Apr-2013 19:40:46 America/New_York] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 93
+[12-Apr-2013 19:40:47 America/New_York] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 93
+[12-Apr-2013 19:40:57 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 121
+[12-Apr-2013 19:40:58 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 121
+[12-Apr-2013 19:40:58 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 121
+[12-Apr-2013 19:41:07 America/New_York] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 99
+[12-Apr-2013 19:41:08 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO, expecting T_VARIABLE or '$' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 131
+[12-Apr-2013 19:41:08 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO, expecting T_VARIABLE or '$' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 131
+[12-Apr-2013 19:41:09 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO, expecting T_VARIABLE or '$' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 131
+[12-Apr-2013 19:41:09 America/New_York] PHP Parse error:  syntax error, unexpected T_ECHO, expecting T_VARIABLE or '$' in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 131
+[12-Apr-2013 22:31:48 America/New_York] PHP Fatal error:  Cannot use [] for reading in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 144
+[12-Apr-2013 22:31:49 America/New_York] PHP Fatal error:  Cannot use [] for reading in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 144
+[12-Apr-2013 22:32:38 America/New_York] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 65802241 bytes) in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 147
+[12-Apr-2013 22:36:46 America/New_York] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 109
+[12-Apr-2013 22:37:34 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 117
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:42:16 America/New_York] PHP Warning:  date() expects parameter 2 to be long, array given in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 162
+[12-Apr-2013 22:46:45 America/New_York] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 106
+[12-Apr-2013 22:47:10 America/New_York] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 105
+[13-Apr-2013 15:04:48 America/New_York] PHP Fatal error:  Class 'calendar' not found in /home/greenswa/public_html/lf/system/littlefoot.php on line 689
+[13-Apr-2013 16:44:37 America/New_York] PHP Parse error:  syntax error, unexpected $end in /home/greenswa/public_html/lf/apps/calendar/controller/calendar.php on line 105

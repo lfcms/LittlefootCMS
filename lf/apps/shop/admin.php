@@ -1,0 +1,1 @@
+<?php echo $this->request->mvc('shop_admin');

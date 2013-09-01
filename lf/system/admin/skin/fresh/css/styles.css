@@ -1,0 +1,308 @@
+
+* {
+    margin: 0;
+}
+html {
+    overflow-y: scroll;
+}
+a {
+    color: #4A6382;
+    text-decoration: none;
+}
+a:hover {
+    color: #1A457A;
+}
+h1 {
+    color: rgba(20, 20, 20, 0.6);
+    font-size: 30px;
+    margin-top: -10px;
+    padding: 0;
+}
+
+.login h1 {
+    color: rgba(20, 20, 20, 0.6);
+    font-size: 30px;
+    margin-top: -15px;
+    padding: 0;
+}
+.login #recaptcha_widget_div {
+	margin: 0 auto 15px;
+	text-align: center;
+}
+.login .error {
+	background: none repeat scroll 0 0 #FFAAAA;
+    border: 3px solid #FF0000;
+    padding: 5px;
+    text-align: center;
+	margin-top: 15px;
+}
+h3 {
+    color: #21759B;
+}
+h4 {
+    color: #66CD00;
+}
+body {
+    color: #444444;
+}
+footer {
+    border-radius: 3px 3px 3px 3px;
+    border-top: 1px solid #DDDDDD;
+    margin-top: 20px;
+    padding: 1rem;
+}
+footer .footer-credits {
+    text-align: center;
+}
+header {
+    color: #515151;
+    float: left;
+}
+body.login {
+	background-color: #efefef;
+}
+div.loginbox {
+	border-radius:  5px;
+	box-shadow: 0px 0px 10px 1px #777;
+	padding:  20px;
+	margin: 100px auto;
+	width: 320px;
+	background-color: rgba(0, 0, 0, 0.3);
+	font-family: arial;
+}
+div.loginbox h1 {
+	/*margin-bottom: 10px;*/
+}
+div.loginbox form {
+	margin-top: 10px;
+}
+div.loginbox form label {
+	font-size: 24px;
+	color: rgba(240, 240, 240, 1);
+}
+div.loginbox form input#username,
+div.loginbox form input#password {
+	padding: 5px 10px; 
+	font-size: 22px;
+	color: #eee;
+	box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1);
+	border:  none;
+	background-color: rgba(100, 100, 100, 0.4);
+	margin-bottom: 15px;
+	line-height: 30px;
+	width: 95%;
+}
+div.loginbox form input#username:focus,
+div.loginbox form input#password:focus {
+	border: none;
+}
+div.loginbox form button {
+	background-color: #ddd;
+	border-radius:  2px;
+	font-size: 25px;
+	width: 100%;
+	border: none;
+	padding: 8px 40px;
+	color: #555;
+	text-decoration: none;
+	margin-bottom: 0;
+}
+div.loginbox form button:hover {
+	background-color: #ccc;
+}
+div.loginbox a.whitelink {
+	color: white;
+}
+div.loginbox a.whitelink:hover {
+	color: #eee;
+	text-decoration: underline;
+}
+.loginheader .logo { float: left; }
+.loginheader .bebas { float: right; }
+
+.container {
+    background-color: #FFFFFF;
+    font-family: arial;
+}
+.container .wrapper {
+	margin-top: 15px;
+	float: left;
+	width: 100%;
+}
+.content {
+    margin-left: 200px;
+    margin-right: 40px;
+}
+.small {
+	font-weight: normal;
+}
+.clear {
+    clear: both;
+}
+.userbar {
+    background-color: #EFEFEF;
+    box-shadow: 0 -1px 1px 0 #CCCCCC inset;
+    color: #666666;
+    font-family: arial;
+    padding: 15px 20px;
+    text-align: right;
+}
+.userbar a {
+    color: #6A83A2;
+}
+.userbar a:hover {
+    color: #1A457A;
+}
+.dash-admin-app {
+    background-color: #FAFAFA;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 5px 0 #AAAAAA;
+    color: #444444;
+    float: left;
+    margin: 10px;
+    padding: 15px;
+    width: 350px;
+}
+.dash-admin-app > h3 {
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+#app-apps {
+    display: block;
+}
+#appgallery {
+    border-radius: 3px 3px 3px 3px;
+    float: left;
+    padding: 20px;
+    width: 480px;
+}
+#appgallery form {
+    box-shadow: 0 0 5px 0 #AAAAAA inset;
+    margin: 10px 0;
+    padding: 10px;
+}
+#appgallery li {
+    list-style-type: none;
+}
+#appgallery > ul > li {
+    background-color: rgba(230, 230, 230, 0.5);
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 3px 0 #CCCCCC;
+    float: left;
+    margin: 5px;
+}
+#appgallery > ul > li:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+}
+#appgallery > ul > li a {
+    font-size: 18px;
+}
+#appgallery > ul > li div.right_header a {
+    font-size: 12px;
+}
+#actions {
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 5px 0 #AAAAAA;
+    margin-left: 550px;
+    padding: 20px;
+}
+#actions li {
+    list-style-type: none;
+}
+#actions > ol, #actions > ul {
+    margin: 10px 0;
+    padding: 10px;
+}
+#actions ol li ol {
+    margin-left: -40px;
+}
+#actions > ol li, #actions > ul li {
+    background-color: rgba(240, 240, 240, 0.5);
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 2px 0 #CCCCCC;
+    margin: 15px;
+    padding: 10px;
+}
+#actions > ol li:hover, #actions > ul li:hover {
+    background-color: rgba(250, 250, 250, 0.5);
+}
+ul.applist {
+    margin-left: -40px;
+}
+#app-skins li {
+    list-style-type: none;
+}
+#app-skins ul.applist {
+    float: left;
+    margin-top: 10px;
+    width: 100%;
+}
+#app-skins ul.applist li {
+    background-color: rgba(230, 230, 230, 0.5);
+    border: medium none;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 3px 0 #CCCCCC;
+    float: left;
+    margin: 5px;
+    width: 90px;
+}
+#app-skins ul.applist li:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+}
+#app-skins ul.applist li {
+    font-size: 18px;
+}
+#app-skins form {
+    background: none repeat scroll 0 0 rgba(250, 250, 250, 0.6);
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 5px 0 #DDDDDD inset;
+    color: #4A6382;
+    font-size: 18px;
+    margin: 10px 0;
+    padding: 10px;
+    text-align: center;
+}
+#app-skins form#skinform {
+	text-align: left;
+}
+#app-users ul {
+    margin-left: -40px;
+}
+#app-users form ul li {
+    list-style-type: none;
+    margin-top: 10px;
+}
+#app-users li input {
+    color: #555555;
+}
+#app-users li input:focus {
+    color: #222222;
+}
+#app-users table {
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 5px 0 #CCCCCC inset;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    padding: 5px;
+}
+#app-users table th {
+    color: #999999;
+    padding: 5px;
+}
+
+#skin_nav {
+    padding: 10px;
+    
+}
+#skin_nav a {
+    border-left: 5px solid rgba(33, 117, 155, 0.3);
+    padding-left: 5px;
+
+}
+#skin_nav a.selected {
+	border-left: 5px solid rgba(33, 117, 155, 1);
+}
+#skin_nav h3 a {
+    border: none;
+
+}

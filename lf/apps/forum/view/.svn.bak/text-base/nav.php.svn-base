@@ -1,0 +1,9 @@
+<ul class="nav nav-list">
+  <li class="nav-header">Navigation</li>
+	<li class="composebutton"><a href="%appurl%compose/">Chit-Chat</a></li>
+	<li><a href="%appurl%inbox/">Item Discussion</a></li>
+	<li><a href="%appurl%from/users/">Bug Reports</a></li>
+	<li><a href="%appurl%from/admin/">Other Stuff</a></li>
+	<li><a href="%appurl%flagged/">More Things</a></li>
+	<li><a href="%appurl%sent/">Blah Blah Blah</a></li>
+</ul>

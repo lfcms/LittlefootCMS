@@ -1,0 +1,1 @@
+<?php echo $this->request->apploader('blog_admin'); ?>

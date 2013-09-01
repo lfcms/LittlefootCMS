@@ -1,0 +1,508 @@
+    * {
+    margin: 0;
+    padding: 0;
+} /* asdf */
+body {
+    background: none repeat scroll 0 0 #88BBEE;
+    color: #333333;
+    font-family: 'trebuchet ms',arial,sans-serif;
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0 20px;
+}
+p {
+    line-height: 1.7em;
+    margin: 0;
+    padding: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #362C20;
+    padding: 0 0 5px;
+}
+h1 {
+    color: #444444;
+    font: 125% "century gothic",arial;
+    margin: 0 0 15px;
+    padding: 15px 20px 5px 0;
+}
+h1 {
+    color: #FFFFFF;
+    float: left !important;
+    font: 275% "century gothic",arial;
+    margin: 0;
+    padding: 0;
+}
+h2 {
+    font-size: 200%;
+    margin: 0;
+    padding: 0;
+}
+h5 {
+    font: 110% arial;
+    letter-spacing: 0;
+    padding: 0 0 5px;
+    text-transform: uppercase;
+}
+h4 {
+    color: #362C20;
+}
+h5, h6 {
+    color: #129991;
+}
+img {
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+.left {
+    border-right: 20px solid #FFFFFF;
+    float: left;
+}
+.right {
+    border-left: 20px solid #FFFFFF;
+    float: right;
+}
+.center {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+blockquote {
+    background: none repeat scroll 0 0 #F5F5F1;
+    border: 1px solid #E5E5DB;
+    margin: 20px 0;
+    padding: 10px 20px 0;
+}
+ul {
+    margin: 2px 0 0px 16px;
+    padding: 0;
+}
+ul li {
+    list-style-type: none;
+    padding: 0;
+}
+ol {
+    margin: 8px 0 0 24px;
+    padding: 0;
+}
+ol li {
+    margin: 0 0 11px;
+    padding: 0;
+}
+a, a:hover {
+    border-bottom: 1px dotted;
+    color: #444444;
+    outline: medium none;
+    text-decoration: none;
+}
+a:hover {
+    border-bottom: 1px solid;
+}
+#logo, #menubar, #panel, #site_content, #footer {
+}
+#header {
+    margin-top: 10px;
+}
+#logo {
+    height: 107px;
+    position: relative;
+    width: 870px;
+}
+#logo #logo_text {
+    left: 0;
+    position: absolute;
+    top: 15px;
+}
+#logo h1 {
+    border-bottom: 0 none;
+    color: #FFFFFF;
+    font: 300% "century gothic",arial,sans-serif;
+    margin: 0;
+    padding: 12px 0 0 26px;
+    text-transform: none;
+}
+#menubar {
+    height: 45px;
+    margin: auto;
+}
+#menubar > ul {
+    float: right;
+    margin: 0;
+}
+#menubar > ul li {
+    float: left;
+    list-style: none outside none;
+    margin: 7px 0 0;
+    padding: 0 0 0 6px;
+}
+#menubar > ul li a {
+    border-bottom: 0 none;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    font-size: 16px;
+    height: 25px;
+    padding: 8px 32px 5px 26px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+#menubar > ul li.tab_selected a {
+    height: 25px;
+    padding: 8px 32px 5px 26px;
+}
+#menubar > ul li.tab_selected {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 5px 5px 0 0;
+}
+#menubar > ul li.tab_selected a, #menubar > ul li.tab_selected a:hover {
+    color: #333333;
+}
+#menubar > ul li a:hover {
+    color: #333333;
+}
+#panel {
+    background: none repeat scroll 0 0 #A2CCFC;
+    border: 10px solid #333333;
+    border-radius: 10px 10px 10px 0;
+    height: 154px;
+    margin-left: 190px;
+    text-align: right;
+}
+#site_content {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    overflow: hidden;
+    padding: 10px;
+}
+.sidebar {
+    border-radius: 10px 10px 10px 10px;
+    float: left;
+    padding: 10px;
+    width: 160px;
+}
+.sidebar h2 {
+    text-align: center;
+}
+.sidebar ul li a {
+    padding: 5px;
+}
+.sidebar ul {
+    /*margin: 0 0 0 10px;*/
+}
+.sidebar li {
+    list-style: none outside none;
+}
+.sidebar li a, .sidebar li a:hover {
+    border: medium none;
+    color: #555555;
+    display: block;
+    text-decoration: none;
+}
+/*.sidebar li > ul { display:none; }*/
+/*.sidebar li.active ul { display:block; background: #EEE;  }*/
+.sidebar li.active { background: #DDD;  }
+
+
+.sidebar li a.selected, .sidebar li a:hover, .sidebar li a.selected:hover {
+    text-decoration: underline;
+}
+#content {
+    border-left: 10px solid #333333;
+    margin-left: 190px;
+    padding: 10px;
+    text-align: left;
+}
+#footer {
+    background: none repeat scroll 0 0 #333333;
+    border-radius: 10px 10px 10px 10px;
+    clear: both;
+    color: #FFFFFF;
+    height: 33px;
+    margin-bottom: 0;
+    padding: 20px 20px 4px;
+    text-align: left;
+    text-transform: uppercase;
+}
+#footer a {
+    color: #CCCCCC;
+}
+.alternate_colour {
+    color: #333333;
+}
+.form_settings {
+    margin: 15px 0 0;
+}
+.form_settings p {
+    padding: 0 0 4px;
+}
+.form_settings span {
+    float: left;
+    text-align: left;
+    width: 200px;
+}
+.form_settings input, .form_settings textarea {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #E5E5DB;
+    color: #47433F;
+    font: 100% arial;
+    padding: 4px;
+    width: 299px;
+}
+.form_settings .submit {
+    background: none repeat scroll 0 0 #3B3B3B;
+    border: 1px solid;
+    color: #FFFFFF;
+    cursor: pointer;
+    font: 100% arial;
+    height: 36px;
+    margin: 0 0 0 210px;
+    padding: 2px 0 3px;
+    width: 99px;
+}
+.form_settings textarea, .form_settings select {
+    font: 100% arial;
+    width: 299px;
+}
+.form_settings select {
+    width: 304px;
+}
+.form_settings .checkbox {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    margin: 4px 0;
+    padding: 0;
+    width: 14px;
+}
+.separator {
+    border-bottom: 1px solid #FFFFFF;
+    border-top: 1px solid #D9D5CF;
+    height: 0;
+    margin: 0 0 20px;
+    width: 100%;
+}
+table {
+    margin: 10px 0 30px;
+}
+table tr th, table tr td {
+    background: none repeat scroll 0 0 #3B3B3B;
+    color: #FFFFFF;
+    padding: 7px 4px;
+    text-align: left;
+}
+table tr td {
+    background: none repeat scroll 0 0 #CCCCCC;
+    border-top: 1px solid #FFFFFF;
+    color: #47433F;
+}
+.read {
+    background: none repeat scroll 0 0 #00FF00;
+}
+.unread {
+    background: none repeat scroll 0 0 #0000FF;
+}
+#argue_add legend {
+    border: 1px solid #333333;
+    padding: 5px;
+}
+#argue_add fieldset {
+    border: 1px solid #333333;
+    padding: 10px;
+}
+#argue_add select {
+    margin-bottom: 10px;
+}
+#argue_add textarea {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #777777;
+    height: 100px;
+    width: 100%;
+}
+#argue_add input {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #333333;
+    float: right;
+    margin-top: 10px;
+}
+.add_thread {
+}
+.add_thread textarea {
+    font-family: 'trebuchet ms',arial,sans-serif;
+    height: 70px;
+    margin-bottom: 5px;
+    padding: 5px;
+    width: 100%;
+	height: 300px;
+}
+.add_thread input {
+    border: 1px solid #333333;
+    /*float: right;*/
+    padding: 5px;
+    width: 150px;
+}
+.add_thread select {
+    border: 1px solid #333333;
+    /*float: right;*/
+    padding: 5px;
+    width: 150px;
+}
+.add_thread .submit {
+    border: 1px solid #333333;
+    display: block;
+    padding: 0;
+    width: 150px;
+}
+.add_thread span {
+    display: block;
+    float: left;
+    padding: 8px 0 0 5px;
+}
+.add_post {
+    margin-left: 5px;
+    width: 100%;
+}
+.add_post input {
+    border: 1px solid #CCCCCC;
+    color: #777777;
+    margin: 7px;
+    padding: 3px;
+    width: 470px;
+}
+.at {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: medium none;
+    color: #555555;
+    display: block;
+    padding: 5px;
+    width: 100% !important;
+}
+.add_post span {
+    display: block;
+    float: left;
+    padding: 8px 0 0 5px;
+}
+.add_post .submit {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 0;
+    width: 70px;
+}
+.pending {
+    border-left: 2px solid #9999FF;
+}
+.inputsuggest {
+    color: #AAAAAA;
+    margin: 10px;
+    width: 300px;
+}
+.date {
+    color: #777777;
+    font-size: 12px;
+}
+.thread {
+    border-radius: 10px 10px 10px 10px;
+    margin-top: 10px;
+    padding: 0 10px 10px;
+}
+.t_head {
+    word-wrap: break-word;
+	overflow: hidden;
+}
+.t_head {
+    font-size: 14px;
+}
+.t_head h4 a {
+    font-size: 16px;
+}
+.t_head ul {
+    margin-left: 0;
+}
+.tlike {
+    display: block;
+}
+.msg {
+    display: block;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.msg li {
+    border: 1px solid #DDDDDD;
+    border-radius: 10px 10px 10px 10px;
+    margin-top: 10px;
+    padding: 10px 5px;
+    word-wrap: break-word;
+}
+.msg li:hover {
+    border: 1px solid #000000;
+}
+a.removethread, a.removepost {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #333333;
+    display: none;
+    float: right;
+    font-size: 14px;
+    padding: 2px 5px;
+}
+.msg li:hover a.removepost, .t_head:hover a.removethread {
+    display: block;
+}
+.msg li form {
+    display: none;
+}
+.msg li:hover form {
+    display: block;
+}
+.clear {
+    clear: both;
+}
+.msg_date {
+    display: none;
+}
+.msg a {
+    font-size: 14px;
+}
+.msg_body {
+    display: block;
+    padding: 5px 0;
+    width: 460px;
+}
+.msg {
+    font-size: 14px;
+}
+iframe {
+    height: 500px;
+    width: 100%;
+}
+dt {
+    font-style: italic;
+    font-weight: bold;
+}
+dd {
+    margin-bottom: 10px;
+}
+#login {
+    color: white;
+    float: right;
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 10px;
+}
+.threadgallery {
+    list-style: none outside none;
+}
+.threadgallery li {
+    border: 1px solid #000000;
+    float: left;
+    margin: 5px;
+    padding: 5px;
+}
+
+.threadgallery li ul li {
+	border: none; 
+}
+
+/* Login form */
+#_auth { float: right; }
+#_auth_login_form ul li { display: inline; }

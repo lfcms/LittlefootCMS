@@ -1,0 +1,44 @@
+/****** basic ******/
+html, body { border: 0; margin: 0; padding: 0;}
+body {font-family:"Trebuchet MS","Segoe UI",Trebuchet,"Bitstream Vera Sans","DejaVu Sans",Verdana,"Verdana Ref",sans serif;color:#696969;background-color:#1d1d1d; line-height:1.7em;font-size:12px; padding:30px 0}
+a {color:#000; text-decoration:none}
+a:hover {color:#158AB0}
+.clear {clear:both}
+strong {font-weight:bold; color:#000}
+
+/****** contact page ******/
+.contact_wrapper { display: block; width: 840px; margin: 0 auto 0 auto; padding:25px; background-color:#fff; -moz-border-radius:7px; -khtml-border-radius:7px; -webkit-border-radius:7px; border-radius:7px; border:3px solid #158AB0}
+.left_column {float:left; width:570px; background-color:#fff; padding-right:25px; border-right:1px solid #dddddd}
+.right_column {float:right; width:220px}
+.location_box , .contact_box , .email_box , .phone_box{padding-bottom:50px}
+h3 {font:2em "PTSansBold", Arial, Helvetica, sans-serif; color:#000; margin:0 0 0 -3px; background:0 0 no-repeat; padding:1px 0 7px 40px}
+h3.email {background-image:url(../images/email.png)}
+h3.phone {background-image:url(../images/phone.png)}
+h3.location {background-image:url(../images/location.png)}
+h3.message {background-image:url(../images/message.png)}
+a.show_map {padding:2px 0 10px 28px; background:url(../images/map.jpg) 0 0 no-repeat; display:block; float:right; width:60px; margin-top:-33px; text-align:right}
+
+/****** contact form ******/
+.contact_form {padding-top:20px}
+.contact_form p {padding:0 0 9px 0; margin:0}
+.contact_form .mandatory{font-size: 13px; color: #ff0000;}
+.contact_form input, textarea, select {margin: 0; padding: 5px; color: #666; background: #f7f7f7; border: 1px solid #c4c4c4; margin: 5px 0; -moz-border-radius: 5px; -webkit-border-radius:5px;font-family:Arial, Helvetica, sans-serif; font-size:12px}
+.contact_form input{width: 300px;margin-top:-3px}
+.contact_form textarea{width: 400px; margin-top:0}
+.contact_form input:focus, textarea:focus, select:focus {border:1px solid #989898; background-color:#fefefe;}
+.contact_form input.submit {margin-top:20px; color:#ffffff; width:60px; cursor:pointer; border:2px solid #2f2f2f; background:#323232; -moz-border-radius:6px; -khtml-border-radius:6px; -webkit-border-radius:6px; border-radius:6px;}
+.contact_form input:hover.submit{background:#4e4e4e; border-color:#393939}
+.contact_form div.code {}
+.contact_form input.code {width:100px; margin-top:4px}
+.contact_form span.error {color:#ff0000; background:url(../images/cross.gif) 5px 0 no-repeat; padding-left:25px; vertical-align:text-top}
+
+/****** system message ******/
+.notice_box {padding-top:15px}
+.notice_box div{padding:5px 10px 5px 36px; line-height:1.5em; -moz-border-radius: 6px; -webkit-border-radius:6px;}
+.alert {background:url(../images/error.gif) 10px 6px no-repeat #fffbcc; color:#666452;}
+.success {background:url(../images/success.gif) 10px 6px no-repeat #e5ffce; color:#6a6668;}
+
+/****** google map ******/
+.map_canvas {width: 570px; height: 300px; background-color:#000000}
+
+

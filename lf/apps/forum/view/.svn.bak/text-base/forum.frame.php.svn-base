@@ -1,0 +1,8 @@
+<div class="span2">
+    <div class="well sidebar-nav">
+		<?=$nav;?>
+	</div><!--/.well -->
+</div><!--/span-->
+<div class="span10">
+	<?=$app;?>
+</div>

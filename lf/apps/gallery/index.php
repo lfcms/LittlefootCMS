@@ -1,0 +1,1 @@
+<?php echo $this->apploader('gallery', $_app['ini']); ?>

@@ -1,0 +1,32 @@
+[12/30/2012 10:15 PM] - FAIL: IPN Validation Failed.
+IPN POST Values from Paypal:
+mc_gross=5.00, protection_eligibility=Ineligible, address_status=confirmed, payer_id=EVQ7JNXMJ3Y9C, tax=0.00, address_street=1 Main St, payment_date=19:12:47 Dec 30, 2012 PST, payment_status=Pending, charset=windows-1252, address_zip=95131, first_name=Joe, address_country_code=US, address_name=Joe Still, notify_version=3.7, custom=, payer_status=verified, business=joe@bioshazard.com, address_country=United States, address_city=San Jose, quantity=1, verify_sign=AFcWxV21C7fd0v3bYYYRCpSSRl31A89iKGP5Z0.zh8tQMiviyHzGk.rs, payer_email=asdf_1356922824_per@bioshazard.com, txn_id=2VC00198VE0206828, payment_type=instant, last_name=Still, address_state=CA, receiver_email=joe@bioshazard.com, pending_reason=unilateral, txn_type=web_accept, item_name=Web Hosting #1, mc_currency=USD, item_number=, residence_country=US, test_ipn=1, handling_amount=0.00, transaction_subject=Web Hosting #1, payment_gross=5.00, shipping=0.00, ipn_track_id=47b1cb91ee22, 
+IPN Response from Paypal Server:
+ HTTP/1.0 302 Found
+Location: https://www.sandbox.paypal.com
+Server: BigIP
+Connection: close
+Content-Length: 0[12/30/2012 10:17 PM] - FAIL: IPN Validation Failed.
+IPN POST Values from Paypal:
+
+IPN Response from Paypal Server:
+ HTTP/1.0 302 Found
+Location: https://www.sandbox.paypal.com
+Server: BigIP
+Connection: close
+Content-Length: 0
+
+
+
+[12/30/2012 10:21 PM] - FAIL: IPN Validation Failed.
+IPN POST Values from Paypal:
+
+IPN Response from Paypal Server:
+ HTTP/1.0 302 Found
+Location: https://www.sandbox.paypal.com
+Server: BigIP
+Connection: close
+Content-Length: 0
+
+
+
