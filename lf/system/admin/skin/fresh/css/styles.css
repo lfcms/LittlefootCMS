@@ -14,27 +14,28 @@ a:hover {
 }
 h1 {
     color: rgba(20, 20, 20, 0.6);
-    font-size: 30px;
-    margin-top: -10px;
-    padding: 0;
+    float: left;
+    font-size: 26px;
+    padding: 5px;
 }
-
+input:focus {
+    outline: 0;
+}
 .login h1 {
     color: rgba(20, 20, 20, 0.6);
     font-size: 30px;
-    margin-top: -15px;
     padding: 0;
 }
 .login #recaptcha_widget_div {
-	margin: 0 auto 15px;
-	text-align: center;
+    margin: 0 auto 15px;
+    text-align: center;
 }
 .login .error {
-	background: none repeat scroll 0 0 #FFAAAA;
+    background: none repeat scroll 0 0 #FFAAAA;
     border: 3px solid #FF0000;
+    margin-top: 15px;
     padding: 5px;
     text-align: center;
-	margin-top: 15px;
 }
 h3 {
     color: #21759B;
@@ -48,7 +49,6 @@ body {
 footer {
     border-radius: 3px 3px 3px 3px;
     border-top: 1px solid #DDDDDD;
-    margin-top: 20px;
     padding: 1rem;
 }
 footer .footer-credits {
@@ -56,85 +56,93 @@ footer .footer-credits {
 }
 header {
     color: #515151;
-    float: left;
 }
 body.login {
-	background-color: #efefef;
+    background-color: #888888;
 }
 div.loginbox {
-	border-radius:  5px;
-	box-shadow: 0px 0px 10px 1px #777;
-	padding:  20px;
-	margin: 100px auto;
-	width: 320px;
-	background-color: rgba(0, 0, 0, 0.3);
-	font-family: arial;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-top: -145px;
+    margin-left: -160px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: rgba(10, 10, 10, 0.2);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 10px 1px #777777;
+    font-family: arial;
+    padding: 15px;
+    width: 320px;
 }
 div.loginbox h1 {
-	/*margin-bottom: 10px;*/
 }
 div.loginbox form {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 div.loginbox form label {
-	font-size: 24px;
-	color: rgba(240, 240, 240, 1);
+    color: #F0F0F0;
+    font-size: 24px;
 }
-div.loginbox form input#username,
-div.loginbox form input#password {
-	padding: 5px 10px; 
-	font-size: 22px;
-	color: #eee;
-	box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1);
-	border:  none;
-	background-color: rgba(100, 100, 100, 0.4);
-	margin-bottom: 15px;
-	line-height: 30px;
-	width: 95%;
+div.loginbox form input#username, div.loginbox form input#password {
+    box-sizing: border-box;
+    background-color: rgba(100, 100, 100, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: #BBB;
+    font-size: 22px;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    width: 100%;
+    transition: border-color .25s linear;
+    -webkit-transition: border-color .25s linear;
 }
-div.loginbox form input#username:focus,
-div.loginbox form input#password:focus {
-	border: none;
+div.loginbox form input#username:focus, div.loginbox form input#password:focus {
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 div.loginbox form button {
-	background-color: #ddd;
-	border-radius:  2px;
-	font-size: 25px;
-	width: 100%;
-	border: none;
-	padding: 8px 40px;
-	color: #555;
-	text-decoration: none;
-	margin-bottom: 0;
+    background-color: #CCCCCC;
+    border: medium none;
+    border-radius: 2px 2px 2px 2px;
+    color: #555555;
+    font-size: 25px;
+    margin-bottom: 0;
+    padding: 8px 40px;
+    text-decoration: none;
+    width: 100%;
+    transition: background-color .25s linear;
+    -webkit-transition: background-color .25s linear;
 }
 div.loginbox form button:hover {
-	background-color: #ccc;
+    background-color: #EEEEEE;
 }
 div.loginbox a.whitelink {
-	color: white;
+    color: white;
 }
 div.loginbox a.whitelink:hover {
-	color: #eee;
-	text-decoration: underline;
+    color: #EEEEEE;
+    text-decoration: underline;
 }
-.loginheader .logo { float: left; }
-.loginheader .bebas { float: right; }
-
+.loginheader .logo {
+    float: left;
+}
+.loginheader .bebas {
+    float: right;
+}
 .container {
     background-color: #FFFFFF;
     font-family: arial;
 }
 .container .wrapper {
-	margin-top: 15px;
-	float: left;
-	width: 100%;
+    float: left;
+    margin-top: 15px;
+    width: 100%;
 }
 .content {
     margin-left: 200px;
     margin-right: 40px;
 }
 .small {
-	font-weight: normal;
+    font-weight: normal;
 }
 .clear {
     clear: both;
@@ -144,7 +152,7 @@ div.loginbox a.whitelink:hover {
     box-shadow: 0 -1px 1px 0 #CCCCCC inset;
     color: #666666;
     font-family: arial;
-    padding: 15px 20px;
+    overflow: hidden;
     text-align: right;
 }
 .userbar a {
@@ -152,6 +160,9 @@ div.loginbox a.whitelink:hover {
 }
 .userbar a:hover {
     color: #1A457A;
+}
+.userbar #greeting {
+	padding: 10px;
 }
 .dash-admin-app {
     background-color: #FAFAFA;
@@ -263,7 +274,7 @@ ul.applist {
     text-align: center;
 }
 #app-skins form#skinform {
-	text-align: left;
+    text-align: left;
 }
 #app-users ul {
     margin-left: -40px;
@@ -289,20 +300,16 @@ ul.applist {
     color: #999999;
     padding: 5px;
 }
-
 #skin_nav {
     padding: 10px;
-    
 }
 #skin_nav a {
     border-left: 5px solid rgba(33, 117, 155, 0.3);
     padding-left: 5px;
-
 }
 #skin_nav a.selected {
-	border-left: 5px solid rgba(33, 117, 155, 1);
+    border-left: 5px solid #21759B;
 }
 #skin_nav h3 a {
-    border: none;
-
+    border: medium none;
 }
