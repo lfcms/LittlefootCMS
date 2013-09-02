@@ -1,7 +1,5 @@
 <?php
 
-// test 2
-
 class Littlefoot
 {
 	private $db;
