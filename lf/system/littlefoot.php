@@ -1,5 +1,7 @@
 <?php
 
+// auth
+
 class Littlefoot
 {
 	private $db;
