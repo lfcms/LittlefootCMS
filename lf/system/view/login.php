@@ -4,28 +4,19 @@
 if($this->auth['user'] != 'anonymous')
 {
         $link = '';
-        $url = $this->base."?_auth=logout";
         if($this->auth['access'] == 'admin')
                 $link .= ' <a href="'.$this->base.'admin/">Admin</a> | ';
-        $link .= '<a href="'.$url.'">Logout</a>';
+        $link .= '<a href="'.$this->base.'_auth/logout">Logout</a>';
 
         ?><div class="_auth_loggedin">Hello, <?=$this->auth['display_name'];?> ( <?=$link;?> )</div>
 
-<?php } else { 
-
-$get = array();
-$action = '&';
-if(count($_GET))
-{
-	foreach($_GET as $var => $val)
-		$get[] = $var.'='.$val;	
-	$action .= implode('&', $get);
-}
+<?php } else {
 
 ?>
 
-	<form id="_auth_login_form" action="?_auth=login<?=$action;?>" method="post">
+	<form id="_auth_login_form" action="%baseurl%_auth/login" method="post">
 			<ul>
+				<input type="hidden" name="dest" value="<?php $_SERVER['REQUEST_URI']; ?>" />
 				<li class="_auth_user">User: <input type="text" name="user" /></li>
 				<li class="_auth_pass">Pass: <input type="password" name="pass" /></li>
 				<li class="_auth_submit"><input type="submit" value="Log In" /></li>

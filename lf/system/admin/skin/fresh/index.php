@@ -38,7 +38,7 @@
 			<header>
 				<h1>Littlefoot CMS</h1>
 			</header>
-			Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->relbase;?>?logout=true">Logout</a>)
+			Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Logout</a>)
 		</div>
 		<div class="container">
 			<nav>

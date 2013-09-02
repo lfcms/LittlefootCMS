@@ -104,6 +104,7 @@ class Littlefoot
 		while($row = $this->db->fetch())
 			$this->settings[$row['var']] = $row['val'];
 			
+		// redirect to URL specified in 'force_url' setting
 		if(isset($this->settings['force_url']) && $this->settings['force_url'] != '')
 		{
 			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
@@ -130,6 +131,16 @@ class Littlefoot
 		if(is_dir(ROOT.'system/lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'system/lib');
 		
 		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		// request
 		$funcstart = microtime(true);
@@ -328,12 +339,12 @@ class Littlefoot
 			// check for submit->login
 				// check for good user/pass
 				// 
-				
+		
 		// If anonymous...
 		if($auth['user'] == 'anonymous' || (count($_POST) && isset($_POST['adminlogin'])) )
 		{
 			// check for normal login
-			if(isset($_GET['_auth']) && $_GET['_auth'] == 'login')
+			if($this->action[0] == '_auth' && $this->action[1] == 'login')
 			{
 				$loggedin = false;
 				
@@ -415,7 +426,9 @@ class Littlefoot
 				
 				// dont let those apps see your password.
 				$_POST = array();
-			}
+				$this->auth = $auth;
+				redirect302($_POST['dest']);
+			}/*
 			else if(is_file('lib/facebook.php')) //otherwise, try to authenticate with facebook
 			{
 				// Facebook login
@@ -483,19 +496,19 @@ class Littlefoot
 					$auth['access'] = 'public';
 					if(in_array('superadmin', $auth['acl'])) $auth['access'] = 'admin';
 				}
-			} 
+			} */
 		}
 		else // if currently logged in
 		{
 			// check for logout request && ignore facebook redirecting from ?logout
-			if(isset($_GET['_auth']) && $_GET['_auth'] == 'logout' && !strpos($_SERVER['HTTP_REFERER'], 'facebook'))
+			if($this->action[0] == '_auth' && $this->action[1] == 'logout')
 			{
 				// reset session
 				session_destroy();
 				$auth = array();
 				$this->note = 'logout';
 				
-				redirect302($this->basenoget);
+				redirect302();
 			}
 			
 			else if(isset($auth['timeout']) && $auth['timeout'] < time() && false) // disabled for now #debug

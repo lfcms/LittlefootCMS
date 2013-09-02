@@ -1,14 +1,5 @@
 <?php
 
-$get = array();
-$action = '&';
-if(count($_GET))
-{
-	foreach($_GET as $var => $val)
-		$get[] = $var.'='.$val;	
-	$action .= implode('&', $get);
-}
-
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -26,7 +17,7 @@ if(count($_GET))
 					<div style="clear: both"></div>
 				</div><!--loginheader-->
 				<div class="loginform">
-					<form id="login" action="?_auth=login<?=$action;?>" method="post">
+					<form id="login" action="<?=$this->base;?>_auth/login" method="post">
 						<p>
 							<label for="username" class="bebas">Username</label>
 							<input type="text" id="username" name="user" class="radius2" />

@@ -1,6 +1,6 @@
 <?php 
 
-// The absolute path to the lf/ directory is the ROOT of the application
+// The ROOT of the application is the absolute path to the lf/ directory
 define('ROOT', dirname(__FILE__).'/lf/');
 if(!chdir(ROOT)) die('Access Denied to '.ROOT); // if unable to cd there, kill script
 

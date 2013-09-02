@@ -45,7 +45,7 @@ $(document).ready(function(){
         
         <div class="loginform">
         	<div class="loginerror"><p>Invalid username or password</p></div>
-        	<form id="login" action="?" method="post">
+        	<form id="login" action="%baseurl%_auth/login" method="post">
             	<p>
                 	<label for="username" class="bebas">Username</label>
                     <input type="text" id="username" name="user" class="radius2" />
