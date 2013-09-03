@@ -27,7 +27,7 @@ if(count($_GET))
                                         <div style="clear: both"></div>
                                 </div><!--loginheader-->
                                 <div class="loginform">
-                                        <form id="login" action="?_auth=login<?=$action;?>" method="post">
+                                        <form id="login" action="<?=$this->base;?>_auth/login" method="post">
                                                 <p>
                                                         <label for="username" class="bebas">Username</label>
                                                         <input type="text" id="username" name="user" class="radius2" />

@@ -1,7 +1,5 @@
 <?php
 
-// auth
-
 class Littlefoot
 {
 	private $db;
@@ -323,7 +321,7 @@ class Littlefoot
 	
 	private function authenticate()
 	{
-		$this->hook_run('pre_auth');
+		$this->hook_run('pre_auth'); 
 		
 		$auth = $this->auth;
 		
@@ -429,7 +427,7 @@ class Littlefoot
 				// dont let those apps see your password.
 				$_POST = array();
 				$this->auth = $auth;
-				redirect302($_POST['dest']);
+				redirect302();
 			}/*
 			else if(is_file('lib/facebook.php')) //otherwise, try to authenticate with facebook
 			{
