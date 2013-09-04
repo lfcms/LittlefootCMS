@@ -127,40 +127,47 @@ function downloadFile ($url, $path) {
 	}
 }
 
-// process submitted $_FILES
+// process submitted $_FILES, allow only images by default
 function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), $allowedTypes = array("image/gif", "image/jpeg", "image/pjpeg", "image/png"))
 {
+	if($destfolder[strlen($destfolder) - 1] != '/') $destfolder .= '/';
 	$return = array();
 	foreach($_FILES as $key => $file)
-	{
-		print_r($file);
-		echo $destfolder;
-		
+	{	
 		$filedata = explode(".", $file["name"]);
 		$extension = strtolower($filedata[1]);
 		
-		if(in_array($extension, $allowedExts) && in_array($file["type"], $allowedTypes))
+		// If either filter array has elements, return invalid if mismatch
+		if((count($allowedExts) && !in_array($extension, $allowedExts)) 
+		|| (count($allowedTypes) && !in_array($file["type"], $allowedTypes)))
 		{
-			if ($file["error"] > 0) {
-				$return[$key] = "Return Code: " . $file["error"] . "<br />";
-			} else {
-				if(!is_dir($destfolder)) mkdir($destfolder, 0755, true);
-				
-				if (file_exists($destfolder.$file["name"]))
-					$file["name"] = 'dupe_'.date('U').$file["name"];
-				
-				$success = move_uploaded_file(
-					$file["tmp_name"],
-					$destfolder.$file["name"]
-				);
-				
-				if($success)
-					$return[$key] = $file["name"];
-				else
-					$return[$key] = "Error: Failed at move_uploaded_file(".$file["tmp_name"].', '.$destfolder.$file["name"].')';
-			}
+			$return[$key] = "Error: Invalid file ext/type";
+			continue;
+		}
+		
+		if ($file["error"] > 0) {
+			$return[$key] = "Error: Code " . $file["error"];
 		} else {
-			$return[$key] = "Invalid file";
+			if(!is_dir($destfolder)) {
+				if(!mkdir($destfolder, 0755, true))
+				{
+					$return[$key] = "Error: Unable to create upload dir '".$destfolder."'";
+					continue;
+				}
+			}
+			
+			if (file_exists($destfolder.$file["name"]))
+				$file["name"] = 'dupe_'.date('U').$file["name"];
+			
+			$success = move_uploaded_file(
+				$file["tmp_name"],
+				$destfolder.$file["name"]
+			);
+			
+			if($success)
+				$return[$key] = $file["name"];
+			else
+				$return[$key] = "Error: Failed at move_uploaded_file(".$file["tmp_name"].', '.$destfolder.$file["name"].')';
 		}
 	}
 	
