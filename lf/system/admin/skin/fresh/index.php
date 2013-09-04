@@ -39,7 +39,7 @@
                                 <h1>Littlefoot CMS</h1>
                         </header>
                         <div id="greeting">
-                                Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Loogout</a>)
+                                Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Logout</a>)
                         </div>
                 </div>
                 <div class="container">
