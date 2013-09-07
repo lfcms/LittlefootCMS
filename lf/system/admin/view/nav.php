@@ -13,8 +13,11 @@
 	<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
 	<li><a class="grid" href="<?=$this->base;?>apps/"><span>Apps</span></a>
 		<ul>
-		<?php foreach($admin_apps as $shortcut): ?>
-			<li><a class="elements" href="<?=$this->base;?>apps/manage/<?php echo $shortcut; ?>/"><span><?php echo ucfirst($shortcut); ?></span></a></li>
+		<?php foreach($admin_apps as $shortcut): 
+				if($shortcut == $this->vars[1]) $highlight = ' class="current"';
+				else $highlight = '';
+		?>
+			<li<?=$highlight;?>><a class="elements" href="<?=$this->base;?>apps/manage/<?php echo $shortcut; ?>/"><span><?php echo ucfirst($shortcut); ?></span></a></li>
 		<?php endforeach; ?>
 		</ul>
 	</li>
