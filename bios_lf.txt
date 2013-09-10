@@ -1,0 +1,861 @@
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_acl`
+--
+
+DROP TABLE IF EXISTS `lf_acl`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_acl` (
+  `id` int(11) NOT NULL auto_increment,
+  `group` varchar(25) NOT NULL,
+  `perm` varchar(25) NOT NULL,
+  `obj` varchar(25) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_acl`
+--
+
+LOCK TABLES `lf_acl` WRITE;
+/*!40000 ALTER TABLE `lf_acl` DISABLE KEYS */;
+INSERT INTO `lf_acl` VALUES (1,'author','access','admin/apps/manage/blog/');
+/*!40000 ALTER TABLE `lf_acl` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_acl_global`
+--
+
+DROP TABLE IF EXISTS `lf_acl_global`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_acl_global` (
+  `id` int(11) NOT NULL auto_increment,
+  `action` varchar(50) NOT NULL,
+  `perm` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_acl_global`
+--
+
+LOCK TABLES `lf_acl_global` WRITE;
+/*!40000 ALTER TABLE `lf_acl_global` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lf_acl_global` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_acl_inherit`
+--
+
+DROP TABLE IF EXISTS `lf_acl_inherit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_acl_inherit` (
+  `id` int(11) NOT NULL auto_increment,
+  `group` varchar(50) NOT NULL,
+  `inherits` varchar(50) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_acl_inherit`
+--
+
+LOCK TABLES `lf_acl_inherit` WRITE;
+/*!40000 ALTER TABLE `lf_acl_inherit` DISABLE KEYS */;
+INSERT INTO `lf_acl_inherit` VALUES (11,'admin','noc'),(2,'2nd','1st'),(3,'2nd','noc'),(4,'noc','1st');
+/*!40000 ALTER TABLE `lf_acl_inherit` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_acl_user`
+--
+
+DROP TABLE IF EXISTS `lf_acl_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_acl_user` (
+  `id` int(11) NOT NULL auto_increment,
+  `action` varchar(50) NOT NULL,
+  `perm` int(11) NOT NULL,
+  `affects` varchar(50) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_acl_user`
+--
+
+LOCK TABLES `lf_acl_user` WRITE;
+/*!40000 ALTER TABLE `lf_acl_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lf_acl_user` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_actions`
+--
+
+DROP TABLE IF EXISTS `lf_actions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_actions` (
+  `id` int(5) NOT NULL auto_increment,
+  `parent` int(5) NOT NULL,
+  `position` varchar(19) NOT NULL,
+  `alias` varchar(20) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `label` varchar(25) NOT NULL,
+  `app` int(1) NOT NULL,
+  `template` varchar(128) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=288 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_actions`
+--
+
+LOCK TABLES `lf_actions` WRITE;
+/*!40000 ALTER TABLE `lf_actions` DISABLE KEYS */;
+INSERT INTO `lf_actions` VALUES (109,-1,'4','lf','Littlefoot CMS','Littlefoot',0,'default'),(284,-1,'1','blog','Blog','Blog',1,'default'),(171,270,'4','skins','skins','Skins',0,'default'),(169,171,'1','treetops','Treetops','Treetops',0,'default'),(172,171,'2','aios','Aios','Aios',0,'aios'),(177,270,'3','freeboard','Freeboard','Freeboard',1,'default'),(178,-1,'2','notes','notes','Notes',0,'default'),(264,-1,'0','hide','hide','hide',1,'default'),(192,270,'2','grid','Grid','Grid',1,'default'),(282,-1,'12','forms','Forms','Forms',0,'default'),(194,178,'3','reference','Reference','Reference',1,'default'),(195,270,'5','calendar','Calendar','Calendar',1,'default'),(196,-1,'5','gallery','Gallery','Gallery',1,'default'),(197,109,'1','dev','Dev','Dev',0,'default'),(198,178,'2','task','Task','Task',1,'default'),(199,270,'1','acl','acl','acl',0,'default'),(200,199,'1','1st','1st','1st',0,'default'),(201,199,'2','2nd','2nd','2nd',0,'default'),(202,199,'3','noc','noc','noc',0,'default'),(203,109,'2','guide','Guide','Guide',0,'default'),(204,270,'9','dev','dev','dev',1,'default'),(205,270,'8','social','Social','Social',1,'default'),(207,178,'4','idea','idea','idea',1,'default'),(209,270,'6','sub','sub','sub',1,'default'),(255,197,'1','dd','Dd','Dd2',1,'default'),(253,197,'2','silly','Silly','Silly',1,'default'),(258,178,'1','impt','Impt','Impt',1,'default'),(265,-1,'7','gym','Gym','Gym',0,'boiler'),(267,270,'7','hq','Hq','Hq',1,'mobile'),(269,-1,'6','blogforum','Blogforum','Blogforum',1,'default'),(270,-1,'3','test','Test','Test',1,'default'),(271,-1,'8','hd','Hd','HD',0,'default'),(272,271,'1','ask','Ask','Ask',1,'blank'),(273,-1,'9','bbcode','Bbcode','Bbcode',0,'default'),(277,-1,'10','bugtrack','Bugtrack','Bugtrack',1,'default'),(281,-1,'11','hq','Hq','Hq',0,'default'),(283,-1,'13','shop','Shop','Shop',0,'default'),(287,270,'10','prime','Prime','Prime',0,'default');
+/*!40000 ALTER TABLE `lf_actions` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_comments`
+--
+
+DROP TABLE IF EXISTS `lf_comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_comments` (
+  `id` int(11) NOT NULL auto_increment,
+  `parent` int(11) NOT NULL,
+  `inst` varchar(256) NOT NULL,
+  `content` text NOT NULL,
+  `from` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=96 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_comments`
+--
+
+LOCK TABLES `lf_comments` WRITE;
+/*!40000 ALTER TABLE `lf_comments` DISABLE KEYS */;
+INSERT INTO `lf_comments` VALUES (1,0,'blog/23','test reply',1,'2013-05-12 17:56:01'),(2,0,'blog/23','test',1,'2013-05-12 18:12:05'),(3,1,'blog/23','sub',1,'2013-05-12 18:12:11'),(4,0,'blog/21','test',1,'2013-05-12 18:17:46'),(5,0,'blog/23','asdf\r\n',1,'2013-05-18 12:22:37'),(6,0,'blog/23','asdf',1,'2013-05-18 12:22:50'),(7,0,'blog/23','test',1,'2013-05-18 12:23:55'),(8,0,'blog/23','tasdf',1,'2013-05-19 01:43:12'),(9,0,'bugtrack/test project/1','&lt;p&gt;fine&lt;/p&gt;',1,'2013-05-25 12:01:59'),(10,0,'bugtrack/test project/1','better',1,'2013-05-25 12:03:08'),(11,9,'bugtrack/test project/1','sub reply',1,'2013-05-25 12:03:13'),(12,0,'bugtrack/test project/1','asdf',1,'2013-05-25 14:47:39'),(13,0,'bugtrack/test project/2','new test',1,'2013-05-25 15:46:05'),(14,11,'bugtrack/test project/1','asdf',1,'2013-05-25 16:02:58'),(15,9,'bugtrack/test project/1','asdf',1,'2013-05-25 16:03:01'),(16,11,'bugtrack/test project/1','asdf',1,'2013-05-25 16:03:38'),(17,0,'bugtrack/test project/3','asdf',1,'2013-05-25 17:14:07'),(18,0,'bugtrack/PwnBB/4','asdf',1,'2013-05-27 05:25:57'),(19,0,'bugtrack/PwnBB/4','d',1,'2013-05-27 05:29:13'),(20,0,'bugtrack/PwnBB/4','asdf',1,'2013-05-27 05:30:46'),(21,18,'bugtrack/PwnBB/4','asdf',1,'2013-05-27 05:33:07'),(22,0,'bugtrack/PwnBB/4','l',1,'2013-05-27 06:07:49'),(23,0,'bugtrack/PwnBB/1','asdf',1,'2013-05-27 07:06:34'),(24,0,'bugtrack/Computer/2','asdf',1,'2013-05-27 08:06:51'),(25,0,'bugtrack/Computer/2','test',1,'2013-05-27 10:33:16'),(26,0,'bugtrack/Computer/2','asdf',1,'2013-05-27 10:34:16'),(27,25,'bugtrack/Computer/2','fdsss',1,'2013-05-27 10:34:20'),(28,0,'bugtrack/Computer/2','d',1,'2013-05-27 10:36:42'),(29,0,'bugtrack/House/27','asdf',1,'2013-05-27 17:35:55'),(30,0,'bugtrack/House/27','To make it easier to pay for the first two, your lender provides a service called escrow.  Your monthly mortgage payment includes amounts for taxes and insurance, which the bank holds for you, and then once a year they send the taxes to the tax assessor, and the insurance premium to your insurance agent.  This service is free.  It&#039;s convenient because it spreads the big annual cost over twelve monthly payments, and because the bank takes care of the transactions for you.',1,'2013-05-27 17:36:09'),(31,0,'bugtrack/House/27','Long-term maintenance often runs around 1% of the home value per year, so on a $175,000 home, figure $1750 per year (going up each year with inflation).  If that sounds like a lot, consider that every 15 years or so you&#039;ll need to replace your roof, which will cost several thousand dollars.  (You could get a metal roof which will last your lifetime, like I did, but metal roofs cost more up front.)  ',1,'2013-05-27 17:41:36'),(32,0,'bugtrack/Self/26','6:52pm',1,'2013-05-27 18:55:51'),(33,0,'bugtrack/Self/26','4:45am',1,'2013-05-28 04:50:07'),(34,0,'bugtrack/Littlefoot/18','Go through signup app?',1,'2013-05-28 08:25:12'),(35,0,'bugtrack/Littlefoot/18','Move account validation to $_GET request?',1,'2013-05-28 08:25:14'),(36,35,'bugtrack/Littlefoot/18','domain.com/subdir/... ?acct=login (w/ $_POST[user/pass])\r\ndomain.com/subdir/... ?acct=logout\r\ndomain.com/subdir/... ?acct=validate&amp;hash=adf1234adf1234\r\ndomain.com/subdir/... ?acct=reset&amp;hash=adf1234adf1234',1,'2013-05-28 08:26:48'),(37,34,'bugtrack/Littlefoot/18','Probably not. Should not depend on app external of system/',1,'2013-05-28 08:28:16'),(38,36,'bugtrack/Littlefoot/18','This will eliminate the need for a login/signup app. Move those functions into system/ and turn them on/off. \r\n\r\nAlso, login/signup can be used when a 403 is put up due to ACL',1,'2013-05-28 08:30:16'),(39,36,'bugtrack/Littlefoot/18','I think I like ?action=login, etc better than acct',1,'2013-05-28 08:31:15'),(40,39,'bugtrack/Littlefoot/18','May choose a different word for it, but  really the system is only handling account level requests.',1,'2013-05-28 08:43:08'),(41,0,'bugtrack/TCP/28','That is just from the ajax file manager being broken :C\r\n\r\nI have already fixed it, I just need to release the LF update.',1,'2013-05-28 09:30:27'),(42,0,'bugtrack/Connie/22','This is that Italian place I mentioned the other day (off of N. goldenrod &amp; university). For a few more days they are running a Groupon, should you want to try it. \r\n\r\nStuffed Pizza and Italian Cuisine at Barducci&#039;s Italian Bistro &amp; Pizzeria (52% Off). Four Options Available.\r\n\r\nhttp://www.groupon.com/deals/barducci-s-italian-grill-pizzeria-1?utm_campaign=UserReferral&amp;utm_medium=email&amp;utm_source=uu22160364',1,'2013-05-28 09:47:16'),(43,0,'bugtrack/Littlefoot/31','Reference: Like a file cabinet',1,'2013-05-28 10:15:04'),(44,43,'bugtrack/Littlefoot/31','Names: Archive, Save, Bookmark',1,'2013-05-28 10:17:02'),(45,0,'bugtrack/Littlefoot/31','Ideas to get to later: Ticket on &quot;Backburner&quot; status',1,'2013-05-28 10:55:00'),(46,43,'bugtrack/Littlefoot/31','Need for reference in HQ: Documents, Legal (contracts, etc), File storage, how-to',1,'2013-05-28 10:57:45'),(47,0,'bugtrack/Self/26','11:10am',1,'2013-05-28 11:13:16'),(48,0,'bugtrack/Self/26','4:42pm',1,'2013-05-28 16:45:54'),(49,0,'bugtrack/Littlefoot/35','Base on Last request\r\n\r\n Select * from table where  timestamp &gt; last request',1,'2013-05-28 17:10:18'),(50,0,'TEST','test',1,'2013-05-28 18:26:36'),(51,0,'hq/11/1','test\r\n',1,'2013-05-29 19:28:35'),(52,0,'hq/11/1','asdf',1,'2013-05-29 19:28:38'),(53,0,'hq/11/2','asdf',1,'2013-05-29 20:12:51'),(54,0,'hq/19/3','This has been done. Going to wait until I have the Reference system working, then I will move all this Realtor info to it.\r\n\r\nAgent I spoke with: John?',1,'2013-05-30 11:51:37'),(55,0,'hq/19/3','Financial Advisor\r\nTracy: 321 972-9412',1,'2013-05-30 12:54:55'),(56,54,'hq/19/3','Definitely John',1,'2013-05-30 12:55:06'),(57,0,'hq/19/8','-Tracy\r\nGet credit card under $600 to bump credit score up to 720+',1,'2013-05-30 13:56:18'),(58,57,'hq/19/8','Done. And added another $40 to account for PF Black card annual fee',1,'2013-05-30 14:10:45'),(59,0,'hq/19/7','Sitting: 15 quick, 5 slow',1,'2013-05-30 14:11:44'),(60,0,'hq/19/7','20 quick',1,'2013-05-30 17:55:36'),(61,0,'hq/19/7','20 quick',1,'2013-05-31 08:39:49'),(62,0,'hq/19/7','5 slow',1,'2013-05-31 19:01:38'),(63,0,'hq/19/1','test',1,'2013-06-01 23:54:03'),(64,0,'hq/19/reference/1','asdf\r\n',1,'2013-06-01 23:56:27'),(65,0,'hq/19/reference/1','&lt;Asdf&gt;',1,'2013-06-01 23:56:36'),(66,0,'hq/19/6','Need to move all that data into reference and plan it out.',1,'2013-06-02 00:09:08'),(67,0,'hq/19/3','All this info has been moved to Reference. Ticket closed.',1,'2013-06-02 12:14:01'),(68,0,'hq/19/events/139','test',1,'2013-06-02 14:02:39'),(69,0,'hq/19/events/139','asdf',1,'2013-06-02 14:02:59'),(70,68,'hq/19/events/139','fdsa',1,'2013-06-02 14:03:02'),(71,0,'hq/19/7','20 quick',1,'2013-06-03 09:18:58'),(72,0,'hq/19/12','Have PDFs for 2, 4, and 5\r\n\r\nNeed to check TurboTax for last years return. Have full return from H &amp; R block.\r\n\r\nNeed to scan driver&#039;s license.',1,'2013-06-03 09:28:01'),(73,0,'hq/19/21','approved.',1,'2013-06-05 12:52:08'),(74,0,'hq/19/18','done',1,'2013-06-05 12:56:01'),(75,72,'hq/19/12','scanned drivers license. just need 2011 tax return',1,'2013-06-05 12:56:46'),(76,0,'hq/19/7','20 quick',1,'2013-06-06 13:52:40'),(77,0,'hq/19/7','5 slow',1,'2013-06-06 13:52:42'),(78,0,'hq/19/12','I potentially need connie&#039;s W2s',1,'2013-06-11 17:39:56'),(79,0,'hq/19/6','* Squat\r\n* Dead Lift\r\n* Back Extension\r\n* Calf on smith machine, w/ risers\r\n* Hang w/ Knees up, Kick above face\r\n* Leg extension\r\n* Frog, inverse Frog',1,'2013-06-14 07:36:49'),(80,78,'hq/19/12','if I do, I will open a new ticket :P',1,'2013-06-19 09:43:08'),(81,0,'hq/19/6','Push day\r\n\r\nChest press: 12 reps, 10, 8, taster (round back)\r\nIncline\r\nIncline fly\r\nFlat fly\r\nTraps\r\nShoulder press (machine: seat as if bar across chest)\r\nLateral raise (shoulder, hold for last two)\r\nClose grip bench press (elbows in)\r\nReverse grip press\r\nWrist curl\r\nRope pull down (kneeling)\r\n\r\nPre exhaustion : tire other muscles first\r\n',1,'2013-06-24 14:53:54'),(82,0,'hq/19/6','12 curls\r\n12 zottman curl\r\n12 inner half circle curl (hammer)\r\n12 curl between leg (half preacher)\r\n10 top curls 45 deg\r\n\r\n12 lat pull down\r\n12 standing straight arm pull down\r\n\r\n12 row pull\r\n12 face pull\r\n\r\n12 vertical row. Spine parallel 2 floor.  Elbow to bench.\r\n\r\nRepeat.\r\n',1,'2013-06-24 14:54:02'),(83,0,'hq/20/37','done\r\n\r\nhttp://howtofixservers.com/files/source/scripts/newcpbackup.sh',1,'2013-06-28 09:27:56'),(84,0,'hq/20/25','Ariel&#039;s system isn&#039;t what we are looking for. Putting this on the backburner until we move into the new building where we will be able to host a file system.',1,'2013-06-28 09:29:10'),(85,0,'hq/20/23','Already told Greg about this.',1,'2013-06-28 09:30:29'),(86,0,'hq/20/32','start taking statistics\r\n\r\nreport outliers at 2 sigma',1,'2013-06-28 09:33:15'),(87,86,'hq/20/32','build average per program, update like:\r\n\r\naverage = total/count\r\n\r\n// idk if this is right, prolly not\r\nnewaverage = (average * count) / new total',1,'2013-06-28 09:37:58'),(88,81,'hq/19/6','Front raise shoulder raise',1,'2013-07-01 17:34:02'),(89,0,'hq/19/reference/13','Also I remember a fairy good mother type person hand me either balloons or flowers after I had accomplished a specific task in the dream. \r\n\r\nI also remember looking into apartments.',1,'2013-07-24 09:54:29'),(90,0,'hq/20/59','@ Post server restore\r\n\r\nHey Joe,\r\n\r\nHere is a lit of items commonly missed after a restore:\r\n\r\n    Dedicated IPs\r\n    Addon domains\r\n    Permissions\r\n    Port 26 being disabled\r\n    Missing files\r\n    Softaculous not installed\r\n    Accounts missed\r\n    SSL&#039;s not reinstalled\r\n    CSF config not copied over (mail ports, passive FTP, 3306 port, client ports)\r\n    Passive FTP not enabled\r\n    Remove clone entries from /etc/hosts, update default nameservers from ns1/ns2.dimenoc.com, update server hostname, perform initial WHM setup steps (the pop up when logging into WHM for the 1st time).\r\n    Custom php.ini no longer working due to extension directories changing and different versions installed. (Possibly create a symlink from the old version/location to the new version/location. Bill&#039;s suggestion.)\r\n\r\n\r\nDime181 - https://admin.dimenoc.com/desk/ticket/753793 (Accounts on dedi IP&#039;s not placed back.)\r\nYesenia - https://admin.dimenoc.com/desk/ticket/754539 (Files missing and Dennis F says Addon domains missing as well)\r\nClient Dedi - https://admin.dimenoc.com/desk/ticket/755084 (Port 26 in Service Manager and CSF, mail permissions\r\nSH73 - https://admin.dimenoc.com/desk/ticket/747380 (A whole heap of stuff after no internal ticket opened)\r\n\r\n-- \r\nGreg P.\r\nSupport Supervisor\r\nTransfers Team Lead',1,'2013-08-09 09:19:49'),(91,90,'hq/20/59','Emailed NOC about this.',1,'2013-08-09 09:52:20'),(92,0,'hq/20/59','@ Checkpoint data\r\n\r\nEmailed supervisors',1,'2013-08-09 09:52:40'),(93,91,'hq/20/59','RestoreCentral: https://repo.dimenoc.com/scripts/view/447',1,'2013-08-09 10:17:23'),(94,0,'hq/20/59','LF Video Site\r\n\r\nhttps://github.com/videojs/video.js/blob/master/docs/setup.md',1,'2013-08-09 11:58:32'),(95,0,'hq/19/38','https://secure3.hilton.com/en_US/es/reservation/book.htm?execution=e1s1\r\n\r\nHotel room: 2 x 357+38 = 714.56 for two nights',1,'2013-08-18 08:01:37');
+/*!40000 ALTER TABLE `lf_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_formauth`
+--
+
+DROP TABLE IF EXISTS `lf_formauth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_formauth` (
+  `id` int(11) NOT NULL auto_increment,
+  `user` int(11) NOT NULL,
+  `action` varchar(256) NOT NULL,
+  `token` varchar(40) NOT NULL,
+  `timeout` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=440 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_formauth`
+--
+
+LOCK TABLES `lf_formauth` WRITE;
+/*!40000 ALTER TABLE `lf_formauth` DISABLE KEYS */;
+INSERT INTO `lf_formauth` VALUES (406,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/install/','148e7b165e4a6dd7f0d0224ba7cb29c920eefbf9',1369513465),(404,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/install/','c10f3dffd77a2683ea1d0679849479756862fe31',1369513455),(403,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/update/','60fa7bd2f19fe0ca322839d7d91e86b83d316263',1369513450),(402,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/install/','60fa7bd2f19fe0ca322839d7d91e86b83d316263',1369513450),(401,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/install/','20941f06a9ae9d1b4b8ee8589ed8cecee69895a4',1369513447),(439,1,'?','5d7d27b7a3e582ead752ea168f7914c914a441b4',1369580121),(438,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog.old.4-13-13/addinst/','5d7d27b7a3e582ead752ea168f7914c914a441b4',1369580121),(437,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/pushrelease/lfrelease/','5d7d27b7a3e582ead752ea168f7914c914a441b4',1369580121),(436,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog/addinst/','5d7d27b7a3e582ead752ea168f7914c914a441b4',1369580121),(435,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blogforum/addinst/','5d7d27b7a3e582ead752ea168f7914c914a441b4',1369580121),(408,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/install/','0abf049fb6a8691e715ff41ca2d3a2b5bbec646d',1369513569),(409,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/update/','0abf049fb6a8691e715ff41ca2d3a2b5bbec646d',1369513569),(410,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blogforum/addinst/','c8dbbeffe44292928d1c313fa04c9a3402d386ff',1369577155),(411,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog/addinst/','c8dbbeffe44292928d1c313fa04c9a3402d386ff',1369577155),(412,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/pushrelease/lfrelease/','c8dbbeffe44292928d1c313fa04c9a3402d386ff',1369577155),(413,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog.old.4-13-13/addinst/','c8dbbeffe44292928d1c313fa04c9a3402d386ff',1369577155),(414,1,'?','c8dbbeffe44292928d1c313fa04c9a3402d386ff',1369577155),(415,1,'?','addf437562f3b1eedbf30a382b6db9f65e3d5be3',1369577268),(416,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/acl/add/user/','cb0f7be4f535da43e769f5a345caced96d954b20',1369577271),(417,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/acl/add/inherit/','cb0f7be4f535da43e769f5a345caced96d954b20',1369577271),(418,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/acl/add/global/','cb0f7be4f535da43e769f5a345caced96d954b20',1369577271),(419,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/users/create/','257148c2db2a16604ad8ff093048fc361de96604',1369577272),(420,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blogforum/addinst/','edf094b4b579e9458cc1c3f3d20bbb2925da55c9',1369577273),(421,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog/addinst/','edf094b4b579e9458cc1c3f3d20bbb2925da55c9',1369577273),(422,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/pushrelease/lfrelease/','edf094b4b579e9458cc1c3f3d20bbb2925da55c9',1369577273),(423,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog.old.4-13-13/addinst/','edf094b4b579e9458cc1c3f3d20bbb2925da55c9',1369577273),(424,1,'?','edf094b4b579e9458cc1c3f3d20bbb2925da55c9',1369577273),(425,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blogforum/addinst/','be9e28f5d97148e7be594110a7e6dfbd8aa13b03',1369577321),(426,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog/addinst/','be9e28f5d97148e7be594110a7e6dfbd8aa13b03',1369577321),(427,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/pushrelease/lfrelease/','be9e28f5d97148e7be594110a7e6dfbd8aa13b03',1369577321),(428,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog.old.4-13-13/addinst/','be9e28f5d97148e7be594110a7e6dfbd8aa13b03',1369577321),(429,1,'?','be9e28f5d97148e7be594110a7e6dfbd8aa13b03',1369577321),(430,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blogforum/addinst/','3439dd883dae4454e43e9c2b8941244dc4250933',1369579691),(431,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog/addinst/','3439dd883dae4454e43e9c2b8941244dc4250933',1369579691),(432,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/pushrelease/lfrelease/','3439dd883dae4454e43e9c2b8941244dc4250933',1369579691),(433,1,'http://dev4.bioshazard.com/littlefoot/index.php/admin/apps/manage/blog.old.4-13-13/addinst/','3439dd883dae4454e43e9c2b8941244dc4250933',1369579691),(434,1,'?','3439dd883dae4454e43e9c2b8941244dc4250933',1369579691);
+/*!40000 ALTER TABLE `lf_formauth` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_forum_boards`
+--
+
+DROP TABLE IF EXISTS `lf_forum_boards`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_forum_boards` (
+  `id` int(11) NOT NULL auto_increment,
+  `title` varchar(128) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `category` varchar(128) NOT NULL,
+  `acl` varchar(256) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_forum_boards`
+--
+
+LOCK TABLES `lf_forum_boards` WRITE;
+/*!40000 ALTER TABLE `lf_forum_boards` DISABLE KEYS */;
+INSERT INTO `lf_forum_boards` VALUES (1,'General','General Discussion','Main','none'),(2,'Test Board 2','Testing Board','Main','none'),(3,'Test Board 3','Testing Board','Other Category','none');
+/*!40000 ALTER TABLE `lf_forum_boards` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_forum_posts`
+--
+
+DROP TABLE IF EXISTS `lf_forum_posts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_forum_posts` (
+  `id` int(11) NOT NULL auto_increment,
+  `owner` int(11) NOT NULL,
+  `thread` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `reply` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_forum_posts`
+--
+
+LOCK TABLES `lf_forum_posts` WRITE;
+/*!40000 ALTER TABLE `lf_forum_posts` DISABLE KEYS */;
+INSERT INTO `lf_forum_posts` VALUES (1,1,1,'test',0,'2012-09-01 06:44:10'),(2,1,2,'fdsa',0,'2012-09-15 01:31:25');
+/*!40000 ALTER TABLE `lf_forum_posts` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_forum_threads`
+--
+
+DROP TABLE IF EXISTS `lf_forum_threads`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_forum_threads` (
+  `id` int(11) NOT NULL auto_increment,
+  `subject` varchar(128) NOT NULL,
+  `owner` int(11) NOT NULL,
+  `board` int(11) NOT NULL,
+  `lastpost` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_forum_threads`
+--
+
+LOCK TABLES `lf_forum_threads` WRITE;
+/*!40000 ALTER TABLE `lf_forum_threads` DISABLE KEYS */;
+INSERT INTO `lf_forum_threads` VALUES (1,'first post',1,1,1),(2,'asd`',1,1,2);
+/*!40000 ALTER TABLE `lf_forum_threads` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_frontpage`
+--
+
+DROP TABLE IF EXISTS `lf_frontpage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_frontpage` (
+  `id` int(5) NOT NULL auto_increment,
+  `author` int(5) NOT NULL,
+  `title` varchar(30) NOT NULL,
+  `content` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_frontpage`
+--
+
+LOCK TABLES `lf_frontpage` WRITE;
+/*!40000 ALTER TABLE `lf_frontpage` DISABLE KEYS */;
+/*!40000 ALTER TABLE `lf_frontpage` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_gallery`
+--
+
+DROP TABLE IF EXISTS `lf_gallery`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_gallery` (
+  `id` int(11) NOT NULL auto_increment,
+  `album` varchar(30) NOT NULL,
+  `title` varchar(30) NOT NULL,
+  `description` text NOT NULL,
+  `img` varchar(30) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_gallery`
+--
+
+LOCK TABLES `lf_gallery` WRITE;
+/*!40000 ALTER TABLE `lf_gallery` DISABLE KEYS */;
+INSERT INTO `lf_gallery` VALUES (2,'Actors','Joe Still','asdf asdf asdf safd ','joestill-headshot.jpg'),(3,'Actors','Other Guy','fasdf asd fasdf asdf asd f','AnneHathaway.jpg');
+/*!40000 ALTER TABLE `lf_gallery` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_links`
+--
+
+DROP TABLE IF EXISTS `lf_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_links` (
+  `id` int(6) NOT NULL auto_increment,
+  `include` varchar(19) NOT NULL,
+  `app` varchar(255) NOT NULL,
+  `ini` varchar(512) NOT NULL,
+  `section` varchar(10) NOT NULL,
+  `recursive` tinyint(1) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=250 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_links`
+--
+
+LOCK TABLES `lf_links` WRITE;
+/*!40000 ALTER TABLE `lf_links` DISABLE KEYS */;
+INSERT INTO `lf_links` VALUES (62,'110','pages','admin','content',0),(89,'%','login','','login',0),(58,'108','blog','','content',0),(63,'111','pages','about','content',0),(192,'209','subscribe','','content',0),(191,'199','hq','','content',0),(227,'265','gym','','',0),(131,'177','forum','','content',0),(139,'178','tab','','content',0),(151,'169','pages','7','content',0),(140,'180','wordpress','','content',0),(226,'264','pages','9','content',0),(150,'171','pages','6','content',0),(158,'109','pages','8','content',0),(168,'192','feed','','content',0),(171,'196','gallery','Actors','content',0),(244,'282','forms','','content',0),(175,'194','todo','notes','content',0),(166,'195','calendar','','content',0),(172,'197','pages','9','content',0),(174,'198','todo','task','content',0),(176,'200','hello','','content',0),(177,'201','pages','9','content',0),(178,'202','pages','6','content',0),(179,'203','pages','9','content',0),(182,'205','social','','content',0),(181,'204','commented','','content',0),(190,'206','hq','','content',0),(249,'287','prime','','content',0),(194,'221','pages','6','content',0),(188,'207','todo','newtable','content',0),(193,'','pages','9','content',0),(195,'222','pages','7','content',0),(196,'223','blank','','content',0),(197,'225','blank','','content',0),(198,'227','pages','9','content',0),(199,'233','pages','9','content',0),(200,'237','pages','9','content',0),(201,'239','pages','8','content',0),(202,'240','hello','','content',0),(203,'241','hello','','content',0),(204,'242','hello','','content',0),(205,'243','calendar','','content',0),(206,'245','argue','','content',0),(207,'246','pages','9','content',0),(208,'247','blank','','content',0),(209,'248','mikephp','','content',0),(210,'249','hello','','content',0),(211,'250','notes','','content',0),(212,'251','blank','','content',0),(213,'252','pages','11','content',0),(214,'253','blank','','content',0),(215,'254','blank','','content',0),(216,'255','blank','','content',0),(219,'258','todo','impt','content',0),(246,'284','blog','','content',0),(229,'267','hq2','','content',0),(231,'269','blogforum','inst=Board','content',0),(232,'270','pages','12','content',0),(233,'271','pages','13','content',0),(234,'272','hdask','','content',0),(235,'273','bbcode','','content',0),(239,'277','bugtrack','','content',0),(243,'281','hq','','content',0),(245,'283','shop','','content',0);
+/*!40000 ALTER TABLE `lf_links` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_pages`
+--
+
+DROP TABLE IF EXISTS `lf_pages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_pages` (
+  `id` int(5) NOT NULL auto_increment,
+  `author` int(5) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `content` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_pages`
+--
+
+LOCK TABLES `lf_pages` WRITE;
+/*!40000 ALTER TABLE `lf_pages` DISABLE KEYS */;
+INSERT INTO `lf_pages` VALUES (9,0,'Dev Guide','<p>This is how the backend works.<br /><br /># index.php</p>\r\n<p>define ROOT<br />load install if present<br />apply session per ROOT.\"domain.com\"<br />__construct() and run(); LitteFoot (system/littlefoot.php)&nbsp;<br /><br /># system/littlefoot.php</p>\r\n<p>__construct() {<br />&nbsp;the script timer is started<br />&nbsp;all plugins are loaded<br />&nbsp;auth is applied from $_SESSION<br />&nbsp;the database object is created<br />&nbsp;the settings are pulled from lf_settings (in database)<br />}</p>\r\n<p>run() {<br />&nbsp;request();<br />&nbsp;authenticate();<br />&nbsp;if(\'admin/\' is found in URL) { chdir(system/admin); include \'loader.php\'; return 0; }<br />&nbsp;nav();<br />&nbsp;getcontent();<br />&nbsp;render();<br />}</p>\r\n<p>request() {<br />&nbsp;<br />}</p>'),(5,0,'Hidden Page','<p>This page is linked to a \"hidden\" nav item.</p>'),(6,0,'Select a skin','<p>just give it a click</p>'),(7,0,'Treetops','<p><img src=\"/littlefoot/lf/media/psphacks.png\" alt=\"\" width=\"350\" height=\"19\" /></p>\r\n<p>Treetops :D</p>'),(8,0,'Littlefoot CMS','<p><a href=\"http://littlefootcms.com\">Download Littlefoot</a></p>\r\n<p><a href=\"http://littlefootcms.com/websvn\">Littlefoot SVN Viewer</a></p>'),(10,0,'How does Littlefoot handle URL requests?','<p>When you visit a URL in Littlefoot, there are a series of steps to ensure the proper content is loaded.</p>\r\n<h3>index.php</h3>\r\n<p>In the installation root, you will find index.php and the lf/ folder. The index.php defines ROOT as the lf/ folder, then initializes and starts <a href=\"#LittleFoot\">LittleFoot</a>();</p>\r\n<h3><a id=\"LittleFoot\" href=\"#\">LittleFoot</a>()</h3>\r\n<h4>run()</h4>\r\n<p>This function essentially directs all of the steps to parse the URL request, authenticate, and serve content. request() parses the URL and lets us know if admin/ was requested. authenticate() will log the user in or update the current login. if admin/ is requested, admin is loaded and the script stops. nav() generates the &lt;ul&gt; nested list of navigation items with the help of getnav(). getnav() actually matches the URL request to a nav item and will separate the request into variables if it needs to. For example, if you ask for domain.com/blog/view/2/, getnav() will see that blog/ is an app, change the request from blog/view/2/, to blog/, and push the rest into an array called variables like array(view, 2) so blog can use them to display a specific blog post. There is some ACL stuff in there, but I will cover how that works later. The next method, getcontent(), takes the nav item determined in getnav()</p>\r\n<h4>request()</h4>\r\n<p>The request() method is run first. This method determines the littlefoot installation URL (subdirectory) then parses the REQUEST_URI using regex. It will parse out the subdirectory, check if index.php/ is used, check if admin/ is requested, and then capture the rest of the URL as the actual request to Littlefoot. request() returns true if \'admin/\' is detected in the URL.</p>\r\n<p>So for example, say we ask for [http://domain.com/some/folder/index.php/blog/]. The REQUEST_URI in this case would be \"/some/folder/index.php/blog/\". \"/some/folder/\" is the subdirectory, \"index.php/\" was found, \"admin/\" was not requested, \"blog/\" is the actual request.</p>\r\n<h4>authenticate()</h4>\r\n<p>If the user is not authenticated, it will be set as anonymous by default. If the user is anonymous, check if they are trying to log in, and log them in if they have the proper credentials. I added support for facebook, but it is a little iffy...</p>\r\n<h4>nav()</h4>\r\n<p>Grab all the navigation items from the `actions` table in the database. Loop through all the items and create an array like $menu[$nav_parent][$nav_position] = $nav_data. This will create a multi-dimensional array with the first level being the parent and the second being the position. We take this array and recursively loop through each \"parent\" using getnav() and passing this function the whole menu array as well as the current parent we are focusing on.</p>\r\n<h4>getnav()</h4>'),(11,0,'eFlip','<p>eFlipDomains | Your upside down domain right side up!</p>\r\n<!-- Le styles -->\r\n<script type=\"text/javascript\">// <![CDATA[\r\n(function(d, s, id) {\r\n  var js, fjs = d.getElementsByTagName(s)[0];\r\n  if (d.getElementById(id)) return;\r\n  js = d.createElement(s); js.id = id;\r\n  js.src = \"//connect.facebook.net/en_US/all.js#xfbml=1&appId=201617616571449\";\r\n  fjs.parentNode.insertBefore(js, fjs);\r\n}(document, \'script\', \'facebook-jssdk\'));\r\n// ]]></script>\r\n<div class=\"container\">\r\n<div class=\"hero-unit-header\"><img src=\"/index.php/admin/apps/manage/pages/new/img/logo.png\" alt=\"logo\" /></div>\r\n<div class=\"hero-unit\">\r\n<h3>// Featured Projects</h3>\r\n<ul class=\"thumbnails\">\r\n<li class=\"span4\"><a class=\"thumbnail\" href=\"http://www.buildpcs.com/\" target=\"_blank\"> <img src=\"/index.php/admin/apps/manage/pages/new/img/bpc.png\" alt=\"buildpcs\" /></a></li>\r\n<li class=\"span4\"><a class=\"thumbnail\" href=\"http://erudioinc.com/\" target=\"_blank\"> <img src=\"/index.php/admin/apps/manage/pages/new/img/erudio_eflip.png\" alt=\"erudio\" /></a></li>\r\n<li class=\"span4\"><a class=\"thumbnail\" href=\"http://sorented.com/\" target=\"_blank\"> <img src=\"/index.php/admin/apps/manage/pages/new/img/so_rented_eflip.png\" alt=\"sorented\" /></a></li>\r\n</ul>\r\n<hr />\r\n<div class=\"well row\" style=\"background-color: #eeeeee; margin-left: 0px; margin-top: 20px;\">\r\n<div class=\"pull-left\" style=\"width: 20%;\">\r\n<h3>// What we do.</h3>\r\n<ul class=\"unstyled\">\r\n<li>- Website Design</li>\r\n<li>- Web Development</li>\r\n<li>- Website Hosting</li>\r\n<li>- Company Branding</li>\r\n<li>- Internet Marketing</li>\r\n</ul>\r\n</div>\r\n<div class=\"pull-right\" style=\"width: 70%;\">\r\n<h3>// Who we are.</h3>\r\n<p>The idea behind eFlipDomains was to provide a virtual one-stop shop, where business owners could develop a dominant online presence in the modern market. Our team came together with the right blend to acheive those goals, and now we have the tools to help you reach yours.</p>\r\n</div>\r\n</div>\r\n<hr />\r\n<h3>// Our Team</h3>\r\n<ul class=\"thumbnails\">\r\n<li class=\"span4\"><a class=\"thumbnail\" href=\"http://claytonfryar.com/\" target=\"_blank\"> <img src=\"/index.php/admin/apps/manage/pages/new/img/clay.jpg\" alt=\"clay\" /></a>\r\n<h4 style=\"text-align: center;\">Clay</h4>\r\n</li>\r\n<li class=\"span4\"><a class=\"thumbnail\" href=\"http://animalvsmachine.com/\" target=\"_blank\"> <img src=\"/index.php/admin/apps/manage/pages/new/img/mike.jpg\" alt=\"mike\" /></a>\r\n<h4 style=\"text-align: center;\">Mike</h4>\r\n</li>\r\n<li class=\"span4\"><a class=\"thumbnail\" href=\"http://bioshazard.com/\" target=\"_blank\"> <img src=\"/index.php/admin/apps/manage/pages/new/img/joe.jpg\" alt=\"joe\" /></a>\r\n<h4 style=\"text-align: center;\">Joe</h4>\r\n</li>\r\n</ul>\r\n<hr />\r\n<div class=\"row\">\r\n<div class=\"well pull-left\" style=\"background-color: #eeeeee; width: 63%; margin-top: 20px; margin-left: 20px;\"><br />\r\n<div style=\"text-align: center;\"><strong>Any Questions?</strong> <small>Contact us now!</small></div>\r\n<hr /><br />\r\n<div class=\"contact_form\"><form id=\"form1\" action=\"index.php\" method=\"post\" name=\"form1\">\r\n<div style=\"width: 270px; float: left;\">\r\n<p><label>Name<span class=\"mandatory\">*</span></label> <input class=\"required\" type=\"text\" name=\"name\" /></p>\r\n<p><label>Email<span class=\"mandatory\">*</span></label> <input class=\"required email\" type=\"text\" name=\"email\" /></p>\r\n</div>\r\n<div style=\"margin-left: 270px;\">\r\n<p><label>URL</label> <input class=\"required\" type=\"text\" name=\"url\" /></p>\r\n<p><label>Subject<span class=\"mandatory\">*</span></label> <input class=\"required\" type=\"text\" name=\"subject\" /></p>\r\n</div>\r\n<p><label>Message<span class=\"mandatory\">*</span></label> <textarea class=\"required\" style=\"height: 120px;\" name=\"message\" rows=\"10\" cols=\"40\"></textarea></p>\r\n<div class=\"pull-left\"><label>Verification Code: <input class=\"code required\" type=\"text\" name=\"ver_code\" /></label></div>\r\n<p><input class=\"submit pull-right\" type=\"submit\" name=\"submit\" value=\"Send\" /></p>\r\n</form></div>\r\n</div>\r\n<div class=\"pull-right\" style=\"width: 25%; margin-top: 30px;\">\r\n<h3>Ready to start a project?</h3>\r\n<p>Please use the form to the left or the contact info below to reach us!</p>\r\n<hr />\r\n<h3>eFlipDomains, LLC</h3>\r\n<p>12472 Lake Underhill Rd. #121<br /> Orlando, FL 32828 US</p>\r\n<p>t. 239.464.7067<br /> t. 386.589.4446<br /> e. pr@eflipdomains.com</p>\r\n<hr /></div>\r\n<!-- span4 --></div>\r\n</div>\r\n<div class=\"footer-unit hero-footer\">\r\n<div class=\"row\">\r\n<div class=\"span4 pull-left\">\r\n<h3>// Projects</h3>\r\n<ul class=\"unstyled\">\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://buildpcs.com\" target=\"_blank\">BuildPCs.com</a></li>\r\n<li><span class=\"label label-warning\">DEV</span> <a href=\"http://codingfornoobs.com\" target=\"_blank\">CodingForNoobs.com</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://computerflorida.com\" target=\"_blank\">ComputerFlorida.com</a></li>\r\n<li><span class=\"label label-warning\">DEV</span> <a href=\"http://readywebspace.com\" target=\"_blank\">ReadyWebSpace.com</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://talkhosting.net\" target=\"_blank\">TalkHosting.net</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://thelinuxnoob.com\" target=\"_blank\">TheLinuxNoob.com</a></li>\r\n</ul>\r\n</div>\r\n<div class=\"span4 pull-left\">\r\n<h3>// Clients</h3>\r\n<ul class=\"unstyled\">\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://defend-foreclosure.com\" target=\"_blank\">Defend-Foreclosure.com</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://erudioinc.com\" target=\"_blank\">ErudioInc.com</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://grimestopperscleaning.com\" target=\"_blank\">GrimeStoppersCleaning.com</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://sorented.com\" target=\"_blank\">SoRented.com</a></li>\r\n<li><span class=\"label label-success\">LIVE</span> <a href=\"http://youth-hoops.org\" target=\"_blank\">Youth-Hoops.org</a></li>\r\n</ul>\r\n</div>\r\n<!--span4 -->\r\n<div class=\"span4 pull-right\">\r\n<div class=\"footer-social\"><a href=\"https://www.facebook.com/eFlipDomains\"><img src=\"/index.php/admin/apps/manage/pages/new/img/facebook.png\" alt=\"facebook\" /></a><a href=\"http://twitter.com/#!/eflipdomains\"><img src=\"/index.php/admin/apps/manage/pages/new/img/twitter.png\" alt=\"twitter\" /></a><a href=\"/index.php/admin/apps/manage/pages/new/\"><img src=\"/index.php/admin/apps/manage/pages/new/img/google.png\" alt=\"google\" /></a></div>\r\n</div>\r\n<!--span4 --></div>\r\n</div>\r\n</div>\r\n<!-- Le javascript\r\n    ================================================== --> <!-- Placed at the end of the document so the pages load faster -->\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/jquery.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-transition.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-alert.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-modal.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-dropdown.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-scrollspy.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-tab.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-tooltip.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-popover.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-button.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-collapse.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-carousel.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/js/bootstrap-typeahead.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/includes/js/jquery.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/includes/js/jquery.form.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/includes/js/jquery.validate.js\"></script>\r\n<script type=\"text/javascript\" src=\"/index.php/admin/apps/manage/pages/new/includes/js/script.js\"></script>'),(12,0,'hash test','<p>These are test pages to house all the random tests I do</p>\r\n<p>&nbsp;</p>\r\n<p><a id=\"testhash\">Test</a></p>'),(13,0,'HD','<p>These are apps for use with HostDime</p>');
+/*!40000 ALTER TABLE `lf_pages` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_settings`
+--
+
+DROP TABLE IF EXISTS `lf_settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_settings` (
+  `id` int(5) NOT NULL auto_increment,
+  `var` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `val` varchar(50) character set utf8 collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_settings`
+--
+
+LOCK TABLES `lf_settings` WRITE;
+/*!40000 ALTER TABLE `lf_settings` DISABLE KEYS */;
+INSERT INTO `lf_settings` VALUES (1,'default_skin','treetops'),(2,'maintenance_mode','off'),(5,'rewrite','off'),(6,'nav_class','nav'),(7,'force_url','http://dev4.bioshazard.com/littlefoot/'),(8,'cache','off'),(9,'debug','off'),(10,'signup','disabled'),(11,'simple_cms','_lfcms');
+/*!40000 ALTER TABLE `lf_settings` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: bios_lf
+-- ------------------------------------------------------
+-- Server version	5.0.95
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `lf_users`
+--
+
+DROP TABLE IF EXISTS `lf_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lf_users` (
+  `id` int(5) NOT NULL auto_increment,
+  `user` varchar(11) NOT NULL,
+  `pass` varchar(40) NOT NULL,
+  `email` varchar(25) NOT NULL,
+  `display_name` varchar(25) NOT NULL,
+  `last_request` varchar(20) NOT NULL,
+  `status` varchar(15) NOT NULL,
+  `access` varchar(15) NOT NULL,
+  `hash` varchar(40) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lf_users`
+--
+
+LOCK TABLES `lf_users` WRITE;
+/*!40000 ALTER TABLE `lf_users` DISABLE KEYS */;
+INSERT INTO `lf_users` VALUES (1,'bios','e83467caaa131dcbc13a46c54556c6c945c02ada','joe@bioshazard.com','BIOS','2012-08-10 17:41:15','valid','admin','');
+/*!40000 ALTER TABLE `lf_users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2013-09-10 18:15:40
