@@ -98,6 +98,14 @@ function apply_ajax()
 $(document).ready(function() {
 	apply_ajax();
 });*/
+
+
+$(document).ready(function() {
+	//$('#actions li > ol').hide('slow');
+	$('#actions li').click(function(){
+		$(this).find('ol').hide('slow');
+	});
+});
 </script>
 
 <div id="actions">

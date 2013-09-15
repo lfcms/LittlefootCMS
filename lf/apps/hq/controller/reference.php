@@ -235,24 +235,21 @@ class reference extends app
 	{
 		if(count($_POST) > 0)
 		{
-			$result = $this->db->query("
-				INSERT INTO hq_reference (`id`, `project`, `category`, `title`, `content`, `owner_id`, `date`, `status`)
-				VALUES (
-					NULL, '".$this->ini."', '".mysql_real_escape_string($_POST['category'])."',
-					'New Article', 
-					'New Content',
-					".$this->request->api('getuid').",
-					NOW(),
-					'open'
-				)
-			");
 			
-			$id = $this->db->last();
+			$cat = $this->db->fetch("SELECT * FROM hq_categories WHERE project = ".$this->ini." AND type = 'reference' AND category = '".mysql_real_escape_string($_POST['category'])."'");
 			
-			redirect302($this->lf->appurl.$this->ini.'/reference/view/'.$id.'/edit');
+			if(!$cat)
+			{
+				$this->db->query("
+					INSERT INTO hq_categories (`id`, `project`, `type`, `category`)
+					VALUES (NULL, '".$this->ini."', 'reference', '".mysql_real_escape_string($_POST['category'])."')
+				");
+				
+				$id = $this->db->last();
+			}
 		}
 		
-		redirect302();
+		redirect302($this->lf->appurl.$this->ini.'/reference/cat/'.$id);
 	}
 }
 

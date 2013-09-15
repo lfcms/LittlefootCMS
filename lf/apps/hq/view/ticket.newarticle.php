@@ -1,6 +1,6 @@
 <?php 
 
-echo '<h3><a href="%appurl%">'.$this->ini.'</a> / New Article</a></h3>';
+echo '<h3>New Ticket</a></h3>';
 ?>
 
 <div id="categories">
@@ -10,34 +10,33 @@ echo '<h3><a href="%appurl%">'.$this->ini.'</a> / New Article</a></h3>';
 	<?php if($cats)
 		foreach($cats as $category)
 		{
-			$category = $category['category'];
+			$category = $category['id'];
 			
-			echo '<li>[<a href="%appurl%rmcategory/'.urlencode($category).'/">x</a>] 
-				<a href="%appurl%cat/'.urlencode($category).'/">'.$category.'</a></li>';
+			echo '<li><a href="%appurl%cat/'.$category.'/">%category:'.$category.'%</a></li>';
 		}
 	?>
 	</ul>
 </div>
 
-<style type="text/css">
-	#note { padding-right: 20px; }
-	#note .title { padding: 5px; font-size: 22px; width: 100%; margin-top: 10px; }
-	#note .content { border: 1px solid #000; margin: 10px 0; padding: 10px; }
-	#note .edit { border: 1px solid #000; margin: 10px 0; padding: 10px; width: 100%; }
-	#postlist ul { margin: 0; padding: 0; }
-	#postlist ul li { border-left: dotted 1px #000; padding: 5px 10px; margin: 5px 0;}
-	#postlist > ul > li { border: none; padding-left: 0; }
-</style>
-
-<div id="note">
-	<style type="text/css">
-		.app-bugtrack { padding: 5px; }
-		.add_thread .title { margin-bottom: 10px; width: 100%; font-size:20px; }
-	</style>
+<div id="note" class="new_ticket">
 	<form action="%appurl%create/" method="post" class="add_thread">
 		<input type="submit" class="submit" value="Post" /><br />
 		<input type="text" name="title" value="New Title" class="title" />
-		Category: <select name="category" id=""><?php echo $cat_options; ?></select> or <input type="text" name="newcat" placeholder="New Category" /><br /><br />
+		
+		Category: <select name="category" id=""><?php echo $cat_options; ?></select> or <input type="text" name="newcat" placeholder="New Category" /> 
+		Assigned: <select name="assigned" id=""><?=$user_options;?></select>
+		Flagged: <select name="flagged" id=""><?php 
+			$flags = array('none', 'urgent');
+			foreach($flags as $flag)
+				echo '<option value="'.$flag.'">'.ucfirst($flag).'</option>';
+		?></select>
+		Status: <select name="status" id=""><?php 
+			$options = array('open', 'closed', 'backburner');
+			foreach($options as $option)
+				echo '<option value="'.$option.'">'.ucfirst($option).'</option>';
+		?></select>
+		
+		<br /><br />
 		<textarea name="content"></textarea><br />
 		<input type="submit" class="submit" value="Post" />
 	</form>

@@ -67,4 +67,6 @@ if(!$simple) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, '
 $signup = $db->fetch("SELECT * FROM lf_settings WHERE var = 'signup'");
 if(!$signup) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'signup', 'disabled')");
 
-echo 'Upgrade complete. Return to <a href="'.$_SERVER['SERVER_REFERER'].'">LittlefootCMS</a>';
+echo 'Upgrade complete. <a href="?exit">Click here to remove upgrade utility and return to LittlefootCMS.';
+
+if(!isset($_GET['exit'])) exit();

@@ -1,5 +1,0 @@
-[01-Jan-2013 06:48:10 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/bios/domains/dev4.bioshazard.com/littlefoot/lf/apps/subscribe/model/ipn.php on line 53
-[01-Jan-2013 07:38:36 UTC] PHP Warning:  mysql_connect(): Access denied for user 'DB_USER'@'localhost' (using password: YES) in /home/bios/domains/dev4.bioshazard.com/littlefoot/lf/apps/subscribe/model/ipn.php on line 107
-[01-Jan-2013 17:20:13 UTC] PHP Warning:  mysql_connect(): Access denied for user 'DB_USER'@'localhost' (using password: YES) in /home/bios/domains/dev4.bioshazard.com/littlefoot/lf/apps/subscribe/model/ipn.php on line 107
-[01-Jan-2013 18:22:41 UTC] PHP Warning:  mysql_connect(): Access denied for user 'DB_USER'@'localhost' (using password: YES) in /home/bios/domains/dev4.bioshazard.com/littlefoot/lf/apps/subscribe/model/ipn.php on line 107
-[14-Apr-2013 03:01:49 UTC] Invalid HTTP request method.

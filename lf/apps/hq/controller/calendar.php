@@ -6,28 +6,33 @@ class calendar extends app
 	
 	public function view($vars)
 	{
-		?>
-		<style type="text/css">
-			.app-calendar a { color: #000 !important; }
-		</style>
-		<?php
-		
+		ob_start();
 		$event = $this->db->fetch('SELECT * FROM hq_events WHERE id = '.intval($vars[1]));
-		
-		echo '<h3>
-			<a href="%appurl%newevent/">New</a> |
-			<a href="%appurl%agenda/">Agenda</a> | 
-			<a href="%appurl%">Calendar</a> / 
-			<a href="%appurl%viewdate/'.date('Y-m-d', strtotime($event['date'])).'/">'.date('F j, Y', strtotime($event['date'])).'</a> / 
-			<a href="%appurl%'.implode('/', $vars).'/">'.$event['title'].'</a>
-		</h3>';
-		echo '<p><strong>Date: '.date('F j, Y', strtotime($event['date'])).' @ '.date('g:m a', strtotime($event['date'])).'</strong></p>';
+		echo '<div id="calendar_nav">
+			<a class="new_event" href="%appurl%newevent/">New Event</a>
+			<a class="view_agenda" href="%appurl%agenda/">Agenda</a>
+			<span class="calendar_date_nav">
+				<a href="%appurl%viewdate/'.date('Y-m-d', strtotime($event['date'])).'/">'.date('F j, Y', strtotime($event['date'])).'</a> / 
+				<a href="%appurl%'.implode('/', $vars).'/">'.$event['title'].'</a>
+			</span>
+		</div>';
+		echo '<p>
+			[<a href="%appurl%edit/'.$event['id'].'/">edit</a>] 
+			<strong>Date: '.date('F j, Y', strtotime($event['date'])).' @ '.date('g:m a', strtotime($event['date'])).'</strong> 
+			{like:event/'.$event['id'].'}
+		</p>';
 		if($event['ticket_id'] > 0)
 			echo '<p><strong>Ticket: <a href="'.$this->lf->appurl.$this->ini.'/tickets/view/'.$event['ticket_id'].'/">'.$event['ticket_id'].'</a></strong></p>';
 		echo '<p>'.$event['note'].'</p>';
 		
 		$this->comment_id = 'hq/'.$this->ini.'/events/'.intval($vars[1]);
 		$this->comment();
+		$data = ob_get_clean();
+		
+		
+		include '../like/controller/like.php';
+		$like = new like($this->request, $this->db);
+		echo $like->parse($data);
 	}
 	
 	public function comment($vars = array(''))
@@ -39,11 +44,6 @@ class calendar extends app
 	
 	public function viewdate($vars)
 	{
-		?>
-		<style type="text/css">
-			.app-calendar a { color: #000 !important; }
-		</style>
-		<?php
 		if(!isset($vars[1]) || !preg_match('/^(\d{4})(?:-0?(\d{1,2}))?(?:-0?(\d{1,2}))?$/', $vars[1], $match)) return $this->showcalendar();
 		
 		if(isset($match[3])) // day requested
@@ -58,16 +58,20 @@ class calendar extends app
 			
 			if($event == array())
 			{
-				echo '<h3>
-					<a href="%appurl%newevent/">New</a>
-					| <a href="%appurl%agenda/">Agenda</a>
+				echo '<div id="calendar_nav">
+					<a class="new_event" href="%appurl%newevent/">New Event</a>
+					| <a class="view_agenda" href="%appurl%agenda/">Agenda</a>
 					| <a href="%appurl%">Calendar</a> / '.date('F j, Y', strtotime($vars[1])).'
-				</h3>';
+				</div>';
 				echo '<p>No events found</p>';
 			}
 			else
 			{
-				echo '<h3><a href="%appurl%newevent/">New</a> |<a href="%appurl%agenda/">Agenda</a> | <a href="%appurl%">Calendar</a> / '.date('F d, Y', strtotime($event[0]['date'])).'</h3>';
+				echo '<div id="calendar_nav">
+					<a class="new_event" href="%appurl%newevent/">New Event</a>
+					<a class="view_agenda" href="%appurl%agenda/">Agenda</a>
+					<a href="%appurl%">Calendar</a> / '.date('F d, Y', strtotime($event[0]['date'])).'
+				</div>';
 				echo '<ul>';
 				foreach($event as $item)
 					echo '<li><a href="%appurl%view/'.$item['id'].'/">'.$item['title'].' @ '.date('g:m a', strtotime($item['date'])).'</a></li>';
@@ -87,17 +91,13 @@ class calendar extends app
 	private function showyear($year = '')
 	{
 		echo '
-			<style type="text/css">
-				#month-grid a { border: 1px solid #000; display: block; width: 20%; float: left; padding: 15px; margin: 5px; }
-				#month-grid a:hover { background: #999 }
-			</style>
-			<h3>
-				[<a href="%appurl%newevent/">New</a>] | 
-				<a href="%appurl%agenda/">Agenda</a> | <a href="%appurl%">Calendar</a> /
+			<div id="calendar_nav">
+				<a class="new_event" href="%appurl%newevent/">New Event</a> | 
+				<a class="view_agenda" href="%appurl%agenda/">Agenda</a> | <a href="%appurl%">Calendar</a> /
 				<a href="%appurl%viewdate/'.($year-1).'/"><</a> 
 				<a href="%appurl%viewdate/'.($year+1).'/">></a> 
 				<a href="%appurl%viewdate/'.$year.'/">'.$year.'</a>
-			</h3>
+			</div>
 			<div id="month-grid">
 		';
 		for($i = 1; $i <= 12; $i++)
@@ -128,20 +128,11 @@ class calendar extends app
 		// Pull calendar events
 		$sql = "
 			SELECT * FROM hq_events
-			WHERE date BETWEEN '".$calendar[3].'-'.sprintf('%02d', $this_month)."-01' 
-				AND '".$calendar[3].'-'.sprintf('%02d', $this_month).'-'.$calendar[1]."'
+			WHERE date BETWEEN '".$calendar[3].'-'.sprintf('%02d', $this_month)."-01 00:00:00' 
+				AND '".$calendar[3].'-'.sprintf('%02d', $this_month).'-'.$calendar[1]." 23:59:59'
 				AND project = ".intval($this->ini)."
 			ORDER BY date
-		";/*
-		$sql = "
-			SELECT *, note as title
-			FROM todo_task
-			WHERE
-				owner = ".$this->request->api('getuid')." AND
-				date BETWEEN '".$calendar[3].'-'.$this_month."-01' 
-					AND '".$calendar[3].'-'.$this_month.'-'.$calendar[1]."'
-			ORDER BY date
-		";*/
+		";
 		
 		$this->db->query($sql);
 		while($row = $this->db->fetch())
@@ -153,25 +144,16 @@ class calendar extends app
 		else $first_calendar_day = ($last_month_days - $calendar[0]) + 1; // +1 to offset starting at 0
 		
 		echo '
-			<style type="text/css">
-				.prev { background: #987; }
-				.cur { background: #897; }
-				.next { background: #789; }
-				.today { background: #FFF; }
-				#cal { border: 1px #000 solid; }
-				#cal td { width: 14%; vertical-align:top; }
-				#cal th { text-align: center; }
-				#cal a { color: #000; }
-				/*.mine { background: #CCC; }*/
-			</style>
 			
-			<h3>
-				[<a href="%appurl%newevent/">New</a>] | <a href="%appurl%agenda/">Agenda</a> | 
-				Calendar / 
-				<a href="%appurl%viewdate/'.$prev_year.'-'.sprintf('%02d', $prev_month).'/"><</a> 
-				<a href="%appurl%viewdate/'.$next_year.'-'.sprintf('%02d', $next_month).'/">></a>
-				<a href="%appurl%viewdate/'.$calendar[3].'-'.$this_month.'/">'.$calendar[4].'</a> <a href="%appurl%viewdate/'.$calendar[3].'/">'.$calendar[3].'</a>
-			</h3>
+			<div id="calendar_nav">
+				<a class="new_event" href="%appurl%newevent/">New Event</a>
+				<a class="view_agenda" href="%appurl%agenda/">Agenda</a>
+				<span class="calendar_date_nav">
+					<a href="%appurl%viewdate/'.$prev_year.'-'.sprintf('%02d', $prev_month).'/"><</a> 
+					<a href="%appurl%viewdate/'.$next_year.'-'.sprintf('%02d', $next_month).'/">></a>
+					<a href="%appurl%viewdate/'.$calendar[3].'-'.$this_month.'/">'.$calendar[4].'</a> <a href="%appurl%viewdate/'.$calendar[3].'/">'.$calendar[3].'</a>
+				</span>
+			</div>
 		';
 		
 		$end = false; // to end display
@@ -179,13 +161,13 @@ class calendar extends app
 		$scope = 'prev'; // start with previous month
 		
 		echo '
-			<table id="cal" width="100%">
+			<table id="cal">
 				<tr><th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th></tr>
 		';
 		while(!$end) 
 		{
 			$weekday = 1;
-			echo '<tr height="125px">';
+			echo '<tr>';
 			while($weekday <= 7) // loop through sunday - saturday
 			{
 				if($scope == 'prev' && $day > $last_month_days)
@@ -226,11 +208,11 @@ class calendar extends app
 	
 	public function agenda($vars)
 	{
-		echo '<h3>
-				[<a href="%appurl%newevent/">New</a>] | 
-				Agenda | 
-				<a href="%appurl%">Calendar</a>
-			</h3>';
+		echo '<div id="calendar_nav">
+				<a class="new_event" href="%appurl%newevent/">New Event</a>
+				<a class="view_agenda" href="%appurl%agenda/">Agenda</a>
+				<a class="back2calendar" href="%appurl%">Back to calendar</a>
+			</div>';
 		$events = $this->db->fetchall('SELECT * FROM hq_events WHERE date > DATE(NOW()) AND project = '.intval($this->ini).' ORDER BY date ASC');
 		
 		foreach($events as $event)
@@ -251,7 +233,7 @@ class calendar extends app
 		<script src="%relbase%lf/lib/jquery-ui-timepicker-addon.js"></script> 
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
 		
-		<h3>Calendar / New Event<?php echo $ticket; ?></h3>
+		<div id="calendar_nav">Calendar / New Event<?php echo $ticket; ?></div>
 		
 		<form action="%appurl%createevent/" method="post">
 			<ul>
@@ -290,6 +272,67 @@ class calendar extends app
 		$id = $this->db->last();
 		
 		redirect302($this->lf->appurl.$this->ini.'/calendar/view/'.$id);
+	}
+	
+	public function edit($vars)
+	{
+		$edit = $this->db->fetch('SELECT * FROM hq_events WHERE id = '.intval($vars[1]));
+		
+		readfile(ROOT.'system/lib/tinymce/js.html');
+		?>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script> -->
+		<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script> 
+		<script src="%relbase%lf/lib/jquery-ui-timepicker-addon.js"></script> 
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+		
+		<div id="calendar_nav">Calendar / Edit Event [<a onclick="return confirm('Do you really want to delete this event?');" href="%appurl%rm/<?=$vars[1];?>/">delete</a>]</div>
+		
+		<form action="%appurl%updateevent/<?=$vars[1];?>/" method="post">
+			<ul>
+				<li>Title: <input type="text" name="title" value="<?=$edit['title'];?>" /></li>
+				<li>Note: <textarea name="note" cols="30" rows="10"><?=$edit['note'];?></textarea></li>
+				<li>Date: <input type="text" id="datepicker" name="date" value="<?=$edit['date'];?>" /></li>
+				<li>Ticket ID: <input name="ticket_id" type="text" value="<?=$edit['ticket_id'];?>" /></li>
+				<li><input type="submit" value="Update Event" /></li>
+			</ul>
+		</form>
+		
+		<script type="text/javascript">
+		$("#datepicker").datetimepicker({
+			dateFormat: "yy-mm-dd",
+			timeFormat: "HH:mm:ss"
+		});
+		</script>
+		<?php
+	}
+	
+	public function updateevent($vars)
+	{	
+		$this->db->query("UPDATE hq_events SET
+			title = '".mysql_real_escape_string($_POST['title'])."',
+			note = '".mysql_real_escape_string($_POST['note'])."',
+			date = '".mysql_real_escape_string($_POST['date'])."',
+			ticket_id = ".intval($_POST['ticket_id'])."
+			WHERE id = ".intval($vars[1])
+		);
+		
+		redirect302($this->lf->appurl.$this->ini.'/calendar/view/'.$vars[1]);
+	}
+	
+	public function rm($vars)
+	{
+		$this->db->query('DELETE FROM hq_events WHERE id = '.intval($vars[1]));
+		redirect302($this->lf->appurl.$this->ini.'/calendar/');
+	}
+	
+	public function like($vars = array(''))
+	{
+		// $vars[1] == unlike, auditlog
+		
+		$vars = array_slice($vars, 1);
+		//if(!isset($this->comment_id)) $this->comment_id = $_POST['inst'];
+		echo $this->lf->extmvc('like', 'like/like', 'likeinst'/*$this->comment_id*/, $vars);
 	}
 }
 
