@@ -36,7 +36,7 @@
     <body>
                 <div class="userbar">
                         <header>
-                                <h1>Littlefoot CMS - NEW BRANCH</h1>
+                                <h1>Littlefoot CMS</h1>
                         </header>
                         <div id="greeting">
                                 Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Logout</a>)
