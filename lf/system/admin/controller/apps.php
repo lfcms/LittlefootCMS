@@ -240,7 +240,7 @@ class apps
 		// $var[0] = 'manage'
 		$app_name = $var[1];
 		
-		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>';
+		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin / <a href="%appurl%manage/'.$app_name.'/preview/">Preview</a></h2>';
 		$var = array_slice($var, 2); // pass the rest of the vars to the admin.php script
 		
 		$oldvars = $this->request->vars;
@@ -249,23 +249,34 @@ class apps
 		
 		// manage
 		preg_match('/[a-z0-9]+/', $this->request->action[2], $matches);		
-		$app = $this->pwd.$matches[0];
+		$app_path = $this->pwd.$matches[0];
 		
 		$preview = 'admin';
-		if(isset($var[0]) && $var[0] == 'preview') $preview = 'index';
+		$admin = true;
+		$urlpreview = '';
+		if(isset($var[0]) && $var[0] == 'preview') 
+		{
+			$preview = 'index';
+			$admin = false;
+			$var = array_slice($var, 1);
+			$urlpreview = 'preview/';
+		}
 		
 		ob_start();
-		if(is_file($app.'/'.$preview.'.php'))
+		if(is_file($app_path.'/'.$preview.'.php'))
 		{ 
-			$old = getcwd(); chdir($app);
+			$old = getcwd(); chdir($app_path);
 			$database = $this->dbconn;
-			$this->request->appurl = $this->request->base.'apps/manage/'.$app_name.'/';
-			include($preview.'.php');
+			$this->request->appurl = $this->request->base.'apps/manage/'.$app_name.'/'.$urlpreview;
+			
+			echo $this->request->loadapp($app_name, $admin, NULL, $var);
+			
+			//include($preview.'.php');
 			chdir($old);
 		}
 		
 		$this->request->vars = $oldvars;
-		return str_replace('%appurl%', '%appurl%manage/'.$app_name.'/', ob_get_clean());
+		return str_replace('%appurl%', '%appurl%manage/'.$app_name.'/'.$urlpreview, ob_get_clean());
 	}
 	
 	public function download($var)

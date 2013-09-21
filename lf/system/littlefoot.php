@@ -863,6 +863,29 @@ class Littlefoot
 		return $return;
 	}
 	
+	// mount, app/controller, $ini, $vars
+	public function loadapp($app, $admin = false, $ini ='', $vars = array(''))
+	{
+		$old = $this->vars;
+		$this->vars = $vars;
+		$var = $vars; // backward compatible
+		
+		$this->request = $this; // backward compatible
+		$cwd = getcwd();
+		chdir(ROOT.'apps/'.$app);
+		
+		$_app['ini'] = $ini;
+		
+		if($admin) $file = 'admin.php';
+		else $file = 'index.php';
+		
+		if(is_file($file)) include $file;
+		else echo 'No such file';
+		
+		chdir($cwd);
+		$this->vars = $old;
+	}
+	
 	// Backward compatible
 	public function apploader($load, $ini = '', $vars = NULL) { return $this->mvc($load, $ini, $vars); }
 	
