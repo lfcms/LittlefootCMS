@@ -212,7 +212,7 @@ class Littlefoot
 				return 0;
 			}
 		}
-			
+		
 		$this->appurl = $this->base.implode('/', $this->action).'/';
 		
 		// apply acl, check auth for current page.

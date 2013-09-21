@@ -237,7 +237,9 @@ class apps
 	
 	public function manage($var)
 	{
+		// $var[0] = 'manage'
 		$app_name = $var[1];
+		
 		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>';
 		$var = array_slice($var, 2); // pass the rest of the vars to the admin.php script
 		
@@ -249,13 +251,16 @@ class apps
 		preg_match('/[a-z0-9]+/', $this->request->action[2], $matches);		
 		$app = $this->pwd.$matches[0];
 		
+		$preview = 'admin';
+		if(isset($var[0]) && $var[0] == 'preview') $preview = 'index';
+		
 		ob_start();
-		if(is_file($app.'/admin.php'))
+		if(is_file($app.'/'.$preview.'.php'))
 		{ 
 			$old = getcwd(); chdir($app);
 			$database = $this->dbconn;
 			$this->request->appurl = $this->request->base.'apps/manage/'.$app_name.'/';
-			include('admin.php');
+			include($preview.'.php');
 			chdir($old);
 		}
 		
