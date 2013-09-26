@@ -263,8 +263,8 @@ class apps
 		}
 		
 		ob_start();
-		if(is_file($app_path.'/'.$preview.'.php'))
-		{ 
+		//if(is_file($app_path.'/'.$preview.'.php'))
+		//{ 
 			$old = getcwd(); chdir($app_path);
 			$database = $this->dbconn;
 			$this->request->appurl = $this->request->base.'apps/manage/'.$app_name.'/'.$urlpreview;
@@ -273,7 +273,7 @@ class apps
 			
 			//include($preview.'.php');
 			chdir($old);
-		}
+		//}
 		
 		$this->request->vars = $oldvars;
 		return str_replace('%appurl%', '%appurl%manage/'.$app_name.'/'.$urlpreview, ob_get_clean());

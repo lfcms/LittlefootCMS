@@ -866,6 +866,7 @@ class Littlefoot
 	// mount, app/controller, $ini, $vars
 	public function loadapp($app, $admin = false, $ini ='', $vars = array(''))
 	{
+		ob_start();
 		$old = $this->vars;
 		$this->vars = $vars;
 		$var = $vars; // backward compatible
@@ -884,6 +885,8 @@ class Littlefoot
 		
 		chdir($cwd);
 		$this->vars = $old;
+		
+		return ob_get_clean();
 	}
 	
 	// Backward compatible

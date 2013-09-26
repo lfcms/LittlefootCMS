@@ -9,7 +9,6 @@
 <ul>
 	<?php /*<li><a href="<?=$this->base;?>dashboard/">Dashboard</a></li>*/ ?>
 	<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a></li>
-	
 	<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
 	<li><a class="grid" href="<?=$this->base;?>apps/"><span>Apps</span></a>
 		<ul>

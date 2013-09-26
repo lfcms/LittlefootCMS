@@ -41,6 +41,12 @@
                                                 <?php if(is_file($app.'/admin.php')): ?>
                                         <a href="%appurl%manage/<?=$file;?>/">Admin</a>
                                                 <?php endif; ?>
+                                                <?php if(is_file($app.'/index.php')): ?>
+                                        <a href="%appurl%manage/<?=$file;?>/preview">Preview</a>
+                                                <?php endif; ?>
+                                                <?php /* if(is_dir($app.'/.git')): ?>
+                                        <a href="%appurl%manage/<?=$file;?>/git">Git</a>
+                                                <?php endif;*/ ?>
                                         </div>
                                         <div style="clear:both; padding: 5px;">
                                                 <a href="%appurl%linkapp/<?=$file;?>/"><?=$file;?></a>
@@ -101,10 +107,25 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-	//$('#actions li > ol').hide('slow');
-	$('#actions li').click(function(){
-		$(this).find('ol').hide('slow');
+	$('#actions li ol').hide();
+	
+	$.each($('#actions li ol'), function ( key, value ) {
+		if($(value).find('.selected').length > 0)
+		{
+			$(this).show();
+		}
 	});
+	
+	$('#actions').find('a').click(function (e) {
+        e.stopPropagation();
+    });
+	
+	$('#actions li').click(function(){
+		$(this).find('>ol').toggle('slow');
+		return false;
+	});
+	
+	$('#actions ol').parent().prepend('+ ');
 });
 </script>
 

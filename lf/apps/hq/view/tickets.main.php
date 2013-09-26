@@ -46,14 +46,14 @@ foreach($status_options as $option)
 ?>
 
 <script type="text/javascript">
-<!--	setInterval(
+	setInterval(
 		function(){
 			$.get('<?php echo $_SERVER['REQUEST_URI']; ?>', function(data) {
 				$("#note").html($(data).find("#note").html());
 			})
 		},
 		20000
-	); -->
+	); 
 </script>
 
 <div id="note" class="ticket_queue">
