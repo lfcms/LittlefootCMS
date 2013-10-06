@@ -50,7 +50,8 @@
                                 <div id="app-<?php echo $class; ?>" class="wrapper">
                                                 <?php echo $app; ?>
                                 </div>
-                                <div class="clear"></div>
+                                <div class="clear">
+				</div>
                         </div>
                         <footer>
                                 <div class="footer-credits">
