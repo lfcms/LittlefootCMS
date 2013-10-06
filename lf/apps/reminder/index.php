@@ -1,1 +1,0 @@
-<?php $this->apploader('reminder'); /* send text reminders about events */?>

@@ -1,1 +1,0 @@
-<?php // Littlefoot CMS - Copyright (c) 2013, Joseph Still. All rights reserved. See license.txt for product license information.function build_apps($input, $select){	}
