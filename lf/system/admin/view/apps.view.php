@@ -114,6 +114,15 @@ $(document).ready(function() {
 		$(this).parent().find('>ol').toggle('fast');
 	});
 
+	$('#actions li ol').hide();
+	
+	$.each($('#actions li ol'), function ( key, value ) {
+		if($(value).find('.selected').length > 0)
+		{
+			$(this).show();
+		}
+	});
+
 });
 </script>
 
