@@ -107,25 +107,13 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-	$('#actions li ol').hide();
-	
-	$.each($('#actions li ol'), function ( key, value ) {
-		if($(value).find('.selected').length > 0)
-		{
-			$(this).show();
-		}
+
+	// Expand / Collapse
+	$('#actions li ol').parent().prepend('<a href="#" class="toggle">+</a> ');
+	$('#actions .toggle').click(function() {
+		$(this).parent().find('>ol').toggle('fast');
 	});
-	
-	$('#actions').find('a').click(function (e) {
-        e.stopPropagation();
-    });
-	
-	$('#actions li').click(function(){
-		$(this).find('>ol').toggle('slow');
-		return false;
-	});
-	
-	$('#actions ol').parent().prepend('+ ');
+
 });
 </script>
 
