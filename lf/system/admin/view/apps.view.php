@@ -107,6 +107,13 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
+
+	// Expand / Collapse
+	$('#actions li ol').parent().prepend('<a href="#" class="toggle">+</a> ');
+	$('#actions .toggle').click(function() {
+		$(this).parent().find('>ol').toggle('fast');
+	});
+
 	$('#actions li ol').hide();
 	
 	$.each($('#actions li ol'), function ( key, value ) {
@@ -115,17 +122,7 @@ $(document).ready(function() {
 			$(this).show();
 		}
 	});
-	
-	$('#actions').find('a').click(function (e) {
-        e.stopPropagation();
-    });
-	
-	$('#actions li').click(function(){
-		$(this).find('>ol').toggle('slow');
-		return false;
-	});
-	
-	$('#actions ol').parent().prepend('+ ');
+
 });
 </script>
 
