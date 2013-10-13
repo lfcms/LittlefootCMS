@@ -214,7 +214,7 @@ div.loginbox a.whitelink:hover {
 #actions {
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 5px 0 #AAAAAA;
-    margin-left: 550px;
+    margin-left: 50%;
     padding: 20px;
 }
 #actions li {
