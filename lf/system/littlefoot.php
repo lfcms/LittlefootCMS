@@ -380,7 +380,6 @@ class Littlefoot
 		// if anon or admin login
 			// check for submit->login
 				// check for good user/pass
-				// 
 		
 		// If anonymous...
 		if($auth['user'] == 'anonymous' || (count($_POST) && isset($_POST['adminlogin'])) )
