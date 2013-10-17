@@ -834,10 +834,14 @@ class Littlefoot
 		ob_start();
 		include 'system/view/login.php';
 		$login = ob_get_clean();
-		
+
 		// Get Template code
 		ob_start();
-		readfile(ROOT.'skins/'.$this->select['template'].'/index.php');
+		if(is_file(ROOT.'skins/'.$this->select['template'].'/index.php'))
+			include ROOT.'skins/'.$this->select['template'].'/index.php';
+		else if(is_file(ROOT.'skins/'.$this->select['template'].'/index.html'))
+			readfile(ROOT.'skins/'.$this->select['template'].'/index.html');		
+
 		$template = ob_get_clean();
 		
 		// Replace all %markers% with $content
