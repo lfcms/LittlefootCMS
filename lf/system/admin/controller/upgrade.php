@@ -18,8 +18,8 @@ class upgrade extends app
 		
 			<h3 style="margin-top: 10px;">Restore to old system</h3>';
 		
-		if(is_dir(ROOT.'backup/'))
-		{
+		//if(is_dir(ROOT.'backup/'))
+		//{
 			$backups = scandir(ROOT.'backup/');
 			foreach($backups as $backup)
 			{
@@ -32,7 +32,7 @@ class upgrade extends app
 				
 				echo '[ <a href="%appurl%restore/'.$backup.'/">Restore</a> ] [<a href="%appurl%rm/'.$backup.'/">Delete</a>] '.$version.'<br />';
 			}
-		} else echo 'No system restore points are available.';
+		//} else echo 'No system restore points are available.';
 	}
 	
 	public function lfup($var)
