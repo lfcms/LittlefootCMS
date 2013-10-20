@@ -43,6 +43,8 @@ class Database
 		
 		if($result == NULL) $result = $this->db_result;
 		
+		if(mysql_num_rows($result) === 0) return false;
+		
 		return mysql_fetch_assoc($result);
 	}
 	
