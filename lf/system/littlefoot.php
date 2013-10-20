@@ -74,10 +74,7 @@ class Littlefoot
 			';
 			foreach($this->app_timer as $app => $time)
 				echo '<tr><td>'.$app.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '
-					</table>
-				</div>
-			';
+			echo '</table></div>';
 		}
 	}
 	
