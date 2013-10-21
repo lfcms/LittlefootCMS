@@ -36,6 +36,7 @@ class Littlefoot
 		$this->start = microtime(true);
 		$this->db = new Database($db);
 		
+		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
 		$this->auth = $_SESSION['_auth'];
