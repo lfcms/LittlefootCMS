@@ -202,6 +202,7 @@ class Littlefoot
 				include('skin/'.$admin_skin.'/index.php');
 				$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
 				$out = str_replace('%baseurl%', $this->base.'admin/', $out);
+				$out = str_replace('%relbase%', $this->relbase, $out);
 				$out = str_replace('Littlefoot CMS', ucfirst($app_name).' Admin', $out);
 				$out = str_replace(array('<nav>', '</nav>'), '', $out);
 				$out = str_replace('class="content"', 'class="content" style="margin: 10px;"', $out);
