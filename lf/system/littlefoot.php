@@ -386,9 +386,9 @@ class Littlefoot
 			{
 				$loggedin = false;
 				
+				
 				// Get user/pass from $_POST and hash pass
-				preg_match('/[a-zA-Z0-9]+/', $this->post['user'], $filter);
-				$username = $filter != array() ? $filter[0] : '';
+				$username = $this->post['user'];
 				$password = sha1($this->post['pass']);
 		
 				//Get user
