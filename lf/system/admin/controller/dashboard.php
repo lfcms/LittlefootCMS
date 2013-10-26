@@ -49,7 +49,7 @@ class dashboard
 	{	
 		if($this->simple) return;
 		
-		$this->updatenavcache(); // DEBUG
+		$this->updatenavcache(); // b
 	
 		// admin load edit from ini
 		include('model/navgen.php');
@@ -64,9 +64,6 @@ class dashboard
 			$save = array();
 			while($row = mysql_fetch_assoc($result))
 			{
-				//print_r($row);
-				//echo '<br />';
-				
 				if(isset($vars[1]) && $row['id'] == $vars[1])
 					$save = $row;
 				
@@ -82,7 +79,9 @@ class dashboard
 			if(isset($menu)) 	$nav = build_menu($menu, $save);
 			if(isset($hidden))	$hooks = build_hidden($hidden, $save);
 			
-		include('model/templateselect.php');
+		include('model/templateselect.php'); // get all nav data
+		
+		$args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';
 		
 		if($save != array())
 		{
@@ -94,6 +93,8 @@ class dashboard
 			
 			/* -=-=-=-=-=- %EDITFORM% -=-=-=-=-=-*/
 			ob_start();
+			if(is_file(ROOT.'apps/'.$save['app'].'/args.php'))
+				include ROOT.'apps/'.$save['app'].'/args.php';
 			include 'view/editform.php';
 			$html = ob_get_clean();
 			
@@ -116,6 +117,7 @@ class dashboard
 	public function linkapp($var)
 	{	
 		if($this->simple) return;
+		
 		if(!isset($var[1])) return 'invalid arguement';
 		
 		include('model/navgen.php');
@@ -161,7 +163,18 @@ class dashboard
 			include $pwd.$var[1].'/args.php';
 		
 		// if the selected app 
-		include 'view/linkapp.php';
+		//include 'view/linkapp.php';
+		
+		
+		
+		
+		
+		// no form, just make and redirect
+		$_POST = array(
+			'title' => 'asdf'
+		);
+		
+		print_r($_POST);
 	}
 	
 	private function deleteAll($directory, $empty = false)
