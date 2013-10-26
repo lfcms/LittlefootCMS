@@ -24,8 +24,7 @@ $(document).ready(function() {
 
 <div id="actions">
         <h3>Navigation</h3>
-        <p>Navigation items are used to link apps to user requests in the URL and display their output in the selected skin.</p>
-        <p>Nav from item: manage admin of (app)</p>
+        <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p>
         <?php
                 if(isset($nav['html']))
                 {
@@ -35,7 +34,7 @@ $(document).ready(function() {
                         echo '<p>- No nav set -</p>';
         ?>
         <h3>Hidden</h3>
-        <p>Hidden nav items are used when you want to add a function, but don't want it on the nav menu.</p>
+        <p>This works just like the nav menu manager above, but these nav items will be hidden from nav menu of your website. This feature is useful for hiding apps like /signup, /secret-blog</p>
         <?php
                 if(isset($hooks['html']))
                         echo $hooks['html'];

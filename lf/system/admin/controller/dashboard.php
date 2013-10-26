@@ -24,16 +24,31 @@ class dashboard
 	private $html;
 	private $pwd;
 	private $dbconn;
+	private $simple = false;
 	
 	public function __construct($request, $dbconn)
 	{
 		$this->db = $dbconn;
 		$this->request = $request;
 		$this->pwd = ROOT.'apps/';
+		
+		if($this->request->settings['simple_cms'] != '_lfcms')
+		{
+			$cwd = getcwd();
+			chdir(ROOT.'apps/'.$this->request->settings['simple_cms']);
+			
+			if(is_file('admin.php')) include 'admin.php';
+			else echo 'No Admin';
+			
+			chdir($cwd);
+			$this->simple = true;
+		}
 	}
 	
 	public function main($vars)
-	{
+	{	
+		if($this->simple) return;
+		
 		$this->updatenavcache(); // DEBUG
 	
 		// admin load edit from ini
@@ -100,6 +115,7 @@ class dashboard
 
 	public function linkapp($var)
 	{	
+		if($this->simple) return;
 		if(!isset($var[1])) return 'invalid arguement';
 		
 		include('model/navgen.php');
@@ -150,6 +166,8 @@ class dashboard
 	
 	private function deleteAll($directory, $empty = false)
 	{
+		if($this->simple) return;
+		
 		if(substr($directory,-1) == "/") {
 			$directory = substr($directory,0,-1);
 		}
@@ -187,6 +205,8 @@ class dashboard
 	
 	public function rm($vars)
 	{
+		if($this->simple) return;
+		
 		// get current position/parent
 		$current = $this->db->fetch('SELECT position, parent FROM lf_actions WHERE id = '.intval($vars[1]));
 		
@@ -224,6 +244,8 @@ class dashboard
 	
 	public function delapp($var)
 	{
+		if($this->simple) return;
+		
 		$success = preg_match('/[a-z]+/', $var[1], $matches);
 		
 		if(!$success) return 0;
@@ -237,6 +259,8 @@ class dashboard
 	
 	public function manage($var)
 	{
+		if($this->simple) return;
+		
 		// $var[0] = 'manage'
 		$app_name = $var[1];
 		
@@ -281,6 +305,8 @@ class dashboard
 	
 	public function download($var)
 	{
+		if($this->simple) return;
+		
 		echo '<h2><a href="%appurl%">Apps</a> / Download</h2>';
 		echo '<p>Applications with a link can be installed. Those that are not links are already installed.</p>';
 		
@@ -302,6 +328,8 @@ class dashboard
 	
 	public function getappfromnet($vars)
 	{
+		if($this->simple) return;
+		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
 		
@@ -336,6 +364,8 @@ class dashboard
 	
 	public function install($vars)
 	{
+		if($this->simple) return;
+		
 		header('HTTP/1.1 302 Moved Temporarily');
 		header('Location: '. $_SERVER['HTTP_REFERER']);
 		
@@ -401,6 +431,8 @@ class dashboard
 	
 	public function upgradesql($app)
 	{
+		if($this->simple) return;
+		
 		$sql = ROOT.'apps/'.$app.'/upgrade.sql';
 		if(is_file($sql))
 		{
@@ -411,6 +443,7 @@ class dashboard
 	
 	public function create($vars) // nav/item create
 	{
+		if($this->simple) return;
 		
 		if(!isset($_POST['title'])) // if simple post, auto-set other settings
 		{
@@ -519,6 +552,8 @@ class dashboard
 
 	public function update($vars) // nav/item update
 	{
+		if($this->simple) return;
+		
 		$post = $_POST;
 		
 		// save, unset ini
@@ -644,6 +679,8 @@ class dashboard
 	
 	public function updatenavcache()
 	{
+		if($this->simple) return;
+		
 		include 'model/apps.navcache.php';
 		
 		// Grab all possible actions
