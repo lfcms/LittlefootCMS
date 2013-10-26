@@ -204,8 +204,6 @@ div.loginbox a.whitelink:hover {
     box-shadow: 0 0 3px 0 #CCCCCC;
     margin: 5px;
 	display:block;
-	height: 50px;
-	width: 100px;
 	float: left;
 }
 #appgallery > ul > li:hover {
@@ -215,7 +213,7 @@ div.loginbox a.whitelink:hover {
     font-size: 18px;
 }
 #appgallery > ul > li div.right_header a {
-    font-size: 12px;
+    font-size: 30px;
 }
 
 
