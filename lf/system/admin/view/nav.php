@@ -8,9 +8,7 @@
 ?>
 <ul>
 	<?php /*<li><a href="<?=$this->base;?>dashboard/">Dashboard</a></li>*/ ?>
-	<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a></li>
-	<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
-	<li><a class="grid" href="<?=$this->base;?>apps/"><span>Apps</span></a>
+	<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a>
 		<ul>
 		<?php foreach($admin_apps as $shortcut): 
 			if(isset($this->vars[1]) && $shortcut == $this->vars[1]) $highlight = ' class="current"';
@@ -20,7 +18,6 @@
 		<?php endforeach; ?>
 		</ul>
 	</li>
-	<?php endif; ?>
 	<li><a class="tables" href="<?=$this->base;?>skins/"><span>Skins</span></a></li>
 	<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>
 	<li><a class="users" href="<?=$this->base;?>users/"><span>Users</span></a></li>

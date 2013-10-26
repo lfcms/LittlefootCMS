@@ -183,9 +183,9 @@ div.loginbox a.whitelink:hover {
 }
 #appgallery {
     border-radius: 3px 3px 3px 3px;
-    float: left;
+    float: right;
     padding: 20px;
-    width: 480px;
+    width: 45%;
 }
 #appgallery form {
     box-shadow: 0 0 5px 0 #AAAAAA inset;
@@ -199,7 +199,7 @@ div.loginbox a.whitelink:hover {
     background-color: rgba(230, 230, 230, 0.5);
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 3px 0 #CCCCCC;
-    float: left;
+    margin-left: 50%;
     margin: 5px;
 }
 #appgallery > ul > li:hover {
@@ -214,7 +214,8 @@ div.loginbox a.whitelink:hover {
 #actions {
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 5px 0 #AAAAAA;
-    margin-left: 50%;
+    float: left;
+	width: 40%;
     padding: 20px;
 }
 #actions li {
