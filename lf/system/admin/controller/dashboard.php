@@ -267,7 +267,7 @@ class dashboard
 		//{ 
 			$old = getcwd(); chdir($app_path);
 			$database = $this->dbconn;
-			$this->request->appurl = $this->request->base.'apps/manage/'.$app_name.'/'.$urlpreview;
+			$this->request->appurl = $this->request->base.'dashboard/manage/'.$app_name.'/'.$urlpreview;
 			
 			echo $this->request->loadapp($app_name, $admin, NULL, $var);
 			

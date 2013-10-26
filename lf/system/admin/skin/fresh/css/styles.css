@@ -185,22 +185,28 @@ div.loginbox a.whitelink:hover {
     border-radius: 3px 3px 3px 3px;
     float: right;
     padding: 20px;
-    width: 45%;
+    width: 40%;
 }
 #appgallery form {
     box-shadow: 0 0 5px 0 #AAAAAA inset;
     margin: 10px 0;
     padding: 10px;
 }
+
+
+
 #appgallery li {
     list-style-type: none;
 }
-#appgallery > ul > li {
+#appgallery > ul>  li {
     background-color: rgba(230, 230, 230, 0.5);
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 3px 0 #CCCCCC;
-    margin-left: 50%;
     margin: 5px;
+	display:block;
+	height: 50px;
+	width: 100px;
+	float: left;
 }
 #appgallery > ul > li:hover {
     background-color: rgba(245, 245, 245, 0.5);
@@ -211,6 +217,9 @@ div.loginbox a.whitelink:hover {
 #appgallery > ul > li div.right_header a {
     font-size: 12px;
 }
+
+
+
 #actions {
     border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 5px 0 #AAAAAA;
