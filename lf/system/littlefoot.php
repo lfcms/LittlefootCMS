@@ -673,7 +673,7 @@ class Littlefoot
 		$base_save = NULL;
 		foreach($matches as $row)
 		{
-			if($row['position'] == 1 && $row['parent'] == -1 && $row['app']) // save item in first spot of base menu if it is an app, just in case nothing matches
+			if($row['position'] == 1 && $row['parent'] == -1) // save item in first spot of base menu if it is an app, just in case nothing matches
 				$base_save = $row; // save row in case "domain.com/" is requested
 				
 			$test_select[$row['parent']][$row['position']] = $row;

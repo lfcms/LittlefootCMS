@@ -114,44 +114,12 @@ class dashboard
 		include('view/apps.view.php');
 	}
 
-	public function linkapp($var)
+	public function linkapp($vars)
 	{	
 		if($this->simple) return;
 		
-		if(!isset($var[1])) return 'invalid arguement';
+		if(!isset($vars[1])) return 'invalid arguement';
 		
-		include('model/navgen.php');
-			$result = $this->db->query("
-				SELECT a.*, a.app as isapp, l.id as lid, l.app, l.section, l.ini
-				FROM lf_actions a 
-				LEFT JOIN lf_links l
-					ON l.include = a.id
-				ORDER BY ABS(a.position)
-			");
-
-			$save = '';
-			while($row = mysql_fetch_assoc($result))
-			{
-				//print_r($row); echo '<br />';
-				
-				if(isset($vars[1]) && $row['id'] == $vars[1])
-					$save = $row;
-				
-				if($row['position'] == 0)
-					$hidden[] = $row;
-				else
-					$menu[$row['parent']][$row['position']] = $row;
-			}
-			
-			if(isset($vars[1])) $edit = $vars[1];
-			else				$edit = 0;
-			
-			$adv = false;
-			if(isset($var[2]) && $var[2] == 'adv') $adv = true;
-			
-			if(isset($menu)) 	$nav = build_menu($menu, $save);
-			if(isset($hidden))	$hooks = build_hidden($hidden, $save);
-			
 		// get template vars
 		include('model/templateselect.php');
 		
@@ -159,22 +127,52 @@ class dashboard
 			
 		$args = '<input type="text" name="ini" />';
 		
-		if(is_file($pwd.$var[1].'/args.php'))
-			include $pwd.$var[1].'/args.php';
+		if(is_file($pwd.$vars[1].'/args.php'))
+			include $pwd.$vars[1].'/args.php';
 		
 		// if the selected app 
 		//include 'view/linkapp.php';
 		
 		
+		/*
 		
+		if(!isset($_POST['title'])) // if simple post, auto-set other settings
+		{
+			if($_POST['alias'] == '') $_POST['alias'] = 'Home';
+			
+			$_POST['title'] = ucwords($_POST['alias']);
+			$_POST['label'] = ucwords($_POST['alias']);
+			$_POST['position'] = 9999; // it will auto adjust to the last position below
+			$_POST['isapp'] = 'off'; // is not an app by default
+			$_POST['template'] = 'default';
+		}*/
 		
+		$result = $this->db->fetchall("
+			SELECT *
+			FROM lf_actions
+			WHERE parent = '-1'
+				AND (
+					alias = '".mysql_real_escape_string($vars[1])."'
+					OR alias LIKE '".mysql_real_escape_string($vars[1])."_%'
+				)
+			ORDER by alias ASC
+		");
+		
+		$alias = $vars[1];
+		if($result[0]['alias'] == $vars[1])
+			$alias .= '_'.(count($result));
 		
 		// no form, just make and redirect
 		$_POST = array(
-			'title' => 'asdf'
+			'alias' => $alias,
+			'parent' => -1,
+			'args' => '',
+			'app' => $vars[1]
 		);
 		
-		print_r($_POST);
+		$id = $this->create($vars);
+		
+		redirect302($this->request->appurl.'main/'.$id);
 	}
 	
 	private function deleteAll($directory, $empty = false)
@@ -469,40 +467,38 @@ class dashboard
 			$_POST['template'] = 'default';
 		}
 		
-		$vars = $_POST;
-		
 		/* -=-=-=-=- Add Nav Item -=-=-=-=- */
-		$pos = intval($vars['position']);
+		$pos = intval($_POST['position']);
 		
 		if($pos != 0)
 		{
-			$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position != 0';
+			$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.mysql_real_escape_string($_POST['parent']).' AND position != 0';
 			$result = $this->db->query($sql);
 			$row = mysql_fetch_array($result);
 			
 			if($row[0] >= $pos)
-				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position >= '.$pos);
+				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($_POST['parent']).' AND position >= '.$pos);
 			else
 				$pos = $row[0] + 1;
 		}
 		
 		/*echo '<pre>';
-		print_r($vars);
+		print_r($_POST);
 		print_r($_POST);
 		print_r($pos);
 		echo '</pre>';*/
 		
 		
 		$id = 'NULL';
-		$app = $vars['isapp'] == 'on' ? '1' : '0';
+		$app = $_POST['isapp'] == 'on' ? '1' : '0';
 		$insert = array(
-			"parent"	=> mysql_real_escape_string($vars['parent']),
+			"parent"	=> mysql_real_escape_string($_POST['parent']),
 			"position"	=> $pos,
-			"alias"		=> mysql_real_escape_string($vars['alias']),
-			"title"		=> mysql_real_escape_string($vars['title']),
-			"label"		=> mysql_real_escape_string($vars['label']),
+			"alias"		=> mysql_real_escape_string($_POST['alias']),
+			"title"		=> mysql_real_escape_string($_POST['title']),
+			"label"		=> mysql_real_escape_string($_POST['label']),
 			"app"		=> $app,
-			"template"	=> mysql_real_escape_string($vars['template'])
+			"template"	=> mysql_real_escape_string($_POST['template'])
 		);
 		
 		$sql = "
@@ -523,7 +519,6 @@ class dashboard
 		
 		/* -=-=-=-=- Add Link to Nav -=-=-=-=- */
 		$pwd = $this->request->absbase.'/apps';
-		$vars = $this->request->post;
 		foreach(scandir($pwd) as $file)
 		{
 			if($file == '.' || $file == '..') 
@@ -542,7 +537,7 @@ class dashboard
 		$this->db->query($sql);
 		$id = $this->db->last();
 		
-		//$recurse = $vars['recursive'] == 'on' ? 1 : 0;
+		//$recurse = $_POST['recursive'] == 'on' ? 1 : 0;
 		$insert = array(
 			"include"	=> $id,
 			"app"		=> $app,
@@ -559,8 +554,11 @@ class dashboard
 		
 		$this->db->query($sql);
 		
-		// redirect them after this completes
-		redirect302($this->request->base.'apps/');
+		if($vars[0] == 'create')
+			// redirect them after this completes
+			redirect302($this->request->base.'apps/');
+		else
+			return $id;
 	}
 
 	public function update($vars) // nav/item update
