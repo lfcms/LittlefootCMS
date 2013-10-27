@@ -245,6 +245,9 @@ div.loginbox a.whitelink:hover {
 #actions > ol li:hover, #actions > ul li:hover {
     background-color: rgba(250, 250, 250, 0.5);
 }
+#actions .selected { 
+	background-color: #DDD !important;
+}
 ul.applist {
     margin-left: -40px;
 }
