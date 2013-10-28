@@ -81,11 +81,12 @@ class dashboard
 			
 		include('model/templateselect.php'); // get all nav data
 		
-		$args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';
+		
+		$args = '<input type="text" name="ini" placeholder="app ini" />';
 		
 		if($save != array())
 		{
-			//$args = '<input type="text" name="ini" />';
+			$args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';
 			
 			$pwd = ROOT.'apps/';
 			//if(is_file($pwd.$save['app'].'/args.php'))
