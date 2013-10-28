@@ -713,7 +713,7 @@ class Littlefoot
 		{
 			$pwd = getcwd();
 			chdir(ROOT.'system/admin/');
-			$this->mvc('apps', NULL, array('updatenavcache'));
+			$this->mvc('dashboard', NULL, array('updatenavcache'));
 			chdir($pwd);
 		}
 		$nav_cache = file_get_contents(ROOT.'cache/nav.cache.html');
