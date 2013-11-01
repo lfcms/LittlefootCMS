@@ -33,7 +33,7 @@
                 </script (http://december.com/html/4/element/script.html)>
         </head>
 
-    <body>
+		<body>
                 <div class="userbar">
                         <header>
                             <h1>LittlefootCMS</h1>
