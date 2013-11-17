@@ -84,7 +84,10 @@ class settings
 		$simple_options = str_replace(' value="'.$settings['simple_cms'].'"', ' selected="selected" value="'.$settings['simple_cms'].'"', $simple_options);
 		$simplecms = 'Simple CMS:  <select name="setting[simple_cms]" id="">'.$simple_options.'</select>';
 		
-		
+		// Settings form
+		$signup = 'Enable Signup:  <select name="setting[signup]" id=""><option value="on">on</option><option value="off">off</option></select>';
+		if(!isset($settings['signup']) || $settings['signup'] == 'off')
+			$signup = str_replace(' value="off"', ' selected="selected" value="off"', $signup);
 		 
 		echo '
 			<div id="admin_settings">
@@ -95,6 +98,7 @@ class settings
 						<li>'.$force_url.'</li>
 						<li>'.$navclass.'</li>
 						<li>'.$debug.'</li>
+						<li>'.$signup.'</li>
 						<li>'.$simplecms.' (works, but no option for ini yet)</li>
 						<li><input type="submit" value="submit" /></li>
 					</ul>

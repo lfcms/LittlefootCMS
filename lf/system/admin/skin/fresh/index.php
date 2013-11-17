@@ -9,27 +9,25 @@
                 <link href="%skinbase%css/styles.css" rel="stylesheet">
                 <link href="%skinbase%css/nav.css" rel="stylesheet">
 
-
-
                 <!-- Load in jQuery for handy hover function | Removes titles of links on hover-->
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
                 <script type="text/javascript" charset="utf-8">
-                                $(document).ready(function() {
-                                        // All links in main menu div
-                                        var menu_links = $('ul.navigation a');
-                                        // On mouse hover
-                                        menu_links.hover(
-                                                // In: Store and remove title
-                                                function() {
-                                                        old_title = $(this).attr('title');
-                                                        $(this).attr('title','');
-                                                },
-                                                // Out: Replace title
-                                                function() {
-                                                        $(this).attr('title', old_title);
-                                                }
-                                        );
-                                });
+					$(document).ready(function() {
+							// All links in main menu div
+							var menu_links = $('ul.navigation a');
+							// On mouse hover
+							menu_links.hover(
+									// In: Store and remove title
+									function() {
+											old_title = $(this).attr('title');
+											$(this).attr('title','');
+									},
+									// Out: Replace title
+									function() {
+											$(this).attr('title', old_title);
+									}
+							);
+					});
                 </script (http://december.com/html/4/element/script.html)>
         </head>
 
@@ -37,7 +35,6 @@
                 <div class="userbar">
                         <header>
                             <h1>LittlefootCMS</h1>
-                        </header>
                         <div id="greeting">
                                 Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Logout</a>)
                         </div>

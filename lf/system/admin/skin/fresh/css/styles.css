@@ -9,6 +9,12 @@ a {
     color: #4A6382;
     text-decoration: none;
 }
+a#forgot {
+    color: #F0F0F0;
+    text-decoration: none;
+	display: block;
+	margin-top: 10px;
+}
 a:hover {
     color: #1A457A;
 }

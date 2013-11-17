@@ -14,6 +14,7 @@
 		<div class="container">
             <header>
                <h1>LFCMS</h1>
+               %login%
             </header>
 			<nav>
 				%nav%

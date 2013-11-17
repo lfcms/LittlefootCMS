@@ -40,6 +40,9 @@ if(count($_GET))
                                                 </p>
                                                 <p><?php echo $recaptcha; ?></p>
                                                 <p><button class="radius3 bebas">Sign in</button></p>
+												
+												<a id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a>
+												
                                                 <?php if($this->error != '') echo '<p class="error">'.$this->error.'</p>'; ?>
                                         </form>
                                 </div><!--loginform-->

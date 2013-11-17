@@ -1,11 +1,29 @@
 <?php
 
-if(!defined('ROOT')) define('ROOT', __DIR__.'/../'); // default to lf install dir
+define('ROOT', __DIR__.'/../'); // default to lf install dir
+define('APP', getcwd().'/'); // app root based on pwd
 
+include ROOT.'config.php';
 include ROOT.'system/functions.php'; // so they
 include ROOT.'system/db.class.php'; // can use
 include ROOT.'system/app.class.php'; // all the
 include ROOT.'system/littlefoot.php'; // cool functions
+
+$lf = new Littlefoot($db);
+$admin = $lf->request();
+$lf->authenticate();
+
+
+
+
+
+
+
+
+
+
+
+
 
 function loader($lf)
 {

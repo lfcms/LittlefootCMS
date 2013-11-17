@@ -11,7 +11,7 @@ class Littlefoot
 	public $appurl; // allow it to change
 	
 	public $action;
-	private $select; // chosen nav item from request (include nav id)
+	public $select; // chosen nav item from request (include nav id)
 	private $alias;
 	
 	public $get;
@@ -34,8 +34,8 @@ class Littlefoot
 	public function __construct($db)
 	{
 		$this->start = microtime(true);
+		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
-		
 		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
@@ -81,7 +81,6 @@ class Littlefoot
 	
 	public function run($debug = false) // run littlefoot as CMS
 	{
-		$this->version = file_get_contents(ROOT.'system/version');
 		
 		// load plugins
 		foreach(scandir('plugins') as $file)
@@ -120,6 +119,8 @@ class Littlefoot
 			}
 		}
 		
+		$this->select['template'] = $this->settings['default_skin'];
+		
 		$this->hook_run('settings_loaded');
 		
 		$this->absbase = ROOT; // backward compatible // getcwd().'/';
@@ -150,8 +151,14 @@ class Littlefoot
 		$this->authenticate();
 		$this->function_timer['auth'] = microtime(true) - $funcstart;
 		$funcstart = microtime(true);
+		
+		
+		
+		
+		
+		
 		/*
-		// to post to a specific app without loading the rest of the CMS (should be to link in db, not app folder)
+		// to post to a specific app without loading the rest of the CMS (should be to link in db, not app folder, this does not seem secure at the moment)
 		if( isset($this->action[0]) && $this->action[0] == 'post' && 
 			preg_match('/[0-9]+/', $this->action[1], $match) && count($_POST) )
 		{
@@ -190,7 +197,7 @@ class Littlefoot
 				return 0;
 			}
 			
-			if(strpos($this->auth['access'], 'admin_') !== false)
+			if(strpos($this->auth['access'], 'app_') !== false)
 			{
 				$admin_skin = 'fresh';
 				$app = explode('_', $this->auth['access']);
@@ -295,8 +302,8 @@ class Littlefoot
 	{
 		// detect file being used as base (for API)
 		$filename = 'index.php';
-		//if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
-		//	$filename = $match[2];
+		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
+			$filename = $match[2];
 		
 		// Extract subdir
 		$pos = strpos($_SERVER['SCRIPT_NAME'], $filename);
@@ -326,7 +333,6 @@ class Littlefoot
 			$request[2] = $filename.'/';
 		}
 		
-			
 		if($_SERVER['SERVER_PORT'] != 80)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
 		else $port = '';
@@ -360,7 +366,7 @@ class Littlefoot
 		return $request[3] == 'admin/' ? true : false;
 	}
 	
-	private function authenticate()
+	public function authenticate()
 	{
 		$this->hook_run('pre_auth'); 
 		
@@ -379,164 +385,180 @@ class Littlefoot
 		// if anon or admin login
 			// check for submit->login
 				// check for good user/pass
+				
+				
+				
+				
 		
-		// If anonymous...
-		if($auth['user'] == 'anonymous' || (count($_POST) && isset($_POST['adminlogin'])) )
+					
+		// change to auth class 
+		if($this->action[0] == '_auth' && isset($this->action[1]) && ($this->action[1] != 'login' && $this->action[1] != 'logout'))
 		{
-			// check for normal login
-			if($this->action[0] == '_auth' && $this->action[1] == 'login')
-			{
-				$loggedin = false;
-				
-				
-				// Get user/pass from $_POST and hash pass
-				$username = $this->post['user'];
-				$password = sha1($this->post['pass']);
+			ob_start();
+			include 'system/lib/signup.php';
+			$signup = new signup($this, $this->db);
+			$method = $this->action[1];
+			
+			$signup->$method(array_slice($this->action, 1));
+			$out = ob_get_clean();
+			$out = str_replace('%appurl%', $this->base.'_auth/', $out);
+			$content['%content%'][] = $out;
+			
+			// display in skin
+			echo $this->render($content);
 		
-				//Get user
-				$sql = sprintf("
-						SELECT id, pass, user, email, last_request, display_name, access, status
-						FROM lf_users WHERE user = '%s'
-						LIMIT 1
-					", 
-					mysql_real_escape_string($username)
-				);
+			exit();
+		}
 				
-				//Execute Query
-				$result = $this->db->query($sql);
 				
-				//Check if user exists
-				if(mysql_num_rows($result) == 0) // if random user tried, add to their guess count
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+		
+		// If anonymous... 
+		if( $auth['user'] == 'anonymous' || ( count($_POST) && isset($_POST['adminlogin']) ) )
+		{
+			//echo $this->action[1];
+			
+			// check for normal login
+			if($this->action[0] == '_auth' && isset($this->action[1]))
+				switch($this->action[1])
 				{
-					//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
-					//$_SESSION['authguess']++;
-					$this->error = "Incorrect Username or Password";
-				}
-				/*else if ($auth['loginfailcnt'] > 7)
-				{
-					$this->error = "Reset your account with the link we emailed you.";
-				}
-				*/
-				else
-				{
-					$auth = $this->db->fetch($result);
-					
-					if($auth['pass'] != $password) // dont allow them to guess your username after 7 tries
-					{
-						/*$deny = '';
-						if($auth['loginfailcnt'] > 6)
-						{
-							mail($auth['email'], 'Your Account Locked at '.$_SERVER['HTTP_HOST'], 'Reset your account at : '.$this->base);
-							$deny = ", status = 'disabled'"; // change status
-						}
+					case 'login':
+						$loggedin = false;
 						
-						$this->db->query('UPDATE lf_users SET loginfailcnt = loginfailcnt + 1 WHERE id = '.$auth['id']);
-						*/
-						$auth = $this->auth;
-						$this->error = "Incorrect Username or Password";
-					}
-					/*else 
-					{ 
-						$this->db->query('UPDATE lf_users SET loginfailcnt = 0 WHERE id = '.$auth['id']);
-					}*/
-				}
-				
-				if(isset($auth['status']) && $auth['status'] != 'valid')
-				{
-					if($auth['status'] == 'banned') $this->error = "You are banned.";
-					else $this->error = "You need to validate your account first.";
-					$auth = $this->auth;
-				}
-				else if(isset($auth['access']) && $auth['access'] == 'admin') // if admin, check for reCaptcha
-				{
-					/*if(isset($_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]))
-					{
-						//require_once(ROOT.'system/lib/recaptchalib.php');
-						$privatekey = "6LffguESAAAAACsudOF71gJLJE_qmvl4ey37qx8l";
-						$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
 						
-						if (!$resp->is_valid) {
-							$this->error = "Wrong reCaptcha";
-							$auth = $this->auth;
-						}
-					}*/
-					
-					if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
-				}
+						// Get user/pass from $_POST and hash pass
+						$username = $this->post['user'];
+						$password = sha1($this->post['pass']);
 				
-				// dont let those apps see your password.
-				$_POST = array();
-				$this->auth = $auth;
-				redirect302();
-			}/*
-			else if(is_file('lib/facebook.php')) //otherwise, try to authenticate with facebook
-			{
-				// Facebook login
-				include 'lib/facebook.php';
-				
-				// Facebook login wrapper
-				
-				if(isset($auth['facebook']))
-					$_SESSION = $auth['facebook'];
-				else
-					$_SESSION = array();
-				
-				$facebook = new Facebook(array(
-				  'appId'  => '331251286935295',
-				  'secret' => '1442db0f6a7675d44d9a5022ac23c04d',
-				));
-
-				$userId = $facebook->getUser();
-				
-				$auth['facebook'] = $_SESSION;
-				
-				
-				// logged in via fb
-				if ($userId) { 
-					$userInfo = $facebook->api('/' + $userId);
-					
-					//Get user with facebook id
-					$sql = "
-						SELECT u.id, u.user, u.last_request, u.display_name, a.acl
-						FROM lf_users u
-						LEFT JOIN lf_admins a
-							ON a.uid = u.id
-						WHERE u.fbid = ".$userId." LIMIT 1
-					";
-					
-					//Execute Query
-					$result = $this->db->query($sql);
-					
-					if(!mysql_num_rows($result)) // if no user is found with this fbid
-					{
-						// create user account
-						$sql = "
-							INSERT INTO lf_users
-								(`id`, `user`, `pass`, `email`, `display_name`, `salt`, `last_request`, `status`, `access`, `fbid`)
-							VALUES
-								(NULL, '".str_replace(' ', '', lcfirst($userInfo['name'])).substr($userId, 0, 4)."', 'null', 'null', '".$userInfo['name']."', 'null', NOW(), 'null', 'null', ".$userId.")
-						";
+						//Get user
+						$sql = sprintf("
+								SELECT id, pass, user, email, last_request, display_name, access, status
+								FROM lf_users WHERE user = '%s'
+								LIMIT 1
+							", 
+							mysql_real_escape_string($username)
+						);
+						
 						//Execute Query
 						$result = $this->db->query($sql);
 						
-						$auth = array(
-							'id' => mysql_insert_id(),
-							'user' => $userId,
-							'display_name' => $userInfo['name'],
-							'acl' => array('null')
-						);
-					}
-					else
-					{
-						$auth = $this->db->fetch($result);
-						$auth['acl'] = explode(',', $auth['acl']);
-					}
+						//Check if user exists
+						if(mysql_num_rows($result) == 0) // if random user tried, add to their guess count
+						{
+							//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
+							//$_SESSION['authguess']++;
+							$this->error = "Incorrect Username or Password";
+						}
+						/*else if ($auth['loginfailcnt'] > 7)
+						{
+							$this->error = "Reset your account with the link we emailed you.";
+						}
+						*/
+						else
+						{
+							$auth = $this->db->fetch($result);
+							
+							if($auth['pass'] != $password) // dont allow them to guess your username after 7 tries
+							{
+								/*$deny = '';
+								if($auth['loginfailcnt'] > 6)
+								{
+									mail($auth['email'], 'Your Account Locked at '.$_SERVER['HTTP_HOST'], 'Reset your account at : '.$this->base);
+									$deny = ", status = 'disabled'"; // change status
+								}
+								
+								$this->db->query('UPDATE lf_users SET loginfailcnt = loginfailcnt + 1 WHERE id = '.$auth['id']);
+								*/
+								$auth = $this->auth;
+								$this->error = "Incorrect Username or Password";
+							}
+							/*else 
+							{ 
+								$this->db->query('UPDATE lf_users SET loginfailcnt = 0 WHERE id = '.$auth['id']);
+							}*/
+						}
+						
+						if(isset($auth['status']) && $auth['status'] != 'valid')
+						{
+							if($auth['status'] == 'banned') $this->error = "You are banned.";
+							else $this->error = "You need to validate your account first.";
+							$auth = $this->auth;
+						}
+						else if(isset($auth['access']) && $auth['access'] == 'admin') // if admin, check for reCaptcha
+						{
+							/*if(isset($_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]))
+							{
+								//require_once(ROOT.'system/lib/recaptchalib.php');
+								$privatekey = "6LffguESAAAAACsudOF71gJLJE_qmvl4ey37qx8l";
+								$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
+								
+								if (!$resp->is_valid) {
+									$this->error = "Wrong reCaptcha";
+									$auth = $this->auth;
+								}
+							}*/
+							
+							if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
+						}
+						 
+						// dont let those apps see your password.
+						$_POST = array();
+						$this->auth = $auth;
+						redirect302();
+						break;
+						
+					// Forget password form
+					case 'forgot':
+						ob_start();
+						include 'view/forgot.php';
+						$content['%content%'][] = ob_get_clean();
+						
+						$this->select['template'] = 'fresh';
+						
+						// display in skin
+						echo $this->render($content);
+						
+						exit();
+						break;
+						
+					// Forget password emailvalidator
+					case 'remember': // will take /$hash to change password
+						
+						if(isset($this->action[2])) // hash provided, display password reset form
+						{
+							$hash = $this->action[2];
+							echo 'form<br />';
+							echo $hash;
+							exit();
+						}
+							
+						print_r($_POST);
+						exit();
 					
-					// Backward compatible
-					$auth['access'] = 'public';
-					if(in_array('superadmin', $auth['acl'])) $auth['access'] = 'admin';
+					
+						ob_start();
+						include 'view/forgot.php';
+						$content['%content%'][] = ob_get_clean();
+						
+						$this->select['template'] = 'fresh';
+						
+						// display in skin
+						echo $this->render($content);
+						
+						exit();
+						break;
 				}
-			} */
 		}
 		else // if currently logged in
 		{
@@ -659,6 +681,9 @@ class Littlefoot
 	
 	private function nav()
 	{
+		// need to utilize cache instead of query
+	
+	
 		/* Determine requested nav item from lf_actions */
 		
 		// get all possible matches for current request, always grab the first one in case nothing is selected
@@ -709,6 +734,7 @@ class Littlefoot
 			$this->action = array(''); // And now littlefoot() thinks that we requested just /
 		}
 		
+		
 		if(!is_file(ROOT.'cache/nav.cache.html')) // in case the file doesn't exist
 		{
 			$pwd = getcwd();
@@ -733,9 +759,7 @@ class Littlefoot
 		$class = isset($this->settings['nav_class']) ? $this->settings['nav_class'] : 'navigation';
 		
 		// Apply class to root <ul> if it is set
-		if($class != '')
-			$nav_cache = preg_replace('/^<ul>/', '<ul class="'.$class.'">', $nav_cache);
-		
+		if($class != '') $nav_cache = preg_replace('/^<ul>/', '<ul class="'.$class.'">', $nav_cache);
 		
 		return $nav_cache;
 	}
@@ -828,20 +852,21 @@ class Littlefoot
 		return $content;
 	}
 	
-	private function render($replace)
+	public function render($replace)
 	{
 		ob_start();
-		include 'system/view/login.php';
+		include ROOT.'system/view/login.php';
 		$login = ob_get_clean();
 
 		// Get Template code
 		ob_start();
 		if(is_file(ROOT.'skins/'.$this->select['template'].'/index.php'))
-			include ROOT.'skins/'.$this->select['template'].'/index.php';
+			readfile(ROOT.'skins/'.$this->select['template'].'/index.php');
 		else if(is_file(ROOT.'skins/'.$this->select['template'].'/index.html'))
 			readfile(ROOT.'skins/'.$this->select['template'].'/index.html');		
-
+			
 		$template = ob_get_clean();
+		
 		
 		// Replace all %markers% with $content
 		if(isset($replace))
@@ -907,8 +932,12 @@ class Littlefoot
 		return $return;
 	}
 	
+	//public function loadapp2($app, $ini = '', $vars = array()){
+		
+	//}
+	
 	// mount, app/controller, $ini, $vars
-	public function loadapp($app, $admin = false, $ini ='', $vars = array(''))
+	public function loadapp($app, $admin, $ini ='', $vars = array(''))
 	{
 		ob_start();
 		$old = $this->vars;
@@ -917,7 +946,7 @@ class Littlefoot
 		
 		$this->request = $this; // backward compatible
 		$cwd = getcwd();
-		chdir(ROOT.'apps/'.$app);
+		chdir(ROOT.'apps/'.$app); // just go into the app's folder
 		
 		$_app['ini'] = $ini;
 		
