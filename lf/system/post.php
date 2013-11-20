@@ -34,4 +34,5 @@ if(is_file($path))
 header('HTTP/1.1 302 Moved Temporarily');
 header('Location: '. $_SERVER['HTTP_REFERER']);
 //echo $output;
-?>
+
+>
