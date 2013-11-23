@@ -20,7 +20,7 @@ class auth extends app
 			// default to anonymous
 			$auth = array();
 		}
-		
+		 
 		else
 		{
 			$auth['last_request'] = date('Y-m-d G:i:s');
