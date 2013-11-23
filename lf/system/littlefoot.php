@@ -3,7 +3,8 @@
 class Littlefoot
 {
 	private $db;
-	private $auth; // use api to read
+	public $auth; // use api to read
+	public $auth_obj; // system/lib/auth.php
 	public $absbase;
 	public $base;
 	public $basenoget;
@@ -33,6 +34,8 @@ class Littlefoot
 	
 	public function __construct($db)
 	{
+		$this->lf = &$this; // universal usage of $this->lf
+		
 		$this->start = microtime(true);
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
@@ -120,6 +123,7 @@ class Littlefoot
 		}
 		
 		$this->select['template'] = $this->settings['default_skin'];
+		$this->select['title'] = 'LFCMS';
 		
 		$this->hook_run('settings_loaded');
 		
@@ -370,227 +374,32 @@ class Littlefoot
 	{
 		$this->hook_run('pre_auth'); 
 		
-		$auth = $this->auth;
+		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
+		include 'system/lib/auth.php';
+		$auth = new auth($this, $this->db);
 		
-		// If no user is currently set...
-		if(!isset($auth['user']))
-		{
-			// default to anonymous
-			$auth['user'] = 'anonymous';
-			$auth['display_name'] = 'Anonymous';
-			$auth['id'] = 0;
-			$auth['access'] = 'none';
-		}
-		
-		// if anon or admin login
-			// check for submit->login
-				// check for good user/pass
-				
-				
-				
-				
-		
-					
 		// change to auth class 
-		if($this->action[0] == '_auth' && isset($this->action[1]) && ($this->action[1] != 'login' && $this->action[1] != 'logout'))
+		if($this->action[0] == '_auth' && isset($this->action[1]))
 		{
 			ob_start();
-			include 'system/lib/signup.php';
-			$signup = new signup($this, $this->db);
 			$method = $this->action[1];
 			
-			$signup->$method(array_slice($this->action, 1));
+			$auth->$method(array_slice($this->action, 1));
+			
 			$out = ob_get_clean();
 			$out = str_replace('%appurl%', $this->base.'_auth/', $out);
 			$content['%content%'][] = $out;
 			
 			// display in skin
 			echo $this->render($content);
+			
+			exit(); // end auth session after render, 
+			// otherwise it will 302 (login/logout)
+		}
 		
-			exit();
-		}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+		$this->auth = $auth;
 		
-		// If anonymous... 
-		if( $auth['user'] == 'anonymous' || ( count($_POST) && isset($_POST['adminlogin']) ) )
-		{
-			//echo $this->action[1];
-			
-			// check for normal login
-			if($this->action[0] == '_auth' && isset($this->action[1]))
-				switch($this->action[1])
-				{
-					case 'login':
-						$loggedin = false;
-						
-						
-						// Get user/pass from $_POST and hash pass
-						$username = $this->post['user'];
-						$password = sha1($this->post['pass']);
-				
-						//Get user
-						$sql = sprintf("
-								SELECT id, pass, user, email, last_request, display_name, access, status
-								FROM lf_users WHERE user = '%s'
-								LIMIT 1
-							", 
-							mysql_real_escape_string($username)
-						);
-						
-						//Execute Query
-						$result = $this->db->query($sql);
-						
-						//Check if user exists
-						if(mysql_num_rows($result) == 0) // if random user tried, add to their guess count
-						{
-							//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
-							//$_SESSION['authguess']++;
-							$this->error = "Incorrect Username or Password";
-						}
-						/*else if ($auth['loginfailcnt'] > 7)
-						{
-							$this->error = "Reset your account with the link we emailed you.";
-						}
-						*/
-						else
-						{
-							$auth = $this->db->fetch($result);
-							
-							if($auth['pass'] != $password) // dont allow them to guess your username after 7 tries
-							{
-								/*$deny = '';
-								if($auth['loginfailcnt'] > 6)
-								{
-									mail($auth['email'], 'Your Account Locked at '.$_SERVER['HTTP_HOST'], 'Reset your account at : '.$this->base);
-									$deny = ", status = 'disabled'"; // change status
-								}
-								
-								$this->db->query('UPDATE lf_users SET loginfailcnt = loginfailcnt + 1 WHERE id = '.$auth['id']);
-								*/
-								$auth = $this->auth;
-								$this->error = "Incorrect Username or Password";
-							}
-							/*else 
-							{ 
-								$this->db->query('UPDATE lf_users SET loginfailcnt = 0 WHERE id = '.$auth['id']);
-							}*/
-						}
-						
-						if(isset($auth['status']) && $auth['status'] != 'valid')
-						{
-							if($auth['status'] == 'banned') $this->error = "You are banned.";
-							else $this->error = "You need to validate your account first.";
-							$auth = $this->auth;
-						}
-						else if(isset($auth['access']) && $auth['access'] == 'admin') // if admin, check for reCaptcha
-						{
-							/*if(isset($_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]))
-							{
-								//require_once(ROOT.'system/lib/recaptchalib.php');
-								$privatekey = "6LffguESAAAAACsudOF71gJLJE_qmvl4ey37qx8l";
-								$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
-								
-								if (!$resp->is_valid) {
-									$this->error = "Wrong reCaptcha";
-									$auth = $this->auth;
-								}
-							}*/
-							
-							if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
-						}
-						 
-						// dont let those apps see your password.
-						$_POST = array();
-						$this->auth = $auth;
-						redirect302();
-						break;
-						
-					// Forget password form
-					case 'forgot':
-						ob_start();
-						include 'view/forgot.php';
-						$content['%content%'][] = ob_get_clean();
-						
-						$this->select['template'] = 'fresh';
-						
-						// display in skin
-						echo $this->render($content);
-						
-						exit();
-						break;
-						
-					// Forget password emailvalidator
-					case 'remember': // will take /$hash to change password
-						
-						if(isset($this->action[2])) // hash provided, display password reset form
-						{
-							$hash = $this->action[2];
-							echo 'form<br />';
-							echo $hash;
-							exit();
-						}
-							
-						print_r($_POST);
-						exit();
-					
-					
-						ob_start();
-						include 'view/forgot.php';
-						$content['%content%'][] = ob_get_clean();
-						
-						$this->select['template'] = 'fresh';
-						
-						// display in skin
-						echo $this->render($content);
-						
-						exit();
-						break;
-				}
-		}
-		else // if currently logged in
-		{
-			// check for logout request && ignore facebook redirecting from ?logout
-			if($this->action[0] == '_auth' && $this->action[1] == 'logout')
-			{
-				// reset session
-				session_destroy();
-				$auth = array();
-				$this->note = 'logout';
-				
-				redirect302();
-			}
-			
-			else if(isset($auth['timeout']) && $auth['timeout'] < time() && false) // disabled for now #debug
-			{
-				//save user for quick re-login
-				$user = $auth['user'];
-				
-				//session_destroy();
-				$this->error = "You timed out. Please log back in.";
-				
-				// default to anonymous
-				$auth = array();
-			}
-			
-			else
-			{
-				$auth['last_request'] = date('Y-m-d G:i:s');
-				$auth['timeout'] = time() + 60*30; // timeout in 30 minutes
-			}
-		}
+		$auth = $auth->auth;
 		
 		// for tinymce ajax file manager auth
 		if(isset($auth['access']) && $auth['access'] == 'admin')
@@ -937,16 +746,21 @@ class Littlefoot
 	//}
 	
 	// mount, app/controller, $ini, $vars
-	public function loadapp($app, $admin, $ini ='', $vars = array(''))
+	public function loadapp($app, $admin, $ini ='', $vars = array(''), $custompath = NULL)
 	{
 		ob_start();
 		$old = $this->vars;
 		$this->vars = $vars;
 		$var = $vars; // backward compatible
 		
-		$this->request = $this; // backward compatible
+		
+		$this->request = $this; // backward compatible with admin
 		$cwd = getcwd();
-		chdir(ROOT.'apps/'.$app); // just go into the app's folder
+		
+		if($custompath == NULL)
+			chdir(ROOT.'apps/'.$app); // just go into the app's folder
+		else
+			chdir($custompath);
 		
 		$_app['ini'] = $ini;
 		
