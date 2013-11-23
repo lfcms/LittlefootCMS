@@ -1,24 +1,144 @@
 <?php
 
-class signup
+class auth extends app
 {
-	private $request;
-	private $html;
-	private $pwd;
-	private $dbconn;
+	public $auth;
 	
-	public function __construct($request, $dbconn, $ini = '')
+	protected function init($args)
 	{
-		$this->db = $dbconn;
-		$this->request = $request;
-		$this->pwd = $request->absbase.'/apps';
-		$this->ini = $ini;
+		$auth = $this->lf->auth;
+		
+		// disabled for now #debug, should add a settings option to enable this
+		if(isset($auth['timeout']) && $auth['timeout'] < time() && false) 
+		{
+			//save user for quick re-login
+			$user = $auth['user'];
+			
+			//session_destroy();
+			$this->error = "You timed out. Please log back in.";
+			
+			// default to anonymous
+			$auth = array();
+		}
+		
+		else
+		{
+			$auth['last_request'] = date('Y-m-d G:i:s');
+			$auth['timeout'] = time() + 60*30; // timeout in 30 minutes
+		}
+		
+		// If no user is currently set...
+		if(!isset($auth['user']))
+		{
+			// default to anonymous
+			$auth['user'] = 'anonymous';
+			$auth['display_name'] = 'Anonymous';
+			$auth['id'] = 0;
+			$auth['access'] = 'none';
+		}
+		
+		$this->auth = $auth;
+	}
+	
+	public function login($args)
+	{
+		$auth = $this->auth;
+		
+		$loggedin = false;
+		
+		// Get user/pass from $_POST and hash pass
+		$username = $_POST['user'];
+		$password = sha1($_POST['pass']);
+
+		//Get user
+		$sql = sprintf("
+				SELECT id, pass, user, email, last_request, display_name, access, status
+				FROM lf_users WHERE user = '%s'
+				LIMIT 1
+			", 
+			mysql_real_escape_string($username)
+		);
+		
+		//Execute Query
+		$result = $this->db->query($sql);
+		
+		//Check if user exists
+		if(mysql_num_rows($result) == 0) // if random user tried, add to their guess count
+		{
+			//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
+			//$_SESSION['authguess']++;
+			$this->error = "Incorrect Username or Password";
+		}
+		/*else if ($auth['loginfailcnt'] > 7)
+		{
+			$this->error = "Reset your account with the link we emailed you.";
+		}
+		*/
+		else
+		{
+			$auth = $this->db->fetch($result);
+			if($auth['pass'] != $password) // dont allow them to guess your username after 7 tries
+			{
+				/*$deny = '';
+				if($auth['loginfailcnt'] > 6)
+				{
+					mail($auth['email'], 'Your Account Locked at '.$_SERVER['HTTP_HOST'], 'Reset your account at : '.$this->base);
+					$deny = ", status = 'disabled'"; // change status
+				}
+				
+				$this->db->query('UPDATE lf_users SET loginfailcnt = loginfailcnt + 1 WHERE id = '.$auth['id']);
+				*/
+				$auth = $this->lf->auth;
+				//$this->error = "Incorrect Username or Password";
+			}
+			/*else 
+			{ 
+				$this->db->query('UPDATE lf_users SET loginfailcnt = 0 WHERE id = '.$auth['id']);
+			}*/
+		}
+		
+		if(isset($auth['status']) && $auth['status'] != 'valid')
+		{
+			if($auth['status'] == 'banned') 
+				$this->error = "You are banned.";
+			else 
+				$this->error = "You need to validate your account first.";
+			
+			$auth = $this->lf->auth;
+		}
+		else if(isset($auth['access']) && $auth['access'] == 'admin') // if admin, check for reCaptcha
+		{
+			/*if(isset($_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]))
+			{
+				//require_once(ROOT.'system/lib/recaptchalib.php');
+				$privatekey = "6LffguESAAAAACsudOF71gJLJE_qmvl4ey37qx8l";
+				$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
+				
+				if (!$resp->is_valid) {
+					$this->error = "Wrong reCaptcha";
+					$auth = $this->auth;
+				}
+			}*/
+			
+			if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
+		}
+		
+		$this->lf->auth = $auth;
+		
+		redirect302();
+	}
+	
+	public function logout($args)
+	{
+		// reset session
+		session_destroy();
+		redirect302();
 	}
 	
 	//default
-	public function main($vars)
+	public function signup($vars)
 	{
-		if($this->request->api('getuid') != 0) // logged in
+		/*if($this->lf->api('getuid') != 0) // logged in
 		{
 			if(isset($_SESSION['dest_url']))
 			{
@@ -27,8 +147,8 @@ class signup
 				redirect302($dest);
 			}
 			else
-				redirect302($this->request->base.'profile/');
-		}
+				redirect302($this->lf->base.'profile/');
+		}*/
 		
 		if(isset($_GET['dest']))
 			$_SESSION['dest_url'] = urldecode($_GET['dest']);
@@ -71,7 +191,7 @@ class signup
 					<li>User:<br /><input type="text" name="user" /></li>
 					<li>Pass:<br /><input type="password" name="pass"/></li>
 					<li>Email:<br /><input type="text" name="email" /></li>
-					<li><input type="checkbox" name="terms" /> I accept the <strike><a href="%baseurl%terms/" target="_blank">terms and conditions</a></strike>.</li>
+					<!-- <li><input type="checkbox" name="terms" /> I accept the <a href="%baseurl%terms/" target="_blank">terms and conditions</a>.</li> -->
 					<li><input style="padding: 5px; background: white; border: 1px;" type="submit" value="Sign Up!"/></li>
 				</ul>
 			</form>
@@ -111,22 +231,22 @@ class signup
 		else
 		{
 			// not in use, create account
-			if(!preg_match('/^[0-9a-zA-Z]+$/', $_POST['user'], $user))
+			/*if(!preg_match('/^[0-9a-zA-Z]+$/', $_POST['user'], $user))
 			{
 				echo 'Invalid username. Must be alphanumeric.';
 				$this->main($vars);
 				
 			}
-			else if(!preg_match('/^[a-z0-9._%-+]+@[a-z0-9.-]+\.[a-z]{2,4}$/', strtolower($_POST['email']), $email))
+			else */if(!preg_match('/^[a-z0-9._%-+]+@[a-z0-9.-]+\.[a-z]{2,4}$/', strtolower($_POST['email']), $email))
 			{
 				echo 'Invalid email.';
 				$this->main($vars);
 			}
-			else if($_POST['terms'] != 'on')
+			/*else if($_POST['terms'] != 'on')
 			{
 				echo 'Accept the terms and conditions.';
 				$this->main($vars);
-			}
+			}*/
 			else
 			{
 				$hash = sha1((rand()*date('U')).$user[0]);
@@ -134,7 +254,7 @@ class signup
 					INSERT INTO lf_users (`id`, `user`, `pass`, `email`, `display_name`, `hash`, `last_request`, `status`, `access`)
 					VALUES ( 
 						NULL, 
-						'".$user[0]."', 
+						'".mysql_real_escape_string($_POST['user'])."',  
 						'".sha1($_POST['pass'])."', 
 						'".mysql_real_escape_string($_POST['email'])."',  
 						'".$user[0]."',
@@ -151,7 +271,7 @@ Hello,
 
 Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you account by visiting the following link:
 
-'.$this->request->base.'_auth/validate/'.$hash;
+'.$this->lf->base.'_auth/validate/'.$hash;
 
 				if(mail($_POST['email'], 'Validate your account at '.$_SERVER['SERVER_NAME'], $msg, 'From: signup@'.$_SERVER['SERVER_NAME']))
 					echo 'Account Created. Check your email to validate your account. Be sure to check your spam folder too!';
@@ -188,11 +308,11 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	public function forgotresult($vars)
 	{
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE email = '".mysql_real_escape_string($_POST['email'])."'");
-		if(!$user) redirect302($this->request->appurl);
+		if(!$user) redirect302($this->lf->appurl);
 		
 		$hash = sha1(rand().date('U'));
 		
-		$url = $this->request->base.'_auth/resetpassform/'.$user['id'].'/'.$hash;
+		$url = $this->lf->base.'_auth/resetpassform/'.$user['id'].'/'.$hash;
 		
 		if(mail(
 			$user['email'], 
@@ -233,6 +353,8 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 			echo 'New password set. <a href="%baseurl%signup/">Login here</a>';
 		} else echo 'Bad form data';
 	}
+	
+	
 }
 
 ?>
