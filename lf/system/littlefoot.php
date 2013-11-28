@@ -666,7 +666,7 @@ class Littlefoot
 		// Get Template code
 		ob_start();
 		if(is_file(ROOT.'skins/'.$this->select['template'].'/index.php'))
-			readfile(ROOT.'skins/'.$this->select['template'].'/index.php');
+			include(ROOT.'skins/'.$this->select['template'].'/index.php');
 		else if(is_file(ROOT.'skins/'.$this->select['template'].'/index.html'))
 			readfile(ROOT.'skins/'.$this->select['template'].'/index.html');		
 			
