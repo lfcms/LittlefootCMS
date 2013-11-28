@@ -157,8 +157,17 @@ function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), 
 				}
 			}
 			
+			// handle duplicate filename
 			if (file_exists($destfolder.$file["name"]))
-				$file["name"] = 'dupe_'.date('U').$file["name"];
+			{
+				$count = 1;
+				while(file_exists($destfolder.$count.'-'.$file["name"]))
+					$count++;
+					
+				$file["name"] = $count.'-'.$file["name"];
+			}
+			
+			//$file["name"] = 'dupe_'.date('U').$file["name"];
 			
 			$success = move_uploaded_file(
 				$file["tmp_name"],

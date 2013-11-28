@@ -378,15 +378,11 @@ class Littlefoot
 		include 'system/lib/auth.php';
 		$auth = new auth($this, $this->db);
 		
+		
 		// change to auth class 
 		if($this->action[0] == '_auth' && isset($this->action[1]))
 		{
-			ob_start();
-			$method = $this->action[1];
-			
-			$auth->$method(array_slice($this->action, 1));
-			
-			$out = ob_get_clean();
+			$out = $auth->_router(array(), $this->action[1]);
 			$out = str_replace('%appurl%', $this->base.'_auth/', $out);
 			$content['%content%'][] = $out;
 			

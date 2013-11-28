@@ -47,7 +47,7 @@ class app
 		$filter: if set, limit valid functions to those in the array; eg, array('func2', 'func3')
 	
 	*/
-	protected function _router($args, $default_route = 'home', $filter = array())
+	public function _router($args, $default_route = 'home', $filter = array())
 	{
 		$this->instbase = $this->lf->appurl.$args[0].'/'; // url lf->appurl to all
 		$this->inst = urldecode($args[0]);
@@ -57,10 +57,13 @@ class app
 		
 		$method = $default_route;
 		
-		if(isset($args[0])) // if a base variable is specified,
-			if($filter == array()) // if no filter is specified,
+		// if a base variable is specified,
+		if(isset($args[0])) 
+			// if no filter is specified,
+			if($filter == array()) 
 				$method = $args[0];
-			else if(in_array($args[0], $filter)) // if $filter has more than no elements and $args[0] is in the filter,
+			// if $filter has more than no elements and $args[0] is in the filter,
+			else if(in_array($args[0], $filter)) 
 				$method = $args[0];
 		
 		ob_start();
