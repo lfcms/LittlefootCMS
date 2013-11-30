@@ -3,14 +3,18 @@
 define('ROOT', __DIR__.'/../'); // default to lf install dir
 define('APP', getcwd().'/'); // app root based on pwd
 
-include ROOT.'config.php';
-include ROOT.'system/functions.php'; // so they
-include ROOT.'system/db.class.php'; // can use
-include ROOT.'system/app.class.php'; // all the
-include ROOT.'system/littlefoot.php'; // cool functions
+chdir(ROOT);
+
+if(!isset($db)) include 'config.php';
+
+include 'system/functions.php'; // so they
+include 'system/db.class.php'; // can use
+include 'system/app.class.php'; // all the
+//include 'system/lib/auth.php'; // cool functions
+include 'system/littlefoot.php'; 
 
 $lf = new Littlefoot($db);
-$admin = $lf->request();
+$lf->request();
 $lf->authenticate();
 
 
@@ -19,6 +23,7 @@ $lf->authenticate();
 
 
 
+chdir(APP); // give cwd back to app
 
 
 

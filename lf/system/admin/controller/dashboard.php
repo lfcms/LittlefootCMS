@@ -49,7 +49,7 @@ class dashboard
 	{	
 		if($this->simple) return;
 		
-		$this->updatenavcache(); // b
+		$this->updatenavcache(); // idk if this needs to be here
 	
 		// admin load edit from ini
 		include('model/navgen.php');

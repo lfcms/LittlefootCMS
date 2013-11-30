@@ -15,6 +15,8 @@ class Littlefoot
 	public $select; // chosen nav item from request (include nav id)
 	private $alias;
 	
+	public $admin;
+	
 	public $get;
 	public $post;
 	public $vars;
@@ -365,6 +367,8 @@ class Littlefoot
 			if(count($this->action) < 1)
 				$this->action[] = '';
 		}
+		
+		$this->admin = $request[3] == 'admin/' ? true : false; // for API
 		
 		// Whether or not this is an admin/ request
 		return $request[3] == 'admin/' ? true : false;
