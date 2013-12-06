@@ -2,20 +2,6 @@
 
 $request = $this->action;
 
-$admin_skin = 'fresh';
-
-// maybe you are an admin, but I need you to login first
-if($this->auth['access'] != 'admin')
-{
-	//$publickey = '6LffguESAAAAAKaa8ZrGpyzUNi-zNlQbKlcq8piD'; // littlefootcms public key
-	$recaptcha = '';//recaptcha_get_html($publickey);
-	
-	ob_start();
-	include('skin/'.$admin_skin.'/login.php'); 
-	echo str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-	exit;
-}
-
 // only admins can see this page
 if($this->auth['access'] != 'admin')
 	redirect302($this->base);

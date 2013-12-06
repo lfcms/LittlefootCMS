@@ -1,6 +1,7 @@
 <br />
-	Args: <input type="text" name="ini" value="<?=$save['ini'];?>" />
+	Config: <?=$args;?>
 		
+		<br />
 			Url: <?php echo $_SERVER['SERVER_NAME'].$this->request->relbase; ?> <select name="parent">
 				<optgroup label="Select Base">
 					<option value="-1">&lt;base&gt;</option>
@@ -41,3 +42,6 @@
 
 		<?php if(isset($save['id'])) echo '<input type="hidden" name="id" value="'.$save['id'].'">'; ?><input type="submit" value="Update" /> <?php if(isset($save['label'])) echo ' ( <a class="deselect_nav_form" href="%appurl%">Deselect</a> )';?>
 	<br />
+	<br />
+	<br />
+	[<a id="nav_<?=$save['alias'];?>" onclick="return confirm('Do you really want to delete this?');" href="%baseurl%apps/rm/<?=$save['id'];?>/">Delete Nav Item</a>]

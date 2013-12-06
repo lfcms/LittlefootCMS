@@ -17,18 +17,22 @@ class upgrade extends app
 		echo '<p>[ <a href="%appurl%lfup/">Upgrade Littlefoot</a> ]</p>
 		
 			<h3 style="margin-top: 10px;">Restore to old system</h3>';
-		$backups = scandir(ROOT.'backup/');
-		foreach($backups as $backup)
-		{
-			if($backup == '.' || $backup == '..') continue;
-			
-			if(is_file(ROOT.'backup/'.$backup.'/version'))
-				$version = file_get_contents(ROOT.'backup/'.$backup.'/version');
-			else
-				$version = $backup;
-			
-			echo '[ <a href="%appurl%restore/'.$backup.'/">Restore</a> ] [<a href="%appurl%rm/'.$backup.'/">Delete</a>] '.$version.'<br />';
-		}
+		
+		//if(is_dir(ROOT.'backup/'))
+		//{
+			$backups = scandir(ROOT.'backup/');
+			foreach($backups as $backup)
+			{
+				if($backup == '.' || $backup == '..') continue;
+				
+				if(is_file(ROOT.'backup/'.$backup.'/version'))
+					$version = file_get_contents(ROOT.'backup/'.$backup.'/version');
+				else
+					$version = $backup;
+				
+				echo '[ <a href="%appurl%restore/'.$backup.'/">Restore</a> ] [<a href="%appurl%rm/'.$backup.'/">Delete</a>] '.$version.'<br />';
+			}
+		//} else echo 'No system restore points are available.';
 	}
 	
 	public function lfup($var)

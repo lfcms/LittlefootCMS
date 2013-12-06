@@ -1,3 +1,8 @@
+
+
+
+
+
 <h3>
 	<?php if($save == '') { $action = 'create'; ?>
 		Create a new Link
@@ -53,7 +58,6 @@
 			<!-- Recursive? <input type="checkbox" name="recursive"/> -->
 			Order: <input type="text" name="position"  style="width: 25px;" value="<?php if(isset($save['position'])) echo $save['position']; else echo 1; ?>" /> 
 			</li>
-		<li>
 		<li>Page Title: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" /></li>
 		<li>Nav Label: <input type="text" name="label" value="<?php if(isset($save['label'])) echo $save['label']; ?>" /></li>
 		<li>

@@ -107,6 +107,7 @@ function get_include($path)
 
 // ty xaav from [http://stackoverflow.com/questions/3938534/download-file-to-server-from-url]
 function downloadFile ($url, $path) {
+
 	$newfname = $path;
 	$file = fopen ($url, "rb");
 	if ($file) {
@@ -156,8 +157,17 @@ function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), 
 				}
 			}
 			
+			// handle duplicate filename
 			if (file_exists($destfolder.$file["name"]))
-				$file["name"] = 'dupe_'.date('U').$file["name"];
+			{
+				$count = 1;
+				while(file_exists($destfolder.$count.'-'.$file["name"]))
+					$count++;
+					
+				$file["name"] = $count.'-'.$file["name"];
+			}
+			
+			//$file["name"] = 'dupe_'.date('U').$file["name"];
 			
 			$success = move_uploaded_file(
 				$file["tmp_name"],

@@ -5,6 +5,7 @@ function build_nav_cache($menu, $parent = -1, $prefix = '')
 	$items = $menu[$parent];
 	
 	$html = '<ul>';
+	if($items)
 	foreach($items as $item) // loop through the items
 	{
 		$newprefix = $prefix;

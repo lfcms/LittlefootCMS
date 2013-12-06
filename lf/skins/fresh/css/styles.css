@@ -1,7 +1,7 @@
 a {
     text-decoration: none;
 }
-h1 { padding: 0px; }
+h1 { padding: 0px; float: left;}
 h3 {
     color: #21759B;
 }
@@ -22,6 +22,7 @@ header {
     color: #515151;
     margin: auto auto;
     padding-top: 1.5rem;   
+    height: 70px;
 }/*
 nav {
     border-top: 1px solid #000;
@@ -45,3 +46,7 @@ nav li {
 .content {
     margin: auto auto;
 }
+
+#_auth { text-align: right; margin-left: 100px; margin-top: 30px; }
+#_auth ul { list-style: none; }
+#_auth ul li { display: inline; }

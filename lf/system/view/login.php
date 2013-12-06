@@ -20,7 +20,8 @@ if($this->auth['user'] != 'anonymous')
 				<li class="_auth_user">User: <input type="text" name="user" /></li>
 				<li class="_auth_pass">Pass: <input type="password" name="pass" /></li>
 				<li class="_auth_submit"><input type="submit" value="Log In" /></li>
-				<?php if($this->settings['signup'] == 'enabled') { ?><li class="_auth_signup">or <a href="%baseurl%signup/">Sign Up</a></li><?php } ?>
+				<li><a href="%baseurl%_auth/forgotform">Reset?</a></li>
+				<?php if($this->settings['signup'] == 'on') { ?><li class="_auth_signup">or <a href="%baseurl%_auth/signup">Sign Up</a></li><?php } ?>
 			</ul>
 	</form> 
 
