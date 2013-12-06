@@ -68,6 +68,7 @@ body.login {
 }
 div.loginbox {
     -webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
     box-sizing: border-box;
     margin-top: -145px;
     margin-left: -160px;
@@ -92,6 +93,8 @@ div.loginbox form label {
 }
 div.loginbox form input#username, div.loginbox form input#password {
     box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
     background-color: rgba(100, 100, 100, 0.4);
     border: 2px solid rgba(255, 255, 255, 0.1);
     color: #BBB;
