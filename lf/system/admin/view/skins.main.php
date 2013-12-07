@@ -1,23 +1,20 @@
-<h2>Skin Manager</h2>
-<div id="inst_skins" class="skin_page_container">
-	<h3>Install Skins</h3>	
-	<p>Install Apps packaged from an uploaded .zip file or <a href="%appurl%download/">Download Skins</a> from online.</p>
-	<form id="inst_skin_form" enctype="multipart/form-data" action="%appurl%install/" method="post">
-		<ul>
-			<li>
-				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-				Source: <input type="file" name="skin" />
-				(<?php echo ini_get('post_max_size'); ?>/<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)
-				<?php echo $install; ?>
-			</li>
-		</ul>
+<div id="new_skins" class="skin_page_container">
+	<h3>New Skins (<a href="%appurl%download/">Store</a>)</h3>
+	<h4>Upload</h4>
+	<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/" method="post">
+		<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
+		<p><input id="upload_skin_file" type="file" name="skin" /></p>
+		<p><?php echo $install; ?> (<?php echo ini_get('post_max_size'); ?>/<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</p>
 	</form>
+	<h4>Create</h4>
+	<form id="create_skin_form" action="%appurl%blankskin/" method="post">
+		<input id="create_skin_namebox" type="text" name="name" placeholder="Name new skin" />
+		<input type="submit" value="Create it" />
+	</form> 
 </div>
 <div id="avail_skins" class="skin_page_container">
 	<h3>Available Skins:</h3>
-	<p>Click a skin to set it as the default. Click the [x] to remove the skin. Click Zip to download the skin.
-	<br />
-	<form id="avail_skin_form" action="%appurl%blankskin/" method="post">Or make a new skin: <input type="text" name="name" placeholder="name" /><input type="submit" value="Create new skin" /></form></p> 
+	<p>Click a skin to set it as the default. [x] to remove a skin. Zip to download a skin.</p>
 		
 	<ul class="applist">
 	<?php

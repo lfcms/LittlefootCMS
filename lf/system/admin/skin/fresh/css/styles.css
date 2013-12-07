@@ -275,17 +275,39 @@ ul.applist {
 #app-skins ul.applist li {
     font-size: 18px;
 }
-#app-skins #inst_skins {
+#app-skins #new_skins {
+	border: 2px dashed #ddd;
+	padding: 15px;
 	float: right;
+}
+#app-skins #new_skins h3 {
+	margin-bottom: 5px;
+}
+#app-skins #new_skins h4 {
+	border-top: 2px dashed #ddd;
+	margin-top: 5px;
+	padding-top: 5px;
+}
+#app-skins #new_skins  input {
+	padding: 5px;
 }
 #app-skins #avail_skins {
 	float: left;
 }
-#app-skins #inst_skin_form {
-    margin: 10px 0;
+#app-skins #create_skin_form {
+    margin-top: 5px;
 }
-#app-skins #avail_skin_form {
-    margin: 10px 0;
+#app-skins #create_skin_form #create_skin_namebox {
+    width: 170px;
+	font-size: 18px;
+	font-size: 18px;
+}
+#app-skins #upload_skin_form {
+    margin-bottom: 10px;
+}
+#app-skins #upload_skin_form #upload_skin_file {
+	border: 2px solid #ddd;
+	margin: 5px 0;
 }
 #app-skins .left_header {
 	float: left;
@@ -300,9 +322,6 @@ ul.applist {
 #app-skins .left_header a,
 #app-skins .right_header a {
 	font-size: small;
-}
-#app-skins .skin_page_container {
-	margin: 10px 0;
 }
 #app-users ul {
     margin-left: -40px;
