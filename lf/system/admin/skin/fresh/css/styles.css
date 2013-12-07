@@ -261,6 +261,7 @@ ul.applist {
     width: 100%;
 }
 #app-skins ul.applist li {
+    transition: background-color 0.25s linear 0s;
     background-color: rgba(230, 230, 230, 0.5);
     border: medium none;
     border-radius: 3px;

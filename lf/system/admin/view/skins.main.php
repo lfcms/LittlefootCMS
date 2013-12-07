@@ -8,7 +8,7 @@
 	</form>
 	<h4>Create</h4>
 	<form id="create_skin_form" action="%appurl%blankskin/" method="post">
-		<input id="create_skin_namebox" type="text" name="name" placeholder="Name new skin" />
+		<input id="create_skin_namebox" type="text" name="name" placeholder="Name your new skin" />
 		<input type="submit" value="Create it" />
 	</form> 
 </div>
