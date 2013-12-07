@@ -6,7 +6,13 @@ Options -Indexes
 	RewriteEngine On
 
 	# Change this to a /sub/folder/ if needed
+	#RewriteBase /
+	
+	# ty http://www.zeilenwechsel.de/it/articles/8/Using-mod_rewrite-in-.htaccess-files-without-knowing-the-RewriteBase.html
 	RewriteBase /
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond $1#%{REQUEST_URI} ([^#]*)#(.*)\1$
+	RewriteRule ^(.*)$ %2index.php [QSA,L]
 
 	# Route all requests to index.php
 	RewriteCond %{REQUEST_FILENAME} !-f
