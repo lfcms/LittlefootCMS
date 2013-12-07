@@ -277,4 +277,9 @@ function thumbnail($html, $dimensions = '200x200')
 	return $html;
 }
 
+function jsprompt($msg)
+{
+	return 'onclick="return confirm(\''.$msg.'\');"';
+}
+
 ?>
