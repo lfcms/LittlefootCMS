@@ -38,6 +38,7 @@ class upgrade extends app
 	public function lfup($var)
 	{
 		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
+		unset($_SESSION['upgrade']);
 		redirect302();
 	}
 

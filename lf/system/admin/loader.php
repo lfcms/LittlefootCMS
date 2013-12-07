@@ -23,6 +23,19 @@ if(!$success) $match[0] = 'dashboard';
 
 $this->vars = array_slice($this->action, 1);
 
+
+
+if(!isset($_SESSION['upgrade']))
+{
+	$newversion = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+	if($this->lf->version != $newversion && $this->lf->version != '1-DEV')
+		$_SESSION['upgrade'] = $newversion;
+	else
+		$_SESSION['upgrade'] = false;
+}
+
+if($_SESSION['upgrade']) echo '<a style="font-family: Arial; display: block; padding: 10px; background: #DDF" href="'.$this->base.'upgrade">Upgrade to '.$_SESSION['upgrade'].' available!</a>';
+
 //formauth
 require_once(ROOT.'system/lib/nocsrf.php');
 if(count($_POST))
