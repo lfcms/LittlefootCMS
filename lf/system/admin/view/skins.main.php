@@ -25,7 +25,7 @@
 		
 		$highlight = '';
 		if($file == $request->settings['default_skin'])
-			$highlight = 'border: 1px solid #999; background: #DDD;';
+			$highlight = 'background: #DDD;';
 			
 		if(is_file($skin.'/index.php'))
 		{
