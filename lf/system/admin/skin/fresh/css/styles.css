@@ -273,14 +273,12 @@ ul.applist {
     background-color: rgba(245, 245, 245, 0.5);
 }
 #app-skins ul.applist li {
-    height: 150px;
-    width: 255px;
+    min-height: 235px;
+    width: 280px;
     font-size: 18px;
 }
 #app-skins #new_skins {
-	right: 15px;
-	position:  fixed;
-	border: 2px dashed #ddd;
+	background-color: #fff;
 	padding: 15px;
 }
 #app-skins #new_skins h3 {
@@ -288,28 +286,28 @@ ul.applist {
 }
 #app-skins #new_skins h4 {
 	border-top: 2px dashed #ddd;
-	margin-top: 5px;
-	padding-top: 5px;
+	margin-top: 10px;
+	padding-top: 10px;
 }
 #app-skins #new_skins  input {
 	padding: 5px;
 }
 #app-skins #avail_skins {
-	margin-right: 270px;
-	float: left;
 }
 #app-skins #create_skin_form {
     margin-top: 5px;
 }
 #app-skins #create_skin_form #create_skin_namebox {
-    width: 170px;
-	font-size: 18px;
+    padding: 3px;
+    width: 72%;
+	
 	font-size: 18px;
 }
 #app-skins #upload_skin_form {
     margin-bottom: 10px;
 }
 #app-skins #upload_skin_form #upload_skin_file {
+	width: 96%;
 	border: 2px solid #ddd;
 	margin: 5px 0;
 }
