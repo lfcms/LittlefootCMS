@@ -257,8 +257,7 @@ ul.applist {
 }
 #app-skins ul.applist {
     float: left;
-    margin-top: 10px;
-    width: 100%;
+    margin: 10px 0 10px -40px;
 }
 #app-skins ul.applist li {
     transition: background-color 0.25s linear 0s;
@@ -274,12 +273,15 @@ ul.applist {
     background-color: rgba(245, 245, 245, 0.5);
 }
 #app-skins ul.applist li {
+    height: 150px;
+    width: 255px;
     font-size: 18px;
 }
 #app-skins #new_skins {
+	right: 15px;
+	position:  fixed;
 	border: 2px dashed #ddd;
 	padding: 15px;
-	float: right;
 }
 #app-skins #new_skins h3 {
 	margin-bottom: 5px;
@@ -293,6 +295,7 @@ ul.applist {
 	padding: 5px;
 }
 #app-skins #avail_skins {
+	margin-right: 270px;
 	float: left;
 }
 #app-skins #create_skin_form {

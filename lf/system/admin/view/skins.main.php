@@ -15,7 +15,6 @@
 <div id="avail_skins" class="skin_page_container">
 	<h3>Available Skins:</h3>
 	<p>Click a skin to set it as the default. [x] to remove a skin. Zip to download a skin.</p>
-		
 	<ul class="applist">
 	<?php
 	foreach(scandir($pwd) as $file)
