@@ -353,7 +353,9 @@ class dashboard
 		else if(isset($apps[$vars[1]]))
 		{
 			$files = array_flip(scandir(ROOT.'apps'));
-			if(isset($files[$vars[1]])) return 'app already downloaded: '.$vars[1];
+			
+			if(isset($files[$vars[1]]))
+				return 'App already downloaded: '.$vars[1];
 			
 			$file = 'http://littlefootcms.com/files/download/apps/'.$vars[1].'.zip';
 			$dest = ROOT.'apps/'.$vars[1].'.zip';

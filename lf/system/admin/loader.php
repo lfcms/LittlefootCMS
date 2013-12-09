@@ -43,14 +43,14 @@ if(count($_POST))
 	try
 	{
 		// Run CSRF check, on POST data, in exception mode, with a validity of 10 minutes, in one-time mode.
-		NoCSRF::check( 'csrf_token', $_POST, true, 60*10, false );
+		NoCSRF::check( 'csrf_token', $_POST, true, 360*10, false );
 		// form parsing, DB inserts, etc.
 		unset($_POST['csrf_token']);
 	}
 	catch ( Exception $e )
 	{
 		// CSRF attack detected
-		die('CSRF attack detected. Access Denied');
+		die('Session timed out');
 	}
 }
 
