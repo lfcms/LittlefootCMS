@@ -23,14 +23,14 @@
 		
 		$skin = $pwd.'/'.$file;	
 		
-		$highlight = '';
+		$highlight = 'available_skin';
 		if($file == $request->settings['default_skin'])
-			$highlight = 'background: #DDD;';
+			$highlight = 'current_skin';
 			
-		if(is_file($skin.'/index.php'))
+		if(is_file($skin.'/index.php') || is_file($skin.'/index.html'))
 		{
 			?>
-			<li style="padding: 15px; <?php echo $highlight; ?>"> 
+			<li class="<?php echo $highlight; ?>"> 
 						<div class="left_header">
 							<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$file;?>/">x</a>
 						</div>

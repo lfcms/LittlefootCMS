@@ -44,28 +44,19 @@ $(document).ready(function() {
 </div>
 
 <div id="appgallery">
+        <h3>App Gallery (<a href="%appurl%download/">Store</a>)</h3>
+        <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p>
 
-        <h3>App Gallery</h3>
-        <p>Install Apps packaged as .zip files or <a href="%appurl%download/">Download Apps</a> from online.</p>
-        <form enctype="multipart/form-data" action="%appurl%install/" method="post">
-                <ul>
-                        <li>
-                                <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-                                Source: <input type="file" name="app" /><br />
-                                <?=$install;?>
-                        </li>
-                </ul>
-        </form>
-
-        <p>Click on the name of an app to attach it to the website.</p>
-
-        <style type="text/css">
-                .left_header { float: left; }
-                .right_header { float: right; }
-                .left_header, .right_header { padding: 0 5px; }
-                .left_header a, .right_header a { font-size: small; }
-        </style>
         <ul class="applist">
+		<li>
+			<form enctype="multipart/form-data" action="%appurl%install/" method="post">
+				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
+				<h4>Upload:</h4>
+				<input type="file" name="app" />
+				<br />
+				<?=$install;?>
+			</form>
+		</li>
         <?php
                 foreach(scandir($pwd) as $file)
                 {
@@ -75,11 +66,11 @@ $(document).ready(function() {
 
                         if(is_dir($app)):
                                 ?>
-                                <li style="padding: 5px;">
-                                        <div class="left_header">
+                                <li>
+                                        <div class="right_header">
                                                 <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$file;?>/">x</a>
                                         </div>
-                                        <div class="right_header">
+                                        <div class="left_header">
                                                 <a href="%appurl%linkapp/<?=$file;?>/"><?=$file;?></a>
                                         <div>
 										<div style="clear:both"></div>

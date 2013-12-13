@@ -49,6 +49,9 @@ h3 {
 h4 {
     color: #24AF68;
 }
+ul, ol {
+	padding-left: 0px;
+}
 body {
     color: #444444;
 }
@@ -185,79 +188,99 @@ div.loginbox a.whitelink:hover {
     margin-bottom: 5px;
     text-transform: uppercase;
 }
-#app-apps {
-    display: block;
+#app-dashboard {
+	margin-bottom: 10px;
 }
-#appgallery {
+#app-dashboard #appgallery {
+    width: 100%;
+    margin-top: 10px;
     border-radius: 3px;
     float: right;
-    padding: 20px;
-    width: 40%;
 }
-#appgallery form {
-    box-shadow: 0 0 5px 0 #AAAAAA inset;
-    margin: 10px 0;
-    padding: 10px;
+#app-dashboard #appgallery form {
+    padding: 5px;
 }
-#appgallery li {
+#app-dashboard #appgallery li {
     list-style-type: none;
 }
-#appgallery > ul > li {
-    background-color: rgba(230, 230, 230, 0.5);
-    border-radius: 3px;
-    box-shadow: 0 0 3px 0 #CCCCCC;
-    display: block;
+#app-dashboard #appgallery > ul {
+	margin: 10px 0 10px 0;
+	border-radius: 3px;
+	background-color: #FAFAFA;
+	border: 1px solid #FAFAFA;
+	max-height: 455px;
+	overflow: auto;
+}
+#app-dashboard #appgallery > ul > li {
     float: left;
+    width: 32%;
+    transition: background-color 0.25s linear 0s;
+    min-height: 75px;
+    padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0px #bbb;
+    display: block;
     margin: 5px;
 }
-#appgallery > ul > li:hover {
-    background-color: rgba(245, 245, 245, 0.5);
+#app-dashboard #appgallery > ul > li:hover {
+    background-color: rgba(240, 240, 240, 0.5);
 }
-#appgallery > ul > li a {
+#app-dashboard #appgallery > ul > li a {
     font-size: 18px;
 }
-#appgallery > ul > li div.right_header a {
-    font-size: 30px;
+#app-dashboard #appgallery > ul > li div.left_header a {
+    font-size: 20px;
 }
-#actions {
+#app-dashboard #appgallery .left_header {
+	float: left;
+}
+#app-dashboard #appgallery .right_header {
+	float: right;
+}
+#app-dashboard #appgallery .left_header,
+#app-dashboard #appgallery .right_header {
+	padding: 0 5px;
+}
+#app-dashboard #appgallery .left_header a,
+#app-dashboard #appgallery .right_header a {
+	font-size: small;
+}
+#app-dashboard #actions {
+    width: 100%;
+    margin-top: 10px;
     border-radius: 3px;
-    box-shadow: 0 0 5px 0 #AAAAAA;
     float: left;
-    padding: 20px;
-    width: 40%;
 }
-#actions li {
+#app-dashboard #actions li {
     list-style-type: none;
 }
-#actions > ol, #actions > ul {
-    margin: 10px 0;
-    padding: 10px;
-}
-#actions ol li ol {
-    margin-left: -40px;
-}
-#actions > ol li, #actions > ul li {
-    background-color: rgba(240, 240, 240, 0.5);
+#app-dashboard #actions > ol,
+#app-dashboard #actions > ul {
     border-radius: 3px;
-    box-shadow: 0 0 2px 0 #CCCCCC;
-    margin: 15px;
+    border: 1px solid #FAFAFA;
+    background-color: #FAFAFA;
+    max-height: 340px;
+    overflow-y: scroll;
+    margin: 10px 0 10px 0;
+}
+#app-dashboard #actions > ol li, #actions > ul li {
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0px #bbb;
+    margin: 5px;
     padding: 10px;
 }
-#actions > ol li:hover, #actions > ul li:hover {
-    background-color: rgba(250, 250, 250, 0.5);
+#app-dashboard #actions > ol li:hover, #actions > ul li:hover {
+    background-color: rgba(240, 240, 240, 0.5);
 }
-#actions .selected {
-    background-color: #DDDDDD !important;
-}
-ul.applist {
-    margin-left: -40px;
+#app-dashboard #actions .selected {
+    background-color: rgba(240, 240, 240, 0.5);
 }
 #app-skins li {
     list-style-type: none;
 }
 #app-skins ul.applist {
     float: left;
-    margin: 10px 0 10px -40px;
+    margin: 10px 0 10px 0;
 }
 #app-skins ul.applist li {
     transition: background-color 0.25s linear 0s;
@@ -267,15 +290,16 @@ ul.applist {
     box-shadow: 0 0 3px 0 #CCCCCC;
     float: left;
     margin: 5px;
-    width: 90px;
+	padding:  15px;
+    min-height: 235px;
+    width: 280px;
+    font-size: 18px;
 }
 #app-skins ul.applist li:hover {
     background-color: rgba(245, 245, 245, 0.5);
 }
-#app-skins ul.applist li {
-    min-height: 235px;
-    width: 280px;
-    font-size: 18px;
+#app-skins ul.applist li.current_skin {
+	background-color: rgba(36, 175, 104, 0.3);
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -326,7 +350,7 @@ ul.applist {
 	font-size: small;
 }
 #app-users ul {
-    margin-left: -40px;
+
 }
 #app-users form ul li {
     list-style-type: none;
