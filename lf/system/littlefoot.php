@@ -183,7 +183,7 @@ class Littlefoot
 			$admin_skin = 'fresh';
 			
 			// maybe you are an admin, but I need you to login first
-			if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'admin_') === false)
+			if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
 			{
 				
 				//$publickey = '6LffguESAAAAAKaa8ZrGpyzUNi-zNlQbKlcq8piD'; // littlefootcms public key

@@ -276,7 +276,7 @@ class dashboard
 		// $var[0] = 'manage'
 		$app_name = $var[1];
 		
-		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin / <a href="%appurl%manage/'.$app_name.'/preview/">Preview</a></h2>';
+		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>';
 		$var = array_slice($var, 2); // pass the rest of the vars to the admin.php script
 		
 		$oldvars = $this->request->vars;
