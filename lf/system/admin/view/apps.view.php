@@ -1,4 +1,4 @@
-<h2><a href="%appurl%">Site Manager</a></h2>
+<h2>Site Manager</h2>
 
 <script type="text/javascript">
 
