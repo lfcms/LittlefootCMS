@@ -206,7 +206,6 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #appgallery {
     width: 45%;
-    margin-top: 10px;
     border-radius: 3px;
     float: right;
 }
@@ -289,8 +288,7 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-dashboard #actions {
-    width: 50%;
-    margin-top: 10px;
+    width: 54%;
     border-radius: 3px;
     float: left;
 }
@@ -299,7 +297,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #actions > ol,
 #app-dashboard #actions > ul {
-    margin: 10px 0 10px 0;
+    margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
     border-radius: 2px;
@@ -319,7 +317,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins ul.applist {
     float: left;
-    margin: 10px 0 10px 0;
+    margin: 0 0 10px 0;
 }
 #app-skins ul.applist li {
     background-color: #FFFFFF;
@@ -406,8 +404,9 @@ div.loginbox a.whitelink:hover {
     color: #222222;
 }
 #app-users table {
-    border-radius: 3px;
-    box-shadow: 0 0 5px 0 #CCCCCC inset;
+    background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0px #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
     padding: 5px;

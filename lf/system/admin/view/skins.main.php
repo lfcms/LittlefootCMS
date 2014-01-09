@@ -1,6 +1,6 @@
 <div id="avail_skins" class="skin_page_container">
 	<h2>Skins Manager</h2>
-	<p>Click a skin to set it as the default. [x] to remove a skin. Zip to download a skin.</p>
+	<!-- <p>Click a skin to set it as the default. [x] to remove a skin. Zip to download a skin.</p> -->
 	<ul class="applist">
 	<li id="new_skins">
 		<h3>New Skin (<a href="%appurl%download/">Store</a>)</h3>
