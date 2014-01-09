@@ -24,7 +24,7 @@ $(document).ready(function() {
 
 <div id="actions">
         <h3>Navigation</h3>
-        <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p>
+        <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <?php
                 if(isset($nav['html']))
                 {
@@ -34,7 +34,7 @@ $(document).ready(function() {
                         echo '<p>- No nav set -</p>';
         ?>
         <h3>Hidden</h3>
-        <p>This works just like the nav menu manager above, but these nav items will be hidden from nav menu of your website. This feature is useful for hiding apps like /signup, /secret-blog</p>
+        <!-- <p>This works just like the nav menu manager above, but these nav items will be hidden from nav menu of your website. This feature is useful for hiding apps like /signup, /secret-blog</p> -->
         <?php
                 if(isset($hooks['html']))
                         echo $hooks['html'];
@@ -44,19 +44,17 @@ $(document).ready(function() {
 </div>
 
 <div id="appgallery">
-        <h3>App Gallery (<a href="%appurl%download/">Store</a>)</h3>
-        <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p>
-
-        <ul class="applist">
-		<li>
+        <h3>App Gallery</h3>
+        <!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
+		<div id="new-app">
 			<form enctype="multipart/form-data" action="%appurl%install/" method="post">
 				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-				<h4>Upload:</h4>
-				<input type="file" name="app" />
-				<br />
-				<?=$install;?>
+				<h3>New App (<a href="%appurl%download/">Store</a>)</h3>
+				<div><input type="file" name="app" value="Upload" /></div>
+				<div><?=$install;?></div>
 			</form>
-		</li>
+		</div>
+        <ul class="applist">
         <?php
                 foreach(scandir($pwd) as $file)
                 {

@@ -20,12 +20,6 @@ a#forgot {
 a:hover {
     color: #1A457A;
 }
-h1 {
-    color: #21759B;
-    float: left;
-    font-size: 24px;
-    padding: 5px;
-}
 input:focus {
     outline: 0 none;
 }
@@ -44,6 +38,12 @@ input:focus {
     margin-top: 15px;
     padding: 5px;
     text-align: center;
+}
+h1 {
+    color: #21759B;
+    float: left;
+    font-size: 24px;
+    padding: 5px;
 }
 h2 {
 	font-size: 16px;
@@ -172,14 +172,20 @@ div.loginbox a.whitelink:hover {
     overflow: hidden;
     text-align: right;
 }
-.userbar a {
-    color: #6A83A2;
+.userbar h1 a {
+    color: #21759B;
 }
-.userbar a:hover {
-    color: #1A457A;
+.userbar h1 a:hover {
+	color: #10648A;
 }
 .userbar #greeting {
     padding: 10px;
+}
+.userbar #greeting a {
+    color: #6A83A2;
+}
+.userbar #greeting a:hover {
+    color: #1A457A;
 }
 .dash-admin-app {
     background-color: #FAFAFA;
@@ -204,18 +210,53 @@ div.loginbox a.whitelink:hover {
     border-radius: 3px;
     float: right;
 }
-#app-dashboard #appgallery form {
-    padding: 5px;
-}
 #app-dashboard #appgallery li {
     list-style-type: none;
 }
-#app-dashboard #appgallery > ul {
+#app-dashboard #appgallery div#new-app {
+	border-radius: 2px;
+    border-left: solid 3px #F0F0F0;
+    
+    
+	padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0px #bbb;
+    display: block;
+    
+	margin: 5px 0;
+	overflow: auto;
+}
+#app-dashboard #appgallery div#new-app:hover {
+	border-color: rgba(36, 175, 104, 0.5);
+}
+#app-dashboard #appgallery div#new-app form {
+	font-size: 14px;
+    padding: 5px;
+}
+#app-dashboard #appgallery div#new-app form div {
+	float: left;
+	margin: 10px 0;
+	width: 275px;
+}
+#app-dashboard #appgallery div#new-app form div input{
+}
+#app-dashboard #appgallery div#new-app form div input[type="file"] {
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+#app-dashboard #appgallery div#new-app form div input[type="submit"] {
+	margin: 5px 0;
+} 
+#app-dashboard #appgallery div#new-app form div span{
+	font-size: 13px;
+}
+#app-dashboard #appgallery > ul.applist {
 	margin: 10px 0 10px 0;
 	max-height: 455px;
 	overflow: auto;
 }
-#app-dashboard #appgallery > ul > li {
+#app-dashboard #appgallery > ul.applist > li {
+    border-radius: 2px;
     border-left: solid 3px #F0F0F0;
     min-height: 75px;
     padding: 5px;
@@ -224,13 +265,13 @@ div.loginbox a.whitelink:hover {
     display: block;
     margin: 5px 0;
 }
-#app-dashboard #appgallery > ul > li:hover {
+#app-dashboard #appgallery > ul.applist > li:hover {
     border-color: rgba(36, 175, 104, 0.5);
 }
-#app-dashboard #appgallery > ul > li a {
+#app-dashboard #appgallery > ul.applist > li a {
     font-size: 18px;
 }
-#app-dashboard #appgallery > ul > li div.left_header a {
+#app-dashboard #appgallery > ul.applist > li div.left_header a {
     font-size: 20px;
 }
 #app-dashboard #appgallery .left_header {
@@ -293,10 +334,9 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins ul.applist li:hover {
     border-color: rgba(36, 175, 104, 0.3);
-    /* background-color: rgba(245, 245, 245, 0.5); */
 }
 #app-skins ul.applist li.current_skin {
-	background-color: rgba(36, 175, 104, 0.3);
+	border-color: rgba(36, 175, 104, 1);
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -310,19 +350,24 @@ div.loginbox a.whitelink:hover {
 	margin-top: 10px;
 	padding-top: 10px;
 }
-#app-skins #new_skins  input {
+#app-skins #new_skins #upload_skin_form  input[type="file"] {
 	padding: 5px;
 }
-#app-skins #avail_skins {
+#app-skins #new_skins #upload_skin_form  input[type="submit"] {
+	margin: 5px 0;
+}
+#app-skins #new_skins #upload_skin_form span{
+	font-size: 13px;
 }
 #app-skins #create_skin_form {
     margin-top: 5px;
 }
+#app-skins #create_skin_form input[type="submit"] {
+	margin: 5px 0;
+}
 #app-skins #create_skin_form #create_skin_namebox {
+    width: 200px;
     padding: 3px;
-    width: 72%;
-	
-	
     font-size: 14px;
 }
 #app-skins #upload_skin_form {
@@ -330,7 +375,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins #upload_skin_form #upload_skin_file {
 	width: 96%;
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 	margin: 5px 0;
 }
 #app-skins .left_header {

@@ -7,8 +7,8 @@
 		<h4>Upload</h4>
 		<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/" method="post">
 			<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-			<p><input id="upload_skin_file" type="file" name="skin" /></p>
-			<p><?php echo $install; ?> (<?php echo ini_get('post_max_size'); ?>/<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</p>
+			<input id="upload_skin_file" type="file" name="skin" />
+			<?php echo $install; ?> <span>(<?php echo ini_get('post_max_size'); ?>/<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>
 		<h4>Create</h4>
 		<form id="create_skin_form" action="%appurl%blankskin/" method="post">
