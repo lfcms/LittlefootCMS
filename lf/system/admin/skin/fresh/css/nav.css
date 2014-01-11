@@ -3,11 +3,11 @@
 	border-color 0.25s linear 0s;
 }
 nav {
+    position: fixed;
     margin-bottom: 10px;
     box-shadow: 0 1px 3px 0px #bbb;
     background-color: #FFFFFF;
     float: left;
-    height: 100%;
     width: 170px;
     border-radius: 0px 0px 3px 0px;
 }
@@ -23,19 +23,19 @@ nav li ul {
 nav li a {
     display: block;
     font-size: 14px;
-    padding: 5px 5px 5px 25px;
+    padding: 10px 5px 10px 25px;
 }
 nav li > a:hover {
 	background-color: rgba(220, 220, 220, 0.2);
 }
 nav > ul > li.current > a {
-    border-left: 4px solid #21759B;
-    color: #1A457A;
+    border-left: 4px solid rgba(36, 175, 104, 1);
+    color: rgba(36, 175, 104, 1);
 }
 
 nav li.current > ul {
     background-color: rgba(240, 240, 240, 0.1);
-    /* box-shadow: inset 0 0 1px 1px rgba(100, 100, 100, 0.1); */
+    box-shadow: inset 0 0 1px 1px rgba(100, 100, 100, 0.1);
     display: block;
 }
 
@@ -45,13 +45,14 @@ nav li > ul li {
 
 nav li > ul li a {
     font-size: small;
-    color: #6B6B6B;
+    color: #444444;
     display: block;
 }
 nav li > ul li a:hover {
-    color: #898989;
+    color: #333333;
 }
 nav li > ul > li.current > a {
-	border-left: 2px dotted #777;
-    color: #1A457A;
+	border-left: 3px solid #656565;
+    
+	color: #000000;
 }

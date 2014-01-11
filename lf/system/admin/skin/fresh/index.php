@@ -41,21 +41,21 @@
 						</header>	
                 </div>
                 <div class="container">
-                        <nav>
-                                <?php echo $nav; ?>
-                        </nav>
-                        <div class="content">
-                                <div id="app-<?php echo $class; ?>" class="wrapper">
-                                                <?php echo $app; ?>
-                                </div>
-                                <div class="clear">
-				</div>
-                        </div>
-                        <footer>
-                                <div class="footer-credits">
-                                        Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
-                                </div>
-                        </footer>
+					<nav>
+							<?php echo $nav; ?>
+					</nav>
+					<div class="content">
+							<div id="app-<?php echo $class; ?>" class="wrapper">
+											<?php echo $app; ?>
+							</div>
+							<div class="clear">
+							</div>
+					</div>
                 </div>
+				<footer>
+					<div class="footer-credits">
+							Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
+					</div>
+                </footer>
         </body>
 </html>
