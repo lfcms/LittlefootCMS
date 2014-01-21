@@ -50,12 +50,12 @@
 							</div>
 							<div class="clear">
 							</div>
+							<footer>
+								<div class="footer-credits">
+									Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
+								</div>
+							</footer>
 					</div>
                 </div>
-				<footer>
-					<div class="footer-credits">
-							Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
-					</div>
-                </footer>
         </body>
 </html>

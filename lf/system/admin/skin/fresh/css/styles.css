@@ -60,15 +60,13 @@ ul, ol {
 	padding-left: 0px;
 }
 body {
+    overflow-x:  hidden;
     width: 100%;
     color: #555555;
 }
 footer {
-    width: 100%;
     bottom: 0;
     position: static;
-    background: #FFFFFF;
-    border-top: 1px solid #AAAAAA;
     padding: 10px;
 }
 footer .footer-credits {
@@ -148,9 +146,9 @@ div.loginbox a.whitelink:hover {
     float: right;
 }
 .container {
+    min-height: 100%;
+    position: absolute;
     width: 100%;
-    overflow-x: hidden;
-    margin-top: 40px;
     background-color: rgba(0,0,0,.2);
     font-family: arial;
 }
@@ -161,7 +159,7 @@ div.loginbox a.whitelink:hover {
 }
 .content {
     padding: 0px 15px;
-    margin-left: 170px;
+    margin: 40px 0px 0px 170px;
 }
 .small {
     font-weight: normal;
@@ -401,6 +399,19 @@ div.loginbox a.whitelink:hover {
 #app-skins .right_header a {
 	font-size: small;
 }
+#app-skins #skin_nav {
+    padding: 10px;
+}
+#app-skins #skin_nav a {
+    border-left: 5px solid rgba(33, 117, 155, 0.3);
+    padding-left: 5px;
+}
+#app-skins #skin_nav a.selected {
+    border-left: 5px solid #21759B;
+}
+#app-skins #skin_nav h3 a {
+    border: medium none;
+}
 #app-users ul {
 
 }
@@ -420,22 +431,50 @@ div.loginbox a.whitelink:hover {
     box-shadow: 0 1px 3px 0px #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
-    padding: 5px;
+    padding: 10px 10px 0px 10px;
 }
-#app-users table th {
+#app-users table tr th {
     color: #999999;
     padding: 5px;
 }
-#skin_nav {
-    padding: 10px;
+#app-users table tr > td {
+	padding: 15px 5px;
+	border-top: 1px solid #EFEFEF;
 }
-#skin_nav a {
-    border-left: 5px solid rgba(33, 117, 155, 0.3);
-    padding-left: 5px;
+#app-acl form.add {
+	padding: 0;
+	margin: 5px 0px 10px 0px;
 }
-#skin_nav a.selected {
-    border-left: 5px solid #21759B;
+#app-acl form.add select {
+	padding: 5px;
 }
-#skin_nav h3 a {
-    border: medium none;
+#app-acl form.add input{
+	padding: 5px;
+}
+#app-acl table {
+	width: 100%;
+	background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0px #bbb;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    
+	padding: 0px 10px;
+}
+#app-acl table tr > td {
+	padding: 15px 0px;
+	border-top: 1px solid #EFEFEF;
+}
+#app-upgrade div#current {
+	margin: 5px 0px 10px 0px;
+	background: #FFFFFF;
+	padding: 10px;
+}
+#app-upgrade div#restore {
+	margin: 5px 0px 10px 0px;
+	background: #FFFFFF;
+	padding: 10px;
+}
+#app-upgrade div#restore h3 {
+	margin-bottom: 5px;
 }
