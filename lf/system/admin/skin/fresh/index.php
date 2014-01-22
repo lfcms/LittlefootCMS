@@ -34,9 +34,9 @@
 		<body>
                 <div class="userbar">
                         <header>
-                            <h1><a href="<?=$this->base;?>">LittlefootCMS</a></h1>
+                            <h1><a href="<?=$this->base;?>">littlefoot</a></h1>
 							<div id="greeting">
-									Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Logout</a>)
+									Hello <?=$this->auth['display_name'];?>. <a href="<?=$this->base;?>_auth/logout">logout</a>
 							</div>
 						</header>	
                 </div>

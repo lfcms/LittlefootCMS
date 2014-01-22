@@ -111,7 +111,7 @@ class acl
 			.activeacl { text-decoration: underline; }
 		</style>
 		
-		<h2>Access Control Lists (<?php echo $header; ?>)</h2>
+		<h2>Access Control Lists <?php echo $header; ?></h2>
 		<?php 
 		echo make_table($$request, $request, $this->db);
 		

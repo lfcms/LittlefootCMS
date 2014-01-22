@@ -1,59 +1,66 @@
 * {
-	transition: background-color 0.25s linear 0s,
-	border-color 0.25s linear 0s;
+	transition: background-color 0.25s linear 0s,  border-color 0.25s linear 0s;
 }
 nav {
+    overflow: auto;
+    max-height: 90%;
     margin-top: 40px;
     position: fixed;
     margin-bottom: 10px;
-    box-shadow: 0 1px 3px 0px #bbb;
-    background-color: #FFFFFF;
+    background-color: #333;
     float: left;
     width: 170px;
-    border-radius: 0px 0px 3px 0px;
+    border-radius: 0px 0px 2px 0px;
 }
 nav > ul {
+	overflow-y: auto;
+	max-height: 90%;
 	padding: 0;
 }
 nav li {
     list-style-type: none;
 }
 nav li ul {
-    display: none;
 }
 nav li a {
+    transition:  none;
+    color: #fff;
     display: block;
-    font-size: 14px;
-    padding: 10px 5px 10px 25px;
+    font-size: 18px;
+    padding: 5px 5px 5px 40px;
 }
 nav li > a:hover {
-	background-color: rgba(220, 220, 220, 0.2);
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.5);
 }
 nav > ul > li.current > a {
-    border-left: 4px solid rgba(36, 175, 104, 1);
-    color: rgba(36, 175, 104, 1);
+    color: #ffffff;
+    background-color: #0063aa;
 }
 
 nav li.current > ul {
-    background-color: rgba(240, 240, 240, 0.1);
-    box-shadow: inset 0 0 1px 1px rgba(100, 100, 100, 0.1);
-    display: block;
 }
 
 
 nav li > ul li {
+	background-color: rgba(240, 240, 240, 0.1);
+    
+    display: block;
 }
 
 nav li > ul li a {
-    font-size: small;
-    color: #444444;
+    /* border-right: 4px solid #333; */
+    font-size: 14px;
     display: block;
 }
 nav li > ul li a:hover {
-    color: #333333;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 nav li > ul > li.current > a {
-	border-left: 3px solid #656565;
+	/* text-decoration: underline; */
+	/* border-right: 4px solid #0063aa; */
+	background-color: #868686;
+	/* font-weight: bold; */
     
-	color: #000000;
 }
