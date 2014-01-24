@@ -1,6 +1,6 @@
 @font-face {
-	font-family: roboto;
-	src: url('Roboto-Regular.ttf');
+	font-family: ubuntu;
+	src: url('Ubuntu-R.ttf');
 }
 * {
     margin: 0;
@@ -8,7 +8,7 @@
 	background-color 0.25s linear 0s;
 }
 html {
-	font-family: roboto;
+	font-family: ubuntu;
     overflow-y: scroll;
 }
 a {
@@ -324,6 +324,7 @@ div.loginbox a.whitelink:hover {
     margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
+    transition:  none;
     font-size: 18px;
     border-radius: 2px;
     border-left: solid 3px #F0F0F0;
@@ -336,6 +337,9 @@ div.loginbox a.whitelink:hover {
     border-color: #0063aa;
 }
 #app-dashboard #actions .selected {
+}
+#app-dashboard #actions .nav_delete_item {
+	float: right;
 }
 #app-skins li {
     list-style-type: none;
@@ -416,17 +420,31 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-skins #skin_nav {
-    padding: 10px;
+    overflow: auto;
+    float: right;
+    width: 10%;
 }
-#app-skins #skin_nav a {
+#app-skins #skin_nav > a {
+    margin-left: 10px;
     border-left: 5px solid rgba(33, 117, 155, 0.3);
     padding-left: 5px;
 }
-#app-skins #skin_nav a.selected {
+#app-skins #skin_nav > a.selected {
     border-left: 5px solid #21759B;
 }
+#app-skins #skin_nav h3 {
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
 #app-skins #skin_nav h3 a {
-    border: medium none;
+}
+#app-skins #skin_nav input {
+	margin: 15px 0px 0px 10px;
+}
+#app-skins div#editor {
+	margin-top: 5px;
+	width: 90%;
+	background-color: #fff;
 }
 #app-users ul {
 

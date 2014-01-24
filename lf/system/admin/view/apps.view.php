@@ -1,5 +1,5 @@
 <script type="text/javascript">
-
+/*
 $(document).ready(function() {
 
 	// Expand / Collapse
@@ -17,7 +17,7 @@ $(document).ready(function() {
 		}
 	});
 
-});
+});*/
 </script>
 
 <div id="actions">
