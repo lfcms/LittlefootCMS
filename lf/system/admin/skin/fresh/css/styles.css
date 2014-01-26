@@ -268,11 +268,12 @@ div.loginbox a.whitelink:hover {
 	font-size: 13px;
 }
 #app-dashboard #appgallery > ul.applist {
-	margin: 10px 0 10px 0;
+	margin: 5px 0 10px 0;
 	max-height: 900px;
 	overflow: auto;
 }
 #app-dashboard #appgallery > ul.applist > li {
+    transition:  none;
     border-radius: 2px;
     border-left: solid 3px #F0F0F0;
     min-height: 75px;
@@ -326,17 +327,44 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #actions > ol li, #actions > ul li {
     transition:  none;
     font-size: 18px;
-    border-radius: 2px;
-    border-left: solid 3px #F0F0F0;
+    /* border-radius: 2px; */
+    border-left: 3px solid #bbb;
     background-color: #FFFFFF;
-    box-shadow: 0 1px 3px 0px #bbb;
-    margin: 5px 0;
+    box-shadow: 0 0px 3px 0px #000;
+    margin: 10px 0;
     padding: 10px;
 }
 #app-dashboard #actions > ol li:hover, #actions > ul li:hover {
     border-color: #0063aa;
 }
 #app-dashboard #actions .selected {
+    background-color: rgba(100, 100, 100, 0.1);
+    border: 3px solid #bbb;
+}#app-dashboard #actions .selected > ol {
+	margin-top: 10px;
+}
+#app-dashboard #actions .selected:hover {
+	border-color: #00aa63;
+}
+#app-dashboard #actions .selected form {
+}
+#app-dashboard #actions .selected form input,
+#app-dashboard #actions .selected form select {
+	padding: 5px;
+}
+#app-dashboard #actions .selected form ul {
+	margin: 10px 0;
+}
+#app-dashboard #actions .selected form ul li {
+	border-top: 1px dashed #bbb;
+	box-shadow: none;
+	border-radius: 0;
+	margin:  0;
+	background-color: transparent;
+	border-left: none;
+}
+#app-dashboard #actions .selected form ul li:last-child {
+	border-bottom: 1px dashed #bbb;
 }
 #app-dashboard #actions .nav_delete_item {
 	float: right;
