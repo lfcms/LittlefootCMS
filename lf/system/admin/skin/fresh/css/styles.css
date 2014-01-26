@@ -224,15 +224,19 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
-    width: 45%;
-    border-radius: 3px;
+    top: 50px;
+    right: 15px;
+    position: fixed;
     float: right;
 }
 #app-dashboard #appgallery li {
     list-style-type: none;
 }
-#app-dashboard #appgallery div#new-app {
-	border-radius: 2px;
+#app-dashboard #appgallery #appgallery-container {
+	border: 1px solid #bbb;
+}
+#app-dashboard #appgallery #appgallery-container div#new-app {
+	/* border-radius: 2px; */
     border-left: solid 3px #F0F0F0;
     
     
@@ -241,81 +245,85 @@ div.loginbox a.whitelink:hover {
     box-shadow: 0 1px 3px 0px #bbb;
     display: block;
     
-	margin: 5px 0;
+	/* margin: 5px 0; */
 	overflow: auto;
 }
-#app-dashboard #appgallery div#new-app:hover {
+#app-dashboard #appgallery #appgallery-container div#new-app:hover {
 	border-color: #0063aa;
 }
-#app-dashboard #appgallery div#new-app form {
+#app-dashboard #appgallery #appgallery-container div#new-app form {
 	font-size: 14px;
     padding: 5px;
 }
-#app-dashboard #appgallery div#new-app form div {
+#app-dashboard #appgallery #appgallery-container div#new-app form div {
 	float: left;
 	margin: 10px 15px 5px 0;
 }
-#app-dashboard #appgallery div#new-app form div input{
+#app-dashboard #appgallery #appgallery-container div#new-app form div input{
 }
-#app-dashboard #appgallery div#new-app form div input[type="file"] {
+#app-dashboard #appgallery #appgallery-container div#new-app form div input[type="file"] {
 	border: 1px solid #ddd;
 	padding: 5px;
 }
-#app-dashboard #appgallery div#new-app form div input[type="submit"] {
+#app-dashboard #appgallery #appgallery-container div#new-app form div input[type="submit"] {
 	margin: 5px 0;
 } 
-#app-dashboard #appgallery div#new-app form div span{
+#app-dashboard #appgallery #appgallery-container div#new-app form div span{
 	font-size: 13px;
 }
-#app-dashboard #appgallery > ul.applist {
-	margin: 5px 0 10px 0;
-	max-height: 900px;
+#app-dashboard #appgallery #appgallery-container > ul.applist {
+	/* margin: 5px 0 10px 0; */
+	max-height: 515px;
 	overflow: auto;
 }
-#app-dashboard #appgallery > ul.applist > li {
+#app-dashboard #appgallery #appgallery-container > ul.applist > li {
+    border-top: 1px dashed #bbb;
     transition:  none;
-    border-radius: 2px;
+    /* border-radius: 2px; */
     border-left: solid 3px #F0F0F0;
     min-height: 75px;
     padding: 5px;
     background-color: #fff;
-    box-shadow: 0 1px 3px 0px #bbb;
+    /* box-shadow: 0 1px 3px 0px #bbb; */
     display: block;
-    margin: 5px 0;
+    /* margin: 5px 0; */
 }
-#app-dashboard #appgallery > ul.applist > li:first-child {
+#app-dashboard #appgallery #appgallery-container > ul.applist > li:first-child {
 	margin-top: 0;
 }
-#app-dashboard #appgallery > ul.applist > li:last-child {
+#app-dashboard #appgallery #appgallery-container > ul.applist > li:last-child {
 	margin-bottom: 0;
 }
-#app-dashboard #appgallery > ul.applist > li:hover {
-    border-color: #0063aa;
+#app-dashboard #appgallery #appgallery-container > ul.applist > li:hover {
+    border-left-color: #0063aa;
 }
-#app-dashboard #appgallery > ul.applist > li a {
+#app-dashboard #appgallery #appgallery-container > ul.applist > li a {
     font-size: 18px;
 }
-#app-dashboard #appgallery > ul.applist > li div.left_header a {
+#app-dashboard #appgallery #appgallery-container  > ul.applist > li div.left_header a {
     font-size: 20px;
 }
-#app-dashboard #appgallery .left_header {
+#app-dashboard #appgallery #appgallery-container .left_header {
 	float: left;
 }
-#app-dashboard #appgallery .right_header {
+#app-dashboard #appgallery #appgallery-container .right_header {
 	float: right;
 }
-#app-dashboard #appgallery .left_header,
-#app-dashboard #appgallery .right_header {
+#app-dashboard #appgallery #appgallery-container .left_header,
+#app-dashboard #appgallery #appgallery-container .right_header {
 	padding: 0 5px;
 }
-#app-dashboard #appgallery .left_header a,
-#app-dashboard #appgallery .right_header a {
+#app-dashboard #appgallery #appgallery-container .left_header a,
+#app-dashboard #appgallery #appgallery-container .right_header a {
 	font-size: small;
 }
 #app-dashboard #actions {
-    width: 54%;
+    margin-right: 510px;
+    /* position: relative; */
+    /* right: 0; */
+    /* width: 70%; */
     border-radius: 3px;
-    float: left;
+    /* float: left; */
 }
 #app-dashboard #actions li {
     list-style-type: none;
@@ -325,17 +333,18 @@ div.loginbox a.whitelink:hover {
     margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
     transition:  none;
     font-size: 18px;
-    /* border-radius: 2px; */
     border-left: 3px solid #bbb;
     background-color: #FFFFFF;
-    box-shadow: 0 0px 3px 0px #000;
+    border-top: 1px solid #bbb;
     margin: 10px 0;
     padding: 10px;
 }
 #app-dashboard #actions > ol li:hover, #actions > ul li:hover {
-    border-color: #0063aa;
+    border-left-color: #0063aa;
 }
 #app-dashboard #actions .selected {
     background-color: rgba(100, 100, 100, 0.1);

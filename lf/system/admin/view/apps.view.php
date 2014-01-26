@@ -42,8 +42,9 @@ $(document).ready(function() {
 </div>
 
 <div id="appgallery">
-        <h2>App Gallery</h2>
-        <!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
+	<h2>App Gallery</h2>
+	<!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
+	<div id="appgallery-container">
 		<div id="new-app">
 			<form enctype="multipart/form-data" action="%appurl%install/" method="post">
 				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
@@ -52,31 +53,32 @@ $(document).ready(function() {
 				<div><?=$install;?></div>
 			</form>
 		</div>
-        <ul class="applist">
-        <?php
-                foreach(scandir($pwd) as $file)
-                {
-                        if($file == '.' || $file == '..') continue;
+		<ul class="applist">
+		<?php
+				foreach(scandir($pwd) as $file)
+				{
+						if($file == '.' || $file == '..') continue;
 
-                        $app = $pwd.'/'.$file;
+						$app = $pwd.'/'.$file;
 
-                        if(is_dir($app)):
-                                ?>
-                                <li>
-                                        <div class="right_header">
-                                                <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$file;?>/">x</a>
-                                        </div>
-                                        <div class="left_header">
-                                                <a href="%appurl%linkapp/<?=$file;?>/"><?=$file;?></a>
-                                        <div>
+						if(is_dir($app)):
+								?>
+								<li>
+										<div class="right_header">
+												<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$file;?>/">x</a>
+										</div>
+										<div class="left_header">
+												<a href="%appurl%linkapp/<?=$file;?>/"><?=$file;?></a>
+										<div>
 										<div style="clear:both"></div>
-                                </li>
-                        <?php
+								</li>
+						<?php
 
-                        endif;
-                        if(isset($vars['app']) && $vars['app'] == $file)
-                                $save = $file;
-                }
-        ?>
-        </ul>
+						endif;
+						if(isset($vars['app']) && $vars['app'] == $file)
+								$save = $file;
+				}
+		?>
+		</ul>
+	</div>	
 </div>
