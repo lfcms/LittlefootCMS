@@ -224,6 +224,7 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
+    max-width: 285px;
     top: 50px;
     right: 15px;
     position: fixed;
@@ -236,7 +237,8 @@ div.loginbox a.whitelink:hover {
 	border: 1px solid #bbb;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app {
-	/* border-radius: 2px; */
+    clear: both;
+    border-bottom: 1px solid #bbb;
     border-left: solid 3px #F0F0F0;
     
     
@@ -245,11 +247,11 @@ div.loginbox a.whitelink:hover {
     box-shadow: 0 1px 3px 0px #bbb;
     display: block;
     
-	/* margin: 5px 0; */
+	
 	overflow: auto;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app:hover {
-	border-color: #0063aa;
+	border-left-color: #0063aa;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app form {
 	font-size: 14px;
@@ -266,7 +268,7 @@ div.loginbox a.whitelink:hover {
 	padding: 5px;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app form div input[type="submit"] {
-	margin: 5px 0;
+	margin: 0px 0px 5px 5px;
 } 
 #app-dashboard #appgallery #appgallery-container div#new-app form div span{
 	font-size: 13px;
@@ -289,7 +291,7 @@ div.loginbox a.whitelink:hover {
     /* margin: 5px 0; */
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li:first-child {
-	margin-top: 0;
+    border-top: none;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li:last-child {
 	margin-bottom: 0;
@@ -318,10 +320,10 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-dashboard #actions {
-    margin-right: 510px;
+    margin-right: 300px;
     /* position: relative; */
     /* right: 0; */
-    /* width: 70%; */
+    /* min-width: 470px; */
     border-radius: 3px;
     /* float: left; */
 }
@@ -347,7 +349,7 @@ div.loginbox a.whitelink:hover {
     border-left-color: #0063aa;
 }
 #app-dashboard #actions .selected {
-    background-color: rgba(100, 100, 100, 0.1);
+    /* background-color: rgba(200, 200, 200, 0.1); */
     border: 3px solid #bbb;
 }#app-dashboard #actions .selected > ol {
 	margin-top: 10px;
@@ -365,6 +367,8 @@ div.loginbox a.whitelink:hover {
 	margin: 10px 0;
 }
 #app-dashboard #actions .selected form ul li {
+	border-right: none;
+	border-bottom: none;
 	border-top: 1px dashed #bbb;
 	box-shadow: none;
 	border-radius: 0;
