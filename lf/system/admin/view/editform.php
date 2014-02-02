@@ -2,7 +2,10 @@
 
 <a id="nav_<?=$save['alias'];?>"></a>
 <ul>	
-	<li>Config: <?=$args;?></li>
+	<li>
+		Page &lt;title /&gt;: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" /><br />
+		<!-- Nav Label: <input type="text" name="label" value="<?php if(isset($save['label'])) echo $save['label']; ?>" /><br /> -->
+	</li>
 	<li>
 		Url: <?php echo $_SERVER['SERVER_NAME'].$this->request->relbase; ?> <select name="parent">
 			<optgroup label="Select Base">
@@ -12,7 +15,13 @@
 			</select>
 		/ <input type="text" name="alias"  style="width: 75px;" value="<?php if(isset($save['alias'])) echo $save['alias']; ?>"/>
 	</li>
+	<li>Config: <?=$args;?></li>
 	<li>
+		Template: 
+			<select name="template">
+				<?=$template_select;?>
+			</select>
+		
 		Location: 
 			<?php if(isset($section_list)) { ?>
 				<select name="section">
@@ -23,17 +32,10 @@
 			<?php } else { ?>
 				<input type="text" name="section" />
 			<?php } ?>
+		
 	</li>
 	<li>
-		Page Title: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" /><br />
-		<!-- Nav Label: <input type="text" name="label" value="<?php if(isset($save['label'])) echo $save['label']; ?>" /><br /> -->
-	</li>
-	<li>
-		Template: 
-			<select name="template">
-				<?=$template_select;?>
-			</select>
-		App? <input type="checkbox" name="app" <?php if(isset($save['isapp']) && $save['isapp'] == 0) echo ''; else echo 'checked="checked"'; ?> /> 
+		Capture URL variables? <input type="checkbox" name="app" <?php if(isset($save['isapp']) && $save['isapp'] == 0) echo ''; else echo 'checked="checked"'; ?> /> 
 	</li>
 </ul>
 

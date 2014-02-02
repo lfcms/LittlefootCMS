@@ -3,8 +3,9 @@
 class upgrade extends app
 {
 	public function main($var)
-	{	
-			
+	{
+		echo '<h1>!!! DEPRECATED !!!</h1>';
+		
 		echo '<h2>Upgrade Littlefoot</h2>';
 		
 		echo '<div id="current">';

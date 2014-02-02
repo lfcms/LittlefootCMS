@@ -148,8 +148,10 @@ function build_hidden($items, $edit)
 			if($selected)
 				$html .= '<form action="%appurl%update/" method="post">';
 				
-			$html .= $pos.'[<a id="nav_'.$item['alias'].'" onclick="return confirm(\'Do you really want to delete this?\');" href="%appurl%rm/'.$item['id'].'/">x</a>]
-					'.$label.' - Apps: '.$apphtml;
+			$html .= $pos.'	'.$label.' - Apps: '.$apphtml;
+					
+					
+			$html .= '<a class="nav_delete_item" '.jsprompt('Are you sure?').' href="%baseurl%apps/rm/'.$item['id'].'/">x</a>';
 
 			if($selected)
 				$html .= '%editform%</form>';
