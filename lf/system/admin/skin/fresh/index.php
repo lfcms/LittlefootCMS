@@ -34,27 +34,28 @@
 		<body>
                 <div class="userbar">
                         <header>
-                            <h1>LittlefootCMS</h1>
-                        <div id="greeting">
-                                Hello <?=$this->auth['display_name'];?>. (<a href="<?=$this->base;?>_auth/logout">Logout</a>)
-                        </div>
+                            <h1><a href="<?=$this->base;?>">littlefoot</a></h1>
+							<div id="greeting">
+									Hello <?=$this->auth['display_name'];?>. <a href="<?=$this->base;?>_auth/logout">logout</a>
+							</div>
+						</header>	
                 </div>
                 <div class="container">
-                        <nav>
-                                <?php echo $nav; ?>
-                        </nav>
-                        <div class="content">
-                                <div id="app-<?php echo $class; ?>" class="wrapper">
-                                                <?php echo $app; ?>
-                                </div>
-                                <div class="clear">
-				</div>
-                        </div>
-                        <footer>
-                                <div class="footer-credits">
-                                        Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
-                                </div>
-                        </footer>
+					<nav>
+							<?php echo $nav; ?>
+					</nav>
+					<div class="content">
+							<div id="app-<?php echo $class; ?>" class="wrapper">
+											<?php echo $app; ?>
+							</div>
+							<div class="clear">
+							</div>
+							<footer>
+								<div class="footer-credits">
+									Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
+								</div>
+							</footer>
+					</div>
                 </div>
         </body>
 </html>

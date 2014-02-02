@@ -1,50 +1,66 @@
-
+* {
+	transition: background-color 0.25s linear 0s,  border-color 0.25s linear 0s;
+}
 nav {
-    border-right: 1px solid rgba(200, 200, 200, 0.5);
+    overflow: auto;
+    max-height: 90%;
+    margin-top: 40px;
+    position: fixed;
+    margin-bottom: 10px;
+    background-color: #333;
     float: left;
-    height: 100%;
     width: 170px;
+    border-radius: 0px 0px 2px 0px;
 }
 nav > ul {
+	overflow-y: auto;
+	max-height: 90%;
 	padding: 0;
 }
 nav li {
     list-style-type: none;
 }
 nav li ul {
-    display: none;
 }
 nav li a {
+    transition:  none;
+    color: #fff;
     display: block;
-    font-size: 20px;
-    padding: 5px 5px 5px 25px;
+    font-size: 18px;
+    padding: 5px 5px 5px 40px;
 }
 nav li > a:hover {
-    /*background-color: rgba(245, 245, 245, 0.5);*/
-	background-color: rgba(220, 220, 220, 0.5);
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.5);
 }
-nav li.current > a {
-    border-left: 4px solid #21759B;
-    color: #1A457A;
+nav > ul > li.current > a {
+    color: #ffffff;
+    background-color: #0063aa;
 }
 
-nav li/*.current*/ > ul {
-    /*background-color: rgba(250, 250, 250, 0.5);*/
-    background-color: rgba(200, 200, 200, 0.5);
-    border-bottom: 1px dotted rgba(200, 200, 200, 0.5);
-    border-top: 1px dotted rgba(200, 200, 200, 0.5);
-    display: block;
-    margin-left: -40px;
+nav li.current > ul {
 }
 
 
-nav li/*.current*/ > ul li {
-}
-
-nav li/*.current*/ > ul a {
-    color: #6B6B6B;
+nav li > ul li {
+	background-color: rgba(240, 240, 240, 0.1);
+    
     display: block;
 }
-nav li/*.current*/ > ul a:hover {
-    color: #898989;
+
+nav li > ul li a {
+    /* border-right: 4px solid #333; */
+    font-size: 14px;
+    display: block;
+}
+nav li > ul li a:hover {
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+nav li > ul > li.current > a {
+	/* text-decoration: underline; */
+	/* border-right: 4px solid #0063aa; */
+	background-color: #868686;
+	/* font-weight: bold; */
+    
 }

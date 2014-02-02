@@ -42,7 +42,7 @@ function build_menu($menu, $edit, $parent = -1, $depth = -1, $prefix = '', $snip
 		//$apphtml .= ' (<a href="%appurl%main/'.$item['id'].'/">Edit</a>)';
 		
 		if(is_file(ROOT.'apps/'.$item['app'].'/admin.php'))
-			$apphtml .= ' (<a href="%baseurl%dashboard/manage/'.$item['app'].'/">Admin</a>)';
+			$apphtml .= ' <a href="%baseurl%dashboard/manage/'.$item['app'].'/">Admin</a>';
 			
 		// set postion for nav item
 		if($variable1 == $item['id'])
@@ -66,6 +66,8 @@ function build_menu($menu, $edit, $parent = -1, $depth = -1, $prefix = '', $snip
 			$html .= '<form id="nav_form" action="%appurl%update/" method="post">';
 			
 		$html .= $pos.' '.$label.' - Apps: '.$apphtml;
+		
+		$html .= '<a class="nav_delete_item" '.jsprompt('Are you sure?').' href="%baseurl%apps/rm/'.$item['id'].'/">x</a>';
 		
 		if($variable1 == $item['id'])
 			$html .= '%editform%</form>';
@@ -146,8 +148,10 @@ function build_hidden($items, $edit)
 			if($selected)
 				$html .= '<form action="%appurl%update/" method="post">';
 				
-			$html .= $pos.'[<a id="nav_'.$item['alias'].'" onclick="return confirm(\'Do you really want to delete this?\');" href="%appurl%rm/'.$item['id'].'/">x</a>]
-					'.$label.' - Apps: '.$apphtml;
+			$html .= $pos.'	'.$label.' - Apps: '.$apphtml;
+					
+					
+			$html .= '<a class="nav_delete_item" '.jsprompt('Are you sure?').' href="%baseurl%apps/rm/'.$item['id'].'/">x</a>';
 
 			if($selected)
 				$html .= '%editform%</form>';

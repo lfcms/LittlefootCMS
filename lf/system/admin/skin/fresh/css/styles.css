@@ -1,12 +1,18 @@
-
+@font-face {
+	font-family: ubuntu;
+	src: url('Ubuntu-R.ttf');
+}
 * {
     margin: 0;
+	transition: border-color 0.25s linear 0s,
+	background-color 0.25s linear 0s;
 }
 html {
+	font-family: ubuntu;
     overflow-y: scroll;
 }
 a {
-    color: #4A6382;
+    color: #0063aa;
     text-decoration: none;
 }
 a#forgot {
@@ -16,13 +22,7 @@ a#forgot {
     text-decoration: none;
 }
 a:hover {
-    color: #1A457A;
-}
-h1 {
-    color: rgba(20, 20, 20, 0.6);
-    float: left;
-    font-size: 26px;
-    padding: 5px;
+    color: #3878A7;
 }
 input:focus {
     outline: 0 none;
@@ -43,34 +43,48 @@ input:focus {
     padding: 5px;
     text-align: center;
 }
+h2 {
+	margin-bottom: 10px;
+	font-size: 16px;
+	color: #333;
+}
+h2 a {
+	color: #0063aa;
+}
 h3 {
-    color: #21759B;
+    font-size: 14px;
+    color: #444;
 }
 h4 {
     color: #24AF68;
 }
+ul, ol {
+	padding-left: 0px;
+}
 body {
-    color: #444444;
+    overflow-x:  hidden;
+    width: 100%;
+    color: #555555;
 }
 footer {
-    border-radius: 3px;
-    border-top: 1px solid #DDDDDD;
-    padding: 1rem;
+    bottom: 0;
+    position: static;
+    padding: 10px;
 }
 footer .footer-credits {
     text-align: center;
 }
 header {
-    color: #515151;
+    color: #ffffff;
 }
 body.login {
-    background-color: #888888;
+    background-color: rgba(0,0,0,.2);
 }
 div.loginbox {
     -moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-    background-color: rgba(10, 10, 10, 0.2);
+    background-color: #333;
     border-radius: 5px;
     box-shadow: 0 0 10px 1px #777777;
     font-family: arial;
@@ -101,7 +115,6 @@ div.loginbox form input#username, div.loginbox form input#password {
     font-size: 22px;
     margin-bottom: 15px;
     padding: 5px 10px;
-    transition: border-color 0.25s linear 0s;
     width: 100%;
 }
 div.loginbox form input#username:focus, div.loginbox form input#password:focus {
@@ -116,7 +129,6 @@ div.loginbox form button {
     margin-bottom: 0;
     padding: 8px 40px;
     text-decoration: none;
-    transition: background-color 0.25s linear 0s;
     width: 100%;
 }
 div.loginbox form button:hover {
@@ -136,17 +148,19 @@ div.loginbox a.whitelink:hover {
     float: right;
 }
 .container {
-    background-color: #FFFFFF;
-    font-family: arial;
+    min-height: 100%;
+    position: absolute;
+    width: 100%;
+    background-color: rgba(0,0,0,.2);
 }
 .container .wrapper {
     float: left;
-    margin-top: 15px;
+    margin-top: 10px;
     width: 100%;
 }
 .content {
-    margin-left: 200px;
-    margin-right: 40px;
+    padding: 0px 15px;
+    margin: 40px 0px 0px 170px;
 }
 .small {
     font-weight: normal;
@@ -155,21 +169,42 @@ div.loginbox a.whitelink:hover {
     clear: both;
 }
 .userbar {
-    background-color: #EFEFEF;
-    box-shadow: 0 -1px 1px 0 #CCCCCC inset;
-    color: #666666;
-    font-family: arial;
+    
+    background: #333;
+    width: 100%;
+    height: 40px;
+    top: 0px;
+    position: fixed;
+    z-index: 999;
+    color: #DDDDDD;
     overflow: hidden;
     text-align: right;
 }
-.userbar a {
-    color: #6A83A2;
+.userbar h1 a {
+    text-align:  center;
+    width: 170px;
+    display:  block;
+	
+    color: #ffffff;
+    float: left;
+    font-size: 24px;
+    padding: 4px 0px;
 }
-.userbar a:hover {
-    color: #1A457A;
+.userbar h1 a:hover {
+	background-color: rgba(0, 0, 0, 0.5);
 }
 .userbar #greeting {
+    margin-right: 10px;
+    float: right;
+    padding: 9px 0px 10px 0px;
+}
+.userbar #greeting a {
     padding: 10px;
+    color: #3891FF;
+}
+.userbar #greeting a:hover {
+    color: #2888FF;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 .dash-admin-app {
     background-color: #FAFAFA;
@@ -185,97 +220,191 @@ div.loginbox a.whitelink:hover {
     margin-bottom: 5px;
     text-transform: uppercase;
 }
-#app-apps {
-    display: block;
+#app-dashboard {
+	margin-bottom: 10px;
 }
-#appgallery {
-    border-radius: 3px;
+#app-dashboard #appgallery {
+    max-width: 285px;
+    top: 50px;
+    right: 15px;
+    position: fixed;
     float: right;
-    padding: 20px;
-    width: 40%;
 }
-#appgallery form {
-    box-shadow: 0 0 5px 0 #AAAAAA inset;
-    margin: 10px 0;
-    padding: 10px;
-}
-#appgallery li {
+#app-dashboard #appgallery li {
     list-style-type: none;
 }
-#appgallery > ul > li {
-    background-color: rgba(230, 230, 230, 0.5);
-    border-radius: 3px;
-    box-shadow: 0 0 3px 0 #CCCCCC;
+#app-dashboard #appgallery #appgallery-container {
+	border: 1px solid #bbb;
+}
+#app-dashboard #appgallery #appgallery-container div#new-app {
+    clear: both;
+    border-bottom: 1px solid #bbb;
+    border-left: solid 3px #F0F0F0;
+    
+    
+	padding: 5px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0px #bbb;
     display: block;
-    float: left;
-    margin: 5px;
+    
+	
+	overflow: auto;
 }
-#appgallery > ul > li:hover {
-    background-color: rgba(245, 245, 245, 0.5);
+#app-dashboard #appgallery #appgallery-container div#new-app:hover {
+	border-left-color: #0063aa;
 }
-#appgallery > ul > li a {
+#app-dashboard #appgallery #appgallery-container div#new-app form {
+	font-size: 14px;
+    padding: 5px;
+}
+#app-dashboard #appgallery #appgallery-container div#new-app form div {
+	float: left;
+	margin: 10px 15px 5px 0;
+}
+#app-dashboard #appgallery #appgallery-container div#new-app form div input{
+}
+#app-dashboard #appgallery #appgallery-container div#new-app form div input[type="file"] {
+	border: 1px solid #ddd;
+	padding: 5px;
+}
+#app-dashboard #appgallery #appgallery-container div#new-app form div input[type="submit"] {
+	margin: 0px 0px 5px 5px;
+} 
+#app-dashboard #appgallery #appgallery-container div#new-app form div span{
+	font-size: 13px;
+}
+#app-dashboard #appgallery #appgallery-container > ul.applist {
+	/* margin: 5px 0 10px 0; */
+	max-height: 430px;
+	overflow: auto;
+}
+#app-dashboard #appgallery #appgallery-container > ul.applist > li {
+    border-top: 1px dashed #bbb;
+    transition:  none;
+    /* border-radius: 2px; */
+    border-left: solid 3px #F0F0F0;
+    min-height: 75px;
+    padding: 5px;
+    background-color: #fff;
+    /* box-shadow: 0 1px 3px 0px #bbb; */
+    display: block;
+    /* margin: 5px 0; */
+}
+#app-dashboard #appgallery #appgallery-container > ul.applist > li:first-child {
+    border-top: none;
+}
+#app-dashboard #appgallery #appgallery-container > ul.applist > li:last-child {
+	margin-bottom: 0;
+}
+#app-dashboard #appgallery #appgallery-container > ul.applist > li:hover {
+    border-left-color: #0063aa;
+}
+#app-dashboard #appgallery #appgallery-container > ul.applist > li a {
     font-size: 18px;
 }
-#appgallery > ul > li div.right_header a {
-    font-size: 30px;
+#app-dashboard #appgallery #appgallery-container  > ul.applist > li div.left_header a {
+    font-size: 18px;
 }
-#actions {
+#app-dashboard #appgallery #appgallery-container .left_header {
+	float: left;
+}
+#app-dashboard #appgallery #appgallery-container .right_header {
+	float: right;
+}
+#app-dashboard #appgallery #appgallery-container .left_header,
+#app-dashboard #appgallery #appgallery-container .right_header {
+	padding: 0 5px;
+}
+#app-dashboard #appgallery #appgallery-container .left_header a,
+#app-dashboard #appgallery #appgallery-container .right_header a {
+	font-size: small;
+}
+#app-dashboard #actions {
+    margin-right: 300px;
+    /* position: relative; */
+    /* right: 0; */
+    /* min-width: 470px; */
     border-radius: 3px;
-    box-shadow: 0 0 5px 0 #AAAAAA;
-    float: left;
-    padding: 20px;
-    width: 40%;
+    /* float: left; */
 }
-#actions li {
+#app-dashboard #actions li {
     list-style-type: none;
 }
-#actions > ol, #actions > ul {
+#app-dashboard #actions > ol,
+#app-dashboard #actions > ul {
+    margin: 5px 0 10px 0;
+}
+#app-dashboard #actions > ol li, #actions > ul li {
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    transition:  none;
+    font-size: 18px;
+    border-left: 3px solid #bbb;
+    background-color: #FFFFFF;
+    border-top: 1px solid #bbb;
     margin: 10px 0;
     padding: 10px;
 }
-#actions ol li ol {
-    margin-left: -40px;
+#app-dashboard #actions > ol li:hover, #actions > ul li:hover {
+    border-left-color: #0063aa;
 }
-#actions > ol li, #actions > ul li {
-    background-color: rgba(240, 240, 240, 0.5);
-    border-radius: 3px;
-    box-shadow: 0 0 2px 0 #CCCCCC;
-    margin: 15px;
-    padding: 10px;
+#app-dashboard #actions .selected {
+    /* background-color: rgba(200, 200, 200, 0.1); */
+    border: 3px solid #00aa63;
+}#app-dashboard #actions .selected > ol {
+	margin-top: 10px;
 }
-#actions > ol li:hover, #actions > ul li:hover {
-    background-color: rgba(250, 250, 250, 0.5);
+#app-dashboard #actions .selected:hover {
+	border-color: #00aa63;
 }
-#actions .selected {
-    background-color: #DDDDDD !important;
+#app-dashboard #actions .selected form {
 }
-ul.applist {
-    margin-left: -40px;
+#app-dashboard #actions .selected form input,
+#app-dashboard #actions .selected form select {
+	padding: 5px;
+}
+#app-dashboard #actions .selected form ul {
+	margin: 10px 0;
+}
+#app-dashboard #actions .selected form ul li {
+	border-right: none;
+	border-bottom: none;
+	border-top: 1px dashed #bbb;
+	box-shadow: none;
+	border-radius: 0;
+	margin:  0;
+	background-color: transparent;
+	border-left: none;
+}
+#app-dashboard #actions .selected form ul li:last-child {
+	border-bottom: 1px dashed #bbb;
+}
+#app-dashboard #actions .nav_delete_item {
+	float: right;
 }
 #app-skins li {
     list-style-type: none;
 }
 #app-skins ul.applist {
     float: left;
-    margin: 10px 0 10px -40px;
+    margin: 0 0 10px 0;
 }
 #app-skins ul.applist li {
-    transition: background-color 0.25s linear 0s;
-    background-color: rgba(230, 230, 230, 0.5);
-    border: medium none;
+    background-color: #FFFFFF;
+    border-top: 5px solid rgba(200, 200, 200, 0.5);
     border-radius: 3px;
     box-shadow: 0 0 3px 0 #CCCCCC;
     float: left;
-    margin: 5px;
-    width: 90px;
+    margin: 5px 15px 15px 0px;
+	padding:  15px;
+    height: 215px;
+    width: 285px;
 }
 #app-skins ul.applist li:hover {
-    background-color: rgba(245, 245, 245, 0.5);
+    border-color: rgba(0, 99, 170, 0.5);
 }
-#app-skins ul.applist li {
-    min-height: 235px;
-    width: 280px;
-    font-size: 18px;
+#app-skins ul.applist li.current_skin {
+	border-color: #0063aa;
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -289,26 +418,32 @@ ul.applist {
 	margin-top: 10px;
 	padding-top: 10px;
 }
-#app-skins #new_skins  input {
+#app-skins #new_skins #upload_skin_form  input[type="file"] {
 	padding: 5px;
 }
-#app-skins #avail_skins {
+#app-skins #new_skins #upload_skin_form  input[type="submit"] {
+	margin: 5px 0;
+}
+#app-skins #new_skins #upload_skin_form span{
+	font-size: 13px;
 }
 #app-skins #create_skin_form {
     margin-top: 5px;
 }
+#app-skins #create_skin_form input[type="submit"] {
+	margin: 5px 0;
+}
 #app-skins #create_skin_form #create_skin_namebox {
+    width: 200px;
     padding: 3px;
-    width: 72%;
-	
-	font-size: 18px;
+    font-size: 14px;
 }
 #app-skins #upload_skin_form {
     margin-bottom: 10px;
 }
 #app-skins #upload_skin_form #upload_skin_file {
 	width: 96%;
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 	margin: 5px 0;
 }
 #app-skins .left_header {
@@ -325,8 +460,35 @@ ul.applist {
 #app-skins .right_header a {
 	font-size: small;
 }
+#app-skins #skin_nav {
+    overflow: auto;
+    float: right;
+    width: 10%;
+}
+#app-skins #skin_nav > a {
+    margin-left: 10px;
+    border-left: 5px solid rgba(33, 117, 155, 0.3);
+    padding-left: 5px;
+}
+#app-skins #skin_nav > a.selected {
+    border-left: 5px solid #21759B;
+}
+#app-skins #skin_nav h3 {
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+#app-skins #skin_nav h3 a {
+}
+#app-skins #skin_nav input {
+	margin: 15px 0px 0px 10px;
+}
+#app-skins div#editor {
+	margin-top: 5px;
+	width: 90%;
+	background-color: #fff;
+}
 #app-users ul {
-    margin-left: -40px;
+
 }
 #app-users form ul li {
     list-style-type: none;
@@ -339,26 +501,89 @@ ul.applist {
     color: #222222;
 }
 #app-users table {
-    border-radius: 3px;
-    box-shadow: 0 0 5px 0 #CCCCCC inset;
+    background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0px #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
-    padding: 5px;
+    padding: 10px 10px 0px 10px;
 }
-#app-users table th {
+#app-users table tr th {
     color: #999999;
     padding: 5px;
 }
-#skin_nav {
-    padding: 10px;
+#app-users table tr > td {
+	padding: 15px 5px;
+	border-top: 1px solid #EFEFEF;
 }
-#skin_nav a {
-    border-left: 5px solid rgba(33, 117, 155, 0.3);
-    padding-left: 5px;
+#app-acl form.add {
+	padding: 0;
+	margin: 5px 0px 10px 0px;
 }
-#skin_nav a.selected {
-    border-left: 5px solid #21759B;
+#app-acl form.add select {
+	padding: 5px;
 }
-#skin_nav h3 a {
-    border: medium none;
+#app-acl form.add input{
+	padding: 5px;
+}
+#app-acl table {
+	width: 100%;
+	background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0px #bbb;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    
+	padding: 0px 10px;
+}
+#app-acl table tr > td {
+	padding: 15px 0px;
+	border-top: 1px solid #EFEFEF;
+}
+#app-upgrade div#current {
+	float: left;
+	font-size: 18px;
+	margin: 5px 15px 10px 0px;
+	background: #FFFFFF;
+	padding: 15px;
+	background-color: #FFFFFF;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0px #bbb;
+}
+#app-upgrade div#restore {
+	float: left;
+	font-size: 18px;
+	margin: 5px 15px 10px 0px;
+	background: #FFFFFF;
+	padding: 15px;
+	background-color: #FFFFFF;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px 0px #bbb;
+}
+#app-upgrade div#restore h3 {
+	margin-bottom: 5px;
+}
+#app-settings  ul {
+	float: left;
+	border-radius: 3px;
+	margin-top: 5px;
+	list-style-type: none;
+    box-shadow: 0 1px 3px 0px #bbb;
+    background-color: #FFFFFF;
+    
+}
+#app-settings  ul  li {
+	border-top: 1px dashed #E2E2E2;
+	padding: 15px;
+}
+#app-settings  ul  li:first-child {
+	border: none;
+
+}
+#app-settings  ul  li:last-child {
+	border: none;
+}
+#app-settings  ul  li input,
+#app-settings  ul  li select {
+	padding: 5px;
 }

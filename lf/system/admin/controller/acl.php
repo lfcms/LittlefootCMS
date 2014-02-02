@@ -53,9 +53,9 @@ function make_table($data, $type, $db)
 			</form>
 			<table>
 				<tr style="text-align:left">
-					<th>Edit</th>
+					<th>edit</th>
 					<th>'.implode('</th><th>', $keys).'</th>
-					<th>Delete</th>
+					<th>delete</th>
 				</tr>
 	';
 	foreach($data as $row)
@@ -97,7 +97,7 @@ class acl
 		$inherit = $this->db->fetchall('SELECT * FROM lf_acl_inherit');
 		$global = $this->db->fetchall('SELECT * FROM lf_acl_global ORDER BY action ASC');
 		
-		$header = '<h3><a href="%appurl%acl_user/">User</a> | <a href="%appurl%acl_inherit/">Inherit</a> | <a href="%appurl%acl_global/">Global</a></h3>';
+		$header = '<a href="%appurl%acl_user/">User</a> | <a href="%appurl%acl_inherit/">Inherit</a> | <a href="%appurl%acl_global/">Global</a>';
 		$header = str_replace('<a href="%appurl%acl_'.$request.'/">'.ucfirst($request).'</a>', '<a class="activeacl" href="%appurl%acl_'.$request.'/">'.ucfirst($request).'</a>', $header);
 		
 		?>			
@@ -111,10 +111,8 @@ class acl
 			.activeacl { text-decoration: underline; }
 		</style>
 		
-		<h2>Access Control Lists</h2>
+		<h2>Access Control Lists <?php echo $header; ?></h2>
 		<?php 
-		
-		echo $header;
 		echo make_table($$request, $request, $this->db);
 		
 		/*
