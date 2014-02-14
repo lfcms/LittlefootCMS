@@ -17,18 +17,7 @@ $lf = new Littlefoot($db);
 $lf->request();
 $lf->authenticate();
 
-
-
-
-
-
-
 chdir(APP); // give cwd back to app
-
-
-
-
-
 
 function loader($lf)
 {

@@ -358,7 +358,7 @@ class Littlefoot
 		
 		if($fixrewrite) redirect302($this->base.$request[3].$request[4].$request[5]);
 		
-		if(substr_count($request[4], '/') > 30) die('That is a ridiculous number of slashes in your URI.');
+		if(substr_count($request[4], '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
 		{
 			$this->action = explode('/', $request[4], -1);

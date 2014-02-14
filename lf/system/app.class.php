@@ -17,7 +17,6 @@ class app
 	protected $lf;
 	protected $auth;
 	
-	/* $dbconn is no longer needed, but too much relies on it, so im leavin it */
 	public function __construct($lf, $dbconn , $ini = '', $args = array())
 	{
 		$this->db = $dbconn;
@@ -67,8 +66,12 @@ class app
 				$method = $args[0];
 		
 		ob_start();
+		
+		// execute given method of $this object
 		$this->$method($args);
-		return str_replace('%insturl%', $this->instbase, ob_get_clean()); // replace appurl with instance base
+		
+		// replace appurl with instance base and return
+		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
 	}
 }
 
