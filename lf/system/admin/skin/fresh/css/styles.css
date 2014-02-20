@@ -200,7 +200,7 @@ div.loginbox a.whitelink:hover {
     padding: 4px 0px;
 }
 .userbar h1 a:hover {
-	color: #000;
+	color: #bbb;
 }
 .userbar #greeting {
     margin-right: 10px;
@@ -233,7 +233,7 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
-    min-width: 545px;
+    width: 630px;
     /* top: 50px; */
     /* right: 15px; */
     /* position: fixed; */
@@ -327,7 +327,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #actions {
     margin-right: 15px;
-    min-width: 545px;
+    width: 630px;
     border-radius: 3px;
     float: left;
 }
@@ -339,14 +339,14 @@ div.loginbox a.whitelink:hover {
     margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
-    border-right: 1px solid #bbb;
-    border-bottom: 1px solid #bbb;
+    /* border-right: 1px solid #bbb; */
+    /* border-bottom: 1px solid #bbb; */
     transition:  none;
     font-size: 18px;
     border-left: 3px solid #bbb;
     background-color: #FFFFFF;
-    border-top: 1px solid #bbb;
-    margin: 10px 0;
+    /* border-top: 1px solid #bbb; */
+    margin: 1px 0;
     padding: 10px;
 }
 #app-dashboard #actions > ol li:hover, #actions > ul li:hover {
@@ -396,8 +396,7 @@ div.loginbox a.whitelink:hover {
 #app-skins ul.applist li {
     background-color: #FFFFFF;
     border-top: 5px solid rgba(200, 200, 200, 0.5);
-    border-radius: 3px;
-    box-shadow: 0 0 3px 0 #CCCCCC;
+    box-shadow: 0 0 3px 0 #bbb;
     float: left;
     margin: 5px 15px 10px 0px;
 	padding:  15px;
@@ -555,6 +554,7 @@ div.loginbox a.whitelink:hover {
 	border-top: 1px solid #EFEFEF;
 }
 #app-settings  ul {
+	width: 545px;
 	margin: 5px 15px 10px 0;
 	float: left;
 	list-style-type: none;
@@ -579,6 +579,7 @@ div.loginbox a.whitelink:hover {
 	padding: 5px;
 }
 #app-settings #admin_upgrade {
+	width: 545px;
 	box-shadow: 0 1px 3px 0px #999;
 	padding:  15px;
 	float: left;
