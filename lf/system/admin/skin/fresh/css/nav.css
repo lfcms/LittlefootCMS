@@ -57,7 +57,7 @@ nav li > ul li a:hover {
     color: #ffffff;
     background-color: rgba(0, 0, 0, 0.1);
 }
-nav li > ul > li.current > a {
+nav li > ul > li.current > a {
 	/* text-decoration: underline; */
 	/* border-right: 4px solid #0063aa; */
 	background-color: #868686;

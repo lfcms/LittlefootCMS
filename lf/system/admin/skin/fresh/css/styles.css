@@ -69,13 +69,21 @@ body {
 footer {
     bottom: 0;
     position: static;
-    padding: 10px;
+    padding: 10px 0;
 }
 footer .footer-credits {
-    text-align: center;
 }
 header {
     color: #ffffff;
+}
+input[type="submit"] {
+	color: #222;
+	border: 1px solid #bbb;
+	padding: 5px;
+	margin: 5px 0;
+}
+input[type="submit"]:hover {
+	background-color: #efefef;
 }
 body.login {
     background-color: rgba(0,0,0,.2);
@@ -264,7 +272,7 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #appgallery #appgallery-container div#new-app form div input{
 }
 #app-dashboard #appgallery #appgallery-container div#new-app form div input[type="file"] {
-	border: 1px solid #ddd;
+	border: 1px solid #bbb;
 	padding: 5px;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app form div input[type="submit"] {
@@ -279,19 +287,16 @@ div.loginbox a.whitelink:hover {
 	overflow: auto;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li {
-    border-top: 1px dashed #bbb;
     transition:  none;
-    /* border-radius: 2px; */
     border-left: solid 3px #F0F0F0;
     min-height: 75px;
     padding: 5px;
     background-color: #fff;
-    /* box-shadow: 0 1px 3px 0px #bbb; */
     display: block;
-    /* margin: 5px 0; */
+    margin: 1px 0;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li:first-child {
-    border-top: none;
+    margin-top: 0;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li:last-child {
 	margin-bottom: 0;
@@ -395,9 +400,9 @@ div.loginbox a.whitelink:hover {
     border-radius: 3px;
     box-shadow: 0 0 3px 0 #CCCCCC;
     float: left;
-    margin: 5px 15px 15px 0px;
+    margin: 5px 15px 10px 0px;
 	padding:  15px;
-    height: 215px;
+    height: 225px;
     width: 285px;
 }
 #app-skins ul.applist li:hover {
@@ -431,19 +436,29 @@ div.loginbox a.whitelink:hover {
     margin-top: 5px;
 }
 #app-skins #create_skin_form input[type="submit"] {
+	color: #222;
+	border: 1px solid #bbb;
+	padding: 5px;
 	margin: 5px 0;
 }
+#app-skins #create_skin_form input[type="submit"]:hover {
+	background-color: #efefef;
+}
 #app-skins #create_skin_form #create_skin_namebox {
+    border: 1px solid #bbb;
     width: 200px;
-    padding: 3px;
+    padding: 5px;
     font-size: 14px;
 }
+#app-skins #create_skin_form #create_skin_namebox:focus {
+	border-color: #24AF68;
+}	
 #app-skins #upload_skin_form {
     margin-bottom: 10px;
 }
 #app-skins #upload_skin_form #upload_skin_file {
 	width: 96%;
-	border: 1px solid #ddd;
+	border: 1px solid #bbb;
 	margin: 5px 0;
 }
 #app-skins .left_header {
@@ -540,39 +555,16 @@ div.loginbox a.whitelink:hover {
 	padding: 15px 0px;
 	border-top: 1px solid #EFEFEF;
 }
-#app-upgrade div#current {
-	float: left;
-	font-size: 18px;
-	margin: 5px 15px 10px 0px;
-	background: #FFFFFF;
-	padding: 15px;
-	background-color: #FFFFFF;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px 0px #bbb;
-}
-#app-upgrade div#restore {
-	float: left;
-	font-size: 18px;
-	margin: 5px 15px 10px 0px;
-	background: #FFFFFF;
-	padding: 15px;
-	background-color: #FFFFFF;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px 0px #bbb;
-}
-#app-upgrade div#restore h3 {
-	margin-bottom: 5px;
-}
 #app-settings  ul {
+	margin: 5px 15px 10px 0;
 	float: left;
-	border-radius: 3px;
-	margin-top: 5px;
 	list-style-type: none;
-    box-shadow: 0 1px 3px 0px #bbb;
+    
+	box-shadow: 0 1px 3px 0px #999;
     background-color: #FFFFFF;
     
 }
-#app-settings  ul  li {
+#app-settings  ul  li {
 	border-top: 1px dashed #E2E2E2;
 	padding: 15px;
 }
@@ -586,4 +578,20 @@ div.loginbox a.whitelink:hover {
 #app-settings  ul  li input,
 #app-settings  ul  li select {
 	padding: 5px;
+}
+#app-settings #admin_upgrade {
+	box-shadow: 0 1px 3px 0px #999;
+	padding:  15px;
+	float: left;
+	margin: 5px 15px 0 0;
+	background-color: #FFFFFF;
+}
+#app-settings #admin_upgrade h3 {
+	margin-bottom: 5px;
+}
+#app-settings #admin_upgrade #restore {
+	margin-top: 15px;
+}
+#app-settings #admin_upgrade #restore h3 {
+	margin-bottom: 5px;
 }
