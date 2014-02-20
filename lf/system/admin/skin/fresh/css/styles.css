@@ -159,7 +159,7 @@ div.loginbox a.whitelink:hover {
     min-height: 100%;
     position: absolute;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.48);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 .container .wrapper {
     float: left;
@@ -233,11 +233,11 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
-    max-width: 545px;
-    top: 50px;
-    right: 15px;
-    position: fixed;
-    float: right;
+    min-width: 545px;
+    /* top: 50px; */
+    /* right: 15px; */
+    /* position: fixed; */
+    float: left;
 }
 #app-dashboard #appgallery li {
     list-style-type: none;
@@ -326,12 +326,10 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-dashboard #actions {
-    margin-right: 524px;
-    /* position: relative; */
-    /* right: 0; */
-    /* min-width: 470px; */
+    margin-right: 15px;
+    min-width: 545px;
     border-radius: 3px;
-    /* float: left; */
+    float: left;
 }
 #app-dashboard #actions li {
     list-style-type: none;
