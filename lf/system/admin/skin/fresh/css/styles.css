@@ -46,7 +46,7 @@ input:focus {
 h2 {
 	margin-bottom: 10px;
 	font-size: 16px;
-	color: #333;
+	color: #000;
 }
 h2 a {
 	color: #0063aa;
@@ -64,7 +64,7 @@ ul, ol {
 body {
     overflow-x:  hidden;
     width: 100%;
-    color: #555555;
+    color: #222;
 }
 footer {
     bottom: 0;
@@ -159,7 +159,7 @@ div.loginbox a.whitelink:hover {
     min-height: 100%;
     position: absolute;
     width: 100%;
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0, 0, 0, 0.48);
 }
 .container .wrapper {
     float: left;
@@ -189,6 +189,7 @@ div.loginbox a.whitelink:hover {
     text-align: right;
 }
 .userbar h1 a {
+    transition: color 0.5s ease-in-out 0s;
     text-align:  center;
     width: 170px;
     display:  block;
@@ -199,7 +200,7 @@ div.loginbox a.whitelink:hover {
     padding: 4px 0px;
 }
 .userbar h1 a:hover {
-	background-color: rgba(0, 0, 0, 0.5);
+	color: #000;
 }
 .userbar #greeting {
     margin-right: 10px;
@@ -232,7 +233,7 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
-    max-width: 285px;
+    max-width: 545px;
     top: 50px;
     right: 15px;
     position: fixed;
@@ -325,7 +326,7 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-dashboard #actions {
-    margin-right: 300px;
+    margin-right: 524px;
     /* position: relative; */
     /* right: 0; */
     /* min-width: 470px; */
