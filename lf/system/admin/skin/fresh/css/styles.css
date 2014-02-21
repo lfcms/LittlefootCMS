@@ -76,6 +76,9 @@ footer .footer-credits {
 header {
     color: #ffffff;
 }
+li {
+	list-style-type: none;
+}
 input[type="submit"] {
 	color: #222;
 	border: 1px solid #bbb;
@@ -248,7 +251,7 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #appgallery #appgallery-container div#new-app {
     clear: both;
     border-bottom: 1px solid #bbb;
-    border-left: solid 3px #F0F0F0;
+    border-left: solid 3px #bbb;
     
     
 	padding: 5px;
@@ -289,7 +292,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li {
     transition:  none;
-    border-left: solid 3px #F0F0F0;
+    border-left: solid 3px #bbb;
     min-height: 75px;
     padding: 5px;
     background-color: #fff;
@@ -336,6 +339,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #actions > ol,
 #app-dashboard #actions > ul {
+    border: 1px solid #bbb;
     margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
