@@ -197,7 +197,7 @@ div.loginbox a.whitelink:hover {
     width: 170px;
     display:  block;
 	
-    color: gray;
+    color: lightgray;
     float: left;
     font-size: 24px;
     padding: 4px 0px;
@@ -211,13 +211,12 @@ div.loginbox a.whitelink:hover {
     padding: 9px 0px 10px 0px;
 }
 .userbar #greeting a {
-    color:  gray;
+    transition: background-color 0.25s linear 0s, color 0.25s linear 0s;
+    color: lightgray;
     padding: 10px;
-    /* color: #3891FF; */
 }
 .userbar #greeting a:hover {
-    color: tomato;
-    /* color: rgba(0, 250, 154, 1); */
+    color: red;
     background-color: rgba(0, 0, 0, 0.5);
 }
 .dash-admin-app {
