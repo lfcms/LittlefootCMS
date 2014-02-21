@@ -203,8 +203,7 @@ div.loginbox a.whitelink:hover {
     padding: 4px 0px;
 }
 .userbar h1 a:hover {
-	/* color: rgb(0, 112, 255); */
-	color: deepskyblue;
+	color: #fff;
 }
 .userbar #greeting {
     margin-right: 10px;
