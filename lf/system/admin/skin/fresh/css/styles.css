@@ -485,7 +485,7 @@ div.loginbox a.whitelink:hover {
 #app-skins #skin_nav {
     overflow: auto;
     float: right;
-    width: 10%;
+    width: 15%;
 }
 #app-skins #skin_nav > a {
     margin-left: 10px;
@@ -505,8 +505,9 @@ div.loginbox a.whitelink:hover {
 	margin: 15px 0px 0px 10px;
 }
 #app-skins div#editor {
+	width: 85%;
 	margin-top: 5px;
-	width: 90%;
+	margin-right: 150px;
 	background-color: #fff;
 }
 #app-users ul {
