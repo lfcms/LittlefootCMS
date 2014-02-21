@@ -217,7 +217,7 @@ div.loginbox a.whitelink:hover {
 }
 .userbar #greeting a:hover {
     color: red;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #222;
 }
 .dash-admin-app {
     background-color: #FAFAFA;
