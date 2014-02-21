@@ -197,13 +197,13 @@ div.loginbox a.whitelink:hover {
     width: 170px;
     display:  block;
 	
-    color: #ffffff;
+    color: gray;
     float: left;
     font-size: 24px;
     padding: 4px 0px;
 }
 .userbar h1 a:hover {
-	color: #bbb;
+	color: #3891FF;
 }
 .userbar #greeting {
     margin-right: 10px;
@@ -211,8 +211,9 @@ div.loginbox a.whitelink:hover {
     padding: 9px 0px 10px 0px;
 }
 .userbar #greeting a {
+    color:  gray;
     padding: 10px;
-    color: #3891FF;
+    /* color: #3891FF; */
 }
 .userbar #greeting a:hover {
     color: #2888FF;
@@ -398,9 +399,12 @@ div.loginbox a.whitelink:hover {
     margin: 0 0 10px 0;
 }
 #app-skins ul.applist li {
+    border-bottom: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    transition: none;
     background-color: #FFFFFF;
-    border-top: 5px solid rgba(200, 200, 200, 0.5);
-    box-shadow: 0 0 3px 0 #bbb;
+    border-top: 5px solid #bbb;
     float: left;
     margin: 5px 15px 10px 0px;
 	padding:  15px;
@@ -408,10 +412,10 @@ div.loginbox a.whitelink:hover {
     width: 285px;
 }
 #app-skins ul.applist li:hover {
-    border-color: rgba(0, 99, 170, 0.5);
+    border-top-color: #0063aa;
 }
 #app-skins ul.applist li.current_skin {
-	border-color: #0063aa;
+	border-top-color: #00aa63;
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -519,8 +523,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-users table {
     background-color: #FFFFFF;
-    border-radius: 2px;
-    box-shadow: 0 1px 3px 0px #bbb;
+    border: 1px solid #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
     padding: 10px 10px 0px 10px;
@@ -546,8 +549,9 @@ div.loginbox a.whitelink:hover {
 #app-acl table {
 	width: 100%;
 	background-color: #FFFFFF;
-    border-radius: 2px;
-    box-shadow: 0 1px 3px 0px #bbb;
+    
+    
+	border: 1px solid #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
     
@@ -563,7 +567,7 @@ div.loginbox a.whitelink:hover {
 	float: left;
 	list-style-type: none;
     
-	box-shadow: 0 1px 3px 0px #999;
+	border: 1px solid #bbb;
     background-color: #FFFFFF;
     
 }
@@ -584,7 +588,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-settings #admin_upgrade {
 	width: 545px;
-	box-shadow: 0 1px 3px 0px #999;
+	border: 1px solid #bbb;
 	padding:  15px;
 	float: left;
 	margin: 5px 15px 0 0;
