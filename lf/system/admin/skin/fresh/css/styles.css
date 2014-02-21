@@ -344,6 +344,7 @@ div.loginbox a.whitelink:hover {
     margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
+    color: gray;
     /* border-right: 1px solid #bbb; */
     /* border-bottom: 1px solid #bbb; */
     transition:  none;
