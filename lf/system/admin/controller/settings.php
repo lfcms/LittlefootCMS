@@ -140,7 +140,7 @@ class settings extends app
 		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
 		unset($_SESSION['upgrade']);
 		
-		echo 'Littlefoot update installed. <a href="'.$_SERVER[''].'">Click here to return to the previous page.</a>';
+		redirect302();
 	}
 
 	public function rm($vars)
