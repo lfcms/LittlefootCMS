@@ -139,11 +139,45 @@ class settings extends app
 	{
 		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
 		unset($_SESSION['upgrade']);
-		upgrade();
+		//upgrade();
+		
+		
+		$time = time();
+		if(!is_dir('backup')) mkdir('backup');
+		
+		if(!is_file(ROOT.'system.zip'))
+		{
+			echo ROOT.'system.zip does not exist';
+		}
+		else if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) 
+			// if unable to rename...
+			echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
+		} 
+		else
+		{
+			// unzip into system/
+			$file = 'system.zip';
+			$dir = ROOT;
+			Unzip($dir,$file);
+			
+			if(!is_dir(ROOT.'system'))
+				echo 'Failed to unzip system.zip';
+			else
+			{
+				unlink(ROOT.'system.zip');
+				/*echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
+				exit();*/
+				redirect302();
+			}
+			
+		}
+		
+		
+		/*
 		//redirect302();
 			
 		echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
-		exit();
+		exit();*/
 	}
 
 	public function rm($vars)
@@ -168,8 +202,10 @@ class settings extends app
 		{
 			rename(ROOT.'backup/'.$vars[1], ROOT.'system');
 			
-			echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
-			exit();
+			/*echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
+			exit();*/
+			
+			redirect302();
 		}
 	}
 }

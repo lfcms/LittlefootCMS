@@ -69,10 +69,16 @@ function upgrade()
 		$file = 'system.zip';
 		$dir = ROOT;
 		Unzip($dir,$file);
-		unlink(ROOT.'system.zip');
 		
-		echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
-		exit();
+		if(!is_dir(ROOT.'system'))
+			echo 'Failed to unzip system.zip';
+		else
+		{
+			unlink(ROOT.'system.zip');
+			echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
+			exit();
+		}
+		
 	}
 }
 
