@@ -89,7 +89,7 @@ input[type="submit"]:hover {
 	background-color: #efefef;
 }
 body.login {
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0,0,0,.1);
 }
 div.loginbox {
     -moz-box-sizing: border-box;
@@ -410,7 +410,7 @@ div.loginbox a.whitelink:hover {
     margin: 5px 15px 10px 0px;
 	padding:  15px;
     height: 225px;
-    width: 285px;
+    width: 275px;
 }
 #app-skins ul.applist li:hover {
     border-top-color: #0063aa;
@@ -453,7 +453,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins #create_skin_form #create_skin_namebox {
     border: 1px solid #bbb;
-    width: 200px;
+    width: 195px;
     padding: 5px;
     font-size: 14px;
 }
@@ -564,7 +564,7 @@ div.loginbox a.whitelink:hover {
 	border-top: 1px solid #EFEFEF;
 }
 #app-settings  ul {
-	width: 545px;
+	width: 630px;
 	margin: 5px 15px 10px 0;
 	float: left;
 	list-style-type: none;
@@ -589,7 +589,7 @@ div.loginbox a.whitelink:hover {
 	padding: 5px;
 }
 #app-settings #admin_upgrade {
-	width: 545px;
+	width: 630px;
 	border: 1px solid #bbb;
 	padding:  15px;
 	float: left;
