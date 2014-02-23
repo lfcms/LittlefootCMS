@@ -166,8 +166,9 @@ class settings extends app
 			else
 			{
 				unlink(ROOT.'system.zip');
-				echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
-				exit();
+				/*echo 'Littlefoot update installed. <a href="'.$_SERVER['HTTP'].'">Click here to return to the previous page.</a>';
+				exit();*/
+				redirect302();
 			}
 			
 		}
