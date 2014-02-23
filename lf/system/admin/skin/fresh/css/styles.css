@@ -587,3 +587,13 @@ div.loginbox a.whitelink:hover {
 #app-settings  ul  li select {
 	padding: 5px;
 }
+
+.admin_error {
+	background: none repeat scroll 0 0 #DDAAAA;
+    border: medium solid #BB0000;
+    color: #BB3333;
+    display: block;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px;
+}

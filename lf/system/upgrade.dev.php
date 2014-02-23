@@ -22,9 +22,17 @@ if(!chdir(ROOT)) die('Access Denied to '.ROOT); // if unable to cd there, kill s
 include 'system/functions.php'; // base functions
 include 'system/db.class.php'; // database wrapper
 
-if(is_file('install/install.php')) { include 'install/install.php'; exit(); } // check for installer, load if presnt
-if(is_file(ROOT.'system.zip')) upgrade(); // if system/ upgrade is ready
-if(is_file(ROOT.'system/upgrade.php')) { include ROOT.'system/upgrade.php'; unlink(ROOT.'system/upgrade.php'); exit(); } // load the upgrade script if present
+if(is_file('install/install.php')) {  // check for installer, load if present
+	include 'install/install.php'; 
+	exit();
+}
+if(is_file(ROOT.'system.zip')) upgrade(); // if system/ upgrade is ready, unzip new system when one is not already live.
+
+if(is_file(ROOT.'system/upgrade.php')) { // load the upgrade script if present
+	include ROOT.'system/upgrade.php'; 
+	unlink(ROOT.'system/upgrade.php'); 
+	//exit(); 
+}
 
 include 'system/init.php';";
 file_put_contents(ROOT.'../index.php', $index);
@@ -66,7 +74,3 @@ if(!$simple) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, '
 // for handling signup within system/
 $signup = $db->fetch("SELECT * FROM lf_settings WHERE var = 'signup'");
 if(!$signup) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'signup', 'disabled')");
-
-echo 'Upgrade complete. <a href="?exit">Click here to remove upgrade utility and return to LittlefootCMS.';
-
-if(!isset($_GET['exit'])) exit();

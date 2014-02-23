@@ -78,6 +78,8 @@
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	</head>
 	<body>
+		<?php if($_SESSION['upgrade']) 
+			echo '<a style="font-family: Arial; display: block; padding: 10px; background: #DDF" href="'.$this->base.'upgrade">Upgrade to '.$_SESSION['upgrade'].' available!</a>'; ?>
 		<div id="wrapper">
 			<div id="header">
 				<h1>LittleFoot Admin</h1>

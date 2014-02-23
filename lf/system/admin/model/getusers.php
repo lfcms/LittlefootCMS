@@ -1,8 +1,8 @@
 <?php
 
 $template = array(
-        'html' => '<td>(<a href="%href%">%text%</a>)</td>',
-        'replace' => array( '%href%', '%text%')
+        'html' => '<td>(<a href="%href%"%js%>%text%</a>)</td>',
+        'replace' => array( '%href%', '%text%', '%js%')
 );
 
 $userlist = '';
@@ -21,11 +21,13 @@ do
 
         $rm = array(
                 '%baseurl%users/rm/'.$row_id.'/',
-                'X'
+                'X',
+				jsprompt('Are you sure?')
         );
         $edit = array(
                 '%baseurl%users/edit/'.$row_id.'/',
-                '[=]'
+                '[=]',
+				''
         );
         $tools =
                 str_replace(
