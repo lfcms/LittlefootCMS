@@ -75,4 +75,5 @@ if(!$simple) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, '
 $signup = $db->fetch("SELECT * FROM lf_settings WHERE var = 'signup'");
 if(!$signup) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'signup', 'disabled')");
 
+
 // really need to add something here to make this interactive in case of a problem
