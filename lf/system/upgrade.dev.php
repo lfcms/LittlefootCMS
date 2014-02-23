@@ -11,6 +11,7 @@ provide option to finish upgrade, delete file
 /*include 'config.php';
 $conf = $db;
 $db = new Database($conf);*/
+$db = $this->db;
 
 // 1.13.5-r129
 $index = "<?php 
