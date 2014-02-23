@@ -150,6 +150,7 @@ class settings extends app
 			echo ROOT.'system.zip does not exist';
 		}
 		else if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) 
+		{
 			// if unable to rename...
 			echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
 		} 
@@ -165,9 +166,8 @@ class settings extends app
 			else
 			{
 				unlink(ROOT.'system.zip');
-				/*echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
-				exit();*/
-				redirect302();
+				echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
+				exit();
 			}
 			
 		}
