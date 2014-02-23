@@ -53,7 +53,7 @@ if(!in_array('hash', $columns)) $db->query('ALTER TABLE lf_users ADD hash VARCHA
 
 // add settings
 $rewrite = $db->fetch("SELECT * FROM lf_settings WHERE var = 'rewrite'");
-if(!$debug) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'rewrite', 'off')");
+if(!$rewrite) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'rewrite', 'off')");
 $debug = $db->fetch("SELECT * FROM lf_settings WHERE var = 'debug'");
 if(!$debug) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'debug', 'off')");
 $url = $db->fetch("SELECT * FROM lf_settings WHERE var = 'force_url'");

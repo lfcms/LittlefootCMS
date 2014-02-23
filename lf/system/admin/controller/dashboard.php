@@ -17,7 +17,7 @@ App_Admin
 
 */
 
-class dashboard
+class dashboard // should extend app class
 {
 	private $isadmin;
 	private $request;
