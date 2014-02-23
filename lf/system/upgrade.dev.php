@@ -8,9 +8,9 @@ provide option to finish upgrade, delete file
 
 */
 
-include 'config.php';
+/*include 'config.php';
 $conf = $db;
-$db = new Database($conf);
+$db = new Database($conf);*/
 
 // 1.13.5-r129
 $index = "<?php 
@@ -25,12 +25,6 @@ include 'system/db.class.php'; // database wrapper
 if(is_file('install/install.php')) {  // check for installer, load if present
 	include 'install/install.php'; 
 	exit();
-}
-
-if(is_file(ROOT.'system/upgrade.php')) { // load the upgrade script if present
-	include ROOT.'system/upgrade.php'; 
-	unlink(ROOT.'system/upgrade.php'); 
-	//exit(); 
 }
 
 include 'system/init.php';";

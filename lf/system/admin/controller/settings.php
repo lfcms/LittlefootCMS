@@ -168,6 +168,14 @@ class settings extends app
 				unlink(ROOT.'system.zip');
 				/*echo 'Littlefoot update installed. <a href="'.$_SERVER['HTTP'].'">Click here to return to the previous page.</a>';
 				exit();*/
+				
+				if(is_file(ROOT.'system/upgrade.php')) {
+					// load the upgrade script if present
+					include ROOT.'system/upgrade.php'; 
+					unlink(ROOT.'system/upgrade.php'); 
+					//exit(); 
+				}
+				
 				redirect302();
 			}
 			
