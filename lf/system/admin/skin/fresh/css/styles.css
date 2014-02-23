@@ -46,7 +46,7 @@ input:focus {
 h2 {
 	margin-bottom: 10px;
 	font-size: 16px;
-	color: #333;
+	color: #000;
 }
 h2 a {
 	color: #0063aa;
@@ -64,21 +64,32 @@ ul, ol {
 body {
     overflow-x:  hidden;
     width: 100%;
-    color: #555555;
+    color: #222;
 }
 footer {
     bottom: 0;
     position: static;
-    padding: 10px;
+    padding: 10px 0;
 }
 footer .footer-credits {
-    text-align: center;
 }
 header {
     color: #ffffff;
 }
+li {
+	list-style-type: none;
+}
+input[type="submit"] {
+	color: #222;
+	border: 1px solid #bbb;
+	padding: 5px;
+	margin: 5px 0;
+}
+input[type="submit"]:hover {
+	background-color: #efefef;
+}
 body.login {
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0,0,0,.1);
 }
 div.loginbox {
     -moz-box-sizing: border-box;
@@ -151,7 +162,7 @@ div.loginbox a.whitelink:hover {
     min-height: 100%;
     position: absolute;
     width: 100%;
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 .container .wrapper {
     float: left;
@@ -181,17 +192,18 @@ div.loginbox a.whitelink:hover {
     text-align: right;
 }
 .userbar h1 a {
+    transition: color 0.5s ease-in-out 0s;
     text-align:  center;
     width: 170px;
     display:  block;
 	
-    color: #ffffff;
+    color: lightgray;
     float: left;
     font-size: 24px;
     padding: 4px 0px;
 }
 .userbar h1 a:hover {
-	background-color: rgba(0, 0, 0, 0.5);
+	color: #fff;
 }
 .userbar #greeting {
     margin-right: 10px;
@@ -199,12 +211,13 @@ div.loginbox a.whitelink:hover {
     padding: 9px 0px 10px 0px;
 }
 .userbar #greeting a {
+    transition: background-color 0.25s linear 0s, color 0.25s linear 0s;
+    color: lightgray;
     padding: 10px;
-    color: #3891FF;
 }
 .userbar #greeting a:hover {
-    color: #2888FF;
-    background-color: rgba(0, 0, 0, 0.5);
+    color: red;
+    background-color: #222;
 }
 .dash-admin-app {
     background-color: #FAFAFA;
@@ -224,11 +237,11 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
-    max-width: 285px;
-    top: 50px;
-    right: 15px;
-    position: fixed;
-    float: right;
+    width: 630px;
+    /* top: 50px; */
+    /* right: 15px; */
+    /* position: fixed; */
+    float: left;
 }
 #app-dashboard #appgallery li {
     list-style-type: none;
@@ -239,7 +252,7 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #appgallery #appgallery-container div#new-app {
     clear: both;
     border-bottom: 1px solid #bbb;
-    border-left: solid 3px #F0F0F0;
+    border-left: solid 3px #bbb;
     
     
 	padding: 5px;
@@ -264,7 +277,7 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #appgallery #appgallery-container div#new-app form div input{
 }
 #app-dashboard #appgallery #appgallery-container div#new-app form div input[type="file"] {
-	border: 1px solid #ddd;
+	border: 1px solid #bbb;
 	padding: 5px;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app form div input[type="submit"] {
@@ -279,19 +292,16 @@ div.loginbox a.whitelink:hover {
 	overflow: auto;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li {
-    border-top: 1px dashed #bbb;
     transition:  none;
-    /* border-radius: 2px; */
-    border-left: solid 3px #F0F0F0;
+    border-left: solid 3px #bbb;
     min-height: 75px;
     padding: 5px;
     background-color: #fff;
-    /* box-shadow: 0 1px 3px 0px #bbb; */
     display: block;
-    /* margin: 5px 0; */
+    margin: 1px 0;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li:first-child {
-    border-top: none;
+    margin-top: 0;
 }
 #app-dashboard #appgallery #appgallery-container > ul.applist > li:last-child {
 	margin-bottom: 0;
@@ -320,29 +330,29 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-dashboard #actions {
-    margin-right: 300px;
-    /* position: relative; */
-    /* right: 0; */
-    /* min-width: 470px; */
+    margin-right: 15px;
+    width: 630px;
     border-radius: 3px;
-    /* float: left; */
+    float: left;
 }
 #app-dashboard #actions li {
     list-style-type: none;
 }
 #app-dashboard #actions > ol,
 #app-dashboard #actions > ul {
+    border: 1px solid #bbb;
     margin: 5px 0 10px 0;
 }
 #app-dashboard #actions > ol li, #actions > ul li {
-    border-right: 1px solid #bbb;
-    border-bottom: 1px solid #bbb;
+    color: gray;
+    /* border-right: 1px solid #bbb; */
+    /* border-bottom: 1px solid #bbb; */
     transition:  none;
     font-size: 18px;
     border-left: 3px solid #bbb;
     background-color: #FFFFFF;
-    border-top: 1px solid #bbb;
-    margin: 10px 0;
+    /* border-top: 1px solid #bbb; */
+    margin: 1px 0;
     padding: 10px;
 }
 #app-dashboard #actions > ol li:hover, #actions > ul li:hover {
@@ -390,21 +400,23 @@ div.loginbox a.whitelink:hover {
     margin: 0 0 10px 0;
 }
 #app-skins ul.applist li {
+    border-bottom: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    transition: none;
     background-color: #FFFFFF;
-    border-top: 5px solid rgba(200, 200, 200, 0.5);
-    border-radius: 3px;
-    box-shadow: 0 0 3px 0 #CCCCCC;
+    border-top: 5px solid #bbb;
     float: left;
-    margin: 5px 15px 15px 0px;
+    margin: 5px 15px 10px 0px;
 	padding:  15px;
-    height: 215px;
-    width: 285px;
+    height: 225px;
+    width: 275px;
 }
 #app-skins ul.applist li:hover {
-    border-color: rgba(0, 99, 170, 0.5);
+    border-top-color: #0063aa;
 }
 #app-skins ul.applist li.current_skin {
-	border-color: #0063aa;
+	border-top-color: #00aa63;
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -431,19 +443,29 @@ div.loginbox a.whitelink:hover {
     margin-top: 5px;
 }
 #app-skins #create_skin_form input[type="submit"] {
+	color: #222;
+	border: 1px solid #bbb;
+	padding: 5px;
 	margin: 5px 0;
 }
+#app-skins #create_skin_form input[type="submit"]:hover {
+	background-color: #efefef;
+}
 #app-skins #create_skin_form #create_skin_namebox {
-    width: 200px;
-    padding: 3px;
+    border: 1px solid #bbb;
+    width: 195px;
+    padding: 5px;
     font-size: 14px;
 }
+#app-skins #create_skin_form #create_skin_namebox:focus {
+	border-color: #24AF68;
+}	
 #app-skins #upload_skin_form {
     margin-bottom: 10px;
 }
 #app-skins #upload_skin_form #upload_skin_file {
 	width: 96%;
-	border: 1px solid #ddd;
+	border: 1px solid #bbb;
 	margin: 5px 0;
 }
 #app-skins .left_header {
@@ -463,7 +485,7 @@ div.loginbox a.whitelink:hover {
 #app-skins #skin_nav {
     overflow: auto;
     float: right;
-    width: 10%;
+    width: 15%;
 }
 #app-skins #skin_nav > a {
     margin-left: 10px;
@@ -483,8 +505,9 @@ div.loginbox a.whitelink:hover {
 	margin: 15px 0px 0px 10px;
 }
 #app-skins div#editor {
+	width: 85%;
 	margin-top: 5px;
-	width: 90%;
+	margin-right: 150px;
 	background-color: #fff;
 }
 #app-users ul {
@@ -502,8 +525,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-users table {
     background-color: #FFFFFF;
-    border-radius: 2px;
-    box-shadow: 0 1px 3px 0px #bbb;
+    border: 1px solid #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
     padding: 10px 10px 0px 10px;
@@ -529,8 +551,9 @@ div.loginbox a.whitelink:hover {
 #app-acl table {
 	width: 100%;
 	background-color: #FFFFFF;
-    border-radius: 2px;
-    box-shadow: 0 1px 3px 0px #bbb;
+    
+    
+	border: 1px solid #bbb;
     margin-bottom: 10px;
     margin-top: 5px;
     
@@ -540,39 +563,17 @@ div.loginbox a.whitelink:hover {
 	padding: 15px 0px;
 	border-top: 1px solid #EFEFEF;
 }
-#app-upgrade div#current {
-	float: left;
-	font-size: 18px;
-	margin: 5px 15px 10px 0px;
-	background: #FFFFFF;
-	padding: 15px;
-	background-color: #FFFFFF;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px 0px #bbb;
-}
-#app-upgrade div#restore {
-	float: left;
-	font-size: 18px;
-	margin: 5px 15px 10px 0px;
-	background: #FFFFFF;
-	padding: 15px;
-	background-color: #FFFFFF;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px 0px #bbb;
-}
-#app-upgrade div#restore h3 {
-	margin-bottom: 5px;
-}
 #app-settings  ul {
+	width: 630px;
+	margin: 5px 15px 10px 0;
 	float: left;
-	border-radius: 3px;
-	margin-top: 5px;
 	list-style-type: none;
-    box-shadow: 0 1px 3px 0px #bbb;
+    
+	border: 1px solid #bbb;
     background-color: #FFFFFF;
     
 }
-#app-settings  ul  li {
+#app-settings  ul  li {
 	border-top: 1px dashed #E2E2E2;
 	padding: 15px;
 }
@@ -596,4 +597,22 @@ div.loginbox a.whitelink:hover {
     font-weight: bold;
     margin: 10px 0;
     padding: 10px;
+}
+
+#app-settings #admin_upgrade {
+	width: 630px;
+	border: 1px solid #bbb;
+	padding:  15px;
+	float: left;
+	margin: 5px 15px 0 0;
+	background-color: #FFFFFF;
+}
+#app-settings #admin_upgrade h3 {
+	margin-bottom: 5px;
+}
+#app-settings #admin_upgrade #restore {
+	margin-top: 15px;
+}
+#app-settings #admin_upgrade #restore h3 {
+	margin-bottom: 5px;
 }

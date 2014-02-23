@@ -27,7 +27,7 @@ nav li a {
     color: #fff;
     display: block;
     font-size: 18px;
-    padding: 5px 5px 5px 40px;
+    padding: 10px 5px 10px 30px;
 }
 nav li > a:hover {
 	color: #fff;
@@ -35,7 +35,7 @@ nav li > a:hover {
 }
 nav > ul > li.current > a {
     color: #ffffff;
-    background-color: #0063aa;
+    background-color: #000;
 }
 
 nav li.current > ul {
@@ -49,8 +49,7 @@ nav li > ul li {
 }
 
 nav li > ul li a {
-    /* border-right: 4px solid #333; */
-    font-size: 14px;
+    font-size: 18px;
     display: block;
 }
 nav li > ul li a:hover {
