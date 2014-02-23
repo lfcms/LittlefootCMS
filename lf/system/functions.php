@@ -75,7 +75,7 @@ function upgrade()
 		}
 		else */
 		
-		echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
+		//echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
 		
 		// let the current page load with new system in place, at the very least, they operate off an old system for one page load (there should really be a separate redirect)
 		//redirect302(); // reload page for upgrade to pull from latest functions
