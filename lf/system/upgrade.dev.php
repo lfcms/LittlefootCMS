@@ -26,7 +26,6 @@ if(is_file('install/install.php')) {  // check for installer, load if present
 	include 'install/install.php'; 
 	exit();
 }
-if(is_file(ROOT.'system.zip')) upgrade(); // if system/ upgrade is ready, unzip new system when one is not already live.
 
 if(is_file(ROOT.'system/upgrade.php')) { // load the upgrade script if present
 	include ROOT.'system/upgrade.php'; 

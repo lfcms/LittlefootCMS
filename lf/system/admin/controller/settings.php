@@ -139,8 +139,11 @@ class settings extends app
 	{
 		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
 		unset($_SESSION['upgrade']);
-		
-		redirect302();
+		upgrade();
+		//redirect302();
+			
+		echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
+		exit();
 	}
 
 	public function rm($vars)

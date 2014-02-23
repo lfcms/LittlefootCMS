@@ -60,7 +60,10 @@ function upgrade()
 	
 	if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) // if unable to rename...
 		echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
-	else
+	else if(!is_file(ROOT.'system.zip'))
+	{
+		echo ROOT.'system.zip does not exist';
+	} else
 	{
 		// unzip into system/
 		$file = 'system.zip';
@@ -68,21 +71,8 @@ function upgrade()
 		Unzip($dir,$file);
 		unlink(ROOT.'system.zip');
 		
-		/*if(is_file(ROOT.'system/upgrade.php'))
-		{
-			include ROOT.'system/upgrade.php';
-			unlink(ROOT.'system/upgrade.php');
-		}
-		else */
-		
 		echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
 		exit();
-		
-		// let the current page load with new system in place, at the very least, they operate off an old system for one page load (there should really be a separate redirect)
-		//redirect302(); // reload page for upgrade to pull from latest functions
-		
-		//echo 'Latest Littlefoot system/ installed. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
-		//exit();
 	}
 }
 
