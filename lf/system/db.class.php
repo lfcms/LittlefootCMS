@@ -7,6 +7,7 @@ class Database
 	private $query_count;
 	private $db_name;
 	private $conf;
+	public $error = '';
 	
 	function __construct( $database_config )
 	{
@@ -15,7 +16,15 @@ class Database
 			$database_config['user'],
 			$database_config['pass'] 
 		);
-		mysql_select_db( $database_config['name'], $this->db_link );
+		
+		if(!$this->db_link)
+			$this->error[] = mysql_errno($this->db_link) . ": " . mysql_error($this->db_link);
+		
+		if(!mysql_select_db( $database_config['name'], $this->db_link ))
+			$this->error[] = mysql_errno($this->db_link) . ": " . mysql_error($this->db_link);
+		
+		
+		
 		$this->query_count = 0;
 		$this->tblprefix = $database_config['prefix'];
 		$this->conf = $database_config;
