@@ -8,10 +8,13 @@ provide option to finish upgrade, delete file
 
 */
 
-/*include 'config.php';
-$conf = $db;
-$db = new Database($conf);*/
-$db = $this->db;
+if(isset($this)) { $db = $this->db; }
+else
+{
+        include 'config.php';
+        $conf = $db;
+        $db = new Database($conf);
+}
 
 // 1.13.5-r129
 $index = "<?php 
