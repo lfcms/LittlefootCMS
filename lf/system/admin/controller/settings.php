@@ -100,8 +100,8 @@ class settings extends app
 		
 		echo '
 			<div id="admin_upgrade">
-				<h2>Upgrade Littlefoot</h2>
 				<div id="current">
+				<h3>Upgrade Littlefoot</h3>
 				<p>Current version: '.$this->request->api('version').'</p>';
 			
 		if($newest != $this->request->api('version'))
@@ -109,8 +109,7 @@ class settings extends app
 		else
 			echo '<p>You are up to date!</p>';
 			
-		echo '
-				<p>[ <a href="%appurl%lfup/">Upgrade Littlefoot</a> ]</p>
+		echo '<p>[ <a href="%appurl%lfup/">Upgrade Littlefoot</a> ]</p>
 			</div>
 			<div id="restore">
 				<h3>Restore to old system</h3>';

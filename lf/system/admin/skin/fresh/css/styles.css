@@ -1,6 +1,6 @@
 @font-face {
 	font-family: ubuntu;
-	src: url('Ubuntu-R.ttf');
+	src: url('Ubuntu-L.ttf');
 }
 * {
     margin: 0;
@@ -602,17 +602,16 @@ div.loginbox a.whitelink:hover {
 #app-settings #admin_upgrade {
 	width: 630px;
 	border: 1px solid #bbb;
-	padding:  15px;
 	float: left;
 	margin: 5px 15px 0 0;
 	background-color: #FFFFFF;
 }
 #app-settings #admin_upgrade h3 {
-	margin-bottom: 5px;
+	padding-bottom: 10px;
+}
+#app-settings #admin_upgrade #current {
+	padding: 15px;
 }
 #app-settings #admin_upgrade #restore {
-	margin-top: 15px;
-}
-#app-settings #admin_upgrade #restore h3 {
-	margin-bottom: 5px;
+	padding: 15px;
 }
