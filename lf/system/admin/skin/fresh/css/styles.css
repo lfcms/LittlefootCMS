@@ -489,7 +489,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins #skin_nav > a {
     margin-left: 10px;
-    border-left: 5px solid rgba(33, 117, 155, 0.3);
+    border-left: 5px solid #bbb;
     padding-left: 5px;
 }
 #app-skins #skin_nav > a.selected {
