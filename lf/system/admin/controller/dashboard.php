@@ -276,7 +276,8 @@ class dashboard // should extend app class
 		// $var[0] = 'manage'
 		$app_name = $var[1];
 		
-		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>';
+		echo '<h2><a href="%appurl%">Apps</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>
+			<div class="dashboard_manage">';
 		$var = array_slice($var, 2); // pass the rest of the vars to the admin.php script
 		
 		$oldvars = $this->request->vars;
@@ -310,6 +311,8 @@ class dashboard // should extend app class
 			//include($preview.'.php');
 			chdir($old);
 		//}
+		
+		echo '</div>';
 		
 		$this->request->vars = $oldvars;
 		return str_replace('%appurl%', '%appurl%manage/'.$app_name.'/'.$urlpreview, ob_get_clean());

@@ -268,14 +268,14 @@ class skins
 					});
 					
 					
-					$(window).scroll(function(){
-					  if($(this).scrollTop() > 400/*$('#editor').position().top*/){
+					/*$(window).scroll(function(){
+					  if($(this).scrollTop() > 400$('#editor').position().top){
 						$('#skin_nav').css({position:'fixed',top:10,left:10});
 					  }else{
 						$('#skin_nav').css({position:'relative'});
 					  } 
 
-					});
+					});*/
 				});
 				</script>
 			<?php
