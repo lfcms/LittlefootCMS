@@ -226,6 +226,7 @@ class skins
 				<script>
 				$(document).ready(function(){
 					var editor = ace.edit("editor");
+					editor.setShowPrintMargin(false);
 					editor.setTheme("ace/theme/textmate");
 					editor.getSession().setMode("ace/mode/<?php echo $ext; ?>");
 					editor.focus(); //To focus the ace editor
