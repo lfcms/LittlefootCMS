@@ -60,9 +60,11 @@ class Littlefoot
 		//exit();
 		
 		//if($this->debug)
+		
+		// actual speed
 		if($this->settings['debug'] == 'on')
 		{
-			echo '
+			echo '<!-- 
 				<div style="clear: both; text-align: center; color: #333; background: #FFF; width:500px; margin: 20px auto; padding:10px;" >
 					<h2 style="color: #999;">Debug Information</h2>
 					<p style="color: #333">Version: '.$this->version.'</p>
@@ -80,7 +82,7 @@ class Littlefoot
 			';
 			foreach($this->app_timer as $app => $time)
 				echo '<tr><td>'.$app.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '</table></div>';
+			echo '</table></div>-->';
 		}
 	}
 	
@@ -666,16 +668,21 @@ class Littlefoot
 		ob_start();
 		include ROOT.'system/view/login.php';
 		$login = ob_get_clean();
-
+		
+		// home.php
+		$file = 'index';
+		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
+			$file = 'home';
+		
+		
 		// Get Template code
 		ob_start();
-		if(is_file(ROOT.'skins/'.$this->select['template'].'/index.php'))
-			include(ROOT.'skins/'.$this->select['template'].'/index.php');
-		else if(is_file(ROOT.'skins/'.$this->select['template'].'/index.html'))
-			readfile(ROOT.'skins/'.$this->select['template'].'/index.html');		
+		if(is_file(ROOT.'skins/'.$this->select['template']."/$file.php"))
+			include(ROOT.'skins/'.$this->select['template']."/$file.php");
+		else if(is_file(ROOT.'skins/'.$this->select['template']."/$file.html"))
+			readfile(ROOT.'skins/'.$this->select['template']."/$file.html");	
 			
 		$template = ob_get_clean();
-		
 		
 		// Replace all %markers% with $content
 		if(isset($replace))
@@ -691,6 +698,34 @@ class Littlefoot
 			'%relbase%' => $this->relbase
 		);
 		$template = str_replace(array_keys($global_replace), array_values($global_replace), $template);
+		
+		
+		if($this->settings['debug'] == 'on')
+		{
+			ob_start();
+			echo '<div style="clear: both; text-align: center; color: #333; background: #FFF; width:500px; margin: 20px auto; padding:10px;" >
+					<h2 style="color: #999;">Debug Information</h2>
+					<p>This debug information was printed from lf->render(). If you want the whole CMS speeds, check the bottom of the source code</p>
+					<p style="color: #333">Version: '.$this->version.'</p>
+					<p style="color: #333">Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms</p>
+					<p style="color: #333">Memory Usage: '.round(memory_get_peak_usage()/1024,2).' kb</p>
+					Littlefoot function load times:
+					<table style="margin: auto; color: #000;">
+			';
+			foreach($this->function_timer as $function => $time)
+				echo '<tr><td>'.$function.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
+			echo '
+					</table>
+					App load times:
+					<table style="margin: auto; color: #000;">
+			';
+			foreach($this->app_timer as $app => $time)
+				echo '<tr><td>'.$app.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
+			echo '</table></div>';
+			$debug = ob_get_clean();
+			
+			$template = str_replace('%debug%', $debug, $template);
+		}
 		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', $template);

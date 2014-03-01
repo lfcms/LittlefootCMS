@@ -36,6 +36,7 @@
         <footer>
 		    <div class="footer-credits page_sizer">
 					Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
+                    %debug%
 			</div>
 		</footer>
 	</body>

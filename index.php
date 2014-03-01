@@ -7,9 +7,7 @@ if(!chdir(ROOT)) die('Access Denied to '.ROOT); // if unable to cd there, kill s
 include 'system/functions.php'; // base functions
 include 'system/db.class.php'; // database wrapper
 
-if(is_file('install/install.php')) {  // check for installer, load if present
-	include 'install/install.php'; 
-	exit();
-}
+// check for installer, load if present
+if(is_file('install/install.php')) { include 'install/install.php'; exit(); }
 
 include 'system/init.php';
