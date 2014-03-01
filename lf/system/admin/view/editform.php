@@ -1,6 +1,7 @@
 
 
 <a id="nav_<?=$save['alias'];?>"></a>
+
 <ul>	
 	<li>
 		Page &lt;title /&gt;: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" /><br />

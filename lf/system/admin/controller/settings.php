@@ -100,8 +100,8 @@ class settings extends app
 		
 		echo '
 			<div id="admin_upgrade">
-				<h2>Upgrade Littlefoot</h2>
 				<div id="current">
+				<h3>Upgrade Littlefoot</h3>
 				<p>Current version: '.$this->request->api('version').'</p>';
 			
 		if($newest != $this->request->api('version'))
@@ -109,8 +109,7 @@ class settings extends app
 		else
 			echo '<p>You are up to date!</p>';
 			
-		echo '
-				<p>[ <a href="%appurl%lfup/">Upgrade Littlefoot</a> ]</p>
+		echo '<p>[ <a href="%appurl%lfup/">Upgrade Littlefoot</a> ]</p>
 			</div>
 			<div id="restore">
 				<h3>Restore to old system</h3>';
@@ -139,7 +138,54 @@ class settings extends app
 	{
 		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
 		unset($_SESSION['upgrade']);
-		redirect302();
+		//upgrade();
+		
+		
+		$time = time();
+		if(!is_dir('backup')) mkdir('backup');
+		
+		if(!is_file(ROOT.'system.zip'))
+		{
+			echo ROOT.'system.zip does not exist';
+		}
+		else if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) 
+		{
+			// if unable to rename...
+			echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
+		} 
+		else
+		{
+			// unzip into system/
+			$file = 'system.zip';
+			$dir = ROOT;
+			Unzip($dir,$file);
+			
+			if(!is_dir(ROOT.'system'))
+				echo 'Failed to unzip system.zip';
+			else
+			{
+				unlink(ROOT.'system.zip');
+				/*echo 'Littlefoot update installed. <a href="'.$_SERVER['HTTP'].'">Click here to return to the previous page.</a>';
+				exit();*/
+				
+				if(is_file(ROOT.'system/upgrade.php')) {
+					// load the upgrade script if present
+					include ROOT.'system/upgrade.php'; 
+					unlink(ROOT.'system/upgrade.php'); 
+					//exit(); 
+				}
+				
+				redirect302();
+			}
+			
+		}
+		
+		
+		/*
+		//redirect302();
+			
+		echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
+		exit();*/
 	}
 
 	public function rm($vars)
@@ -164,8 +210,10 @@ class settings extends app
 		{
 			rename(ROOT.'backup/'.$vars[1], ROOT.'system');
 			
-			echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
-			exit();
+			/*echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
+			exit();*/
+			
+			redirect302();
 		}
 	}
 }

@@ -8,9 +8,13 @@ provide option to finish upgrade, delete file
 
 */
 
-include 'config.php';
-$conf = $db;
-$db = new Database($conf);
+if(isset($this)) { $db = $this->db; }
+else
+{
+        include 'config.php';
+        $conf = $db;
+        $db = new Database($conf);
+}
 
 // 1.13.5-r129
 $index = "<?php 
@@ -22,9 +26,10 @@ if(!chdir(ROOT)) die('Access Denied to '.ROOT); // if unable to cd there, kill s
 include 'system/functions.php'; // base functions
 include 'system/db.class.php'; // database wrapper
 
-if(is_file('install/install.php')) { include 'install/install.php'; exit(); } // check for installer, load if presnt
-if(is_file(ROOT.'system.zip')) upgrade(); // if system/ upgrade is ready
-if(is_file(ROOT.'system/upgrade.php')) { include ROOT.'system/upgrade.php'; unlink(ROOT.'system/upgrade.php'); exit(); } // load the upgrade script if present
+if(is_file('install/install.php')) {  // check for installer, load if present
+	include 'install/install.php'; 
+	exit();
+}
 
 include 'system/init.php';";
 file_put_contents(ROOT.'../index.php', $index);
@@ -53,7 +58,7 @@ if(!in_array('hash', $columns)) $db->query('ALTER TABLE lf_users ADD hash VARCHA
 
 // add settings
 $rewrite = $db->fetch("SELECT * FROM lf_settings WHERE var = 'rewrite'");
-if(!$debug) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'rewrite', 'off')");
+if(!$rewrite) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'rewrite', 'off')");
 $debug = $db->fetch("SELECT * FROM lf_settings WHERE var = 'debug'");
 if(!$debug) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'debug', 'off')");
 $url = $db->fetch("SELECT * FROM lf_settings WHERE var = 'force_url'");
@@ -67,6 +72,5 @@ if(!$simple) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, '
 $signup = $db->fetch("SELECT * FROM lf_settings WHERE var = 'signup'");
 if(!$signup) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'signup', 'disabled')");
 
-echo 'Upgrade complete. <a href="?exit">Click here to remove upgrade utility and return to LittlefootCMS.';
 
-if(!isset($_GET['exit'])) exit();
+// really need to add something here to make this interactive in case of a problem

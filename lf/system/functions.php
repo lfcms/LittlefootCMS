@@ -60,25 +60,25 @@ function upgrade()
 	
 	if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) // if unable to rename...
 		echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
-	else
+	else if(!is_file(ROOT.'system.zip'))
+	{
+		echo ROOT.'system.zip does not exist';
+	} else
 	{
 		// unzip into system/
 		$file = 'system.zip';
 		$dir = ROOT;
 		Unzip($dir,$file);
-		unlink(ROOT.'system.zip');
 		
-		/*if(is_file(ROOT.'system/upgrade.php'))
+		if(!is_dir(ROOT.'system'))
+			echo 'Failed to unzip system.zip';
+		else
 		{
-			include ROOT.'system/upgrade.php';
-			unlink(ROOT.'system/upgrade.php');
+			unlink(ROOT.'system.zip');
+			echo 'Littlefoot update installed. <a href="?">Click here to return to the previous page.</a>';
+			exit();
 		}
-		else */
 		
-		redirect302();
-		
-		//echo 'Latest Littlefoot system/ installed. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
-		//exit();
 	}
 }
 

@@ -8,6 +8,7 @@
                 <!-- Le styles -->
                 <link href="%skinbase%css/styles.css" rel="stylesheet">
                 <link href="%skinbase%css/nav.css" rel="stylesheet">
+				<link href="%skinbase%css/apps.css" rel="stylesheet">
 
                 <!-- Load in jQuery for handy hover function | Removes titles of links on hover-->
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -36,7 +37,16 @@
                         <header>
                             <h1><a href="<?=$this->base;?>">littlefoot</a></h1>
 							<div id="greeting">
-									Hello <?=$this->auth['display_name'];?>. <a href="<?=$this->base;?>_auth/logout">logout</a>
+							<?php 
+							
+							if($_SESSION['upgrade']) 
+			echo '<a href="'.$this->base.'settings/lfup/">new littlefoot version available! </a>'; ?>
+							
+									Hello <?=$this->auth['display_name'];?>. 
+									
+									
+									
+									<a href="<?=$this->base;?>_auth/logout">logout</a>
 							</div>
 						</header>	
                 </div>

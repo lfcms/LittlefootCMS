@@ -14,9 +14,4 @@ Options -Indexes
 	RewriteCond $1#%{REQUEST_URI} ([^#]*)#(.*)\1$
 	RewriteRule ^(.*)$ %2index.php [QSA,L]
 
-	# Route all requests to index.php
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . index.php [L]
-
 </IfModule>

@@ -1,14 +1,9 @@
 <?php
 
-class skins
+class skins extends app
 {
-	private $db;
-	private $request;
-	
-	function __construct($request, $dbconn)
+	function init($args)
 	{
-		$this->db = $dbconn;
-		$this->request = $request;
 		$this->pwd = ROOT.'skins/';
 	}
 	
@@ -176,11 +171,14 @@ class skins
 			$files = $match[1];
 			$files[-1] = 'index.php';
 			
+			if(is_file($skin.'/home.php'))
+				$files[-2] = 'home.php';
+			
 			if(!isset($vars[2])) $vars[2] = -1;
 			$vars[2] = intval($vars[2]);
 			$file = $skin.'/'.$files[$vars[2]];
 			$ext = 'html';
-			if($vars[2] != -1) $ext = $match[2][$vars[2]];
+			if($vars[2] != -1 && $vars[2] != -2) $ext = $match[2][$vars[2]];
 			
 			$data = '';
 			if(is_file($file))
@@ -196,6 +194,9 @@ class skins
 			echo '<h3><a href="%appurl%">Skins</a> / <a href="%appurl%edit/'.$matches[0].'/">'.$matches[0].'</a></h3>';
 			$data = preg_replace('/%([a-z]+)%/', '%{${1}}%', $data);
 			ksort($files);
+			
+			if(!is_file($skin.'/home.php')) echo '<a href="%appurl%makehome/'.$matches[0].'">(create home.php)</a><br />';
+			
 			foreach($files as $id => $url)
 			{
 				$select = '';
@@ -226,6 +227,7 @@ class skins
 				<script>
 				$(document).ready(function(){
 					var editor = ace.edit("editor");
+					editor.setShowPrintMargin(false);
 					editor.setTheme("ace/theme/textmate");
 					editor.getSession().setMode("ace/mode/<?php echo $ext; ?>");
 					editor.focus(); //To focus the ace editor
@@ -268,18 +270,29 @@ class skins
 					});
 					
 					
-					$(window).scroll(function(){
-					  if($(this).scrollTop() > 400/*$('#editor').position().top*/){
+					/*$(window).scroll(function(){
+					  if($(this).scrollTop() > 400$('#editor').position().top){
 						$('#skin_nav').css({position:'fixed',top:10,left:10});
 					  }else{
 						$('#skin_nav').css({position:'relative'});
 					  } 
 
-					});
+					});*/
 				});
 				</script>
 			<?php
 		}
+	}
+	
+	public function makehome($args)
+	{
+		preg_match('/[_\-a-zA-Z0-9]+/', $args[1], $matches);
+		$skin = $this->pwd.$matches[0];
+		
+		if(!is_file($skin.'/home.php'))
+		file_put_contents($skin.'/home.php', file_get_contents($skin.'/index.php'));
+		
+		redirect302();
 	}
 	
 	public function update($vars)
@@ -296,6 +309,7 @@ class skins
 		preg_match_all('/"%skinbase%\/([^".]+\.(?:css|js))"/', $template, $match);
 		$files = $match[1];
 		$files[-1] = 'index.php';
+		$files[-2] = 'home.php';
 		
 		$file = $skin.'/'.$files[$vars[2]];
 		
