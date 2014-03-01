@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">	
+<html lang="en">    
 	<head>
     <meta charset="utf-8">
     <title>%title%</title>
@@ -13,21 +13,31 @@
     <body>
 		<div class="container">
             <header>
-               <h1>LFCMS</h1>
-               %login%
+                <div class="page_sizer">
+                    <h1 id="littlefoot_logo">littlefoot</h1>
+                    %login%
+                    <div id="download_box">
+                        <h2>Lightning Fast CMS</h2>
+                        <a href="http://littlefootcms.com/files/download/littlefoot.zip" id="download_littlefoot">Download</a>
+                    </div>
+                </div>
             </header>
-			<nav>
-				%nav%
+            <nav>
+                <div class= "page_sizer">
+                    %nav%
+                </div>
 			</nav>
 			<div class="content">
-				%content%
+				<div class="page_sizer">
+                    %content%
+                </div>
 			</div>
-			<footer>
-				<div class="footer-credits">
-					Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
-				</div>
-			</footer>
 		</div>
+        <footer>
+		    <div class="footer-credits page_sizer">
+					Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
+			</div>
+		</footer>
 	</body>
 </html>
 
