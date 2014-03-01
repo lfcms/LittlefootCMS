@@ -1,17 +1,7 @@
 <?php
 
-class users
+class users extends app
 {
-	private $db = NULL;
-	private $request;
-	
-	function __construct($request, $dbconn)
-	{
-		$this->db = $dbconn;
-		$this->request = $request;
-		$this->pwd = $request->absbase.'/apps';
-	}
-	
 	public function main($vars)
 	{		
 		$result = $this->db->query('SELECT id, user, email, display_name, access FROM lf_users ORDER BY user');
