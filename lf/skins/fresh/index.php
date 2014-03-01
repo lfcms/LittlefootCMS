@@ -14,7 +14,7 @@
 		<div class="container">
             <header>
                 <div class="page_sizer">
-                    <h1 id="littlefoot_logo">littlefoot</h1>
+                    <h1 id="littlefoot_logo"><a href="%basurl%/littlefoot/index.php/">littlefoot</a></h1>
                     %login%
                     <div id="info_box">
                         <h2>Here is some info.</h2>
@@ -37,6 +37,7 @@
 		    <div class="footer-credits page_sizer">
 					Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
 			</div>
+            %debug%
 		</footer>
 	</body>
 </html>

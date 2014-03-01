@@ -130,6 +130,9 @@ header #info_box {
     clear: both;
     width: 100%;
 }
+header #info_box h1 a {
+    color: #fff;   
+}
 header #info_box h2 {
     margin: 0 auto;
     width: 60%;
