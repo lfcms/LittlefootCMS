@@ -1,6 +1,6 @@
 @font-face {
 	font-family: ubuntu;
-	src: url('Ubuntu-L.ttf');
+	src: url('../includes/fonts/Ubuntu-L.ttf');
 }
 * {
     margin: 0;
