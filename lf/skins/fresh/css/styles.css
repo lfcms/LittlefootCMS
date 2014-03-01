@@ -98,8 +98,7 @@ header #_auth input[type="submit"]:hover {
 header #download_box {
     padding: 30px;
     clear: both;
-    width: 100%;
-    
+    width: 100%;  
 }
 header #download_box h2 {
     margin: 0 auto;
@@ -124,6 +123,25 @@ header #download_box #download_littlefoot {
     width: 200px;
 }
 header #download_box #download_littlefoot:hover {
+    
+}
+header #info_box {
+    padding: 30px;
+    clear: both;
+    width: 100%;
+}
+header #info_box h1 a {
+    color: #fff;   
+}
+header #info_box h2 {
+    margin: 0 auto;
+    width: 60%;
+    font-weight: normal;
+    font-size: 60px;
+    text-align: center;
+}
+header #info_box p {
+    text-align: center;
     
 }
 .page_sizer {
