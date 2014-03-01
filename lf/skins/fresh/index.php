@@ -16,9 +16,9 @@
                 <div class="page_sizer">
                     <h1 id="littlefoot_logo">littlefoot</h1>
                     %login%
-                    <div id="download_box">
-                        <h2>Lightning Fast CMS</h2>
-                        <a href="http://littlefootcms.com/files/download/littlefoot.zip" id="download_littlefoot">Download</a>
+                    <div id="info_box">
+                        <h2>Here is some info.</h2>
+                        <p>Check it out.</p>
                     </div>
                 </div>
             </header>
