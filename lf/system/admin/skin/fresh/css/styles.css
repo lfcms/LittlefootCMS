@@ -159,6 +159,7 @@ div.loginbox a.whitelink:hover {
     float: right;
 }
 .container {
+    overflow: hidden;
     min-height: 100%;
     position: absolute;
     width: 100%;
@@ -391,6 +392,13 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #actions .nav_delete_item {
 	float: right;
+}
+#app-dashboard .dashboard_manage { 
+	min-width: 630px;
+	float: left;
+	background-color: #fff;
+	border: 1px solid #bbb;
+	padding: 15px;
 }
 #app-skins li {
     list-style-type: none;
