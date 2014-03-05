@@ -37,7 +37,7 @@ footer {
 }
 footer .footer-credits {
     height: 20px;
-    color: gray;
+    color: lightgrey;
     text-align: center;
 }
 footer .footer-credits a {
@@ -45,7 +45,7 @@ footer .footer-credits a {
     
 }
 footer .footer-credits a:hover {
-    color: gray;
+    color: #fff;
     
 }
 header {
