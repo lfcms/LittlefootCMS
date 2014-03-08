@@ -1,5 +1,5 @@
 <?php
-/* conflict */
+
 function Unzip($dir, $file, $destiny="")
 {
 	$dir .= DIRECTORY_SEPARATOR;

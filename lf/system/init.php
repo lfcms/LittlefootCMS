@@ -1,5 +1,5 @@
 <?php
-/* no conflict */
+
 if(!is_file('config.php')) die(ROOT.'config.php missing'); // if the config file is missing, kill script
 
 // Session name needs to be alphanumeric, just MD5 it to keep it unique and to not show the docroot
