@@ -1,5 +1,5 @@
 <?php
-
+/* conflict 2 */
 // Unzip.
 function Unzip($dir, $file, $destiny="")
 {
