@@ -27,6 +27,15 @@ a:hover {
 input:focus {
     outline: 0 none;
 }
+.admin_error {
+	background: none repeat scroll 0 0 #DDAAAA;
+    border: medium solid #BB0000;
+    color: #BB3333;
+    display: block;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px;
+}
 .login h1 {
     color: rgba(20, 20, 20, 0.6);
     font-size: 30px;
@@ -79,6 +88,11 @@ header {
 li {
 	list-style-type: none;
 }
+input {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 5px;
+}
 input[type="submit"] {
 	color: #222;
 	border: 1px solid #bbb;
@@ -87,6 +101,11 @@ input[type="submit"] {
 }
 input[type="submit"]:hover {
 	background-color: #efefef;
+}
+textarea {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	padding: 5px;
 }
 body.login {
     background-color: rgba(0,0,0,.1);
@@ -159,7 +178,6 @@ div.loginbox a.whitelink:hover {
     float: right;
 }
 .container {
-    overflow: hidden;
     min-height: 100%;
     position: absolute;
     width: 100%;
@@ -173,6 +191,13 @@ div.loginbox a.whitelink:hover {
 .content {
     padding: 0px 15px;
     margin: 40px 0px 0px 170px;
+}
+.dashboard_manage {
+	min-width: 630px;
+	float: left;
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #bbb;
 }
 .small {
     font-weight: normal;
@@ -238,7 +263,7 @@ div.loginbox a.whitelink:hover {
 	margin-bottom: 10px;
 }
 #app-dashboard #appgallery {
-    width: 630px;
+    width: 650px;
     /* top: 50px; */
     /* right: 15px; */
     /* position: fixed; */
@@ -254,14 +279,10 @@ div.loginbox a.whitelink:hover {
     clear: both;
     border-bottom: 1px solid #bbb;
     border-left: solid 3px #bbb;
-    
-    
 	padding: 5px;
     background-color: #fff;
     box-shadow: 0 1px 3px 0px #bbb;
     display: block;
-    
-	
 	overflow: auto;
 }
 #app-dashboard #appgallery #appgallery-container div#new-app:hover {
@@ -332,7 +353,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #actions {
     margin-right: 15px;
-    width: 630px;
+    width: 650px;
     border-radius: 3px;
     float: left;
 }
@@ -392,13 +413,6 @@ div.loginbox a.whitelink:hover {
 }
 #app-dashboard #actions .nav_delete_item {
 	float: right;
-}
-#app-dashboard .dashboard_manage { 
-	min-width: 630px;
-	float: left;
-	background-color: #fff;
-	border: 1px solid #bbb;
-	padding: 15px;
 }
 #app-skins li {
     list-style-type: none;
@@ -491,17 +505,25 @@ div.loginbox a.whitelink:hover {
 	font-size: small;
 }
 #app-skins #skin_nav {
+    max-height: 85%;
+    right: 10px;
+    position: fixed;
     overflow: auto;
-    float: right;
-    width: 15%;
+    width: 195px;
 }
 #app-skins #skin_nav > a {
+    overflow: hidden;
+    padding: 5px;
+    display: block;
     margin-left: 10px;
     border-left: 5px solid #bbb;
     padding-left: 5px;
 }
+#app-skins #skin_nav > a:hover {
+    text-decoration: underline;
+}
 #app-skins #skin_nav > a.selected {
-    border-left: 5px solid #21759B;
+    border-left-color: #00aa63;
 }
 #app-skins #skin_nav h3 {
 	margin-left: 10px;
@@ -510,12 +532,15 @@ div.loginbox a.whitelink:hover {
 #app-skins #skin_nav h3 a {
 }
 #app-skins #skin_nav input {
-	margin: 15px 0px 0px 10px;
+	margin: 10px 0px 10px 10px;
+}
+#app-skins #skin_nav .ajax_message {
+    margin: 0px 0px 10px 15px;
+	
 }
 #app-skins div#editor {
-	width: 85%;
 	margin-top: 5px;
-	margin-right: 150px;
+	margin-right: 200px;
 	background-color: #fff;
 }
 #app-users ul {
@@ -581,7 +606,7 @@ div.loginbox a.whitelink:hover {
     background-color: #FFFFFF;
     
 }
-#app-settings  ul  li {
+#app-settings  ul  li {
 	border-top: 1px dashed #E2E2E2;
 	padding: 15px;
 }
@@ -596,17 +621,6 @@ div.loginbox a.whitelink:hover {
 #app-settings  ul  li select {
 	padding: 5px;
 }
-
-.admin_error {
-	background: none repeat scroll 0 0 #DDAAAA;
-    border: medium solid #BB0000;
-    color: #BB3333;
-    display: block;
-    font-weight: bold;
-    margin: 10px 0;
-    padding: 10px;
-}
-
 #app-settings #admin_upgrade {
 	width: 630px;
 	border: 1px solid #bbb;

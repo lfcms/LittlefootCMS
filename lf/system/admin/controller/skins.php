@@ -195,17 +195,17 @@ class skins extends app
 			$data = preg_replace('/%([a-z]+)%/', '%{${1}}%', $data);
 			ksort($files);
 			
-			if(!is_file($skin.'/home.php')) echo '<a href="%appurl%makehome/'.$matches[0].'">(create home.php)</a><br />';
+			if(!is_file($skin.'/home.php')) echo '<a href="%appurl%makehome/'.$matches[0].'">(create home.php)</a>';
 			
 			foreach($files as $id => $url)
 			{
 				$select = '';
 				if($id == $vars[2]) $select = ' class="selected"';
 				
-				echo '<a'.$select.' href="%appurl%edit/'.$matches[0].'/'.$id.'/">'.$url.'</a><br />';
+				echo '<a title="'.$url.'" '.$select.' href="%appurl%edit/'.$matches[0].'/'.$id.'/">'.$url.'</a>';
 			}
 			echo '
-						<input type="submit" value="Update" /><br /><br />
+						<input type="submit" value="Update" />
 					</div>
 					
 					<style type="text/css" media="screen">
@@ -216,9 +216,9 @@ class skins extends app
 							bottom: 0;
 							left: 0;
 							height: '.($linecount*16).'px;
-							width: 100%;			}
+						}
 					</style>
-					<div id="editor">'.htmlentities($data).'</div><br />
+					<div id="editor">'.htmlentities($data).'</div>
 					<input type="submit" value="Update" />
 				</form>';
 			?>
