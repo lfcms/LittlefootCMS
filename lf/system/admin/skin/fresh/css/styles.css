@@ -414,6 +414,9 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #actions .nav_delete_item {
 	float: right;
 }
+#app-dashboard #actions .nav_manage_link {
+
+}
 #app-skins li {
     list-style-type: none;
 }
