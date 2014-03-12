@@ -197,6 +197,7 @@ div.loginbox a.whitelink:hover {
 	float: left;
 	background: #fff;
 	border: 1px solid #bbb;
+	padding: 15px;
 }
 .small {
     font-weight: normal;
