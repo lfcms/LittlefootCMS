@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">    
 	<head>
-    <meta charset="utf-8">
-    <title>%title%</title>
-    <meta name="description" content="Littlefoot CMS was deigned to help webmasters create websites and integrate custom apps easily and efficiently."/>
-    <meta name="keywords" content="cms, content management system, website, web development, web design, littlefoot, littlefoot cms" />
-    <!-- Le styles -->
-    <link href="%skinbase%/css/styles.css" rel="stylesheet">
-    <link href="%skinbase%/css/nav.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <title>%title%</title>
+        <meta name="description" content="Littlefoot CMS was deigned to help webmasters create websites and integrate custom apps easily and efficiently."/>
+        <meta name="keywords" content="cms, content management system, website, web development, web design, littlefoot, littlefoot cms" />
+        <!-- Le styles -->
+        <link href="%skinbase%/css/styles.css" rel="stylesheet">
+        <link href="%skinbase%/css/nav.css" rel="stylesheet">
 	</head>
-    
     <body>
 		<div class="container">
             <header>

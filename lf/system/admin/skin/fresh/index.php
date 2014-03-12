@@ -62,9 +62,8 @@
 							</div>
 							<footer>
 								<div class="footer-credits">
-									Powered by &copy; <a href="http://littlefootcms.com">LittlefootCMS</a>
+									powered by &copy; <a href="http://littlefootcms.com">littlefoot</a>
 								</div>
-								%debug%
 							</footer>
 					</div>
                 </div>
