@@ -1,5 +1,5 @@
 <h2><a href="%appurl%">Users</a> > <?=ucfirst($action).' User'.$link;?></h2>
-<form action="%baseurl%users/<?=$action;?>/" method="post">
+<form class="dashboard_manage" action="%baseurl%users/<?=$action;?>/" method="post">
 	<ul>
 		<li><input type="text" name="user" value="<?=$values['user'];?>" /> Username</li>
 		<li><input type="password" name="pass" /> Password</li>

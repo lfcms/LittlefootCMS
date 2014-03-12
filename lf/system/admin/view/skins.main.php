@@ -3,7 +3,7 @@
 	<!-- <p>Click a skin to set it as the default. [x] to remove a skin. Zip to download a skin.</p> -->
 	<ul class="applist">
 	<li id="new_skins">
-		<h3>New Skin (<a href="%appurl%download/">Store</a>)</h3>
+		<h3>New Skin <a href="%appurl%download/">Store</a></h3>
 		<h4>Upload</h4>
 		<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/" method="post">
 			<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
