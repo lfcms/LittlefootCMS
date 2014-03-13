@@ -182,7 +182,7 @@ class Littlefoot
 		{
 			chdir('system/admin');
 			
-			$admin_skin = 'fresh';
+			$admin_skin = 'leap'; // this needs to be an option instead of hard coded
 			
 			// maybe you are an admin, but I need you to login first
 			if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
