@@ -680,7 +680,9 @@ class Littlefoot
 		if(is_file(ROOT.'skins/'.$this->select['template']."/$file.php"))
 			include(ROOT.'skins/'.$this->select['template']."/$file.php");
 		else if(is_file(ROOT.'skins/'.$this->select['template']."/$file.html"))
-			readfile(ROOT.'skins/'.$this->select['template']."/$file.html");	
+			readfile(ROOT.'skins/'.$this->select['template']."/$file.html");
+		else
+			echo 'Template files missing. Log into admin and select a different template with the Skins tool.';
 			
 		$template = ob_get_clean();
 		
