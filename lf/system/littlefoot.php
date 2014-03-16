@@ -224,7 +224,6 @@ class Littlefoot
 				$out = str_replace('class="content"', 'class="content" style="margin: 10px;"', $out);
 				
 				echo $out;
-				
 				return 0;
 			}
 				
