@@ -193,7 +193,7 @@ class Littlefoot
 				ob_start();
 				include('skin/'.$admin_skin.'/login.php'); 
 				echo str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-				exit;
+				exit; 
 			}
 			
 			if($this->auth['access'] == 'admin')
