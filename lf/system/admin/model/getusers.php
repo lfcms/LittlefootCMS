@@ -1,5 +1,7 @@
 <?php
 
+$count = 0;
+
 $template = array(
         'html' => '<td>(<a href="%href%"%js%>%text%</a>)</td>',
         'replace' => array( '%href%', '%text%', '%js%')
@@ -21,12 +23,12 @@ do
 
         $rm = array(
                 '%baseurl%users/rm/'.$row_id.'/',
-                'X',
+                'delete',
 				jsprompt('Are you sure?')
         );
         $edit = array(
                 '%baseurl%users/edit/'.$row_id.'/',
-                '[=]',
+                'edit',
 				''
         );
         $tools =
@@ -44,11 +46,13 @@ do
 
         $userlist .= '
                 <tr>
-                        '.$tools.'
                         <td>'.implode('</td><td>', $row).'</td>
+                        <td><a href="%appurl%edit/'.$row_id.'">edit</a></td>
+                        <td><a '.jsprompt('Are you sure?').'  href="%appurl%rm/'.$row_id.'">delete</a></td>
                 </tr>
         ';
         unset($row_id);
+		$count++;
 }
 while ($row = mysql_fetch_assoc($result));
 

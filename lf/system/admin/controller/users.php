@@ -22,6 +22,8 @@ class users extends app
 			''
 		);
 		
+		
+		
 		include 'view/users.view.php';
 	}
 	
@@ -72,7 +74,9 @@ class users extends app
 		if($vars['pass'] != '')
 			$insert[] = "pass = '".sha1($vars['pass'])."'";
 		
-		$sql = "UPDATE lf_users SET ".implode(', ', $insert)." WHERE id = ".$id;
+		$sql = "UPDATE lf_users 
+				SET ".implode(', ', $insert)." 
+				WHERE id = ".$id;
 		$this->db->query($sql);
 		
 		redirect302();
@@ -85,6 +89,7 @@ class users extends app
 		$row_id = $row['id'];
 		unset($row['id']);
 		$headers = implode('</th><th>', array_keys($row));
+		
 		include 'model/getusers.php';
 		
 		$action = 'create';
@@ -163,9 +168,6 @@ You can log in to your new account with the following credentials:
 Host: http://'.$_SERVER['SERVER_NAME'].$this->request->relbase.'
 User: '.$vars['user'].'
 Pass: '.$vars['pass'].'
-
-Regards,
-LF Bot
 
 Do not reply to this email. It was generated automatically.', 
 'From: noreply@'.$_SERVER['SERVER_NAME']);

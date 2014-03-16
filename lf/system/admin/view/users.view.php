@@ -1,9 +1,10 @@
-<h2>Users <a href="%appurl%newuser/">New</a></h2>
+<h2>Users (<?=$count;?>)</h2>
+<h3><a href="%appurl%newuser/">Create New</a></h3>
 <table cellspacing=0 cellpadding=5 style="width: 100%;">
 	<tr style="text-align:left;">
-		<th>delete</th>
-		<th>edit</th>
-		<th><?=$headers;?></th>
+		<th><?=$headers;?></th
+		<th></th>
+		<th></th>
 	</tr>
 	<?=$userlist;?>
 </table>
