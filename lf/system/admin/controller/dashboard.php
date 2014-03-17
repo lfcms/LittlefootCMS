@@ -37,8 +37,10 @@ class dashboard // should extend app class
 			$cwd = getcwd();
 			chdir(ROOT.'apps/'.$this->request->settings['simple_cms']);
 			
+			echo '<div class="dashboard_manage">';
 			if(is_file('admin.php')) include 'admin.php';
 			else echo 'No Admin';
+			echo '</div>';
 			
 			chdir($cwd);
 			$this->simple = true;
