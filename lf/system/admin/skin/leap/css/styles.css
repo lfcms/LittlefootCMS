@@ -563,6 +563,7 @@ div.loginbox a.whitelink:hover {
 	
 }
 #app-skins div#editor {
+	border: 1px solid #bbb;
 	margin-top: 5px;
 	margin-right: 200px;
 	background-color: #fff;
