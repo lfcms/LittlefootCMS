@@ -53,9 +53,9 @@ function make_table($data, $type, $db)
 			</form>
 			<table>
 				<tr style="text-align:left">
-					<th>edit</th>
 					<th>'.implode('</th><th>', $keys).'</th>
-					<th>delete</th>
+					<th></th>
+					<th></th>
 				</tr>
 	';
 	foreach($data as $row)
@@ -65,9 +65,9 @@ function make_table($data, $type, $db)
 		$id = $row['id'];
 		unset($row['id']);
 		$ret .= '<tr>
-				 <td>[<a href="%appurl%edit/'.$type.'/'.$id.'/">e</a>]</td>
 				 <td>'.implode('</td><td>', $row).'</td>
-				 <td>[<a href="%appurl%rm/'.$type.'/'.$id.'/">x</a>]</td>
+				 <td><!-- <a href="%appurl%edit/'.$type.'/'.$id.'/">edit</a> coming soon --></td>
+				 <td><a href="%appurl%rm/'.$type.'/'.$id.'/">delete</a></td>
 			</tr>
 		';
 	}
