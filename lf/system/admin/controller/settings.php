@@ -101,37 +101,43 @@ class settings extends app
 		echo '
 			<div id="admin_upgrade">
 				<div id="current">
-				<h3>Upgrade Littlefoot</h3>
-				<p>Current version: '.$this->request->api('version').'</p>';
+				<div class="upgrade-button">
+					<a href="%appurl%lfup/">Upgrade Littlefoot</a>
+				</div>
+				<div class="upgrade-info">
+					<h4>Current version: '.$this->request->api('version').'</h4>';
 			
 		if($newest != $this->request->api('version'))
 			echo '<p>Latest version available: '.$newest.'</p>';
 		else
 			echo '<p>You are up to date!</p>';
 			
-		echo '<p>[ <a href="%appurl%lfup/">Upgrade Littlefoot</a> ]</p>
+		echo '
+		</div>
 			</div>
 			<div id="restore">
-				<h3>Restore to old system</h3>';
-			
-			if(is_dir(ROOT.'backup'))
-			{
-				$backups = scandir(ROOT.'backup/');
-				foreach($backups as $backup)
+				<h4>Restore Old Version</h4>
+				<div class="old-version-info">';
+				if(is_dir(ROOT.'backup'))
 				{
-					if($backup == '.' || $backup == '..') continue;
-					
-					if(is_file(ROOT.'backup/'.$backup.'/version'))
-						$version = file_get_contents(ROOT.'backup/'.$backup.'/version');
-					else
-						continue;
-					
-					echo '[ <a href="%appurl%restore/'.$backup.'/">Restore</a> ] [<a href="%appurl%rm/'.$backup.'/">Delete</a>] '.$version.'<br />';
-				}
-			} else echo 'No system restore points are available.';
-		echo '
+					$backups = scandir(ROOT.'backup/');
+					foreach($backups as $backup)
+					{
+						if($backup == '.' || $backup == '..') continue;
+						
+						if(is_file(ROOT.'backup/'.$backup.'/version'))
+							$version = file_get_contents(ROOT.'backup/'.$backup.'/version');
+						else
+							continue;
+						
+						echo '<p>'.$version.' - <a href="%appurl%restore/'.$backup.'/">restore</a> -
+						<a href="%appurl%rm/'.$backup.'/">delete</a></p>';
+					}
+				} else echo '<p>No system restore points are available.</p>';
+				echo '
 				</div>
-			</div>';
+			</div>
+		</div>';
 	}
 	
 	public function lfup($var)
