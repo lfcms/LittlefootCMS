@@ -30,19 +30,33 @@
 		if(is_file($skin.'/index.php') || is_file($skin.'/index.html'))
 		{
 			?>
-			<li class="<?php echo $highlight; ?>"> 
-						<div class="left_header">
+			<li class="<?php echo $highlight; ?>">
+						<div class="delete">
 							<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$file;?>/">x</a>
 						</div>
-							
-						<div class="right_header">
-							
-							<a href="%appurl%edit/<?php echo $file; ?>/">Edit</a> | 
-							<a href="%appurl%zip/<?php echo $file; ?>/">Zip</a>
-						</div>
-						<div style="clear:both; padding: 5px;">
+						<div class="skin-name">
 							<a href="%appurl%setdefault/<?php echo $file; ?>"><?=$file;?></a>
 						<div>
+						<div class="control">
+							<a href="%appurl%edit/<?php echo $file; ?>/">edit</a> | 
+							<a href="%appurl%zip/<?php echo $file; ?>/">zip</a>
+						</div>
+						<?php
+							if(is_file($skin.'/screenshot.png'))
+							{
+								echo '<div class="screenshot">
+									<a href="%relbase%lf/skins/'.$file.'/screenshot.png" target="_blank">
+									<img src="%relbase%lf/skins/'.$file.'/screenshot.png" alt="screenshot" />
+									</a>
+									</div>';
+							}
+							else
+							{
+								echo '<div class="screenshot">
+									<span>no screenshot available</span>
+									</div>';
+							}
+						?>
 					</li>
 			<?php
 		}
