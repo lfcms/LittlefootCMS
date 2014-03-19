@@ -31,7 +31,7 @@ $(document).ready(function() {
                 else
                         echo '<p>- No nav set -</p>';
         ?>
-        <h2>Hidden</h2>
+        <h2>Hidden Navigation</h2>
         <!-- <p>This works just like the nav menu manager above, but these nav items will be hidden from nav menu of your website. This feature is useful for hiding apps like /signup, /secret-blog</p> -->
         <?php
                 if(isset($hooks['html']))
@@ -48,7 +48,7 @@ $(document).ready(function() {
 		<div id="new-app">
 			<form enctype="multipart/form-data" action="%appurl%install/" method="post">
 				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-				<h3>New App (<a href="%appurl%download/">Store</a>)</h3>
+				<h3>New App <a href="%appurl%download/">Store</a></h3>
 				<div><input type="file" name="app" value="Upload" /></div>
 				<div><?=$install;?></div>
 			</form>

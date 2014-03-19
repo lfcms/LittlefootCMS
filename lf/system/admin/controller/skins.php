@@ -18,25 +18,26 @@ class skins extends app
 	public function download($var)
 	{
 		echo '<h2><a href="%appurl%">Skins</a> / Download</h2>';
-		
-		echo '<p>Skins with a link can be installed. Those that are blank are already installed.</p>';
-		
-		
-		
-		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
-		$apps = array_flip(explode("\n",$apps,-1));
-		$files = array_flip(scandir(ROOT.'skins'));
-		
-		echo '<ul>';
-		foreach($apps as $app => $ignore)
-		{	
-			echo '<li>';
+		echo '<div id="skin-store-wrapper">';
+			echo '<p>Skins with a link can be installed. Those that are blank are already installed.</p>';
 			
-			if(!isset($files[$app])) echo '<a href="%appurl%getappfromnet/'.$app.'/">'.$app.'</a>';
-			else echo $app. ' [<a href="%appurl%getappfromnet/'.$app.'/update/">Update</a>]';
-			echo '</li>';
-		}
-		echo '</ul>';
+			
+			
+			$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
+			$apps = array_flip(explode("\n",$apps,-1));
+			$files = array_flip(scandir(ROOT.'skins'));
+			
+			echo '<ul>';
+			foreach($apps as $app => $ignore)
+			{	
+				echo '<li>';
+				
+				if(!isset($files[$app])) echo '<a href="%appurl%getappfromnet/'.$app.'/">'.$app.'</a>';
+				else echo $app. ' [<a href="%appurl%getappfromnet/'.$app.'/update/">Update</a>]';
+				echo '</li>';
+			}
+			echo '</ul>';
+		echo '</div>';
 	}
 	
 	public function getappfromnet($vars)
