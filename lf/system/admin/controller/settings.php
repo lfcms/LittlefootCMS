@@ -131,7 +131,7 @@ class settings extends app
 							continue;
 						
 						echo '<p>'.$version.' - <a href="%appurl%restore/'.$backup.'/">restore</a> -
-						<a href="%appurl%rm/'.$backup.'/">delete</a></p>';
+						<a href="%appurl%rm/'.$backup.'/" class="delete_item">delete</a></p>';
 					}
 				} else echo '<p>No system restore points are available.</p>';
 				echo '

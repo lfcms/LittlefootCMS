@@ -65,7 +65,7 @@ $(document).ready(function() {
 								?>
 								<li>
 										<div class="right_header">
-												<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$file;?>/">x</a>
+												<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$file;?>/" class="delete_item">x</a>
 										</div>
 										<div class="left_header">
 												<a href="%appurl%linkapp/<?=$file;?>/"><?=$file;?></a>

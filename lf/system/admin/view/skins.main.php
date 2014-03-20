@@ -32,7 +32,7 @@
 			?>
 			<li class="<?php echo $highlight; ?>">
 						<div class="delete">
-							<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$file;?>/">x</a>
+							<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$file;?>/" class="delete_item">x</a>
 						</div>
 						<div class="skin-name">
 							<a href="%appurl%setdefault/<?php echo $file; ?>"><?=$file;?></a>

@@ -48,7 +48,7 @@ do
                 <tr>
                         <td>'.implode('</td><td>', $row).'</td>
                         <td><a href="%appurl%edit/'.$row_id.'">edit</a></td>
-                        <td><a '.jsprompt('Are you sure?').'  href="%appurl%rm/'.$row_id.'">delete</a></td>
+                        <td><a '.jsprompt('Are you sure?').'  href="%appurl%rm/'.$row_id.'" class="delete_item">delete</a></td>
                 </tr>
         ';
         unset($row_id);

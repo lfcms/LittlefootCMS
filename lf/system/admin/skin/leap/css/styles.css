@@ -36,6 +36,10 @@ input:focus {
     margin: 10px 0;
     padding: 10px;
 }
+.delete_item:hover,
+.nav_delete_item:hover {
+	color: red;
+}
 .login h1 {
     color: rgba(20, 20, 20, 0.6);
     font-size: 30px;
@@ -246,7 +250,6 @@ div.loginbox a.whitelink:hover {
 }
 .userbar #greeting a:hover {
     color: red;
-    background-color: #222;
 }
 .dash-admin-app {
     background-color: #FAFAFA;
@@ -346,6 +349,8 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #appgallery #appgallery-container .right_header {
 	float: right;
 }
+ {
+}
 #app-dashboard #appgallery #appgallery-container .left_header,
 #app-dashboard #appgallery #appgallery-container .right_header {
 	padding: 0 5px;
@@ -417,6 +422,8 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #actions .nav_delete_item {
 	float: right;
 }
+ {	
+}
 #app-dashboard #actions .nav_manage_link {
     margin-right: 20px;
     float: right;
@@ -470,8 +477,7 @@ div.loginbox a.whitelink:hover {
 #app-skins ul.applist li div.control a,
 #app-skins ul.applist li div.delete a {
 }
-#app-skins ul.applist li div.delete a:hover {
-	color: red;
+ {
 }
 #app-skins ul.applist li div.screenshot {
     color: #bbb;

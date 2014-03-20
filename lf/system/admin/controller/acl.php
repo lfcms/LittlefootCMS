@@ -67,7 +67,7 @@ function make_table($data, $type, $db)
 		$ret .= '<tr>
 				 <td>'.implode('</td><td>', $row).'</td>
 				 <td><!-- <a href="%appurl%edit/'.$type.'/'.$id.'/">edit</a> coming soon --></td>
-				 <td><a href="%appurl%rm/'.$type.'/'.$id.'/">delete</a></td>
+				 <td><a href="%appurl%rm/'.$type.'/'.$id.'/" class="delete_item">delete</a></td>
 			</tr>
 		';
 	}
