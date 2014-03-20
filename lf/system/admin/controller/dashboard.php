@@ -1,37 +1,15 @@
 <?php 
 
-/*
-
-admin/apps/
-
-[Actions]
-
--Write (followed by redirect to referrer)
-Add
-Remove
-App_Admin_POST
-
--Read
-List
-App_Admin
-
-*/
-
-class dashboard // should extend app class
+class dashboard extends app
 {
-	private $isadmin;
-	private $request;
-	private $html;
 	private $pwd;
-	private $dbconn;
 	private $simple = false;
 	
-	public function __construct($request, $dbconn)
+	public function init($vars)
 	{
-		$this->db = $dbconn;
-		$this->request = $request;
 		$this->pwd = ROOT.'apps/';
 		
+		// if simple cms is enabled, load the select app's admin instead of the usual nav interface
 		if($this->request->settings['simple_cms'] != '_lfcms')
 		{
 			$cwd = getcwd();
@@ -51,7 +29,7 @@ class dashboard // should extend app class
 	{	
 		if($this->simple) return;
 		
-		$this->updatenavcache(); // idk if this needs to be here
+		$this->updatenavcache(); // idk if this needs to be here lol
 	
 		// admin load edit from ini
 		include('model/navgen.php');
@@ -111,10 +89,10 @@ class dashboard // should extend app class
 		$install = extension_loaded('zip') 
 			? '<input type="submit" value="Upload" /> <span>('.ini_get('upload_max_filesize').' Upload Limit)</span>'
 			: "<strong>Error: PHP Zip Extension missing.</strong>";
-		/*
-		include 'model/apps_linked.php';
+		
+		/*include 'model/apps_linked.php';
 		linked_app();*/
-		include('view/apps.view.php');
+		include('view/dashboard.main.php');
 	}
 
 	public function linkapp($vars)
