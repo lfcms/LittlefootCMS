@@ -36,7 +36,7 @@
 						</div>
 						<div class="skin-name">
 							<a href="%appurl%setdefault/<?php echo $file; ?>"><?=$file;?></a>
-						<div>
+						</div>
 						<div class="control">
 							<a href="%appurl%edit/<?php echo $file; ?>/">edit</a> | 
 							<a href="%appurl%zip/<?php echo $file; ?>/">zip</a>

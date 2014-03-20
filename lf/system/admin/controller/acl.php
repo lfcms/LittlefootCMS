@@ -52,7 +52,7 @@ function make_table($data, $type, $db)
 	$ret .= '<input type="submit" value="Add New" />
 			</form>
 			<table>
-				<tr style="text-align:left">
+				<tr>
 					<th>'.implode('</th><th>', $keys).'</th>
 					<th></th>
 					<th></th>
@@ -101,15 +101,6 @@ class acl
 		$header = str_replace('<a href="%appurl%acl_'.$request.'/">'.ucfirst($request).'</a>', '<a class="activeacl" href="%appurl%acl_'.$request.'/">'.ucfirst($request).'</a>', $header);
 		
 		?>			
-		
-		
-		<style type="text/css">
-			form { margin-top: 10px; }
-			td input { width: 90% !important; }
-			td { padding:  15px 15px 15px 0; }
-			th { padding:  15px 15px 0px 0; }
-			.activeacl { text-decoration: underline; }
-		</style>
 		
 		<h2>Access Control Lists <?php echo $header; ?></h2>
 		<?php 
