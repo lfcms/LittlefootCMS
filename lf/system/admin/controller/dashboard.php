@@ -109,7 +109,7 @@ class dashboard // should extend app class
 		$pwd = $this->pwd;
 		
 		$install = extension_loaded('zip') 
-			? '<input type="submit" value="Upload" /> <span>('.ini_get('post_max_size').'/'.ini_get('upload_max_filesize').' Upload Limit)</span>'
+			? '<input type="submit" value="Upload" /> <span>('.ini_get('upload_max_filesize').' Upload Limit)</span>'
 			: "<strong>Error: PHP Zip Extension missing.</strong>";
 		/*
 		include 'model/apps_linked.php';
