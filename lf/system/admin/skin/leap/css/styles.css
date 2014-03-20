@@ -600,19 +600,37 @@ div.loginbox a.whitelink:hover {
     color: #222222;
 }
 #app-users table {
-    background-color: #FFFFFF;
-    border: 1px solid #bbb;
-    margin-bottom: 10px;
-    margin-top: 5px;
-    padding: 10px 10px 0px 10px;
+	border-spacing: 0;
+	width: 100%;
+	background-color: #FFFFFF;
+	border: 1px solid #bbb;
 }
-#app-users table tr th {
-    color: #999999;
-    padding: 5px;
+#app-users table tr {
+    border-bottom: 1px solid #e2e2e2;
+    background-color: #f5f5f5;
+}
+#app-users table tr:hover {
+	background-color: #fff;
+}
+#app-users table tr:hover > td {
+	border-bottom-color: #bbb;
+}
+#app-users table tr:first-child {
+	background-color: #fff;
+}
+#app-users table tr:last-child td {
+	border-bottom: none;
+}
+#app-users table tr:nth-child(2n+1) {
+}
+#app-users table tr > th {
+	border-bottom: 1px solid #bbb;
+	padding:15px
 }
 #app-users table tr > td {
-	padding: 15px 5px;
-	border-top: 1px solid #EFEFEF;
+	text-align: center;
+	padding: 15px 0px;
+	border-bottom: 1px solid #e2e2e2;
 }
 #app-acl form.add {
 	padding: 0;
