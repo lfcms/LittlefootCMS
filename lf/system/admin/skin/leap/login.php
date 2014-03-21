@@ -1,5 +1,10 @@
 <?php // Littlefoot CMS - Copyright (c) 2013, Joseph Still. All rights reserved. See license.txt for product license information.
 
+if(isset($_SESSION['_lf_login_error']))
+{
+	$this->error = $_SESSION['_lf_login_error'];
+	unset($_SESSION['_lf_login_error']);
+}
 
 $get = array();
 $action = '&';

@@ -89,7 +89,7 @@ class auth extends app
 				$this->db->query('UPDATE lf_users SET loginfailcnt = loginfailcnt + 1 WHERE id = '.$auth['id']);
 				*/
 				$auth = $this->lf->auth;
-				//$this->error = "Incorrect Username or Password";
+				$this->error = "Incorrect Username or Password";
 			}
 			/*else 
 			{ 
@@ -124,6 +124,8 @@ class auth extends app
 		}
 		
 		$this->lf->auth = $auth;
+		
+		if(isset($this->error)) $_SESSION['_lf_login_error'] = $this->error;
 		
 		redirect302();
 	}
