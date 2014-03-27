@@ -189,7 +189,6 @@ class settings extends app
 				
 				redirect302();
 			}
-			
 		}
 		
 		
