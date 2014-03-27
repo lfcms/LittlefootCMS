@@ -62,6 +62,29 @@ function make_table($data, $type, $db)
 	{
 		if(isset($row['perm'])) $row['perm'] = $row['perm'] ? 'Allow' : 'Deny';
 			
+		// user list
+		if(isset($row['affects']))
+			if(is_numeric($row['affects'])) 
+				$row['affects'] = 'User / %user:'.$row['affects'].'%';
+			else
+				$row['affects'] = 'Group / '.$row['affects'];
+			
+		// inherit list
+		if(isset($row['group']))
+		{
+			if(is_numeric($row['group'])) 
+				$row['group'] = 'User / %user:'.$row['group'].'%';
+			else
+				$row['group'] = 'Group / '.$row['group'];
+		}
+			
+		// inherit list
+		if(isset($row['inherits']))
+			if(is_numeric($row['inherits'])) 
+				$row['inherits'] = 'User / %user:'.$row['inherits'].'%';
+			else
+				$row['inherits'] = 'Group / '.$row['inherits'];
+			
 		$id = $row['id'];
 		unset($row['id']);
 		$ret .= '<tr>
@@ -73,7 +96,8 @@ function make_table($data, $type, $db)
 	}
 	$ret .= '
 				
-			</table>';
+			</table>';		
+	
 	return $ret;
 }
 
@@ -104,7 +128,27 @@ class acl
 		
 		<h2>Access Control Lists <?php echo $header; ?></h2>
 		<?php 
-		echo make_table($$request, $request, $this->db);
+		
+		$table = make_table($$request, $request, $this->db);
+		
+		if(preg_match_all('/%user:([0-9]+)%/', $table, $matches))
+		{
+			$users = $matches[1];
+			$sql = 'SELECT id, display_name FROM lf_users 
+				WHERE id IN ('.implode(',', $users).')';
+				
+			$usernames = $this->db->fetchall($sql);
+			foreach($usernames as $user)
+				$replace['%user:'.$user['id'].'%'] = $user['display_name'];
+			
+			$table = str_replace(
+				array_keys($replace), 
+				array_values($replace), 
+				$table);
+		}
+		
+		
+		echo $table;
 		
 		/*
 		<div class="widgetbox">
