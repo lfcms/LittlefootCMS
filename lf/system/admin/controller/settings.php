@@ -121,6 +121,7 @@ class settings extends app
 				if(is_dir(ROOT.'backup'))
 				{
 					$backups = scandir(ROOT.'backup/');
+					$backup_count = 0;
 					foreach($backups as $backup)
 					{
 						if($backup == '.' || $backup == '..') continue;
@@ -132,8 +133,13 @@ class settings extends app
 						
 						echo '<p>'.$version.' - <a href="%appurl%restore/'.$backup.'/">restore</a> -
 						<a href="%appurl%rm/'.$backup.'/" class="delete_item">delete</a></p>';
-					}
-				} else echo '<p>No system restore points are available.</p>';
+						
+						$backup_count++;
+					} 
+					
+					if($backup_count == 0)
+						echo '<p>No system restore points are available.</p>';
+				}
 				echo '
 				</div>
 			</div>
