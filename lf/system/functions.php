@@ -128,12 +128,14 @@ function downloadFile ($url, $path) {
 }
 
 // process submitted $_FILES, allow only images by default
-function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), $allowedTypes = array("image/gif", "image/jpeg", "image/pjpeg", "image/png"))
+function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), $allowedTypes = array("image/gif", "image/jpeg", "image/pjpeg", "image/png"), $limit = 5)
 {
 	if($destfolder[strlen($destfolder) - 1] != '/') $destfolder .= '/';
 	$return = array();
 	foreach($_FILES as $key => $file)
-	{	
+	{
+		if($limit < 1) break;
+		
 		$filedata = explode(".", $file["name"]);
 		$extension = strtolower($filedata[1]);
 		
@@ -178,6 +180,8 @@ function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), 
 			else
 				$return[$key] = "Error: Failed at move_uploaded_file(".$file["tmp_name"].', '.$destfolder.$file["name"].')';
 		}
+		
+		$limit--; // to prevent spoofed multifile. this used to be unprotected :\
 	}
 	
 	$_FILES = array();
@@ -213,7 +217,7 @@ function rrmdir($dir) {
   } rmdir($dir); 
 }
 
-// process HTML to produce thumbnails from larger images. // like the "like" system in hq, it scrapes and replaces the image URLs
+// process HTML to produce thumbnails from larger images. it scrapes and replaces the image URLs
 function thumbnail($html, $dimensions = '200x200')
 {
 	if(!preg_match_all('/src="([^"]+\.(png|jpe?g))"/', $html, $match)) return $html;
@@ -276,7 +280,7 @@ function thumbnail($html, $dimensions = '200x200')
 	return $html;
 }
 
-function jsprompt($msg)
+function jsprompt($msg = 'Are you sure?')
 {
 	return 'onclick="return confirm(\''.$msg.'\');"';
 }

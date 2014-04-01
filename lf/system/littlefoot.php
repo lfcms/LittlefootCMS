@@ -386,7 +386,7 @@ class Littlefoot
 		// change to auth class 
 		if($this->action[0] == '_auth' && isset($this->action[1]))
 		{
-			$out = $auth->_router(array(), $this->action[1]);
+			$out = $auth->_router($this->action);
 			$out = str_replace('%appurl%', $this->base.'_auth/', $out);
 			$content['%content%'][] = $out;
 			

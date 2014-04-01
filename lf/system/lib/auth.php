@@ -152,6 +152,8 @@ class auth extends app
 				redirect302($this->lf->base.'profile/');
 		}*/
 		
+		if($this->lf->settings['signup'] != 'on') die('Signup is disabled.');
+		
 		if(isset($_GET['dest']))
 			$_SESSION['dest_url'] = urldecode($_GET['dest']);
 		
@@ -352,7 +354,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		if($user)
 		{
 			$this->db->query("UPDATE lf_users SET hash = '', pass = '".sha1($_POST['pass'])."' WHERE id = ".$user['id']);
-			echo 'New password set. <a href="%baseurl%signup/">Login here</a>';
+			echo 'New password set. <a href="%baseurl%">Return to main site</a>';
 		} else echo 'Bad form data';
 	}
 	
