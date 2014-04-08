@@ -101,6 +101,7 @@ option {
 	transition: none;
 }
 input[type="submit"] {
+	font-size: 16px;
 	color: #222;
 	border: 1px solid #bbb;
 	padding: 5px;
@@ -451,7 +452,7 @@ div.loginbox a.whitelink:hover {
     float: left;
     margin: 5px 15px 10px 0px;
 	padding:  15px;
-    height: 280px;
+    height: 295px;
     width: 275px;
 }
 #app-skins ul.applist li:hover {
@@ -465,20 +466,30 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins ul.applist li div.skin-name:hover {
 }
-#app-skins ul.applist li div.control {
-	font-size: small;
+#app-skins ul.applist li div.edit {
 }
-#app-skins ul.applist li div.delete {
+#app-skins ul.applist li div.edit a {
+    color: #222;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #e2e2e2;
+    display: block;
+
+    border: 1px solid #bbb;
+    padding: 5px;
+}
+#app-skins ul.applist li div.edit a:hover {
+	background-color: #efefef;
+}
+#app-skins ul.applist li div.delete,
+#app-skins ul.applist li div.skin-zip {
+	margin-left: 15px;
 	float: right;
 }
-#app-skins ul.applist li div.control,
 #app-skins ul.applist li div.delete {
     font-size: 18px;
 }
-#app-skins ul.applist li div.control a,
 #app-skins ul.applist li div.delete a {
-}
- {
 }
 #app-skins ul.applist li div.screenshot {
     color: #bbb;
@@ -516,6 +527,7 @@ div.loginbox a.whitelink:hover {
 #app-skins #create_skin_form {
 }
 #app-skins #create_skin_form input[type="submit"] {
+	font-size: 16px;
 	width: 100%;
 	color: #fff;
 	color: #222;
@@ -531,7 +543,7 @@ div.loginbox a.whitelink:hover {
     border: 1px solid #bbb;
     width: 100%;
     padding: 5px;
-    font-size: 14px;
+    font-size: 16px;
 }
 #app-skins #create_skin_form #create_skin_namebox:focus {
 	border-color: #24AF68;
