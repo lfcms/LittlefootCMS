@@ -38,7 +38,10 @@
 							<a href="%appurl%zip/<?php echo $file; ?>/" class="zip_item">zip</a>
 						</div>
 						<div class="skin-name">
-							<a href="%appurl%setdefault/<?php echo $file; ?>"><?=$file;?></a>
+							<?=$file;?>
+						</div>
+						<div class="default">
+							<a href="%appurl%setdefault/<?php echo $file; ?>">Set as Default</a>
 						</div>
 						<div class="edit">
 							<a href="%appurl%edit/<?php echo $file; ?>/">Edit Skin</a>

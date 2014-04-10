@@ -453,7 +453,7 @@ div.loginbox a.whitelink:hover {
     margin: 5px 15px 10px 0px;
 	padding:  15px;
     height: 295px;
-    width: 275px;
+    width: 325px;
 }
 #app-skins ul.applist li:hover {
     border-top-color: #0063aa;
@@ -461,14 +461,40 @@ div.loginbox a.whitelink:hover {
 #app-skins ul.applist li.current_skin {
 	border-top-color: #00aa63;
 }
+#app-skins ul.applist li.current_skin div.skin-name {
+	font-weight: bold;
+}
+#app-skins ul.applist li.current_skin div.default a {
+	color: gray;
+}
 #app-skins ul.applist li div.skin-name {
 	font-size: 22px;
 }
 #app-skins ul.applist li div.skin-name:hover {
 }
+#app-skins ul.applist li div.default {
+}
+#app-skins ul.applist li div.default a {
+    margin-right: 10px;
+    float: left;
+    width: 145px;
+    color: #222;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #e2e2e2;
+    display: block;
+
+    border: 1px solid #bbb;
+    padding: 5px;
+}
+#app-skins ul.applist li div.default a:hover {
+	background-color: #efefef;
+}
 #app-skins ul.applist li div.edit {
 }
 #app-skins ul.applist li div.edit a {
+    float: left;
+    width: 145px;
     color: #222;
     margin-top: 10px;
     text-align: center;
@@ -498,9 +524,9 @@ div.loginbox a.whitelink:hover {
 	
 }
 #app-skins ul.applist li div.screenshot img {
-    max-height: 220px;
-    /* margin-top: 15px; */
+    max-height: 200px;
     max-width: 100%;
+    margin-top: 15px;
 }
 #app-skins #new_skins {
 	background-color: #fff;
