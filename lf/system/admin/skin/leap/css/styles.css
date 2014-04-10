@@ -494,6 +494,7 @@ div.loginbox a.whitelink:hover {
 #app-skins ul.applist li div.edit {
 }
 #app-skins ul.applist li div.edit a {
+    margin-bottom: 15px;
     float: left;
     width: 145px;
     color: #222;
