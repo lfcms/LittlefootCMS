@@ -483,6 +483,7 @@ div.loginbox a.whitelink:hover {
 }
 #app-skins ul.applist li div.delete,
 #app-skins ul.applist li div.skin-zip {
+	font-size: 18px;
 	margin-left: 15px;
 	float: right;
 }
