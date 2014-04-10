@@ -475,6 +475,7 @@ div.loginbox a.whitelink:hover {
 #app-skins ul.applist li div.default {
 }
 #app-skins ul.applist li div.default a {
+    margin-bottom: 15px;
     margin-right: 10px;
     float: left;
     width: 145px;
@@ -524,9 +525,10 @@ div.loginbox a.whitelink:hover {
 	
 }
 #app-skins ul.applist li div.screenshot img {
+    display: block;
     max-height: 200px;
     max-width: 100%;
-    margin-top: 15px;
+    margin: auto;
 }
 #app-skins #new_skins {
 	background-color: #fff;
