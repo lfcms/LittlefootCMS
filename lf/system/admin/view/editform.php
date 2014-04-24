@@ -40,4 +40,4 @@
 	</li>
 </ul>
 
-<?php if(isset($save['id'])) echo '<input type="hidden" name="id" value="'.$save['id'].'">'; ?><input type="submit" value="Update" /> <?php if(isset($save['label'])) echo ' ( <a class="deselect_nav_form" href="%appurl%">Deselect</a> )';?>
+<?php if(isset($save['id'])) echo '<input type="hidden" name="id" value="'.$save['id'].'">'; ?><input type="submit" value="Update" /> <?php if(isset($save['label'])) echo '<a class="cancel_edit" href="%appurl%">cancel</a>';?>

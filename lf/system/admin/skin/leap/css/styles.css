@@ -378,26 +378,31 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #actions > ol li, #actions > ul li {
     color: gray;
     /* border-right: 1px solid #bbb; */
-    /* border-bottom: 1px solid #bbb; */
+    border-bottom: 1px solid #e2e2e2;
     transition:  none;
     font-size: 18px;
     border-left: 3px solid #bbb;
-    background-color: #FFFFFF;
-    /* border-top: 1px solid #bbb; */
-    margin: 1px 0;
+    background-color: #f5f5f5;
+    /* border-top: 1px solid #e2e2e2; */
+    /* margin: 1px 0; */
     padding: 10px;
 }
 #app-dashboard #actions > ol li:hover, #actions > ul li:hover {
     border-left-color: #0063aa;
+    background-color: #fff;
+    border-bottom-color: #bbb;
+}
+#app-dashboard #actions > ol li .cancel_edit {
 }
 #app-dashboard #actions .selected {
-    /* background-color: rgba(200, 200, 200, 0.1); */
-    border: 3px solid #00aa63;
+    background-color: #fff;
+    /* border: 3px solid #00aa63; */
+    border-bottom-color: #bbb;
 }#app-dashboard #actions .selected > ol {
 	margin-top: 10px;
 }
 #app-dashboard #actions .selected:hover {
-	border-color: #00aa63;
+	border-left-color: #00aa63;
 }
 #app-dashboard #actions .selected form {
 }
@@ -529,6 +534,7 @@ div.loginbox a.whitelink:hover {
     max-height: 200px;
     max-width: 100%;
     margin: auto;
+	clear: both;
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -624,12 +630,6 @@ div.loginbox a.whitelink:hover {
 	margin-top: 5px;
 	margin-right: 200px;
 	background-color: #fff;
-}
-#app-skins div#skin-store-wrapper {
-	padding: 15px;
-	background-color: #fff;
-	min-width: 630px;
-	float: left;
 }
 #app-users ul {
 }
@@ -822,4 +822,10 @@ div.loginbox a.whitelink:hover {
 #app-settings #admin_upgrade #restore:hover {
 	border-left-color: #0063aa;
 	background-color: #fff;
+}
+#store-wrapper {
+	padding: 15px;
+	background-color: #fff;
+	min-width: 630px;
+	float: left;
 }
