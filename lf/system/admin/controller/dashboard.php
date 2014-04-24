@@ -256,7 +256,7 @@ class dashboard extends app
 		// $var[0] = 'manage'
 		$app_name = $var[1];
 		
-		echo '<h2><a href="%appurl%">Dashboard</a> / <a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>
+		echo '<h2><a href="%appurl%manage/'.$app_name.'/">'.ucfirst($app_name).'</a> / Admin</h2>
 			<div class="dashboard_manage">';
 		$var = array_slice($var, 2); // pass the rest of the vars to the admin.php script
 		
@@ -303,22 +303,24 @@ class dashboard extends app
 		if($this->simple) return;
 		
 		echo '<h2><a href="%appurl%">Apps</a> / Download</h2>';
-		echo '<p>Applications with a link can be installed. Those that are not links are already installed.</p>';
-		
-		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
-		$apps = array_flip(explode("\n",$apps,-1));
-		$files = array_flip(scandir(ROOT.'apps'));
-		
-		echo '<ul>';
-		foreach($apps as $app => $ignore)
-		{	
-			echo '<li>';
+		echo '<div id="store-wrapper">';
+			echo '<p>Applications with a link can be installed. Those that are not links are already installed.</p>';
 			
-			if(!isset($files[$app])) echo '<a href="%appurl%getappfromnet/'.$app.'/">'.$app.'</a>';
-			else echo $app;// no updates, handled on the upgrade system. ' [<a href="%appurl%getappfromnet/'.$app.'/update/">Update</a>]';
-			echo '</li>';
-		}
-		echo '</ul>';
+			$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
+			$apps = array_flip(explode("\n",$apps,-1));
+			$files = array_flip(scandir(ROOT.'apps'));
+			
+			echo '<ul>';
+			foreach($apps as $app => $ignore)
+			{	
+				echo '<li>';
+				
+				if(!isset($files[$app])) echo '<a href="%appurl%getappfromnet/'.$app.'/">'.$app.'</a>';
+				else echo $app;// no updates, handled on the upgrade system. ' [<a href="%appurl%getappfromnet/'.$app.'/update/">Update</a>]';
+				echo '</li>';
+			}
+			echo '</ul>';
+		echo '</div>';
 	}
 	
 	public function getappfromnet($vars)

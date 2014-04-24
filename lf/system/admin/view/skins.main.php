@@ -13,7 +13,7 @@
 		<h4>Create</h4>
 		<form id="create_skin_form" action="%appurl%blankskin/" method="post">
 			<input id="create_skin_namebox" type="text" name="name" placeholder="Name your new skin" />
-			<input type="submit" value="Create it" />
+			<input type="submit" value="Create Skin" />
 		</form> 
 	</li>
 	<?php
@@ -34,12 +34,17 @@
 						<div class="delete">
 							<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$file;?>/" class="delete_item">x</a>
 						</div>
-						<div class="skin-name">
-							<a href="%appurl%setdefault/<?php echo $file; ?>"><?=$file;?></a>
+						<div class="skin-zip">
+							<a href="%appurl%zip/<?php echo $file; ?>/" class="zip_item">zip</a>
 						</div>
-						<div class="control">
-							<a href="%appurl%edit/<?php echo $file; ?>/">edit</a> | 
-							<a href="%appurl%zip/<?php echo $file; ?>/">zip</a>
+						<div class="skin-name">
+							<?=$file;?>
+						</div>
+						<div class="default">
+							<a href="%appurl%setdefault/<?php echo $file; ?>">Set as Default</a>
+						</div>
+						<div class="edit">
+							<a href="%appurl%edit/<?php echo $file; ?>/">Edit Skin</a>
 						</div>
 						<?php
 							if(is_file($skin.'/screenshot.png'))

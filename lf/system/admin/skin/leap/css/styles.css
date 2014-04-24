@@ -101,10 +101,12 @@ option {
 	transition: none;
 }
 input[type="submit"] {
+	font-size: 16px;
 	color: #222;
 	border: 1px solid #bbb;
 	padding: 5px;
 	margin: 5px 0;
+	font-family: ubuntu;
 }
 input[type="submit"]:hover {
 	background-color: #efefef;
@@ -376,26 +378,31 @@ div.loginbox a.whitelink:hover {
 #app-dashboard #actions > ol li, #actions > ul li {
     color: gray;
     /* border-right: 1px solid #bbb; */
-    /* border-bottom: 1px solid #bbb; */
+    border-bottom: 1px solid #e2e2e2;
     transition:  none;
     font-size: 18px;
     border-left: 3px solid #bbb;
-    background-color: #FFFFFF;
-    /* border-top: 1px solid #bbb; */
-    margin: 1px 0;
+    background-color: #f5f5f5;
+    /* border-top: 1px solid #e2e2e2; */
+    /* margin: 1px 0; */
     padding: 10px;
 }
 #app-dashboard #actions > ol li:hover, #actions > ul li:hover {
     border-left-color: #0063aa;
+    background-color: #fff;
+    border-bottom-color: #bbb;
+}
+#app-dashboard #actions > ol li .cancel_edit {
 }
 #app-dashboard #actions .selected {
-    /* background-color: rgba(200, 200, 200, 0.1); */
-    border: 3px solid #00aa63;
+    background-color: #fff;
+    /* border: 3px solid #00aa63; */
+    border-bottom-color: #bbb;
 }#app-dashboard #actions .selected > ol {
 	margin-top: 10px;
 }
 #app-dashboard #actions .selected:hover {
-	border-color: #00aa63;
+	border-left-color: #00aa63;
 }
 #app-dashboard #actions .selected form {
 }
@@ -444,14 +451,13 @@ div.loginbox a.whitelink:hover {
     border-bottom: 1px solid #bbb;
     border-right: 1px solid #bbb;
     border-left: 1px solid #bbb;
-    transition: none;
     background-color: #FFFFFF;
     border-top: 5px solid #bbb;
     float: left;
     margin: 5px 15px 10px 0px;
 	padding:  15px;
-    height: 280px;
-    width: 275px;
+    height: 295px;
+    width: 325px;
 }
 #app-skins ul.applist li:hover {
     border-top-color: #0063aa;
@@ -459,25 +465,64 @@ div.loginbox a.whitelink:hover {
 #app-skins ul.applist li.current_skin {
 	border-top-color: #00aa63;
 }
+#app-skins ul.applist li.current_skin div.skin-name {
+	font-weight: bold;
+}
+#app-skins ul.applist li.current_skin div.default a {
+	color: gray;
+}
 #app-skins ul.applist li div.skin-name {
 	font-size: 22px;
 }
 #app-skins ul.applist li div.skin-name:hover {
 }
-#app-skins ul.applist li div.control {
-	font-size: small;
+#app-skins ul.applist li div.default {
 }
-#app-skins ul.applist li div.delete {
+#app-skins ul.applist li div.default a {
+    margin-bottom: 15px;
+    margin-right: 10px;
+    float: left;
+    width: 145px;
+    color: #222;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #e2e2e2;
+    display: block;
+
+    border: 1px solid #bbb;
+    padding: 5px;
+}
+#app-skins ul.applist li div.default a:hover {
+	background-color: #efefef;
+}
+#app-skins ul.applist li div.edit {
+}
+#app-skins ul.applist li div.edit a {
+    margin-bottom: 15px;
+    float: left;
+    width: 145px;
+    color: #222;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #e2e2e2;
+    display: block;
+
+    border: 1px solid #bbb;
+    padding: 5px;
+}
+#app-skins ul.applist li div.edit a:hover {
+	background-color: #efefef;
+}
+#app-skins ul.applist li div.delete,
+#app-skins ul.applist li div.skin-zip {
+	font-size: 18px;
+	margin-left: 15px;
 	float: right;
 }
-#app-skins ul.applist li div.control,
 #app-skins ul.applist li div.delete {
     font-size: 18px;
 }
-#app-skins ul.applist li div.control a,
 #app-skins ul.applist li div.delete a {
-}
- {
 }
 #app-skins ul.applist li div.screenshot {
     color: #bbb;
@@ -485,9 +530,11 @@ div.loginbox a.whitelink:hover {
 	
 }
 #app-skins ul.applist li div.screenshot img {
-    max-height: 220px;
-    /* margin-top: 15px; */
+    display: block;
+    max-height: 200px;
     max-width: 100%;
+    margin: auto;
+	clear: both;
 }
 #app-skins #new_skins {
 	background-color: #fff;
@@ -515,6 +562,7 @@ div.loginbox a.whitelink:hover {
 #app-skins #create_skin_form {
 }
 #app-skins #create_skin_form input[type="submit"] {
+	font-size: 16px;
 	width: 100%;
 	color: #fff;
 	color: #222;
@@ -530,7 +578,7 @@ div.loginbox a.whitelink:hover {
     border: 1px solid #bbb;
     width: 100%;
     padding: 5px;
-    font-size: 14px;
+    font-size: 16px;
 }
 #app-skins #create_skin_form #create_skin_namebox:focus {
 	border-color: #24AF68;
@@ -582,12 +630,6 @@ div.loginbox a.whitelink:hover {
 	margin-top: 5px;
 	margin-right: 200px;
 	background-color: #fff;
-}
-#app-skins div#skin-store-wrapper {
-	padding: 15px;
-	background-color: #fff;
-	min-width: 630px;
-	float: left;
 }
 #app-users ul {
 }
@@ -747,7 +789,7 @@ div.loginbox a.whitelink:hover {
     display: block;
     width: 80%;
     font-size: 14px;
-    padding: 10px;
+    padding: 10px 0;
     color:  #fff;
     border: 1px solid #bbb;
     background-color: #00884F;
@@ -780,4 +822,10 @@ div.loginbox a.whitelink:hover {
 #app-settings #admin_upgrade #restore:hover {
 	border-left-color: #0063aa;
 	background-color: #fff;
+}
+#store-wrapper {
+	padding: 15px;
+	background-color: #fff;
+	min-width: 630px;
+	float: left;
 }

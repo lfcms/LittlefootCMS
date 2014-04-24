@@ -18,7 +18,7 @@ class skins extends app
 	public function download($var)
 	{
 		echo '<h2><a href="%appurl%">Skins</a> / Download</h2>';
-		echo '<div id="skin-store-wrapper">';
+		echo '<div id="store-wrapper">';
 			echo '<p>Skins with a link can be installed. Those that are blank are already installed.</p>';
 			
 			
