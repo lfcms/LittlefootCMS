@@ -285,4 +285,14 @@ function jsprompt($msg = 'Are you sure?')
 	return 'onclick="return confirm(\''.$msg.'\');"';
 }
 
+// given a set of rows from $this->db->fetchall($query), generate a table.
+function datatable($result)
+{
+	ob_start();
+	
+	
+	
+	return ob_get_clean();
+}
+
 ?>

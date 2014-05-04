@@ -22,9 +22,7 @@ class Database
 		
 		if(!mysql_select_db( $database_config['name'], $this->db_link ))
 			$this->error[] = mysql_errno($this->db_link) . ": " . mysql_error($this->db_link);
-		
-		
-		
+			
 		$this->query_count = 0;
 		$this->tblprefix = $database_config['prefix'];
 		$this->conf = $database_config;

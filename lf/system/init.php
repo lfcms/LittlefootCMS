@@ -11,4 +11,4 @@ include 'system/app.class.php'; // load app base class
 include 'system/littlefoot.php'; // load main littlefoot object
 
 $lf = new LittleFoot($db); // initialize with db connection
-$lf->run($debug); // execute littlefoot and render ouput
+$lf->cms($debug); // execute littlefoot as cms and render ouput

@@ -206,6 +206,12 @@ class auth extends app
 	
 	public function create($vars)
 	{
+		// DEV DEV DEV DEV // plugins 2.0
+		if(isset($this->lf->settings['plugins']['pre-auth-create']))
+			foreach($this->lf->settings['plugins']['pre-auth-create'] as $plugin => $devnull)
+				include ROOT.'plugins/'.$plugin.'/index.php';
+		// END DEV DEV DEV DEV
+		
 		$sql = "
 			SELECT email, user 
 			FROM lf_users 
@@ -230,7 +236,7 @@ class auth extends app
 			if($user)			echo 'Username';
 								echo ' already in use.';
 			
-			$this->main($vars);
+			$this->signup($vars);
 		}
 		else
 		{
@@ -244,7 +250,7 @@ class auth extends app
 			else */if(!preg_match('/^[a-z0-9._%-+]+@[a-z0-9.-]+\.[a-z]{2,4}$/', strtolower($_POST['email']), $email))
 			{
 				echo 'Invalid email.';
-				$this->main($vars);
+				$this->signup($vars);
 			}
 			/*else if($_POST['terms'] != 'on')
 			{
