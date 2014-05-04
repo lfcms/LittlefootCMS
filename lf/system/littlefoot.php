@@ -34,6 +34,8 @@ class Littlefoot
 	 
 	private $plugin_listen = array();
 	
+	public $head = ''; // just to put stuff in <head>
+	
 	public function __construct($db)
 	{
 		$this->lf = &$this; // universal usage of $this->lf
@@ -65,29 +67,36 @@ class Littlefoot
 		if($this->settings['debug'] == 'on')
 		{
 			echo '<!-- 
-				<div style="clear: both; text-align: center; color: #333; background: #FFF; width:500px; margin: 20px auto; padding:10px;" >
-					<h2 style="color: #999;">Debug Information</h2>
-					<p style="color: #333">Version: '.$this->version.'</p>
-					<p style="color: #333">Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms</p>
-					<p style="color: #333">Memory Usage: '.round(memory_get_peak_usage()/1024,2).' kb</p>
-					Littlefoot function load times:
-					<table style="margin: auto; color: #000;">
-			';
+-=lf Debug Information=-
+Version: '.$this->version.'
+Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
+Peak Memory Usage: '.round(memory_get_peak_usage()/1024,2).' kb
+
+Littlefoot function load times:
+	';
 			foreach($this->function_timer as $function => $time)
-				echo '<tr><td>'.$function.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
+				echo ''.$function.': '.round($time, 6)*(1000).'ms
+	';
 			echo '
-					</table>
-					App load times:
-					<table style="margin: auto; color: #000;">
-			';
+App load times:
+	';
 			foreach($this->app_timer as $app => $time)
-				echo '<tr><td>'.$app.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '</table></div>-->';
+				echo ''.$app.': '.round($time, 6)*(1000).'ms
+	';
+			echo '
+-->';
 		}
 	}
 	
-	public function run($debug = false) // run littlefoot as CMS
+	public function cms($debug = false) // run littlefoot as CMS
 	{
+		// Apply settings 
+		$this->db->query('SELECT * FROM lf_settings');
+		while($row = $this->db->fetch())
+			$this->settings[$row['var']] = $row['val'];
+		
+		// JSON => array
+		$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
 		
 		// load plugins
 		foreach(scandir('plugins') as $file)
@@ -102,11 +111,6 @@ class Littlefoot
 		//		include 'plugins/plugins_loaded/'.$plugin;
 		
 		$this->hook_run('plugins_loaded');
-		
-		// Apply settings 
-		$this->db->query('SELECT * FROM lf_settings');
-		while($row = $this->db->fetch())
-			$this->settings[$row['var']] = $row['val'];
 			
 		// redirect to URL specified in 'force_url' setting
 		if(isset($this->settings['force_url']) && $this->settings['force_url'] != '')
@@ -658,6 +662,11 @@ class Littlefoot
 		
 		chdir(ROOT); // cd back to ROOT for the rest of the app
 		
+		// DEV DEV DEV DEV // plugins 2.0
+		foreach($this->lf->settings['plugins']['postcontent'] as $plugin => $devnull)
+			include ROOT.'plugins/'.$plugin.'/index.php';
+		// END DEV DEV DEV DEV
+		
 		return $content;
 	}
 	
@@ -726,6 +735,8 @@ class Littlefoot
 			
 			$template = str_replace('%debug%', $debug, $template);
 		}
+		
+		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
 		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', $template);
@@ -852,6 +863,11 @@ class Littlefoot
 		//echo $output;
 	}
 	
+	/*private load_plugin() {
+	
+	}*/
+	
+	
 	// Add plugin function to execute when $hook happens
 	private function hook_add($hook, $function)
 	{
@@ -873,6 +889,7 @@ class Littlefoot
 			
 		return $return;
 	}
+	
 	
 	// public, read-only access to private variables
 	public function api($var)

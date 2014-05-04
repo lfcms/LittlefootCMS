@@ -4,7 +4,7 @@ class users extends app
 {
 	public function main($vars)
 	{		
-		$result = $this->db->query('SELECT id, user, email, display_name, access FROM lf_users ORDER BY user');
+		$result = $this->db->query('SELECT id, user, email, display_name, access, status FROM lf_users ORDER BY user');
 		$row = $this->db->fetch();
 		$row_id = $row['id'];
 		unset($row['id']);

@@ -21,6 +21,7 @@
 	<?php endif; ?>
 	</li>
 	<li><a class="tables" href="<?=$this->base;?>skins/"><span>Skins</span></a></li>
+	<li><a class="tables" href="<?=$this->base;?>plugins/"><span>Plugins</span></a></li>
 	<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->
 	<li><a class="users" href="<?=$this->base;?>users/"><span>Users</span></a></li>
 	<li><a class="editor" href="<?=$this->base;?>acl/"><span>ACL</span></a></li>
