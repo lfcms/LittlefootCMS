@@ -221,10 +221,10 @@ class acl
 		unset($_POST['appurl']);
 		
 		foreach($_POST as $key => $val)
-			$_POST[$key] = mysql_real_escape_string($val);
+			$_POST[$key] = $this->db->escape($val);
 			
 		$this->db->query("
-			INSERT INTO lf_acl_".mysql_real_escape_string($vars[1])."
+			INSERT INTO lf_acl_".$this->db->escape($vars[1])."
 			VALUES (NULL, '".implode("', '", $_POST)."')
 		");
 		
@@ -235,7 +235,7 @@ class acl
 	public function rm($vars)
 	{
 		$this->db->query("
-			DELETE FROM lf_acl_".mysql_real_escape_string($vars[1])."	
+			DELETE FROM lf_acl_".$this->db->escape($vars[1])."	
 			WHERE id = ".intval($vars[2])."
 		");
 		

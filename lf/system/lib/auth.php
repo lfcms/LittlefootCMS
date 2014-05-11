@@ -62,10 +62,14 @@ class auth extends app
 		//Execute Query
 		$result = $this->db->query($sql);
 		
+		/*echo '<pre>SQL: ';
 		print_r($sql);
+		echo '
+		numrows: ';
+		var_dump($this->db->numrows());*/
 		
 		//Check if user exists
-		if(mysql_num_rows($result) == 0) // if random user tried, add to their guess count
+		if($this->db->numrows() == 0) // if random user tried, add to their guess count
 		{
 			//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
 			//$_SESSION['authguess']++;
@@ -133,8 +137,9 @@ class auth extends app
 		
 		if(isset($this->error)) $_SESSION['_lf_login_error'] = $this->error;
 		
-		print_r($auth);
-		exit();
+		/*print_r($auth);
+		echo '</pre>';
+		exit();*/
 		
 		redirect302();
 	}

@@ -21,7 +21,7 @@ class plugins extends app
 		{
 			echo 'insert';
 			$hooks = json_encode(array($_POST['hook'][$_POST['plugin']] => true));
-			$this->db->query("INSERT INTO lf_settings VALUES (NULL, 'plugins', '".mysql_real_escape_string($hooks)."')");
+			$this->db->query("INSERT INTO lf_settings VALUES (NULL, 'plugins', '".$this->db->escape($hooks)."')");
 		}
 		else
 		{
@@ -44,7 +44,7 @@ class plugins extends app
 			//echo '</pre>';
 			
 			
-			$this->db->query("UPDATE lf_settings SET val = '".mysql_real_escape_string($hooks)."' WHERE var = 'plugins'");
+			$this->db->query("UPDATE lf_settings SET val = '".$this->db->escape($hooks)."' WHERE var = 'plugins'");
 		}
 		
 		redirect302();
