@@ -70,7 +70,7 @@ class Littlefoot
 -=lf Debug Information=-
 Version: '.$this->version.'
 Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
-Peak Memory Usage: '.round(memory_get_peak_usage()/1024,2).' kb
+Peak Memory Usage: '.round(memory_get_peak_usage()/1024/1024,2).' MB
 
 Littlefoot function load times:
 	';
@@ -663,8 +663,8 @@ App load times:
 		chdir(ROOT); // cd back to ROOT for the rest of the app
 		
 		// DEV DEV DEV DEV // plugins 2.0
-		foreach($this->lf->settings['plugins']['postcontent'] as $plugin => $devnull)
-			include ROOT.'plugins/'.$plugin.'/index.php';
+		/*foreach($this->lf->settings['plugins']['postcontent'] as $plugin => $devnull)
+			include ROOT.'plugins/'.$plugin.'/index.php';*/
 		// END DEV DEV DEV DEV
 		
 		return $content;

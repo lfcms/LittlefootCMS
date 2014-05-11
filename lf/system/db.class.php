@@ -3,6 +3,7 @@
 class Database
 {
 	private $db_link;
+	private $mysqli;
 	private $db_result;
 	private $query_count;
 	private $db_name;
@@ -11,18 +12,17 @@ class Database
 	
 	function __construct( $database_config )
 	{
-		$this->db_link = mysql_connect( 
+		$this->mysqli = new mysqli( 
 			$database_config['host'], 
 			$database_config['user'],
 			$database_config['pass'] 
 		);
 		
-		if(!$this->db_link)
-			$this->error[] = mysql_errno($this->db_link) . ": " . mysql_error($this->db_link);
+		if($this->mysqli->connect_errno)
+			$this->error[] = "Connection failed (".$this->mysqli->connect_errno."): " .$this->mysqli->connect_error;
+		else if(!$this->mysqli->select_db( $database_config['name']))
+			$this->error[] = $this->mysqli->error;
 		
-		if(!mysql_select_db( $database_config['name'], $this->db_link ))
-			$this->error[] = mysql_errno($this->db_link) . ": " . mysql_error($this->db_link);
-			
 		$this->query_count = 0;
 		$this->tblprefix = $database_config['prefix'];
 		$this->conf = $database_config;
@@ -30,13 +30,21 @@ class Database
 	
 	function __destruct()
 	{
-		mysql_close($this->db_link);
+		$this->mysqli->close();
 	}
 	
-	function query($q)
+	function free()
 	{
-		$this->db_result = mysql_query($q, $this->db_link);
+		$this->dbresult->free();
+	}
+	
+	function query($q, $big = false)
+	{
+		if($big)	$this->db_result = $this->mysqli->query($q, MYSQLI_USE_RESULT);
+		else		$this->db_result = $this->mysqli->query($q);
+		
 		$this->query_count++;
+		
 		return $this->db_result;
 	}
 	
@@ -50,9 +58,11 @@ class Database
 		
 		if($result == NULL) $result = $this->db_result;
 		
-		if(mysql_num_rows($result) === 0) return false;
+		$this->query_count++;
 		
-		return mysql_fetch_assoc($result);
+		if($this->db_result->num_rows === 0) return false;
+		
+		return $this->db_result->fetch_assoc();
 	}
 	
 	function fetchall($result = NULL)
@@ -67,9 +77,11 @@ class Database
 		if($result === false) return false;
 		
 		$ret = array();
-		while($row = mysql_fetch_assoc($result)) { 
+		while($row = $this->db_result->fetch_assoc()) { 
 			$ret[] = $row;
 		}
+		
+		$this->query_count++;
 		
 		return $ret;
 	}
@@ -81,7 +93,7 @@ class Database
 	
 	function last()
 	{
-		return mysql_insert_id($this->db_link);
+		return $this->mysqli->insert_id;
 	}
 	
 	function getLastResult()
@@ -102,7 +114,12 @@ class Database
 	
 	function affected()
 	{
-		return mysql_affected_rows($this->db_link);
+		return $this->mysqli->affected_rows;
+	}
+	
+	function escape($str)
+	{
+		return $this->mysqli->escape_string($str);
 	}
 	
 	function import($file)
@@ -113,9 +130,11 @@ class Database
 		// Extract queries from file
 		preg_match_all("/(?:^|\n)([A-Z][^;]+);/", $dump, $match);
 		
+		ob_start();
 		// Run queries
 		foreach($match[1] as $sql)
-			@mysql_query($sql, $this->db_link);
+			$this->query($sql);
+		return ob_get_clean();
 	}
 	
 	function dump($table = '', $folder = NULL)
