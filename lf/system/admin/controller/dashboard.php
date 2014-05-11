@@ -42,7 +42,7 @@ class dashboard extends app
 			");
 
 			$save = array();
-			while($row = mysql_fetch_assoc($result))
+			while($row = $this->db->fetch($result))
 			{
 				if(isset($vars[1]) && $row['id'] == $vars[1])
 					$save = $row;
@@ -133,8 +133,8 @@ class dashboard extends app
 			FROM lf_actions
 			WHERE parent = '-1'
 				AND (
-					alias = '".mysql_real_escape_string($vars[1])."'
-					OR alias LIKE '".mysql_real_escape_string($vars[1])."_%'
+					alias = '".$this->db->escape($vars[1])."'
+					OR alias LIKE '".$this->db->escape($vars[1])."_%'
 				)
 			ORDER by alias ASC
 		");
@@ -219,7 +219,7 @@ class dashboard extends app
 					WHERE b.id IS NULL AND a.parent != -1
 				');
 				
-				if(mysql_num_rows($result) == 0) break;
+				if($this->db->numrows($result) == 0) break;
 				
 				$orphans = array();
 				while($row = $this->db->fetch($result))
@@ -460,12 +460,12 @@ class dashboard extends app
 		
 		if($pos != 0)
 		{
-			$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.mysql_real_escape_string($_POST['parent']).' AND position != 0';
+			$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.$this->db->escape($_POST['parent']).' AND position != 0';
 			$result = $this->db->query($sql);
 			$row = mysql_fetch_array($result);
 			
 			if($row[0] >= $pos)
-				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($_POST['parent']).' AND position >= '.$pos);
+				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($_POST['parent']).' AND position >= '.$pos);
 			else
 				$pos = $row[0] + 1;
 		}
@@ -480,13 +480,13 @@ class dashboard extends app
 		$id = 'NULL';
 		$app = $_POST['isapp'] == 'on' ? '1' : '0';
 		$insert = array(
-			"parent"	=> mysql_real_escape_string($_POST['parent']),
+			"parent"	=> $this->db->escape($_POST['parent']),
 			"position"	=> $pos,
-			"alias"		=> mysql_real_escape_string($_POST['alias']),
-			"title"		=> mysql_real_escape_string($_POST['title']),
-			"label"		=> mysql_real_escape_string($_POST['label']),
+			"alias"		=> $this->db->escape($_POST['alias']),
+			"title"		=> $this->db->escape($_POST['title']),
+			"label"		=> $this->db->escape($_POST['label']),
 			"app"		=> $app,
-			"template"	=> mysql_real_escape_string($_POST['template'])
+			"template"	=> $this->db->escape($_POST['template'])
 		);
 		
 		$sql = "
@@ -529,8 +529,8 @@ class dashboard extends app
 		$insert = array(
 			"include"	=> $id,
 			"app"		=> $app,
-			"ini"		=> mysql_real_escape_string($_POST['ini']),
-			"section"	=> mysql_real_escape_string($_POST['section']),
+			"ini"		=> $this->db->escape($_POST['ini']),
+			"section"	=> $this->db->escape($_POST['section']),
 			"recursive"	=> 0
 		);
 		
@@ -557,7 +557,7 @@ class dashboard extends app
 		
 		// save, unset ini
 		$id = intval($post['id']);
-		$ini = mysql_real_escape_string($post['ini']);
+		$ini = $this->db->escape($post['ini']);
 		unset($post['id'], $post['ini']);
 		if($post['position'] <= 0) 
 		{
@@ -569,7 +569,7 @@ class dashboard extends app
 		$old = $this->db->fetch('SELECT position, parent FROM lf_actions WHERE id = '.$id);
 		
 		// get # of children of destination parent
-		$result = $this->db->fetch('SELECT COUNT(id) as count FROM lf_actions WHERE parent = '.mysql_real_escape_string($post['parent']));
+		$result = $this->db->fetch('SELECT COUNT(id) as count FROM lf_actions WHERE parent = '.$this->db->escape($post['parent']));
 		$count = $result['count'];
 		
 		// handle parent/position updates
@@ -630,7 +630,7 @@ class dashboard extends app
 		{
 			$update = array();
 			foreach($post as $key => $var)
-				$update[$key] = mysql_real_escape_string($key)." = '".mysql_real_escape_string($var)."'";
+				$update[$key] = $this->db->escape($key)." = '".$this->db->escape($var)."'";
 			
 			// Move the item
 			$sql = "UPDATE lf_actions SET ".implode(', ', $update)." WHERE id = ".$id;
@@ -644,17 +644,17 @@ class dashboard extends app
 		{
 			/*$update = array();
 			foreach($post as $key => $var)
-				$update[$key] = mysql_real_escape_string($key)." = '".mysql_real_escape_string($var)."'";*/
+				$update[$key] = $this->db->escape($key)." = '".$this->db->escape($var)."'";*/
 				
 			$post['app'] = $post['app'] == 'on' ? '1' : '0';
 			$update = array(
-//				"parent = 	'".mysql_real_escape_string($post['parent'])."'",
+//				"parent = 	'".$this->db->escape($post['parent'])."'",
 //				"position = ".intval($post['position']),
-				"alias = 	'".mysql_real_escape_string($post['alias'])."'",
-				"title = 	'".mysql_real_escape_string($post['title'])."'",
-				"label = 	'".mysql_real_escape_string($post['label'])."'",
+				"alias = 	'".$this->db->escape($post['alias'])."'",
+				"title = 	'".$this->db->escape($post['title'])."'",
+				"label = 	'".$this->db->escape($post['label'])."'",
 				"app = 		'".$post['app']."'",
-				"template = '".mysql_real_escape_string($post['template'])."'"
+				"template = '".$this->db->escape($post['template'])."'"
 			);
 			
 			// Move the item
@@ -663,7 +663,7 @@ class dashboard extends app
 			
 			$update = array(
 				"ini = 	'".$ini."'",
-				"section = 	'".mysql_real_escape_string($post['section'])."'"
+				"section = 	'".$this->db->escape($post['section'])."'"
 			);
 			
 			// Move the item

@@ -17,7 +17,7 @@ class settings extends app
 			{
 				$sql = "
 					INSERT INTO lf_settings (id, var, val)
-					VALUES (NULL, '".mysql_real_escape_string($_POST['newvar'])."', '".mysql_real_escape_string($_POST['newval'])."')
+					VALUES (NULL, '".$this->db->escape($_POST['newvar'])."', '".$this->db->escape($_POST['newval'])."')
 				";
 				$this->db->query($sql);
 			}*/
@@ -29,8 +29,8 @@ class settings extends app
 				foreach($_POST['setting'] as $var => $val)
 				{
 				
-					$sql .= " WHEN '".mysql_real_escape_string($var)."' THEN '".mysql_real_escape_string($val)."'";
-					$params[] = mysql_real_escape_string($var);
+					$sql .= " WHEN '".$this->db->escape($var)."' THEN '".$this->db->escape($val)."'";
+					$params[] = $this->db->escape($var);
 				}
 				
 				$sql .= " END WHERE var IN ('".implode("', '", $params)."')";

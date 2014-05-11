@@ -28,7 +28,7 @@ class menu
 			");
 
 			$save = '';
-			while($row = mysql_fetch_assoc($result))
+			while($row = $this->db->fetch($result))
 			{
 				if(isset($vars[1]) && $row['id'] == $vars[1])
 					$save = $row;
@@ -85,7 +85,7 @@ class menu
 			$result = $this->db->query("SELECT * FROM lf_actions ORDER BY ABS(position)");
 
 			$save = '';
-			while($row = mysql_fetch_assoc($result))
+			while($row = $this->db->fetch($result))
 			{
 				if(isset($vars[1]) && $row['id'] == $vars[1])
 					$save = $row;
@@ -142,7 +142,7 @@ class menu
 			$result = $this->db->query("SELECT * FROM lf_actions ORDER BY ABS(position)");
 
 			$save = '';
-			while($row = mysql_fetch_assoc($result))
+			while($row = $this->db->fetch($result))
 			{
 				if(isset($vars[1]) && $row['id'] == $vars[1])
 					$save = $row;
@@ -201,12 +201,12 @@ class menu
 		$vars = $this->request->post;
 		if(isset($vars['parent']))
 		{
-			$id = mysql_real_escape_string($vars['id']);
+			$id = $this->db->escape($vars['id']);
 			
 			//select current children id's and positions
 			$sql = 'SELECT position, parent FROM lf_actions WHERE id = '.$id;
 			$result = $this->db->query($sql);
-			$from = mysql_fetch_assoc($result);
+			$from = $this->db->fetch($result);
 			$pos = intval($vars['position']); // default target position is as requested
 			
 			// if from hook to nav
@@ -218,13 +218,13 @@ class menu
 			if($from['position'] == 0 && $vars['position'] > 0)
 			{
 				// Get number of items under parent
-				$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position != 0';
+				$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.$this->db->escape($vars['parent']).' AND position != 0';
 				$result = $this->db->query($sql);
 				$row = mysql_fetch_array($result);
 				
 				// $pos = target position, $row[0] = number of children under the same parent
 				if($row[0] >= $pos)
-					$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position >= '.$pos);
+					$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($vars['parent']).' AND position >= '.$pos);
 				else 
 					$pos = $row[0] + 1;
 			}
@@ -239,12 +239,12 @@ class menu
 				if($vars['parent'] != $from['parent'])
 				{
 					// change in parent node
-					$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.mysql_real_escape_string($vars['parent']);
+					$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.$this->db->escape($vars['parent']);
 					$result = $this->db->query($sql);
 					$row = mysql_fetch_array($result);
 			
 					if($row[0] >= $pos)
-						$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position >= '.$pos);
+						$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($vars['parent']).' AND position >= '.$pos);
 					else 
 						$pos = $row[0] + 1;
 					
@@ -253,23 +253,23 @@ class menu
 				} 
 				else if($vars['position'] < $from['position'])
 				{
-					$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position >= '.$pos.' AND position < '.$from['position']);
+					$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($vars['parent']).' AND position >= '.$pos.' AND position < '.$from['position']);
 				}
 				else if($vars['position'] > $from['position'])
 				{
-					$this->db->query('UPDATE lf_actions SET position = position - 1 WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position <= '.$pos.' AND position > '.$from['position']);
+					$this->db->query('UPDATE lf_actions SET position = position - 1 WHERE parent = '.$this->db->escape($vars['parent']).' AND position <= '.$pos.' AND position > '.$from['position']);
 				}
 			}
 			
 			$app = $vars['app'] == 'on' ? '1' : '0';
 			$update = array(
-				"parent = 	'".mysql_real_escape_string($vars['parent'])."'",
+				"parent = 	'".$this->db->escape($vars['parent'])."'",
 				"position = '".$pos."'",
-				"alias = 	'".mysql_real_escape_string($vars['alias'])."'",
-				"title = 	'".mysql_real_escape_string($vars['title'])."'",
-				"label = 	'".mysql_real_escape_string($vars['label'])."'",
+				"alias = 	'".$this->db->escape($vars['alias'])."'",
+				"title = 	'".$this->db->escape($vars['title'])."'",
+				"label = 	'".$this->db->escape($vars['label'])."'",
 				"app = 		'".$app."'",
-				"template = '".mysql_real_escape_string($vars['template'])."'"
+				"template = '".$this->db->escape($vars['template'])."'"
 			);
 			
 			// Move the item
@@ -363,10 +363,10 @@ class menu
 			
 			$recurse = $vars['recursive'] == 'on' ? 1 : 0;
 			$insert = array(
-				"include"	=> mysql_real_escape_string($vars['include']),
+				"include"	=> $this->db->escape($vars['include']),
 				"app"		=> $app,
-				"ini"		=> mysql_real_escape_string($vars['ini']),
-				"section"	=> mysql_real_escape_string($vars['section']),
+				"ini"		=> $this->db->escape($vars['ini']),
+				"section"	=> $this->db->escape($vars['section']),
 				"recursive"	=> $recurse,
 			);
 			
@@ -388,12 +388,12 @@ class menu
 			
 			if($pos != 0)
 			{
-				$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position != 0';
+				$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.$this->db->escape($vars['parent']).' AND position != 0';
 				$result = $this->db->query($sql);
 				$row = mysql_fetch_array($result);
 				
 				if($row[0] >= $pos)
-					$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.mysql_real_escape_string($vars['parent']).' AND position >= '.$pos);
+					$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($vars['parent']).' AND position >= '.$pos);
 				else 
 					$pos = $row[0] + 1;
 			}
@@ -401,13 +401,13 @@ class menu
 			$id = 'NULL';
 			$app = $vars['app'] == 'on' ? '1' : '0';
 			$insert = array(
-				"parent"	=> mysql_real_escape_string($vars['parent']),
+				"parent"	=> $this->db->escape($vars['parent']),
 				"position"	=> $pos,
-				"alias"		=> mysql_real_escape_string($vars['alias']),
-				"title"		=> mysql_real_escape_string($vars['title']),
-				"label"		=> mysql_real_escape_string($vars['label']),
+				"alias"		=> $this->db->escape($vars['alias']),
+				"title"		=> $this->db->escape($vars['title']),
+				"label"		=> $this->db->escape($vars['label']),
 				"app"		=> $app,
-				"template"	=> mysql_real_escape_string($vars['template'])
+				"template"	=> $this->db->escape($vars['template'])
 			);
 			
 			$sql = "

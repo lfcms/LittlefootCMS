@@ -62,13 +62,13 @@ class users extends app
 		);
 		
 		$vars = $this->request->post;
-		$id = mysql_real_escape_string($vars['id']);
+		$id = $this->db->escape($vars['id']);
 		
 		$insert = array(
-			"user = '"			.mysql_real_escape_string($vars['user']) ."'",
-			"email = '"		.mysql_real_escape_string($vars['email'])."'",
-			"display_name = '"	.mysql_real_escape_string($vars['nick'])."'",
-			"access = '"		.mysql_real_escape_string($vars['group'])."'",
+			"user = '"			.$this->db->escape($vars['user']) ."'",
+			"email = '"		.$this->db->escape($vars['email'])."'",
+			"display_name = '"	.$this->db->escape($vars['nick'])."'",
+			"access = '"		.$this->db->escape($vars['group'])."'",
 		);
 		
 		if($vars['pass'] != '')
@@ -144,13 +144,13 @@ class users extends app
 		$vars = $_POST;
 					
 		$insert = array(
-			'user' 			=> mysql_real_escape_string($vars['user']),
+			'user' 			=> $this->db->escape($vars['user']),
 			'pass' 			=> sha1($vars['pass']),
-			'email' 		=> mysql_real_escape_string($vars['email']),
-			'display_name' 	=> mysql_real_escape_string($vars['nick']),
+			'email' 		=> $this->db->escape($vars['email']),
+			'display_name' 	=> $this->db->escape($vars['nick']),
 			'hash'			=> '',
 			'status'		=> 'valid',
-			'access'		=> mysql_real_escape_string($vars['group']),
+			'access'		=> $this->db->escape($vars['group']),
 		);
 		
 		$sql = "

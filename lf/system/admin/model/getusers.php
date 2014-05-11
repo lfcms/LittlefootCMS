@@ -54,6 +54,6 @@ do
         unset($row_id);
 		$count++;
 }
-while ($row = mysql_fetch_assoc($result));
+while ($row = $this->db->fetch($result));
 
 ?>

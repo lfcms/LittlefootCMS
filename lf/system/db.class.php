@@ -56,10 +56,12 @@ class Database
 			$result = $this->db_result;
 		}
 		
+		// if no argument given, default result is last SQL result
 		if($result == NULL) $result = $this->db_result;
 		
 		$this->query_count++;
 		
+		// return false if no rows
 		if($this->db_result->num_rows === 0) return false;
 		
 		return $this->db_result->fetch_assoc();
@@ -91,6 +93,11 @@ class Database
 		return $this->query_count;
 	}
 	
+	function numrows($make_conversion_easier = true)
+	{
+		return $this->db_result->num_rows;
+	}
+	
 	function last()
 	{
 		return $this->mysqli->insert_id;
@@ -107,7 +114,7 @@ class Database
 			select count(TABLE_NAME) as is_table
 			from information_schema.TABLES 
 			WHERE TABLE_SCHEMA = '".$this->conf['name']."' 
-				AND TABLE_NAME = '".mysql_real_escape_string($table)."'
+				AND TABLE_NAME = '".$this->db->escape($table)."'
 		");
 		return $result['is_table'] ? 1 : 0;
 	}

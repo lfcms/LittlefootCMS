@@ -3,7 +3,7 @@
 unction build_apps($links, $save)
 
 $html = '';
-while($row = mysql_fetch_assoc($links))
+while($row = $this->db->fetch($links))
 {
 	if($row['ini'] == '') $row['ini'] = 'none';
 	if($row['include'] == '%') $row['include'] = 'All';
@@ -21,7 +21,7 @@ $old = NULL;
 $html = '
 	<table width="100%">
 ';
-while($row = mysql_fetch_assoc($links))
+while($row = $this->db->fetch($links))
 {
 	if($row['include'] == '%') $row['include'] = 'All';
 	
