@@ -24,7 +24,7 @@ class auth extends app
 		else
 		{
 			$auth['last_request'] = date('Y-m-d G:i:s');
-			$auth['timeout'] = time() + 60*30; // timeout in 30 minutes
+			$auth['timeout'] = time() + 60*120; // timeout in 2 hours
 		}
 		
 		// If no user is currently set...
@@ -56,11 +56,13 @@ class auth extends app
 				FROM lf_users WHERE user = '%s'
 				LIMIT 1
 			", 
-			mysql_real_escape_string($username)
+			$this->db->escape($username)
 		);
 		
 		//Execute Query
 		$result = $this->db->query($sql);
+		
+		print_r($sql);
 		
 		//Check if user exists
 		if(mysql_num_rows($result) == 0) // if random user tried, add to their guess count
@@ -68,7 +70,10 @@ class auth extends app
 			//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
 			//$_SESSION['authguess']++;
 			$this->error = "Incorrect Username or Password";
+		echo $this->error;
 		}
+		
+		
 		/*else if ($auth['loginfailcnt'] > 7)
 		{
 			$this->error = "Reset your account with the link we emailed you.";
@@ -120,12 +125,16 @@ class auth extends app
 				}
 			}*/
 			
-			if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
+			// disabled, you can log in as admin anywhere
+			//if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
 		}
 		
 		$this->lf->auth = $auth;
 		
 		if(isset($this->error)) $_SESSION['_lf_login_error'] = $this->error;
+		
+		print_r($auth);
+		exit();
 		
 		redirect302();
 	}
@@ -205,13 +214,13 @@ class auth extends app
 	
 	
 	public function create($vars)
-	{
+	{/*
 		// DEV DEV DEV DEV // plugins 2.0
 		if(isset($this->lf->settings['plugins']['pre-auth-create']))
 			foreach($this->lf->settings['plugins']['pre-auth-create'] as $plugin => $devnull)
 				include ROOT.'plugins/'.$plugin.'/index.php';
 		// END DEV DEV DEV DEV
-		
+		*/
 		$sql = "
 			SELECT email, user 
 			FROM lf_users 
