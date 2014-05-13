@@ -90,8 +90,6 @@ class dashboard extends app
 			? '<input type="submit" value="Upload" /> <span>('.ini_get('upload_max_filesize').' Upload Limit)</span>'
 			: "<strong>Error: PHP Zip Extension missing.</strong>";
 		
-		/*include 'model/apps_linked.php';
-		linked_app();*/
 		include('view/dashboard.main.php');
 	}
 
