@@ -156,6 +156,116 @@ class dashboard extends app
 		redirect302($this->request->appurl.'main/'.$id);
 	}
 	
+	public function create($vars) // nav/item create
+	{
+		if($this->simple) return;
+		
+		if(!isset($_POST['title'])) // if simple post, auto-set other settings
+		{
+			if($_POST['alias'] == '') $_POST['alias'] = 'Home';
+			
+			$_POST['title'] = ucwords($_POST['alias']);
+			$_POST['label'] = ucwords($_POST['alias']);
+			$_POST['position'] = 9999; // it will auto adjust to the last position below
+			$_POST['isapp'] = 'off'; // is not an app by default
+			$_POST['template'] = 'default';
+		}
+		
+		/* -=-=-=-=- Add Nav Item -=-=-=-=- */
+		$pos = intval($_POST['position']);
+		
+		if($pos != 0)
+		{
+			$sql = 'SELECT COUNT(id) as pos FROM lf_actions WHERE parent = '.$this->db->escape($_POST['parent']).' AND position != 0';
+			$result = $this->db->query($sql);
+			$row = $this->db->fetch($result);
+			
+			if($row['pos'] >= $pos)
+				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($_POST['parent']).' AND position >= '.$pos);
+			else
+				$pos = $row['pos'] + 1;
+		}
+		/*
+		echo '<pre>';
+		print_r($_POST);
+		print_r($pos);
+		echo '</pre>';*/
+		
+		
+		$id = 'NULL';
+		$app = $_POST['isapp'] == 'on' ? '1' : '0';
+		$insert = array(
+			"parent"	=> $this->db->escape($_POST['parent']),
+			"position"	=> $pos,
+			"alias"		=> $this->db->escape($_POST['alias']),
+			"title"		=> $this->db->escape($_POST['title']),
+			"label"		=> $this->db->escape($_POST['label']),
+			"app"		=> $app,
+			"template"	=> $this->db->escape($_POST['template'])
+		);
+		
+		$sql = "
+			INSERT INTO 
+				lf_actions	( `id`, `".implode('`, `',array_keys($insert))."`)
+				VALUES	( ".$id.", '".implode("', '",array_values($insert))."')
+		";
+		
+		//echo $sql;
+		
+		//echo $sql;
+		//exit();
+		
+		if(!isset($_POST['section'])) // simple link
+		{
+			$_POST['section'] = 'content';
+		}
+		
+		$this->updatenavcache();
+		
+		/* -=-=-=-=- Add Link to Nav -=-=-=-=- */
+		$pwd = $this->request->absbase.'/apps';
+		foreach(scandir($pwd) as $file)
+		{
+			if($file == '.' || $file == '..') 
+				continue;
+
+			if(is_file($pwd.'/'.$file.'/index.php'))
+				$app_filter[$file] = $file;
+		}
+		
+		if(isset($app_filter[$_POST['app']]))
+			$app = $app_filter[$_POST['app']];
+		else
+			exit();
+		
+		// link was valid, move on to running the sql
+		$this->db->query($sql);
+		$id = $this->db->last();
+		
+		//$recurse = $_POST['recursive'] == 'on' ? 1 : 0;
+		$insert = array(
+			"include"	=> $id,
+			"app"		=> $app,
+			"ini"		=> $this->db->escape($_POST['ini']),
+			"section"	=> $this->db->escape($_POST['section']),
+			"recursive"	=> 0
+		);
+		
+		$sql = "
+			INSERT INTO 
+				lf_links	( `id`, `".implode('`, `',array_keys($insert))."`)
+				VALUES	( NULL, '".implode("', '",array_values($insert))."')
+		";
+		
+		$this->db->query($sql);
+		
+		if($vars[0] == 'create')
+			// redirect them after this completes
+			redirect302($this->request->base.'apps/');
+		else
+			return $id;
+	}
+	
 	private function deleteAll($directory, $empty = false)
 	{
 		if($this->simple) return;
@@ -438,115 +548,6 @@ class dashboard extends app
 			$this->db->import($sql);
 			unlink($sql);
 		}
-	}
-	
-	public function create($vars) // nav/item create
-	{
-		if($this->simple) return;
-		
-		if(!isset($_POST['title'])) // if simple post, auto-set other settings
-		{
-			if($_POST['alias'] == '') $_POST['alias'] = 'Home';
-			
-			$_POST['title'] = ucwords($_POST['alias']);
-			$_POST['label'] = ucwords($_POST['alias']);
-			$_POST['position'] = 9999; // it will auto adjust to the last position below
-			$_POST['isapp'] = 'off'; // is not an app by default
-			$_POST['template'] = 'default';
-		}
-		
-		/* -=-=-=-=- Add Nav Item -=-=-=-=- */
-		$pos = intval($_POST['position']);
-		
-		if($pos != 0)
-		{
-			$sql = 'SELECT COUNT(id) FROM lf_actions WHERE parent = '.$this->db->escape($_POST['parent']).' AND position != 0';
-			$result = $this->db->query($sql);
-			$row = mysql_fetch_array($result);
-			
-			if($row[0] >= $pos)
-				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($_POST['parent']).' AND position >= '.$pos);
-			else
-				$pos = $row[0] + 1;
-		}
-		
-		/*echo '<pre>';
-		print_r($_POST);
-		print_r($_POST);
-		print_r($pos);
-		echo '</pre>';*/
-		
-		
-		$id = 'NULL';
-		$app = $_POST['isapp'] == 'on' ? '1' : '0';
-		$insert = array(
-			"parent"	=> $this->db->escape($_POST['parent']),
-			"position"	=> $pos,
-			"alias"		=> $this->db->escape($_POST['alias']),
-			"title"		=> $this->db->escape($_POST['title']),
-			"label"		=> $this->db->escape($_POST['label']),
-			"app"		=> $app,
-			"template"	=> $this->db->escape($_POST['template'])
-		);
-		
-		$sql = "
-			INSERT INTO 
-				lf_actions	( `id`, `".implode('`, `',array_keys($insert))."`)
-				VALUES	( ".$id.", '".implode("', '",array_values($insert))."')
-		";
-		
-		//echo $sql;
-		//exit();
-		
-		if(!isset($_POST['section'])) // simple link
-		{
-			$_POST['section'] = 'content';
-		}
-		
-		$this->updatenavcache();
-		
-		/* -=-=-=-=- Add Link to Nav -=-=-=-=- */
-		$pwd = $this->request->absbase.'/apps';
-		foreach(scandir($pwd) as $file)
-		{
-			if($file == '.' || $file == '..') 
-				continue;
-
-			if(is_file($pwd.'/'.$file.'/index.php'))
-				$app_filter[$file] = $file;
-		}
-		
-		if(isset($app_filter[$_POST['app']]))
-			$app = $app_filter[$_POST['app']];
-		else
-			exit();
-		
-		// link was valid, move on to running the sql
-		$this->db->query($sql);
-		$id = $this->db->last();
-		
-		//$recurse = $_POST['recursive'] == 'on' ? 1 : 0;
-		$insert = array(
-			"include"	=> $id,
-			"app"		=> $app,
-			"ini"		=> $this->db->escape($_POST['ini']),
-			"section"	=> $this->db->escape($_POST['section']),
-			"recursive"	=> 0
-		);
-		
-		$sql = "
-			INSERT INTO 
-				lf_links	( `id`, `".implode('`, `',array_keys($insert))."`)
-				VALUES	( NULL, '".implode("', '",array_values($insert))."')
-		";
-		
-		$this->db->query($sql);
-		
-		if($vars[0] == 'create')
-			// redirect them after this completes
-			redirect302($this->request->base.'apps/');
-		else
-			return $id;
 	}
 
 	public function update($vars) // nav/item update

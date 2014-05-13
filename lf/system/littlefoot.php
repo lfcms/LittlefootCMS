@@ -66,22 +66,21 @@ class Littlefoot
 		// actual speed
 		if($this->settings['debug'] == 'on')
 		{
-			echo '<!-- 
--=lf Debug Information=-
+			echo '<!-- lf Stat Info
 Version: '.$this->version.'
-Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
+PHP Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
 Peak Memory Usage: '.round(memory_get_peak_usage()/1024/1024,2).' MB
-
+Num Queries: '.$this->db->getNumQueries().'
 Littlefoot function load times:
 	';
 			foreach($this->function_timer as $function => $time)
-				echo ''.$function.': '.round($time, 6)*(1000).'ms
+				echo ''.round($time, 6)*(1000).'ms - '.$function.'
 	';
 			echo '
 App load times:
 	';
 			foreach($this->app_timer as $app => $time)
-				echo ''.$app.': '.round($time, 6)*(1000).'ms
+				echo ''.round($time, 6)*(1000).'ms - '.$app.'
 	';
 			echo '
 -->';
@@ -673,7 +672,7 @@ App load times:
 	public function render($replace)
 	{
 		ob_start();
-		include ROOT.'system/view/login.php';
+		include ROOT.'system/template/login.php';
 		$login = ob_get_clean();
 		
 		// home.php
