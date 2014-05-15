@@ -391,7 +391,7 @@ class dashboard extends app
 		//if(is_file($app_path.'/'.$preview.'.php'))
 		//{ 
 			$old = getcwd(); chdir($app_path);
-			$database = $this->dbconn;
+			#$database = $this->dbconn;
 			$this->request->appurl = $this->request->base.'dashboard/manage/'.$app_name.'/'.$urlpreview;
 			
 			echo $this->request->loadapp($app_name, $admin, NULL, $var);
