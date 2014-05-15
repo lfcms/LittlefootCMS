@@ -97,12 +97,12 @@ App load times:
 		// JSON => array
 		$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
 		
-		// load plugins
-		foreach(scandir('plugins') as $file)
-		{
-			if(substr($file, -4) != '.php') continue;
-			include 'plugins/'.$file;
-		}
+	#	// load plugins old
+	#	foreach(scandir('plugins') as $file)
+	#	{
+	#		if(substr($file, -4) != '.php') continue;
+	#		include 'plugins/'.$file;
+	#	}
 		
 		//plug-ins v2
 		//if(is_dir('plugins/plugins_loaded_FALSE'))
