@@ -24,6 +24,7 @@ class auth extends app
 		else
 		{
 			$auth['last_request'] = date('Y-m-d G:i:s');
+			
 			$auth['timeout'] = time() + 60*60*12; // timeout in 12 hours
 		}
 		
