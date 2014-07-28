@@ -24,7 +24,7 @@ class auth extends app
 		else
 		{
 			$auth['last_request'] = date('Y-m-d G:i:s');
-			$auth['timeout'] = time() + 60*120; // timeout in 2 hours
+			$auth['timeout'] = time() + 60*60*12; // timeout in 12 hours
 		}
 		
 		// If no user is currently set...
@@ -185,8 +185,8 @@ class auth extends app
 		$sql = "
 			SELECT email, user 
 			FROM lf_users 
-			WHERE user = '".mysql_real_escape_string($_POST['user'])."' 
-				OR email = '".mysql_real_escape_string($_POST['email'])."'
+			WHERE user = '".$this->db->escape($_POST['user'])."' 
+				OR email = '".$this->db->escape($_POST['email'])."'
 		";
 		
 		$result = $this->db->query($sql);
@@ -234,9 +234,9 @@ class auth extends app
 					INSERT INTO lf_users (`id`, `user`, `pass`, `email`, `display_name`, `hash`, `last_request`, `status`, `access`)
 					VALUES ( 
 						NULL, 
-						'".mysql_real_escape_string($_POST['user'])."',  
+						'".$this->db->escape($_POST['user'])."',  
 						'".sha1($_POST['pass'])."', 
-						'".mysql_real_escape_string($_POST['email'])."',  
+						'".$this->db->escape($_POST['email'])."',  
 						'".$user[0]."',
 						'".$hash."',
 						NOW(),
@@ -285,7 +285,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	
 	public function forgotresult($vars)
 	{
-		$user = $this->db->fetch("SELECT * FROM lf_users WHERE email = '".mysql_real_escape_string($_POST['email'])."'");
+		$user = $this->db->fetch("SELECT * FROM lf_users WHERE email = '".$this->db->escape($_POST['email'])."'");
 		if(!$user) redirect302($this->lf->appurl);
 		
 		$hash = sha1(rand().date('U'));
@@ -306,7 +306,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	public function resetpassform($vars)
 	{
 		
-		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($vars[1])." AND hash = '".mysql_real_escape_string($vars[2])."'");
+		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($vars[1])." AND hash = '".$this->db->escape($vars[2])."'");
 		if($user)
 		{
 			echo '
@@ -324,7 +324,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	
 	public function resetpass($vars)
 	{
-		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($_POST['id'])." AND hash = '".mysql_real_escape_string($_POST['hash'])."'");
+		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($_POST['id'])." AND hash = '".$this->db->escape($_POST['hash'])."'");
 		if($user)
 		{
 			$this->db->query("UPDATE lf_users SET hash = '', pass = '".sha1($_POST['pass'])."' WHERE id = ".$user['id']);

@@ -20,5 +20,4 @@ if(isset($hook_list))
 	$hooks = '<option value="">-- Select a hook --</option><option>'.implode('</option><option>', $hook_list).'</option>'; 
 else
 	$hooks = '<option value="">-- No hooks available --</option>';
-	
 ?>

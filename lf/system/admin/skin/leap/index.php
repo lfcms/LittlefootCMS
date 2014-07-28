@@ -11,7 +11,7 @@
 				<link href="%skinbase%css/apps.css" rel="stylesheet">
 
                 <!-- Load in jQuery for handy hover function | Removes titles of links on hover-->
-                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
                 <script type="text/javascript" charset="utf-8">
 					$(document).ready(function() {
 							// All links in main menu div

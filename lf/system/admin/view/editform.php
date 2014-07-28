@@ -9,8 +9,8 @@
 	</li>
 	<li>
 		Url: <?php echo $_SERVER['SERVER_NAME'].$this->request->relbase; ?> <select name="parent">
-			<optgroup label="Select Base">
-				<option value="-1">&lt;base&gt;</option>
+			<option value="-1">&lt;no subdir&gt;</option>
+			<optgroup label="Select Subdir">
 				<?=$nav['select'];?>
 			</optgroup>
 			</select>

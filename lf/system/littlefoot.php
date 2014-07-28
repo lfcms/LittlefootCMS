@@ -342,13 +342,12 @@ App load times:
 			$request[2] = $filename.'/';
 		}
 		
-		if($_SERVER['SERVER_PORT'] != 80)
+		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
 		else $port = '';
 		
 		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
 		{
-			if($port == 443) $port = '';
 			$protocol = 'https://';
 		} else
 			$protocol = 'http://';
