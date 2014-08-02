@@ -168,11 +168,6 @@ App load times:
 		$this->function_timer['auth'] = microtime(true) - $funcstart;
 		$funcstart = microtime(true);
 		
-		
-		
-		
-		
-		
 		/*
 		// to post to a specific app without loading the rest of the CMS (should be to link in db, not app folder, this does not seem secure at the moment)
 		if( isset($this->action[0]) && $this->action[0] == 'post' && 
