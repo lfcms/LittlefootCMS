@@ -15,7 +15,7 @@ class install
 			install::installpost();
 			
 		$msg = 'No configuration file found at lf/config.php';
-		include 'install.form.php';
+		include ROOT.'system/lib/recovery/install.form.php';
 		exit();
 	}
 
@@ -36,7 +36,7 @@ class install
 	{
 		if($this->db->error != '') $errors = $this->db->error;
 		$msg = 'Unable to query database.';
-		include 'install.form.php';
+		include ROOT.'system/lib/recovery/install.form.php';
 	}
 	
 	private function installpost()
@@ -54,7 +54,7 @@ class install
 
 		if(isset($errors))
 		{
-			include 'install.form.php';
+			include ROOT.'system/lib/recovery/install.form.php';
 			exit();
 		}
 
@@ -73,12 +73,7 @@ class install
 		}
 
 		if(!is_file('config.php') || (isset($_POST['overwrite']) && $_POST['overwrite'] == 'on'))
-			echo
-				file_put_contents('config.php', $conf) != false
-				&& !isset($errrors)
-					? 'Config written. '
-					: 'Config writing failed. '
-			;
+			file_put_contents('config.php', $conf);
 
 		if(isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php'))
 		{
@@ -89,7 +84,7 @@ class install
 					$errors = $dbconn->error;
 			else
 			{
-					echo $dbconn->import('system/lib/recovery/lf.sql', false);
+					echo $dbconn->import(ROOT.'system/lib/recovery/lf.sql', false);
 
 					/*if($dbconn->fetch("select * from lf_settings limit 1"))
 							echo 'Data imported. You can <a href="?install=delete">remove the install folder</a>, then login as admin with: <br />
