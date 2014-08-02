@@ -96,6 +96,6 @@ class install
 			}
 		}
 		
-		redirect302('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'/');
+		redirect302('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'/admin');
 	}
 }
