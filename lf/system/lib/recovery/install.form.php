@@ -57,7 +57,7 @@ else if(is_file('config.php'))
                         body { font-family: Arial }
                         div#installer { width: 500px; border: 1px solid #000; padding: 20px; margin: 100px auto 0}
                         h1 { text-align: center; }
-                        h2 { margin: 0; }
+                        h2 { margin: 10px 0; }
                         ul { list-style: none; margin: 0; padding: 0; }
                         li label { display: block; font-size: 12px; color: #333 }
                         input { width: 100%; border: 1px solid #999; padding: 10px; margin-bottom: 5px; }
@@ -103,6 +103,7 @@ else if(is_file('config.php'))
                                                 echo '<div class="ini_error">'.$error.'</div>';
                                 }
                         ?>
+								
                                 <h2>Configure database credentials below:</h2>
                                 <ul>
                                         <li><label for="">Hostname:</label> <input type="text" name="host" value="localhost" /></li>
@@ -136,8 +137,12 @@ else if(is_file('config.php'))
                                                 }
                                         ?>
 
-                                        <input class="submit" type="submit" value="Install LittlefootCMS" />
-
+										
+								<h2>Default user credentials</h2>
+								<p>Username: <strong>admin</strong><br />
+								Password: <strong>pass</strong></p>
+                                
+								<input class="submit" type="submit" value="Install LittlefootCMS" />
                         </form>
                 </div>
         </body>

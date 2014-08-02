@@ -96,8 +96,6 @@ class install
 			}
 		}
 		
-		$_SESSION['_auth'] = array('access' => 'admin');
-		
 		redirect302('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'/');
 	}
 }
