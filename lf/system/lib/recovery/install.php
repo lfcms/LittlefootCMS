@@ -89,7 +89,7 @@ class install
 					$errors = $dbconn->error;
 			else
 			{
-					echo $dbconn->import('lf.sql', false);
+					echo $dbconn->import('system/lib/recovery/lf.sql', false);
 
 					/*if($dbconn->fetch("select * from lf_settings limit 1"))
 							echo 'Data imported. You can <a href="?install=delete">remove the install folder</a>, then login as admin with: <br />
