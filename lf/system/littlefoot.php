@@ -2,7 +2,7 @@
 
 class Littlefoot
 {
-	private $db;
+	public $db;
 	public $auth; // use api to read
 	public $auth_obj; // system/lib/auth.php
 	public $absbase;
