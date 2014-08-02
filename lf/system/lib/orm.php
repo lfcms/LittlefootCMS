@@ -30,9 +30,8 @@ class orm {
 	}
 	
 	// query builder
-	public function q($table, $debug = false) 
+	public function q($table) 
 	{
-		$this->debug = $debug;
 		return new orm($this->db, $table);
 	}
 	
