@@ -8,15 +8,9 @@ class orm {
 	public $crud = 'select';
 	public $data = array(); // array of data ($col => $val)
 	public $conditions = array(); // array of conditions
-	public $limit = '';
 	public $where = '';
-	
-	
-	//CONSTANTS
-	const EQ = '=';
-	const GT = '>';
-	const LT = '<';
-	const NEQ = '!=';
+	public $order = '';
+	public $limit = '';
 	
 
 	// this can be the query builder
@@ -114,6 +108,12 @@ class orm {
 		return $this;
 	}
 	
+	public function order($column, $sort = 'ASC')
+	{
+		$this->order = ' ORDER BY '.$column.' '.$sort;
+		return $this;
+	}
+	
 	// Add limit to query
 	public function limit($limit)
 	{
@@ -148,8 +148,6 @@ class orm {
 	{
 		$sql = 'UPDATE '.$this->table.' SET ';
 		
-		
-		
 		if(count($this->data))
 		{
 			$set = array();
@@ -159,12 +157,6 @@ class orm {
 			}
 			$sql .= implode(', ', $set);
 		}
-		
-		
-		
-		
-		
-		
 		
 		if($this->where != '')
 			$sql .= ' WHERE '.$this->where;
@@ -186,6 +178,7 @@ class orm {
 		else if(count($this->conditions))
 			$sql .= ' WHERE '.implode(' AND ', $this->conditions);
 		
+		$sql .= $this->order;
 		$sql .= $this->limit;
 		
 		echo $sql.'<br />';
