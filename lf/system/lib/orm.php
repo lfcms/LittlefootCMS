@@ -100,6 +100,13 @@ class orm {
 		return $this;
 	}
 	
+	// 
+	public function add()
+	{
+		$this->crud = 'insert';
+		return $this;
+	}
+	
 	
 	// Where override
 	public function where($clause)
@@ -121,7 +128,7 @@ class orm {
 		return $this;
 	}
 	
-	
+		
 	// compile SQL and return result of query
 	public function get()
 	{
@@ -139,10 +146,20 @@ class orm {
 		return $this->$crud();
 	}
 	
+	
 	// CRUD functions
 	private function insert() //create
 	{
+		if(!count($this->data)) return null;
 		
+		$cols = '`'.implode('`, `', array_keys($this->data)).'`';
+		$values = implode(', ', array_values($this->data));
+		
+		$sql = 'INSERT INTO '.$this->table.' ('.$cols.') VALUES ('.$values.')';
+		
+		echo $sql.'<br />';
+		
+		return $this->db->query($sql);
 	}
 	private function update()
 	{
@@ -185,9 +202,20 @@ class orm {
 		
 		return $this->db->fetchall($sql);
 	}
-	private function delete()
+	public function delete()
 	{
+		$sql = 'DELETE FROM '.$this->table;
 		
+		if($this->where != '')
+			$sql .= ' WHERE '.$this->where;
+		else if(count($this->conditions))
+			$sql .= ' WHERE '.implode(' AND ', $this->conditions);
+		
+		$sql .= $this->limit;
+		
+		echo $sql.'<br />';
+		
+		return $this->db->query($sql);
 	}
 	
 	
