@@ -2,6 +2,9 @@
 
 class orm {
 
+	private $debug;
+	private $sql;
+
 	private $db;
 	private $table;
 	
@@ -20,9 +23,16 @@ class orm {
 		$this->db = $db;
 	}
 	
-	// query builder
-	public function q($table) 
+	public function __destruct()
 	{
+		//if($this->debug)
+			//echo $this->sql;
+	}
+	
+	// query builder
+	public function q($table, $debug = false) 
+	{
+		$this->debug = $debug;
 		return new orm($this->db, $table);
 	}
 	
@@ -100,13 +110,21 @@ class orm {
 		return $this;
 	}
 	
-	// 
+	// get into insert statement
 	public function add()
 	{
 		$this->crud = 'insert';
 		return $this;
 	}
 	
+	public function cols($cols)
+	{
+		if(is_array($cols))
+			$cols = implode(', ', $cols);
+		
+		$this->data = $cols;
+		return $this;
+	}
 	
 	// Where override
 	public function where($clause)
@@ -157,9 +175,11 @@ class orm {
 		
 		$sql = 'INSERT INTO '.$this->table.' ('.$cols.') VALUES ('.$values.')';
 		
-		echo $sql.'<br />';
+		$this->sql = $sql;
+		$result = $this->db->query($sql);
 		
-		return $this->db->query($sql);
+		if(!$result) return null;
+		else return $this->db->last();
 	}
 	private function update()
 	{
@@ -182,13 +202,20 @@ class orm {
 			
 		$sql .= $this->limit;
 		
-		echo $sql.'<br />';
+		$this->sql = $sql;
 		
 		return $this->db->query($sql);
 	}
 	private function select() // read
 	{
-		$sql = 'SELECT * FROM '.$this->table;
+		$sql = 'SELECT ';
+		
+		if($this->data == array()) 
+			$sql .= '*';
+		else
+			$sql .= $this->data;
+			
+		$sql .= ' FROM '.$this->table;
 		
 		if($this->where != '')
 			$sql .= ' WHERE '.$this->where;
@@ -198,7 +225,7 @@ class orm {
 		$sql .= $this->order;
 		$sql .= $this->limit;
 		
-		echo $sql.'<br />';
+		$this->sql = $sql;
 		
 		return $this->db->fetchall($sql);
 	}
@@ -213,7 +240,7 @@ class orm {
 		
 		$sql .= $this->limit;
 		
-		echo $sql.'<br />';
+		$this->sql = $sql;
 		
 		return $this->db->query($sql);
 	}
