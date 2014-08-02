@@ -49,8 +49,8 @@ $(document).ready(function() {
 			<form enctype="multipart/form-data" action="%appurl%install/" method="post">
 				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
 				<h3>New App <a href="%appurl%download/">Store</a></h3>
-				<div><input type="file" name="app" value="Upload" /></div>
-				<div><?=$install;?></div>
+				<!-- <div><input type="file" name="app" value="Upload" /></div>
+				<div><?=$install;?></div> -->
 			</form>
 		</div>
 		<ul class="applist">

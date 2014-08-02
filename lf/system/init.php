@@ -7,9 +7,11 @@ session_name(md5(ROOT.$_SERVER['SERVER_NAME']));
 session_start(); 
 
 require_once('config.php'); // load db config
-include 'system/app.class.php'; // load app base class
-include 'system/lib/orm.php'; // load orm class
-include 'system/littlefoot.php'; // load main littlefoot object
+include 'system/app.class.php';
+include 'system/lib/orm.php';
+include 'system/lib/recovery/install.php';
+include 'system/littlefoot.php';
 
 $lf = new LittleFoot($db); // initialize with db connection
+$lf->cms($debug); // execute littlefoot as cms and render ouput
 $lf->cms($debug); // execute littlefoot as cms and render ouput

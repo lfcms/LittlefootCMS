@@ -44,6 +44,18 @@ class Littlefoot
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
 		
+		// check install
+		if(!install::testinstall())
+		{
+			if(count($_POST))
+				install::installpost();
+			else
+				install::installform();
+			
+			exit();
+		}
+		
+		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
 		$this->auth = $_SESSION['_auth'];
@@ -381,7 +393,7 @@ App load times:
 		$this->hook_run('pre_auth'); 
 		
 		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
-		include 'system/lib/auth.php';
+		include ROOT.'system/lib/auth.php';
 		$auth = new auth($this, $this->db);
 		
 		

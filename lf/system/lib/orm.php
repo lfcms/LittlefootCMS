@@ -149,9 +149,9 @@ class orm {
 	// compile SQL and return result of query
 	public function first()
 	{
+		$this->limit(1);
 		$crud = $this->crud;
-		$result = $this->$crud();
-		return $result[0];
+		return $this->$crud();
 	}
 	public function get()
 	{
