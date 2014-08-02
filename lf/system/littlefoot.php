@@ -45,16 +45,7 @@ class Littlefoot
 		$this->db = new Database($db);
 		
 		// check install
-		if(!install::testinstall())
-		{
-			if(count($_POST))
-				install::installpost();
-			else
-				install::installform();
-			
-			exit();
-		}
-		
+		install::testinstall();
 		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';

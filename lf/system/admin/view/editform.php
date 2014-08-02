@@ -36,7 +36,7 @@
 		
 	</li>
 	<li>
-		Capture URL variables? <input type="checkbox" name="app" <?php if(isset($save['isapp']) && $save['isapp'] == 0) echo ''; else echo 'checked="checked"'; ?> /> 
+		Capture URL variables? (experimental) <input type="checkbox" name="app" <?php if(isset($save['isapp']) && $save['isapp'] == 0) echo ''; else echo 'checked="checked"'; ?> />
 	</li>
 </ul>
 
