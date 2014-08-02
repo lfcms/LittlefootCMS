@@ -2,7 +2,7 @@
 
 class app
 {
-	protected $db;
+	public $db;
 	protected $ini;
 	protected $request;
 	protected $lf;

@@ -37,7 +37,7 @@ $(document).ready(function() {
                 if(isset($hooks['html']))
                         echo $hooks['html'];
                 else
-                        echo '<p>- No hidden nav items set -</p>';
+                        echo '<p>Hide nav items from the main menu by setting the position to 0</p>';
         ?>
 </div>
 
@@ -46,12 +46,13 @@ $(document).ready(function() {
 	<!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
 	<div id="appgallery-container">
 		<div id="new-app">
-			<form enctype="multipart/form-data" action="%appurl%install/" method="post">
+			<!-- <form enctype="multipart/form-data" action="%appurl%install/" method="post">
 				<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-				<h3>New App <a href="%appurl%download/">Store</a></h3>
+				<h3>Click an app to add it to the navigation. <a href="%appurl%download/">Download more apps from the Store</a></h3>
 				<div><input type="file" name="app" value="Upload" /></div>
 				<div><?=$install;?></div>
-			</form>
+			</form> -->
+			<h3>Click an app to add it to the nav. <a href="%appurl%download/">Download more apps from the Store</a></h3>
 		</div>
 		<ul class="applist">
 		<?php

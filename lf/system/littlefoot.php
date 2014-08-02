@@ -2,7 +2,7 @@
 
 class Littlefoot
 {
-	private $db;
+	public $db;
 	public $auth; // use api to read
 	public $auth_obj; // system/lib/auth.php
 	public $absbase;
@@ -38,11 +38,14 @@ class Littlefoot
 	
 	public function __construct($db)
 	{
+		$this->start = microtime(true);
 		$this->lf = &$this; // universal usage of $this->lf
 		
-		$this->start = microtime(true);
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
+		
+		// check install
+		install::testinstall();
 		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
@@ -50,6 +53,7 @@ class Littlefoot
 		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
 		
 		include ROOT.'system/lib/recaptchalib.php';
+		include ROOT.'system/lib/auth.php';
 	}
 	
 	public function __destruct()
@@ -95,7 +99,8 @@ App load times:
 			$this->settings[$row['var']] = $row['val'];
 		
 		// JSON => array
-		$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
+		if(isset($this->lf->settings['plugins']))
+			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
 		
 	#	// load plugins old
 	#	foreach(scandir('plugins') as $file)
@@ -162,11 +167,6 @@ App load times:
 		$this->authenticate();
 		$this->function_timer['auth'] = microtime(true) - $funcstart;
 		$funcstart = microtime(true);
-		
-		
-		
-		
-		
 		
 		/*
 		// to post to a specific app without loading the rest of the CMS (should be to link in db, not app folder, this does not seem secure at the moment)
@@ -381,7 +381,6 @@ App load times:
 		$this->hook_run('pre_auth'); 
 		
 		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
-		include 'system/lib/auth.php';
 		$auth = new auth($this, $this->db);
 		
 		

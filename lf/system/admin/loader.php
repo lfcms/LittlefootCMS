@@ -23,8 +23,6 @@ if(!$success) $match[0] = 'dashboard';
 
 $this->vars = array_slice($this->action, 1);
 
-
-
 if(!isset($_SESSION['upgrade']))
 {
 	$newversion = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
