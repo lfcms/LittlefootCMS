@@ -99,7 +99,8 @@ App load times:
 			$this->settings[$row['var']] = $row['val'];
 		
 		// JSON => array
-		$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
+		if(isset($this->lf->settings['plugins']))
+			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
 		
 	#	// load plugins old
 	#	foreach(scandir('plugins') as $file)
