@@ -38,9 +38,9 @@ class Littlefoot
 	
 	public function __construct($db)
 	{
+		$this->start = microtime(true);
 		$this->lf = &$this; // universal usage of $this->lf
 		
-		$this->start = microtime(true);
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
 		

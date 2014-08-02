@@ -133,7 +133,7 @@ class orm {
 		return $this;
 	}
 	
-	public function order($column, $sort = 'ASC')
+	public function order($column = 'id', $sort = 'ASC')
 	{
 		$this->order = ' ORDER BY '.$column.' '.$sort;
 		return $this;
@@ -148,6 +148,12 @@ class orm {
 	
 		
 	// compile SQL and return result of query
+	public function first()
+	{
+		$crud = $this->crud;
+		$result = $this->$crud();
+		return $result[0];
+	}
 	public function get()
 	{
 		$crud = $this->crud;
@@ -165,7 +171,7 @@ class orm {
 	}
 	
 	
-	// CRUD functions
+	// CRUD functions.
 	private function insert() //create
 	{
 		if(!count($this->data)) return null;
@@ -244,14 +250,4 @@ class orm {
 		
 		return $this->db->query($sql);
 	}
-	
-	
-	
-	
-	
-	/*public function select1()
-	{
-		//return $this->output();
-		return $this->db->fetch('SELECT * FROM '.$this->table.' LIMIT 1');
-	}*/
 }
