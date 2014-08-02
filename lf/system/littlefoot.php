@@ -53,6 +53,7 @@ class Littlefoot
 		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
 		
 		include ROOT.'system/lib/recaptchalib.php';
+		include ROOT.'system/lib/auth.php';
 	}
 	
 	public function __destruct()
@@ -384,7 +385,6 @@ App load times:
 		$this->hook_run('pre_auth'); 
 		
 		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
-		include ROOT.'system/lib/auth.php';
 		$auth = new auth($this, $this->db);
 		
 		

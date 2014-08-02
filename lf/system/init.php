@@ -16,4 +16,3 @@ else 						include 'config.php'; // load db config
 
 $lf = new LittleFoot($db); // initialize with db connection
 $lf->cms($debug); // execute littlefoot as cms and render ouput
-$lf->cms($debug); // execute littlefoot as cms and render ouput
