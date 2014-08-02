@@ -8,6 +8,7 @@ session_start();
 
 require_once('config.php'); // load db config
 include 'system/app.class.php'; // load app base class
+include 'system/lib/orm.php'; // load orm class
 include 'system/littlefoot.php'; // load main littlefoot object
 
 $lf = new LittleFoot($db); // initialize with db connection
