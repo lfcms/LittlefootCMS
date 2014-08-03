@@ -2,10 +2,11 @@
 
 class orm {
 
+	public $debug = false;
 	private $sql;
 
 	private $db;
-	private $table;
+	private $table = '';
 	
 	public $crud = 'select';
 	public $data = array(); // array of data ($col => $val)
@@ -24,13 +25,16 @@ class orm {
 	
 	public function __destruct()
 	{
-		//if(isset($this->debug) && $this->debug)
-		//	echo $this->sql;
+		if($this->debug)
+			echo $this->sql;
 	}
 	
 	// query builder
-	public function q($table) 
+	public function q($table = '') 
 	{
+		if($table == '')
+			$table = $this->table;
+			
 		return new orm($this->db, $table);
 	}
 	
