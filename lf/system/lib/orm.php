@@ -14,7 +14,6 @@ class orm {
 	public $where = '';
 	public $order = '';
 	public $limit = '';
-	
 
 	// this can be the query builder
 	public function __construct($db, $table = '')
