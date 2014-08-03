@@ -1,12 +1,9 @@
 Options -Indexes
 
-#Rewrite (still works with /index.php/)
+# BEGIN LF
 <IfModule mod_rewrite.c>
 
 	RewriteEngine On
-
-	# Change this to a /sub/folder/ if needed
-	#RewriteBase /
 	
 	# ty http://www.zeilenwechsel.de/it/articles/8/Using-mod_rewrite-in-.htaccess-files-without-knowing-the-RewriteBase.html
 	RewriteBase /
@@ -15,3 +12,4 @@ Options -Indexes
 	RewriteRule ^(.*)$ %2index.php [QSA,L]
 
 </IfModule>
+# END LF

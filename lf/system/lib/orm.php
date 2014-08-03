@@ -2,7 +2,6 @@
 
 class orm {
 
-	private $debug;
 	private $sql;
 
 	private $db;
@@ -25,8 +24,8 @@ class orm {
 	
 	public function __destruct()
 	{
-		//if($this->debug)
-			//echo $this->sql;
+		//if(isset($this->debug) && $this->debug)
+		//	echo $this->sql;
 	}
 	
 	// query builder
