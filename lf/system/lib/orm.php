@@ -151,7 +151,10 @@ class orm {
 	{
 		$this->limit(1);
 		$crud = $this->crud;
-		return $this->$crud();
+		$result = $this->$crud();
+		if(isset($result[0]))
+			$result = $result[0];
+		return $result;
 	}
 	public function get()
 	{
