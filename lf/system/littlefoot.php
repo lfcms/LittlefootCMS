@@ -70,7 +70,7 @@ class Littlefoot
 		// actual speed
 		if($this->settings['debug'] == 'on')
 		{
-			echo '<!-- lf Stat Info
+			echo ' <!-- lf Stat Info
 Version: '.$this->version.'
 PHP Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
 Peak Memory Usage: '.round(memory_get_peak_usage()/1024/1024,2).' MB

@@ -16,6 +16,7 @@ class install
 			
 		$msg = 'No configuration file found at lf/config.php';
 		include ROOT.'system/lib/recovery/install.form.php';
+		
 		exit();
 	}
 
