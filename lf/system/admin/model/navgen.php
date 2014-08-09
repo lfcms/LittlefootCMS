@@ -54,7 +54,7 @@ function build_menu($menu, $edit, $parent = -1, $depth = -1, $prefix = '', $snip
 		// set postion for nav item
 		if($variable1 == $item['id'])
 		{
-			$pos = '<input type="text" name="position"  style="width: 20px;" value="';
+			$pos = 'Position: <input type="text" name="position"  style="width: 40px;" value="';
 			//if(isset($save['position'])) 
 				$pos .= $edit['position']; 
 			//else $pos .= 1;
@@ -72,7 +72,7 @@ function build_menu($menu, $edit, $parent = -1, $depth = -1, $prefix = '', $snip
 		if($variable1 == $item['id'])
 			$html .= '<form id="nav_form" action="%appurl%update/" method="post">';
 			
-		$html .= $pos.' '.$label.' - '.$apphtml;
+		$html .= $pos.' '.$label.' - App: '.$apphtml;
 		
 		if($variable1 == $item['id'])
 			$html .= '%editform%</form>';
