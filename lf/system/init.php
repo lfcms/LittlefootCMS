@@ -4,12 +4,17 @@
 session_name(md5(ROOT.$_SERVER['SERVER_NAME']));
 session_start(); 
 
+// 3rd Party
+include 'system/lib/recaptchalib.php';
+
+// Littlefoot
 include 'system/functions.php'; // base functions
 include 'system/db.class.php'; // database wrapper
 include 'system/app.class.php';
 include 'system/lib/orm.php';
 include 'system/lib/recovery/install.php';
-include 'system/littlefoot.php';
+include 'system/littlefoot.php';		
+include 'system/lib/auth.php';
 
 if(file_get_contents(ROOT.'system/version') != '1-DEV')
 	error_reporting(0); // my orm stuff upsets the strict PHP standards. I will remove this after I fix that :P

@@ -1,5 +1,6 @@
 <?php
 
+// I copied this from somewhere
 function Unzip($dir, $file, $destiny="")
 {
 	$dir .= DIRECTORY_SEPARATOR;
@@ -86,6 +87,11 @@ function revert()
 	if(!is_dir('backup')) redirect302();
 }
 
+/**
+ * Shortcut for headers to redirect to HTTP_REFERER. Very handy after a successful DELETE, INSERT, or UPDATE.
+ *
+ * @param string $url Optionally specified alternative URL to the default $_SERVER['HTTP_REFERER']
+ */
 function redirect302($url = '')
 {		
 	if($url == '') $url = $_SERVER['HTTP_REFERER'];
@@ -127,7 +133,19 @@ function downloadFile ($url, $path) {
 	}
 }
 
-// process submitted $_FILES, allow only images by default
+/**
+ * Process submitted $_FILES, allow only images by default
+ * 
+ * @param string $destfolder File path to where the file(s) should be uploaded
+ * 
+ * @param string[] $allowedExts An array of strings that list that accepted file extensions
+ *
+ * @param string[] $allowedExts An array of strings that list that accepted file types
+ *
+ * @param int $limit Maximum number of files that can be uploaded at once from $_FILES (default = 5)
+ *
+ * @return string[] An array of the upload results as strings. Array keys are the name="" of the input in the form.
+ */
 function upload($destfolder, $allowedExts = array("jpg", "jpeg", "gif", "png"), $allowedTypes = array("image/gif", "image/jpeg", "image/pjpeg", "image/png"), $limit = 5)
 {
 	if($destfolder[strlen($destfolder) - 1] != '/') $destfolder .= '/';
@@ -217,7 +235,15 @@ function rrmdir($dir) {
   } rmdir($dir); 
 }
 
-// process HTML to produce thumbnails from larger images. it scrapes and replaces the image URLs
+/**
+ * Process HTML to produce thumbnails from larger images. It scrapes and replaces the image URLs.
+ * 
+ * @param string $html String of HTML text containing 'img src="[^"]+"' to be thumbnailed
+ * 
+ * @param string $dimensions "HeightxWidth" pixels. Defaults to 200x200.
+ *
+ * @return string $html, with img src=".jpg" replaced with links to the thumbnails of the image.
+ */
 function thumbnail($html, $dimensions = '200x200')
 {
 	if(!preg_match_all('/src="([^"]+\.(png|jpe?g))"/', $html, $match)) return $html;
