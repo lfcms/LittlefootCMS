@@ -38,6 +38,13 @@ class Database
 		$this->dbresult->free();
 	}
 	
+	/**
+	 * Run query, return result, increment SQL counter
+	 * 
+	 * @param string $q MySQL Query
+	 * 
+	 * @param bool $big If the request is big
+	 */
 	function query($q, $big = false)
 	{
 		if($big)	$this->db_result = $this->mysqli->query($q, MYSQLI_USE_RESULT);
@@ -48,6 +55,11 @@ class Database
 		return $this->db_result;
 	}
 	
+	/**
+	 * Fetch single row of results of a query, returns array(id => 1, col1' => 'val1', ...)
+	 * 
+	 * @param string $result If this is a string, it is run as SQL and the first row is returned. If it is a MySQL resource, the fetch is run from the resource.
+	 */
 	function fetch($result = NULL)
 	{
 		if(is_string($result)) // allow for direct SQL fetch
@@ -67,6 +79,11 @@ class Database
 		return $this->db_result->fetch_assoc();
 	}
 	
+	/**
+	 * Fetch all rows from a query, returns matrix array of the rows: array(0 => array(id = 1, col1 => 'val1', ...), 1 => array(id => 2, col1 => 'val1', ...))
+	 * 
+	 * @param string $result If this is a string, it is run as SQL and all rows are returned. If it is a MySQL resource, the fetch is run from the resource.
+	 */
 	function fetchall($result = NULL)
 	{
 		if(is_string($result)) // allow for direct SQL fetch
@@ -88,6 +105,10 @@ class Database
 		return $ret;
 	}
 	
+	
+	/**
+	 * Returns number of queries run for the instance
+	 */
 	function getNumQueries()
 	{
 		return $this->query_count;
@@ -98,16 +119,27 @@ class Database
 		return $this->db_result->num_rows;
 	}
 	
+	
+	/**
+	 * Returns the row id of the last affected row. ideal for redirecting to directly edit a newly added entry.
+	 */
 	function last()
 	{
 		return $this->mysqli->insert_id;
 	}
 	
+	/**
+	 * Returns the last query result good for debugging
+	 */
 	function getLastResult()
 	{
 		return $this->db_result;
 	}
 	
+	
+	/**
+	 * Queries the information schema for a table called $table in this database
+	 */
 	function is_table($table)
 	{
 		$result = $this->fetch("
@@ -119,16 +151,28 @@ class Database
 		return $result['is_table'] ? 1 : 0;
 	}
 	
+	
+	/**
+	 * { return $this->mysqli->affected_rows; }
+	 */
 	function affected()
 	{
 		return $this->mysqli->affected_rows;
 	}
 	
+	
+	/**
+	 * $string is usually user-supplied supplied data. Don't forget to sanatize input!
+	 */
 	function escape($str)
 	{
 		return $this->mysqli->escape_string($str);
 	}
 	
+	
+	/**
+	 * SQL commands are preg_match()'d out of $file and run in a loop with errors suppressed
+	 */
 	function import($file)
 	{
 		// Get SQL Dump file
@@ -143,6 +187,9 @@ class Database
 			$this->query($sql);
 		return ob_get_clean();
 	}
+	/**
+	 * $folder is the destination, $table will print only the table instead of the whole database
+	 */
 	
 	function dump($table = '', $folder = NULL)
 	{

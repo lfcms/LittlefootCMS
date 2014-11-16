@@ -14,7 +14,7 @@ class install
 		if(count($_POST))
 			install::installpost();
 			
-		$msg = 'No configuration file found at lf/config.php';
+		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
 		include ROOT.'system/lib/recovery/install.form.php';
 		
 		exit();

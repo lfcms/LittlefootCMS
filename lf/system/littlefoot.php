@@ -1,8 +1,81 @@
 <?php
 
+/**
+ * Littlefoot framework environment
+ * 
+ * ## Quick Reference
+ *
+ * ### $this->lf
+ *
+ * ->appurl //pre rendered %appurl%
+ * ->base //pre rendered %baseurl%
+ * ->relbase //pre rendered %relbase%
+ *
+ * ## Usage
+ * 
+ * While in the Littlefoot context (executing inside the class), one has access to the entire Environment:
+ * 
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * ### Framework context
+ * 
+ * $this is the current Littlefoot class instance
+ * 
+ * ~~~
+ * 
+ * 
+ * // allows a consistent environment between Littlefoot and classes that extend 'app'. So I use $this->lf even while in the littlefoot context
+ * $this->lf = $this 
+ * 
+ * // database wrapper
+ * $config = array('host'=>'localhost', 'name'=>'mydbname'
+ *					'user'=>'mydbuser', 'pass'=>'mypass', );
+ * $db = new Database($config);
+ * $this->db = $db
+ * 
+ * 
+ * 
+ * 
+ * ~~~
+ * 
+ * 
+ * ## Initialization and manual calls (library)
+ *
+ * ~~~
+ * $config = array('host'=>'localhost', 'name'=>'mydbname'
+ *					'user'=>'mydbuser', 'pass'=>'mypass', );
+ * $db = new Database($config);
+ * $lf = new Littlefoot($db);
+ *
+ * //$lf->cms();
+ *
+ * $lf->request();
+ *
+ * chdir(ROOT.'app_root');
+ * $lf->mvc('testmvc');
+ * ~~~
+ * 
+ * ### $this
+ * While executing within a Littlefoot instance. 
+ * 
+ * ~~~
+ * // Environment object instantions
+ * $this->lf &= $this;
+ * $this->db = new Database($config);
+ * $this->auth = new auth();
+ * ~~~
+ * 
+ */
 class Littlefoot
 {
+	/** @var Database $db Database Wrapper */
 	public $db;
+	
 	public $auth; // use api to read
 	public $auth_obj; // system/lib/auth.php
 	public $absbase;
@@ -39,7 +112,7 @@ class Littlefoot
 	public function __construct($db)
 	{
 		$this->start = microtime(true);
-		$this->lf = &$this; // universal usage of $this->lf
+		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
@@ -51,9 +124,6 @@ class Littlefoot
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
 		$this->auth = $_SESSION['_auth'];
 		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
-		
-		include ROOT.'system/lib/recaptchalib.php';
-		include ROOT.'system/lib/auth.php';
 	}
 	
 	public function __destruct()
@@ -91,6 +161,43 @@ App load times:
 		}
 	}
 	
+	/**
+	 * Execute as CMS
+	 *
+	 * ## Flow
+	 *
+	 * pull lf_settings
+	 *
+	 * pull plugins
+	 * 
+	 * default $this->lf->select values (template, title, alias=404)
+	 * 
+	 * redirect force URL //move this to request()
+	 * 
+	 * $this->request() // should move to __construct()
+	 * 
+	 * $this->authenticate() // should use auth() class in cms()
+	 *
+	 * admin?
+	 *
+	 * apply acl // should be called from auth() class
+	 *
+	 * simplecms?or:nav(is404?)
+	 *
+	 * testACL?403 // should be called from auth() class (or in a separate ACL object)
+	 *
+	 * getcontent() //contains simplecms?mvc
+	 *
+	 * simplecms?%nav%
+	 *
+	 * echo render()
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	public function cms($debug = false) // run littlefoot as CMS
 	{
 		// Apply settings 
@@ -102,12 +209,12 @@ App load times:
 		if(isset($this->lf->settings['plugins']))
 			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
 		
-	#	// load plugins old
-	#	foreach(scandir('plugins') as $file)
-	#	{
-	#		if(substr($file, -4) != '.php') continue;
-	#		include 'plugins/'.$file;
-	#	}
+		/* load plugins old
+		foreach(scandir('plugins') as $file)
+		{
+			if(substr($file, -4) != '.php') continue;
+			include 'plugins/'.$file;
+		}*/
 		
 		//plug-ins v2
 		//if(is_dir('plugins/plugins_loaded_FALSE'))
@@ -146,13 +253,6 @@ App load times:
 		if(is_dir(ROOT.'system/lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'system/lib');
 		
 		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -307,6 +407,12 @@ App load times:
 		echo $output;
 	}
 	
+	/**
+	 * Parses $_SERVER variables to environment for use within apps
+	 * and $this->lf->cms\(\)
+	 *
+	 * @return bool True if admin/ requested. False if not.
+	 */
 	public function request()
 	{
 		// detect file being used as base (for API)
@@ -739,8 +845,33 @@ App load times:
 		return preg_replace('/%[a-z]+%/', '', $template);
 	}
 	
-	// Auto load given class name in controller/ folder.
-	// Quick way to MVC with multiple class/method requests hooked into URL
+	/**
+	 * Instant MVC: Routing URL request to class methods. Auto load given class name in controller/ folder as Littlefoot app. 
+	 *
+	 * 
+	 * ## Usage
+	 *
+	 * ~~~
+	 * echo $this->lf->mvc($controllerName); 
+	 * ~~~
+	 * 
+	 * ## Backend operation
+	 * 
+	 * include "controller/$controllerName.php";
+	 * $class = new $controllerName($this->lf, )
+	 *
+	 *
+	 *
+	 *
+	 * @param string $controller Executes $controller->$vars[0]\(\) defined at ./controller/$controller.php
+	 * 
+	 * @param string $ini `= '' (by default)` App configuration set [Dashboard](http://littlefootcms.com/byid/24). Used in 'Pages' app to select the page to display on the website.
+	 *
+	 * @param string[] $vars `= NULL (by default)` The "slash separated" list of strings in the URL after the Navigation alias.
+	 *		ie. domain.com/littlefoot/appNavAlias/$vars[0]/$vars[1] 
+	 *		defaults to $this->lf->$vars generated in $this->lf->request()
+	 *
+	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
 	{
 		ob_start();
@@ -753,7 +884,7 @@ App load times:
 		if(!class_exists($controller)) // include specified controller class
 			include 'controller/' . $controller . '.php';
 		
-		$class = new $controller($this, $this->db, $ini, $vars); // init class specified by $controller
+		$class = new $controller($this->lf, $this->db, $ini, $vars); // init class specified by $controller
 		if(is_callable(array($class, $vars[0])))
 			$func = $vars[0];
 		else
