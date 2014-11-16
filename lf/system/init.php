@@ -8,12 +8,13 @@ session_start();
 include 'system/lib/recaptchalib.php';
 
 // Littlefoot
-include 'system/functions.php'; // base functions
-include 'system/db.class.php'; // database wrapper
-include 'system/app.class.php';
-include 'system/lib/orm.php';
+include 'system/functions.php'; // Helpful functions
+include 'system/db.class.php'; // Database Wrapper
+include 'system/app.class.php'; // Littlefoot app base class
+include 'system/lib/orm.php'; // Object Relation Manager
+include 'system/lib/dba.php'; // Database Abstraction (should be switched with ORM)
 include 'system/lib/recovery/install.php';
-include 'system/littlefoot.php';		
+include 'system/littlefoot.php'; // Littlefoot CMS (Request, Auth, Run assigned Apps, Render on template)
 include 'system/lib/auth.php';
 
 if(file_get_contents(ROOT.'system/version') != '1-DEV')

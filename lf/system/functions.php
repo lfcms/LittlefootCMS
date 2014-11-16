@@ -1,6 +1,8 @@
 <?php
 
-// I copied this from somewhere
+/**
+ * I copied this from somewhere. Unzip a given file at $dir/$file
+ */ 
 function Unzip($dir, $file, $destiny="")
 {
 	$dir .= DIRECTORY_SEPARATOR;
@@ -52,6 +54,9 @@ function Unzip($dir, $file, $destiny="")
 	}
 }
 
+/**
+ * Upgrades littlefoot automatically if the system.zip exists in lf/
+ */ 
 function upgrade()
 {
 	$time = time();
@@ -82,6 +87,9 @@ function upgrade()
 	}
 }
 
+/**
+ * no longer used :\
+ */ 
 function revert() 
 {
 	if(!is_dir('backup')) redirect302();
@@ -101,6 +109,9 @@ function redirect302($url = '')
 	exit();
 }
 
+/**
+ * Include and return output as string
+ */ 
 function get_include($path)
 {
 	if(!is_file($path)) return false;
@@ -110,7 +121,11 @@ function get_include($path)
 	return ob_get_clean();
 }
 
-// ty xaav from [http://stackoverflow.com/questions/3938534/download-file-to-server-from-url]
+/**
+ * download a file from $url to $path
+ *
+ * ty xaav from [http://stackoverflow.com/questions/3938534/download-file-to-server-from-url]
+ */
 function downloadFile ($url, $path) {
 
 	$newfname = $path;
@@ -228,7 +243,11 @@ function lfbacktrace()
 	}
 }
 
-// ty Yuriy [http://stackoverflow.com/questions/1296681/php-simplest-way-to-delete-a-folder-including-its-contents]
+/**
+ * Recursively delete a given $dir path
+ *
+ * ty Yuriy [http://stackoverflow.com/questions/1296681/php-simplest-way-to-delete-a-folder-including-its-contents]
+ */ 
 function rrmdir($dir) { 
   foreach(glob($dir . '/*') as $file) { 
     if(is_dir($file)) rrmdir($file); else unlink($file); 
@@ -306,6 +325,9 @@ function thumbnail($html, $dimensions = '200x200')
 	return $html;
 }
 
+/**
+ * `return 'onclick="return confirm(\''.$msg.'\');"';`
+ */ 
 function jsprompt($msg = 'Are you sure?')
 {
 	return 'onclick="return confirm(\''.$msg.'\');"';

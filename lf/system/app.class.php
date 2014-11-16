@@ -3,18 +3,79 @@
 /**
  * A base class definition meant to be extended in littlefoot apps
  *
- * ## Usage
+ * # How to App
+ *
+ * Extending app brings a lot of helpful tools into your environment.
+ * Here is a list of what is accessible when developing a littlefoot app
+ *
+ * ## $this->
+ * * **$this->lf**: [Littlefoot](http://littlefootcms.com/files/docs/classes/Littlefoot.html) instance
+ * 	* ->appurl (rendering of %appurl% without waiting for $lf->render(). Ideal for use with [redirect302();](http://littlefootcms.com/files/docs/index.html#method_redirect302) )
+ * 	* ->baseurl (%baseurl%)
+ * 	* ->relbase (%relbase%)
+ * * **$this->db**: [Database](http://littlefootcms.com/files/docs/classes/Database.html) instance
+ * * **$this->auth**: [Auth](http://littlefootcms.com/files/docs/classes/auth.html) instance
+ * 
+ * ## Static
+ * * [**orm**::q('table_name')](http://littlefootcms.com/files/docs/classes/orm.html#method_q)
+ * * [**dba**::Table_name](#)
+ *
+ *
+ *
+ *
+ *
+ * ## init()
+ * 
+ * If you need something to run before all functions, you can do it in an 'init()' function. This function is called from __construct() just before any other controller is executed.
+ *
+ * ## $args
+ * 
+ * Littlefoot serves requests based on the URL. For example, if we ask for "domain.com/blog", it knows to serve "/blog". The "/blog" navigation item has been associated with the "Blog" app in the admin backend. So we wind up being presented with Blog. Simple enough right? Now lets get to $args.
+
+ * The Blog navigation item has been set as an "app". This means that any extra part of the URL past the matching "/blog" request is taken as variables for the "Blog" app rather than a separate navigation item. Alternatively, if it was not set as an "app", we could make child navigation items and serve them without conflict.
+
+ * If we ask for "domain.com/blog/view/5", the "view/5" is taken as a variable for the Blog app. The Blog app utilizes a Model-View-Controller structure and uses its class methods as a kind of router. The variable taken from the url is split on the "/" to give us an array of "(view, 5)". The first part, "view", is used to determine which method of Blog to serve. In this case, it will use the view() method and since the "5" is specified, the Blog is programmed to serve the Blog post with an "id" of 5.
+ *
+ * ### Routing URI to controller methods
+ *
+ * The URI is chopped up into arguments and those arguments route the controller. 
+ * 
+ * ## URI routing to controller class methods
+ * 
+ * Create a file at `ROOT/apps/myapp/index.php` that contains
+ * ~~~
+ * <?php echo $this->lf->mvc('myapp');
+ * ~~~
+ * 
+ * Then at `ROOT/apps/myapp/controller/myapp.php`, create a file with the following code:
  * 
  * ~~~
- * class myApp extends app {
- * 		function main($args) {
- *			echo '<pre>';
+ * <?php
+ *
+ * class myapp extends app {
+ *		function main($args) {
+ *			echo '<a href="%appurl%otherfunction">otherfunction</a>
+				<pre>';
  *			var_dump($args, $this);
  *			echo '</pre>';
- *  	}
- * 
+ * 		}
+ *
+ *		function otherfunction($args) {
+ *			echo '<a href="%appurl%">back to main</a>
+				<pre>';
+ *			var_dump($args, $this);
+ *			echo '</pre>';
+ * 		}
  * }
  * ~~~
+ *
+ * If you go into the [Dashboard](http://littlefootcms.com/byid/24) and assign this app to the navigation, a link will appear on the navigation. When you click it, the screen will display the content of $args 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  */
 class app
 {
@@ -33,16 +94,19 @@ class app
 	/** @var auth Auth object. Access to access data (username, id, etc) */
 	protected $auth;
 	
+	/** @var default_method Sets default method when none is specified. */
+	public $default_method = 'main';
+	
 	/**
 	 * Initializes the app environment for use with $this->lf->mvc() routing
 	 * 
-	 * @param Littlefoot $lf The single Littlefoot instance
+	 * @param Littlefoot $lf The single Littlefoot instance. Accessible at **$this->lf**
 	 * 
-	 * @param Database $dbconn Database wrapper
+	 * @param Database $dbconn Database wrapper. Accessible at **$this->db**
 	 * 
-	 * @param string $ini Configured INI value
+	 * @param string $ini Configured INI value. Accessible at **$this->ini**
 	 *
-	 * @param array $args URL Variables. 
+	 * @param array $args URL Variables. Accessible at **$this->args**
 	 */
 	public function __construct($lf, $dbconn , $ini = '', $args = array())
 	{
@@ -68,10 +132,20 @@ class app
 	/** 
 	 * used to route based on args[0] as instance
 	 *
-	 * ### Usage
+	 * ### How to use _router
+	 * 
+	 * ~~~
+	 * public function home($args)
+	 * {
 	 *		if($args[0] == '') return $this->main($args);
 	 *		if(intval($args[0]) != 0) // if you want to force a number
-	 *			return $this->_router($args);
+	 *			return $this->_router($args);		
+	 *
+	 *		echo 'Couldnt route anywhere';
+	 * }
+	 * ~~~
+	 * 
+	 * 
 	 *
 	 * @param array $args URL Variables.
 	 *

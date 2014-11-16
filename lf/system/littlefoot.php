@@ -3,10 +3,25 @@
 /**
  * Littlefoot framework environment
  * 
+ * ## Quick Reference
+ *
+ * ### $this->lf
+ *
+ * ->appurl //pre rendered %appurl%
+ * ->base //pre rendered %baseurl%
+ * ->relbase //pre rendered %relbase%
+ *
  * ## Usage
  * 
  * While in the Littlefoot context (executing inside the class), one has access to the entire Environment:
  * 
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * ### Framework context
  * 
  * $this is the current Littlefoot class instance
@@ -28,11 +43,8 @@
  * 
  * ~~~
  * 
- * ~~~
- * asdf
- * ~~~
  * 
- * ## Initialization and manual calls (api)
+ * ## Initialization and manual calls (library)
  *
  * ~~~
  * $config = array('host'=>'localhost', 'name'=>'mydbname'
@@ -100,7 +112,7 @@ class Littlefoot
 	public function __construct($db)
 	{
 		$this->start = microtime(true);
-		$this->lf = &$this; // universal usage of $this->lf
+		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
@@ -149,6 +161,43 @@ App load times:
 		}
 	}
 	
+	/**
+	 * Execute as CMS
+	 *
+	 * ## Flow
+	 *
+	 * pull lf_settings
+	 *
+	 * pull plugins
+	 * 
+	 * default $this->lf->select values (template, title, alias=404)
+	 * 
+	 * redirect force URL //move this to request()
+	 * 
+	 * $this->request() // should move to __construct()
+	 * 
+	 * $this->authenticate() // should use auth() class in cms()
+	 *
+	 * admin?
+	 *
+	 * apply acl // should be called from auth() class
+	 *
+	 * simplecms?or:nav(is404?)
+	 *
+	 * testACL?403 // should be called from auth() class (or in a separate ACL object)
+	 *
+	 * getcontent() //contains simplecms?mvc
+	 *
+	 * simplecms?%nav%
+	 *
+	 * echo render()
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	public function cms($debug = false) // run littlefoot as CMS
 	{
 		// Apply settings 
@@ -204,13 +253,6 @@ App load times:
 		if(is_dir(ROOT.'system/lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'system/lib');
 		
 		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -810,10 +852,16 @@ App load times:
 	 * ## Usage
 	 *
 	 * ~~~
-	 * // will initialize ./controller/$appName.php as an app, 
-	 * // and run the method $this->lf->vars[0] with $this->lf->vars as input
-	 * echo $this->lf->mvc($appName); 
+	 * echo $this->lf->mvc($controllerName); 
 	 * ~~~
+	 * 
+	 * ## Backend operation
+	 * 
+	 * include "controller/$controllerName.php";
+	 * $class = new $controllerName($this->lf, )
+	 *
+	 *
+	 *
 	 *
 	 * @param string $controller Executes $controller->$vars[0]\(\) defined at ./controller/$controller.php
 	 * 
@@ -836,7 +884,7 @@ App load times:
 		if(!class_exists($controller)) // include specified controller class
 			include 'controller/' . $controller . '.php';
 		
-		$class = new $controller($this, $this->db, $ini, $vars); // init class specified by $controller
+		$class = new $controller($this->lf, $this->db, $ini, $vars); // init class specified by $controller
 		if(is_callable(array($class, $vars[0])))
 			$func = $vars[0];
 		else
