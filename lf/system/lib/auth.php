@@ -1,5 +1,31 @@
 <?php
 
+/**
+ * Auth class
+ * 
+ * ## Usage
+ * 
+ * This is mostly just used by littlefoot. When authorization is called, it routes through this. 
+ *	
+ * ~~~ 
+ * $auth = new auth($this, $this->db);
+ *
+ * // change to auth class 
+ * if($this->action[0] == '_auth' && isset($this->action[1]))
+ * {
+ * 		$out = $auth->_router($this->action);
+ * 		$out = str_replace('%appurl%', $this->base.'_auth/', $out);
+ * 		$content['%content%'][] = $out;
+ * 	
+ * 		// display in skin
+ * 		echo $this->render($content);
+ * 	
+ * 		exit(); // end auth session after render, 
+ * 		// otherwise it will 302 (login/logout)
+ * }
+ * ~~~
+ * 
+ */
 class auth extends app
 {
 	public $auth;

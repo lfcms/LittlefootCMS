@@ -1,21 +1,68 @@
 <?php
 
+/**
+ * Abstracted object relation mapping for database manipulation.
+ *
+ * # Example Usage
+ *
+ * ~~~
+ * // SELECT * FROM mydb.my_table WHERE id = 34
+ * // returns an array
+ * orm::q('my_table')->filterByid(34)->get();
+ *
+ * // SELECT * FROM mydb.my_table WHERE cost > 25
+ * // returns an array
+ * orm::q('my_table')->filterBycost('>', 25)->get();
+ *
+ * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
+ * // returns result of $this->db->query($sql);
+ * orm::q('my_table')->settitle('new title')->filterByid(34)->save();
+ *
+ * // INSERT INTO mydb.my_table (id, title, body) VALUES (NULL, 'my title', 'my body')
+ * $_POST = array('title' => 'my title', 'body' => 'my body');
+ * orm::q('my_table')->insertArray($_POST);
+ *
+ * // DELETE FROM mydb.my_table WHERE id = 12
+ * orm::q('my_table')->filterByid(12)->delete();
+ * ~~~
+ */
 class orm {
 
+	/** @var bool $debug Prints resulting $sql after execution. */
 	public $debug = false;
+	
+	/** @var string $sql Variable used to construct the SQL query at execution */
 	private $sql;
 
+	/** @var Database $db Database wrapper object. $this->db */
 	private $db;
+	
+	/** @var string $table Stores the table specified at orm::q('my_table') */
 	private $table = '';
 	
+	/** @var string $crud Chosen CRUD operation (select, insert, update, delete) */
 	public $crud = 'select';
-	public $data = array(); // array of data ($col => $val)
-	public $conditions = array(); // array of conditions
+	
+	/** @var array $data Array of data ($col => $val). Used in CRUD operations. */
+	public $data = array();
+	
+	/** @var array $conditions Array of conditions ('var > val', 'var2 = val2'). Used in where clause. */
+	public $conditions = array();
+	
+	/** @var string $where Where clause override. */
 	public $where = '';
+	
+	/** @var string $order Literal string after "ORDER BY". Usage: "id" (sort by id); "position DESC" (sort by position descending) */
 	public $order = '';
+	
+	/** @var string $limit Limit clause. Usage: "1" or "1, 3" */
 	public $limit = '';
 
-	// this can be the query builder
+	/**
+	 * Initialize the orm class. Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
+	 *
+	 * @param Database $db Database wrapper
+	 */
 	public function __construct($db, $table = '')
 	{
 		$this->table = $table;
@@ -28,18 +75,7 @@ class orm {
 			echo $this->sql;
 	}
 	
-	// query builder
-	public function q($table = '') 
-	{
-		if($table == '')
-			$table = $this->table;
-			
-		return new orm($this->db, $table);
-	}
-	
-	
-	// __toString
-	public function __toString()
+	public function __toString() 
 	{
 		ob_start();
 		$counter = 1;
@@ -52,8 +88,23 @@ class orm {
 			}
 			$counter++;
 		}
-		
+		 
 		return ob_get_clean();
+	}
+	
+	/**
+	 * Called statically (ie "orm::q()")
+	 *
+	 * @param string $table Specifies the table to run queries on
+	 * 
+	 * @return orm object
+	 */
+	public function q($table = '') 
+	{
+		if($table == '')
+			$table = $this->table;
+			
+		return new orm($this->db, $table);
 	}
 	
 	// wildcard catchall for shortcut requests (filter, set, etc)
@@ -94,29 +145,13 @@ class orm {
 		return $this;
 	}
 	
-	// shortcut to allow column in called function title
-	private function set($column, $args)
+	public function get()
 	{
-		$value = $args[0];
-		if(isset($args[1]))
-			$condition = $args[1];
-		else
-			$condition = '=';
-		
-		if(!is_numeric($value))
-			$value = "'".$this->db->escape($value)."'";
-		
-		$this->data[$column] = $value;
-		
-		return $this;
+		$crud = $this->crud;
+		return $this->$crud();
 	}
 	
-	// get into insert statement
-	public function add()
-	{
-		$this->crud = 'insert';
-		return $this;
-	}
+	
 	
 	public function cols($cols)
 	{
@@ -147,23 +182,30 @@ class orm {
 		return $this;
 	}
 	
+	// shortcut to allow column in called function title
+	private function set($column, $args)
+	{
+		$value = $args[0];
+		if(isset($args[1]))
+			$condition = $args[1];
+		else
+			$condition = '=';
 		
-	// compile SQL and return result of query
-	public function first()
-	{
-		$this->limit(1);
-		$crud = $this->crud;
-		$result = $this->$crud();
-		if(isset($result[0]))
-			$result = $result[0];
-		return $result;
-	}
-	public function get()
-	{
-		$crud = $this->crud;
-		return $this->$crud();
+		if(!is_numeric($value))
+			$value = "'".$this->db->escape($value)."'";
+		
+		$this->data[$column] = $value;
+		
+		return $this;
 	}
 	
+	// get into insert statement
+	public function add()
+	{
+		$this->crud = 'insert';
+		return $this;
+	}
+		
 	// save or update entry
 	public function save()
 	{
@@ -174,6 +216,16 @@ class orm {
 		return $this->$crud();
 	}
 	
+	// compile SQL and return result of query
+	public function first()
+	{
+		$this->limit(1);
+		$crud = $this->crud;
+		$result = $this->$crud();
+		if(isset($result[0]))
+			$result = $result[0];
+		return $result;
+	}
 	
 	// CRUD functions.
 	private function insert() //create
@@ -253,5 +305,69 @@ class orm {
 		$this->sql = $sql;
 		
 		return $this->db->query($sql);
+	}
+	
+	
+	// Higher Level CRUD
+	public function getall()
+	{
+		return $this->cols('id, title')->order()->get();
+	}
+	
+	public function get1byid($id)
+	{
+		return $this->filterByid($id)->first();
+	}
+	
+	public function rm1byid($id)
+	{
+		return $this->filterByid($id)->delete();
+	}
+	
+	public function update1byid($id, $data)
+	{
+		$page = $this->filterByid($id);
+		foreach($data as $col => $val)
+		{
+			$setcol = "set$col";
+			$page->$setcol($val);
+		}
+		$page->save();
+	}
+	
+	public function add1($data)
+	{
+		/*$insert = $this->add();
+		foreach($data as $col => $val)
+		{
+			$setcol = "set$col";
+			$insert->$setcol($val);
+		}
+		return $insert->save();*/
+		//backward compatible
+		return $this->insertArray($data);
+	}
+	
+	public function insertArray($data)
+	{
+		$insert = $this->add();
+		foreach($data as $col => $val)
+		{
+			$setcol = "set$col";
+			$insert->$setcol($val);
+		}
+		return $insert->save();
+	}
+	
+	public function updateById($id, $data)
+	{
+		$page = $this->filterByid($id);
+		foreach($data as $col => $val)
+		{
+			$setcol = "set$col";
+			$page->$setcol($val);
+			
+		}
+		$page->save();
 	}
 }

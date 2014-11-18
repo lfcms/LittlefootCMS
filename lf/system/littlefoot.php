@@ -1,8 +1,40 @@
 <?php
 
+/**
+ * Littlefoot framework environment
+ * 
+ * ## Environment
+ * 
+ * While in the Littlefoot context (executing inside the class), one has access to the entire Environment
+ * 
+ * [Programming in Littlefoot](http://littlefootcms.com/byid/21)
+ *
+ * ### Quick Reference
+ *
+ * These things are accessible in littlefoot apps.
+ *
+ * * [$this->db](http://littlefootcms.com/files/docs/classes/Database.html)
+ * * $this->auth
+ * * functions.php
+ * * orm::q('table_name')
+ *
+ * ### $this->lf
+ *
+ * `$this->lf = &$this` allows a consistent environment between Littlefoot and classes that extend 'app'. So I use $this->lf even while in the littlefoot context
+ * 
+ * | $this public variables | string replace in render() | Example render |
+ * | --- | --- | --- |
+ * | ->relbase | %relbase% | http://domain.com/littlefoot/ |
+ * | ->appurl | %appurl% | http://domain.com/littlefoot/blog/ |
+ * | ->base | %baseurl% | http://domain.com/littlefoot/(index.php/)? |
+ * 
+ * 
+ */
 class Littlefoot
 {
+	/** @var Database $db Database Wrapper */
 	public $db;
+	
 	public $auth; // use api to read
 	public $auth_obj; // system/lib/auth.php
 	public $absbase;
@@ -39,7 +71,7 @@ class Littlefoot
 	public function __construct($db)
 	{
 		$this->start = microtime(true);
-		$this->lf = &$this; // universal usage of $this->lf
+		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = new Database($db);
@@ -51,9 +83,6 @@ class Littlefoot
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
 		$this->auth = $_SESSION['_auth'];
 		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
-		
-		include ROOT.'system/lib/recaptchalib.php';
-		include ROOT.'system/lib/auth.php';
 	}
 	
 	public function __destruct()
@@ -91,6 +120,42 @@ App load times:
 		}
 	}
 	
+	/**
+	 * Execute as CMS
+	 *
+	 * ## Flow
+	 *
+	 * 1. pull lf_settings
+	 *
+	 * 1. pull plugins
+	 * 
+	 * 1. default $this->lf->select values (template, title, alias=404)
+	 * 
+	 * 1. redirect force URL //move this to request()
+	 * 
+	 * 1. $this->request() // should move to __construct()
+	 * 
+	 * 1. $this->authenticate() // should use auth() class in cms()
+	 *
+	 * 1. admin?
+	 *
+	 * 1. apply acl // should be called from auth() class
+	 *
+	 * 1. simplecms?or:nav(is404?)
+	 *
+	 * 1. testACL?403 // should be called from auth() class (or in a separate ACL object)
+	 *
+	 * 1. getcontent() //contains simplecms?mvc
+	 *
+	 * 1. simplecms?%nav%
+	 *
+	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
+	 * 
+	 * 
+	 * 
+	 * @param string $debug Is debug set to true
+	 * 
+	 */
 	public function cms($debug = false) // run littlefoot as CMS
 	{
 		// Apply settings 
@@ -102,12 +167,12 @@ App load times:
 		if(isset($this->lf->settings['plugins']))
 			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
 		
-	#	// load plugins old
-	#	foreach(scandir('plugins') as $file)
-	#	{
-	#		if(substr($file, -4) != '.php') continue;
-	#		include 'plugins/'.$file;
-	#	}
+		/* load plugins old
+		foreach(scandir('plugins') as $file)
+		{
+			if(substr($file, -4) != '.php') continue;
+			include 'plugins/'.$file;
+		}*/
 		
 		//plug-ins v2
 		//if(is_dir('plugins/plugins_loaded_FALSE'))
@@ -147,19 +212,9 @@ App load times:
 		
 		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// request
 		$funcstart = microtime(true);
-		$admin = $this->request();
+		/*$this->admin = */$this->request();
 		$this->function_timer['request'] = microtime(true) - $funcstart;
 		$funcstart = microtime(true);
 		
@@ -181,7 +236,7 @@ App load times:
 		}*/
 		
 		// if requested, load admin/
-		if($admin)
+		if($this->admin)
 		{
 			chdir('system/admin');
 			
@@ -307,6 +362,12 @@ App load times:
 		echo $output;
 	}
 	
+	/**
+	 * Parses $_SERVER variables to environment for use within apps
+	 * and $this->lf->cms\(\)
+	 *
+	 * @return bool True if admin/ requested. False if not.
+	 */
 	public function request()
 	{
 		// detect file being used as base (for API)
@@ -399,6 +460,9 @@ App load times:
 		}
 		
 		$this->auth = $auth;
+		
+		
+		// need to convert this to using the $this->auth object rather than array
 		
 		$auth = $auth->auth;
 		
@@ -739,8 +803,34 @@ App load times:
 		return preg_replace('/%[a-z]+%/', '', $template);
 	}
 	
-	// Auto load given class name in controller/ folder.
-	// Quick way to MVC with multiple class/method requests hooked into URL
+	/**
+	 * Instant MVC: Routing URL request to class methods. Auto load given class name in controller/ folder as Littlefoot app. 
+	 *
+	 * 
+	 * ## Usage
+	 *
+	 * ~~~
+	 * echo $this->lf->mvc($controllerName); 
+	 * ~~~
+	 * 
+	 * ## Backend operation
+	 * 
+	 * ~~~
+	 * include "controller/$controllerName.php";
+	 * $class = new $controllerName($this->lf[, $ini[, $vars]])
+	 * ~~~
+	 *
+	 *
+	 *
+	 * @param string $controller Executes $controller->$vars[0]\(\) defined at ./controller/$controller.php
+	 * 
+	 * @param string $ini `= '' (by default)` App configuration set [Dashboard](http://littlefootcms.com/byid/24). Used in 'Pages' app to select the page to display on the website.
+	 *
+	 * @param string[] $vars `= NULL (by default)` The "slash separated" list of strings in the URL after the Navigation alias.
+	 *		ie. domain.com/littlefoot/appNavAlias/$vars[0]/$vars[1] 
+	 *		defaults to $this->lf->$vars generated in $this->lf->request()
+	 *
+	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
 	{
 		ob_start();
@@ -753,7 +843,7 @@ App load times:
 		if(!class_exists($controller)) // include specified controller class
 			include 'controller/' . $controller . '.php';
 		
-		$class = new $controller($this, $this->db, $ini, $vars); // init class specified by $controller
+		$class = new $controller($this->lf, $this->db, $ini, $vars); // init class specified by $controller
 		if(is_callable(array($class, $vars[0])))
 			$func = $vars[0];
 		else
@@ -822,6 +912,7 @@ App load times:
 	// Backward compatible
 	public function apploader($load, $ini = '', $vars = NULL) { return $this->mvc($load, $ini, $vars); }
 	
+	// should turn this into an API system for direct-to-app calls via json request.
 	private function post($id)
 	{
 		$vars = $this->vars;

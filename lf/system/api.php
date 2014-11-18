@@ -7,19 +7,95 @@ chdir(ROOT);
 
 if(!isset($db)) include 'config.php';
 
-include 'system/functions.php'; // so they
-include 'system/db.class.php'; // can use
-include 'system/app.class.php'; // all the
-//include 'system/lib/auth.php'; // cool functions
-include 'system/littlefoot.php'; 
+// Littlefoot
+include 'system/functions.php'; // base functions
+include 'system/db.class.php'; // database wrapper
+include 'system/app.class.php';
+include 'system/lib/orm.php';
+include 'system/lib/recovery/install.php';
+include 'system/littlefoot.php';		
+include 'system/lib/auth.php';
 
 $lf = new Littlefoot($db);
 $lf->request();
-$lf->authenticate();
 
 chdir(APP); // give cwd back to app
 
+function quickload($lf)
+{
+	$app = $lf->action[0];
+	
+	if(!is_file("controllers/$app.php"))
+		return "No such $app controller";
+		
+	include "controllers/$app.php";
+	
+	$myapp = new $app($lf, $lf->db);
+	return $myapp->_router($lf->action);
+}
 
+function autoloader($lf, $defaultPath = 'main')
+{
+	ob_start();
+	
+	// Find folder matching action request
+	$path = array();
+	$index = 0;
+	foreach($lf->action as $action)
+	{
+		// * Loop through actions until no folder matches
+		// * No match? Slice vars from action
+		$path[] = $action;
+		if(is_dir(implode('/', $path)) && 
+			is_file(implode('/', $path).'/index.php'))
+		{
+			$folder = implode('/', $path);
+		
+			$lf->vars = array_slice($lf->action, $index);
+			$lf->action = array_slice($lf->action, 0, $index);
+		
+			break;
+		}
+		
+		$index++;
+	}
+	
+	/**
+	 * Try to load the app
+	 *
+	 * If a subfolder matches an app... run it
+	 * 
+	 * No match? Try to load app at $defaultPath
+	 */
+	if(isset($folder) && $folder != '')
+	{
+		chdir($folder);	
+		
+		if(is_file('index.php'))
+			include 'index.php';
+	}
+	else
+	{
+		$folder = $defaultPath;
+		if(!is_dir($folder))
+		{
+			echo $folder.' not found!';
+		}
+		else if(!is_file($folder.'/index.php'))
+		{
+			echo $folder.'/index.php not found!';
+		}
+		else
+		{
+			chdir($folder);
+			include 'index.php';
+		}
+	}
+	
+	return ob_get_clean();
+}
+
+/*
 function loader($lf)
 {
 	//$request = $lf->action;
@@ -42,7 +118,8 @@ function loader($lf)
 		echo '%login%';
 		exit;
 	}*/
-
+	
+/*
 	// only admins can see this page
 	//if($lf->auth['access'] != 'admin')
 	//	redirect302($lf->base);
@@ -118,7 +195,7 @@ function loader($lf)
 	$out = str_replace('%skinbase%', $lf->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
 
 	/* csrf form auth */
-
+/*
 	// Generate CSRF token to use in form hidden field
 	$token = NoCSRF::generate( 'csrf_token' );
 	preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
@@ -126,4 +203,4 @@ function loader($lf)
 		$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
 
 	return $out;
-}
+}*/
