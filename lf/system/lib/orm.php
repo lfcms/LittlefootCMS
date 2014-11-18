@@ -8,11 +8,11 @@
  * ~~~
  * // SELECT * FROM mydb.my_table WHERE id = 34
  * // returns an array
- * orm::q('my_table')->filterByid(34);
+ * orm::q('my_table')->filterByid(34)->get();
  *
  * // SELECT * FROM mydb.my_table WHERE cost > 25
  * // returns an array
- * orm::q('my_table')->filterBycost('>', 25);
+ * orm::q('my_table')->filterBycost('>', 25)->get();
  *
  * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
  * // returns result of $this->db->query($sql);

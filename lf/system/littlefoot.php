@@ -3,72 +3,31 @@
 /**
  * Littlefoot framework environment
  * 
- * ## Quick Reference
+ * ## Environment
+ * 
+ * While in the Littlefoot context (executing inside the class), one has access to the entire Environment
+ * 
+ * [Programming in Littlefoot](http://littlefootcms.com/byid/21)
+ *
+ * ### Quick Reference
+ *
+ * These things are accessible in littlefoot apps.
+ *
+ * * [$this->db](http://littlefootcms.com/files/docs/classes/Database.html)
+ * * $this->auth
+ * * functions.php
+ * * orm::q('table_name')
  *
  * ### $this->lf
  *
- * ->appurl //pre rendered %appurl%
- * ->base //pre rendered %baseurl%
- * ->relbase //pre rendered %relbase%
- *
- * ## Usage
+ * `$this->lf = &$this` allows a consistent environment between Littlefoot and classes that extend 'app'. So I use $this->lf even while in the littlefoot context
  * 
- * While in the Littlefoot context (executing inside the class), one has access to the entire Environment:
+ * | $this public variables | string replace in render() | Example render |
+ * | --- | --- | --- |
+ * | ->relbase | %relbase% | http://domain.com/littlefoot/ |
+ * | ->appurl | %appurl% | http://domain.com/littlefoot/blog/ |
+ * | ->base | %baseurl% | http://domain.com/littlefoot/(index.php/)? |
  * 
- *
- *
- *
- *
- *
- *
- *
- * ### Framework context
- * 
- * $this is the current Littlefoot class instance
- * 
- * ~~~
- * 
- * 
- * // allows a consistent environment between Littlefoot and classes that extend 'app'. So I use $this->lf even while in the littlefoot context
- * $this->lf = $this 
- * 
- * // database wrapper
- * $config = array('host'=>'localhost', 'name'=>'mydbname'
- *					'user'=>'mydbuser', 'pass'=>'mypass', );
- * $db = new Database($config);
- * $this->db = $db
- * 
- * 
- * 
- * 
- * ~~~
- * 
- * 
- * ## Initialization and manual calls (library)
- *
- * ~~~
- * $config = array('host'=>'localhost', 'name'=>'mydbname'
- *					'user'=>'mydbuser', 'pass'=>'mypass', );
- * $db = new Database($config);
- * $lf = new Littlefoot($db);
- *
- * //$lf->cms();
- *
- * $lf->request();
- *
- * chdir(ROOT.'app_root');
- * $lf->mvc('testmvc');
- * ~~~
- * 
- * ### $this
- * While executing within a Littlefoot instance. 
- * 
- * ~~~
- * // Environment object instantions
- * $this->lf &= $this;
- * $this->db = new Database($config);
- * $this->auth = new auth();
- * ~~~
  * 
  */
 class Littlefoot
@@ -166,36 +125,35 @@ App load times:
 	 *
 	 * ## Flow
 	 *
-	 * pull lf_settings
+	 * 1. pull lf_settings
 	 *
-	 * pull plugins
+	 * 1. pull plugins
 	 * 
-	 * default $this->lf->select values (template, title, alias=404)
+	 * 1. default $this->lf->select values (template, title, alias=404)
 	 * 
-	 * redirect force URL //move this to request()
+	 * 1. redirect force URL //move this to request()
 	 * 
-	 * $this->request() // should move to __construct()
+	 * 1. $this->request() // should move to __construct()
 	 * 
-	 * $this->authenticate() // should use auth() class in cms()
+	 * 1. $this->authenticate() // should use auth() class in cms()
 	 *
-	 * admin?
+	 * 1. admin?
 	 *
-	 * apply acl // should be called from auth() class
+	 * 1. apply acl // should be called from auth() class
 	 *
-	 * simplecms?or:nav(is404?)
+	 * 1. simplecms?or:nav(is404?)
 	 *
-	 * testACL?403 // should be called from auth() class (or in a separate ACL object)
+	 * 1. testACL?403 // should be called from auth() class (or in a separate ACL object)
 	 *
-	 * getcontent() //contains simplecms?mvc
+	 * 1. getcontent() //contains simplecms?mvc
 	 *
-	 * simplecms?%nav%
+	 * 1. simplecms?%nav%
 	 *
-	 * echo render()
+	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
 	 * 
 	 * 
 	 * 
-	 * 
-	 * 
+	 * @param string $debug Is debug set to true
 	 * 
 	 */
 	public function cms($debug = false) // run littlefoot as CMS
@@ -254,12 +212,9 @@ App load times:
 		
 		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
 		
-		
-		
-		
 		// request
 		$funcstart = microtime(true);
-		$admin = $this->request();
+		/*$this->admin = */$this->request();
 		$this->function_timer['request'] = microtime(true) - $funcstart;
 		$funcstart = microtime(true);
 		
@@ -281,7 +236,7 @@ App load times:
 		}*/
 		
 		// if requested, load admin/
-		if($admin)
+		if($this->admin)
 		{
 			chdir('system/admin');
 			
@@ -505,6 +460,9 @@ App load times:
 		}
 		
 		$this->auth = $auth;
+		
+		
+		// need to convert this to using the $this->auth object rather than array
 		
 		$auth = $auth->auth;
 		
@@ -857,9 +815,10 @@ App load times:
 	 * 
 	 * ## Backend operation
 	 * 
+	 * ~~~
 	 * include "controller/$controllerName.php";
-	 * $class = new $controllerName($this->lf, )
-	 *
+	 * $class = new $controllerName($this->lf[, $ini[, $vars]])
+	 * ~~~
 	 *
 	 *
 	 *
@@ -953,6 +912,7 @@ App load times:
 	// Backward compatible
 	public function apploader($load, $ini = '', $vars = NULL) { return $this->mvc($load, $ini, $vars); }
 	
+	// should turn this into an API system for direct-to-app calls via json request.
 	private function post($id)
 	{
 		$vars = $this->vars;
