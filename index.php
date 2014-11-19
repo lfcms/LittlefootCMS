@@ -13,7 +13,7 @@ if(isset($_GET['xhprof']))
 		function __destruct() {	
 			$xhprof_data = xhprof_disable();
 
-			$XHPROF_ROOT = ROOT.'../../xhprof';
+			$XHPROF_ROOT = ROOT.'lib/xhprof';
 
 			include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_lib.php";
 			include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_runs.php";
