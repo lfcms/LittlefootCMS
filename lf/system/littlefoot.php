@@ -35,25 +35,55 @@ class Littlefoot
 	/** @var Database $db Database Wrapper */
 	public $db;
 	
-	public $auth; // use api to read
+	/** @var Littlefoot $lf Littlefoot instance. = &$this; */
+	public $lf;
+	
+	/** @var array $auth Current an array of auth information. Hoping to move to an auth object. Accessible through $lf->api() */
+	public $auth;
+	
+	/** @var auth $auth_obj The auth object. Hoping to replace the old array system with it. */
 	public $auth_obj; // system/lib/auth.php
+	
+	/** @var string $absbase Backward compatible. Replaced by defined 'ROOT' */
 	public $absbase;
+	
+	/** @var string $base Pre-rendered data for %baseurl% */
 	public $base;
+	
+	/** @var string $basenoget Pre-rendered data for %baseurl%. With $_GET data stripped. */
 	public $basenoget;
+	
+	/** @var string $relbase Pre-rendered data for %relbase%. */
 	public $relbase;
+	
+	/** @var string $appurl Pre-rendered data for %appurl% (per app). */
 	public $appurl; // allow it to change
 	
+	/** @var array $action After $lf->request(), this array is filled with the chopped up URI */
 	public $action;
-	public $select; // chosen nav item from request (include nav id)
-	private $alias;
 	
-	public $admin;
-	
-	public $get;
-	public $post;
+	/** @var array $vars After $lf->nav(), the URI is chopped up into the navigation elements followed by the app variables. */
 	public $vars;
 	
+	/** @var array $select Array of data for present request (template, nav_id, alias) */
+	public $select;
+	
+	/** @var string $alias Not sure if I still use this. It would be 'alias' from $select */
+	private $alias;
+	
+	/** @var bool $admin If /admin is requested, this is set to true to fork to admin during $lf->cms() */
+	public $admin;
+	
+	/** @var array $get Copied contents of $_GET */
+	public $get;
+	
+	/** @var array $get Copied contents of $_POST */
+	public $post;
+	
+	/** @var float $start Start time of $lf execution. */
 	private $start;
+	
+	/** @var bool $debug Whether or not to display errors and render execution times. */
 	public $debug;
 	private $note;
 	private $error;
@@ -64,6 +94,7 @@ class Littlefoot
 	public $settings;
 	public $msgg = '';
 	 
+	
 	private $plugin_listen = array();
 	
 	public $head = ''; // just to put stuff in <head>
