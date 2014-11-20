@@ -1,5 +1,8 @@
 <?php 
 
+/**
+ * @ignore
+ */
 class settings extends app
 {
 	public function main($var)

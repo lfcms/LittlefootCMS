@@ -1,5 +1,8 @@
 <?php 
 
+/**
+ * @ignore
+ */
 class dashboard extends app
 {
 	private $pwd;
@@ -694,5 +697,3 @@ class dashboard extends app
 		file_put_contents(ROOT.'cache/nav.cache.html', $nav);
 	}
 }
-
-?>

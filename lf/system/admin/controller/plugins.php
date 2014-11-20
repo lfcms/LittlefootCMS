@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @ignore
+ */
 class plugins extends app
 {
 	public function main($args)

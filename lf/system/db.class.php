@@ -1,5 +1,43 @@
 <?php
 
+/**
+ * Database wrapper object
+ * 
+ * ## Instantiation
+ * 
+ * $config['host'] = 'localhost';
+ * $config['user'] = 'user_mydb';
+ * $config['pass'] = '*******';
+ * $config['name'] = 'user_myuser';
+ * 
+ * $db = new Database($config);
+ * 
+ * ## Example Usage
+ * 
+ * $user = $db->fetch('SELECT * FROM lf_users'); // return associative array of first row from `lf_users` table.
+ * 
+ * $userlist = $db->fetchall('SELECT id, user FROM lf_users'); // return multiple rows as an array
+ * 
+ * 
+ * ## Littlefoot
+ * 
+ * In a littlefoot app a database object is accessible at `$this->db`
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 class Database
 {
 	private $db_link;

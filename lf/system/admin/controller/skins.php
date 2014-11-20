@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @ignore
+ */
 class skins extends app
 {
 	function init($args)

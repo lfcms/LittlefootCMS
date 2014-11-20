@@ -1,5 +1,8 @@
 <?php 
 
+/**
+ * @ignore
+ */
 class media
 {	
 	function __construct($request, $dbconn)

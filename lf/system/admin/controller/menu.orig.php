@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @ignore
+ */
 class menu
 {
 	private $request;

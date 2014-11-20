@@ -1,7 +1,8 @@
 <?php
 
-if(!class_exists('orm')) include ROOT.'system/lib/orm.php';
-
+/**
+ * @ignore
+ */
 class dba
 {
 	public $asdf = 'asdf';
@@ -9,6 +10,7 @@ class dba
 	
 	public function __construct($args)
 	{
+		if(!class_exists('orm')) include ROOT.'system/lib/orm.php';
 		$this->orm = orm::q($args);
 	}
 	
