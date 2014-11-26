@@ -21,7 +21,7 @@
 	<li><a class="editor" href="<?=$this->base;?>acl/"><span>ACL</span></a></li>
     <!-- <li><a class="buttons" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
 	<li><a class="buttons" href="<?=$this->base;?>settings/"><span>Settings</span></a></li>
-	<li><a class="elements" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>
+	<!--<li><a class="elements" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
 	<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
 		<li class="nav_appadmin"><ul>
 		<?php foreach($admin_apps as $shortcut): 

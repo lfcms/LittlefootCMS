@@ -226,6 +226,7 @@ div.loginbox a.whitelink:hover {
     overflow: hidden;
     text-align: right;
 }
+
 .userbar h1 a {
     transition: color 0.5s ease-in-out 0s;
     text-align:  center;
@@ -237,6 +238,11 @@ div.loginbox a.whitelink:hover {
     font-size: 24px;
     padding: 4px 0px;
 }
+
+#site_preview { float: left; margin: 0; padding: 10px 0; background: #555; }
+#site_preview:hover { background: #BBB; }
+#site_preview a { color: #EEE; padding: 10px;  }
+
 .userbar h1 a:hover {
 	color: #fff;
 }

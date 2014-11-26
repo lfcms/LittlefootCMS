@@ -85,19 +85,36 @@ class Littlefoot
 	
 	/** @var bool $debug Whether or not to display errors and render execution times. */
 	public $debug;
+	
+	/** @var string $msgg Not sure if used. */
+	public $msgg = '';
+	
+	/** @var string $note Old message function. Not sure if used. */
 	private $note;
+	
+	/** @var string $error I think this is also an old message function. Not sure. */
 	private $error;
+	
+	/** @var string $version Current littlefoot version. Pulled from ROOT.'system/version' */
 	private $version;
 	
+	/** @var array $app_timer A list of execution times for each function */
 	private $app_timer = array();
-	public $function_timer = array();
-	public $settings;
-	public $msgg = '';
-	 
 	
+	/** @var array $function_timer A list of execution times for each function */
+	public $function_timer = array();
+	
+	/** @var string[] $settings array of littlefoot settings pulled from lf_settings */
+	public $settings;
+	 
+	/** @var array $plugin_listen Array of plugins waiting to run array('pre_auth' => 'plugin1', 'plugin2', 'etc'). */
 	private $plugin_listen = array();
 	
-	public $head = ''; // just to put stuff in <head>
+	/** @var string $head just to put stuff in <head>. this prints just before </head> in DOM */
+	public $head = '';
+	
+	/** @var string $domain The domain used to access this application */
+	public $domain = '';
 	
 	public function __construct($db)
 	{
@@ -153,7 +170,9 @@ App load times:
 	
 	/**
 	 * Execute as CMS
-	 *
+	 * 
+	 * Run littlefoot as CMS with request routed to app based on lf_actions and lf_links tables
+	 * 
 	 * ## Flow
 	 *
 	 * 1. pull lf_settings
@@ -187,7 +206,7 @@ App load times:
 	 * @param string $debug Is debug set to true
 	 * 
 	 */
-	public function cms($debug = false) // run littlefoot as CMS
+	public function cms($debug = false)
 	{
 		// Apply settings 
 		$this->db->query('SELECT * FROM lf_settings');
@@ -433,6 +452,8 @@ App load times:
 			if($request[2] == '') $fixrewrite = true;
 			$request[2] = $filename.'/';
 		}
+		
+		$this->domain = $_SERVER['HTTP_HOST'];
 		
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
@@ -721,6 +742,10 @@ App load times:
 			if($this->action[0] != '') $appurl .= '/'; // account for home page
 			$this->appurl = $appurl;
 			
+			$appbase = $this->relbase.implode('/',$this->action);
+			if($this->action[0] != '') $appbase .= '/'; // account for home page
+			$this->appbase = $appbase;
+			
 			// collect app output
 			ob_start();
 			chdir($path); // set current working dir to app base path
@@ -772,7 +797,6 @@ App load times:
 		$file = 'index';
 		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
 			$file = 'home';
-		
 		
 		// Get Template code
 		ob_start();
