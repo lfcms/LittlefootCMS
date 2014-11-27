@@ -64,12 +64,13 @@ if(!$signup) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, '
 
 
 
-
+// when plugins were introduced
 $db->query('CREATE TABLE IF NOT EXISTS lf_plugins (
   id int(11) NOT NULL AUTO_INCREMENT,
   hook varchar(128) NOT NULL,
   plugin varchar(128) NOT NULL,
   status varchar(64) NOT NULL,
+  config varchar(1024) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1');
 
