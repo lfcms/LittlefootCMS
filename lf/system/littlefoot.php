@@ -1022,8 +1022,9 @@ App load times:
 	public function load_plugins()
 	{
 		$result = orm::q('lf_plugins')->get();
-		foreach($result as $plugin)
-			$this->plugins[$plugin['hook']][] = $plugin['plugin'];
+		if($result)
+			foreach($result as $plugin)
+				$this->plugins[$plugin['hook']][] = $plugin['plugin'];
 	}
 	
 	/*

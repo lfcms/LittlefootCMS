@@ -251,7 +251,7 @@ div.loginbox a.whitelink:hover {
     float: right;
     padding: 9px 0px 10px 0px;
 }
-.userbar #greeting a {
+.userbar a {
     transition: background-color 0.25s linear 0s, color 0.25s linear 0s;
     color: lightgray;
     padding: 10px;

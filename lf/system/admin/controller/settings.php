@@ -114,7 +114,12 @@ class settings extends app
 			echo '<p>Latest version available: '.$newest.'</p>';
 		else
 			echo '<p>You are up to date!</p>';
-			
+		
+		if($this->request->api('version') == '1-DEV')
+		{
+			echo '<p><a href="%appurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>';
+		}
+		
 		echo '
 		</div>
 			</div>
@@ -147,6 +152,14 @@ class settings extends app
 				</div>
 			</div>
 		</div>';
+	}
+	
+	public function upgradedev($args)
+	{
+		if($this->request->api('version') == '1-DEV')
+			include ROOT.'system/upgrade.dev.php';
+			
+		redirect302();
 	}
 	
 	public function lfup($var)
