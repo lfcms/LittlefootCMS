@@ -428,6 +428,7 @@ App load times:
 	 */
 	public function request()
 	{
+		$this->hook_run('pre lf request');
 		// detect file being used as base (for API)
 		$filename = 'index.php';
 		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
@@ -492,6 +493,8 @@ App load times:
 		}
 		
 		$this->admin = $request[3] == 'admin/' ? true : false; // for API
+		
+		$this->hook_run('post lf request');
 		
 		// Whether or not this is an admin/ request
 		return $request[3] == 'admin/' ? true : false;
@@ -701,6 +704,7 @@ App load times:
 	private function getcontent()
 	{
 		$funcstart = microtime(true);
+		$this->hook_run('pre lf getcontent');
 		
 		
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
@@ -792,12 +796,14 @@ App load times:
 			include ROOT.'plugins/'.$plugin.'/index.php';*/
 		// END DEV DEV DEV DEV
 		
+		$this->hook_run('pre lf getcontent');
+		
 		return $content;
 	}
 	
 	public function render($replace)
 	{
-		$this->hook_run('pre_render');
+		$this->hook_run('pre lf render');
 		
 		ob_start();
 		include ROOT.'system/template/login.php';
@@ -862,10 +868,13 @@ App load times:
 			$template = str_replace('%debug%', $debug, $template);
 		}
 		
-		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
+		ob_start();
+		echo str_replace('</head>', $this->lf->head.'</head>', $template);
+		
+		$this->hook_run('pre lf render');
 		
 		// Clean up unused %replace%
-		return preg_replace('/%[a-z]+%/', '', $template);
+		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
 	}
 	
 	/**
