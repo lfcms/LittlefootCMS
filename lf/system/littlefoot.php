@@ -107,8 +107,8 @@ class Littlefoot
 	/** @var string[] $settings array of littlefoot settings pulled from lf_settings */
 	public $settings;
 	 
-	/** @var array $plugin_listen Array of plugins waiting to run array('pre_auth' => 'plugin1', 'plugin2', 'etc'). */
-	private $plugin_listen = array();
+	/** @var array $plugins Array of plugins waiting to run array('pre_auth' => 'plugin1', 'plugin2', 'etc'). */
+	private $plugins = array();
 	
 	/** @var string $head just to put stuff in <head>. this prints just before </head> in DOM */
 	public $head = '';
@@ -213,9 +213,13 @@ App load times:
 		while($row = $this->db->fetch())
 			$this->settings[$row['var']] = $row['val'];
 		
+		
+		
+		/* OOOOOLD plugin stuff
+		
 		// JSON => array
 		if(isset($this->lf->settings['plugins']))
-			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
+			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);*/
 		
 		/* load plugins old
 		foreach(scandir('plugins') as $file)
@@ -228,6 +232,10 @@ App load times:
 		//if(is_dir('plugins/plugins_loaded_FALSE'))
 		//	foreach(preg_grep('/^([^.])/', scandir('plugins/plugins_loaded')) as $plugin)
 		//		include 'plugins/plugins_loaded/'.$plugin;
+		
+		
+		$this->load_plugins();
+		
 		
 		$this->hook_run('plugins_loaded');
 			
@@ -789,6 +797,8 @@ App load times:
 	
 	public function render($replace)
 	{
+		$this->hook_run('pre_render');
+		
 		ob_start();
 		include ROOT.'system/template/login.php';
 		$login = ob_get_clean();
@@ -1006,11 +1016,17 @@ App load times:
 		//echo $output;
 	}
 	
-	/*private load_plugin() {
+	/**
+	 * Initializes the plugin listener from lf_plugins table
+	 */
+	public function load_plugins()
+	{
+		$result = orm::q('lf_plugins')->get();
+		foreach($result as $plugin)
+			$this->plugins[$plugin['hook']][] = $plugin['plugin'];
+	}
 	
-	}*/
-	
-	
+	/*
 	// Add plugin function to execute when $hook happens
 	private function hook_add($hook, $function)
 	{
@@ -1019,18 +1035,14 @@ App load times:
 		$this->plugin_listen[$hook][] = $function;
 		
 		return true;
-	}
+	}*/
 	
 	// Run hooks to execute plugins attached to them
 	public function hook_run($hook)
 	{
-		if(!isset($this->plugin_listen[$hook])) return false;
-		
-		$return = array();
-		foreach($this->plugin_listen[$hook] as $function)
-			$return[$function] = $function($this);
-			
-		return $return;
+		if(!isset($this->plugins[$hook])) return false;
+		foreach($this->plugins[$hook] as $plugin)
+			include ROOT.'plugins/'.$plugin.'/index.php';
 	}
 	
 	

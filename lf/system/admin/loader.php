@@ -73,6 +73,8 @@ foreach($links[2] as $id => $request)
 $replace = str_replace('<li>', '<li class="current">', $links[0][$match]);
 $nav = str_replace($links[0][$match], $replace, $nav);
 
+$this->hook_run('pre_render');
+
 ob_start();
 include('skin/'.$admin_skin.'/index.php');
 
@@ -85,5 +87,7 @@ $token = NoCSRF::generate( 'csrf_token' );
 preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
 for($i = 0; $i < count($match[0]); $i++)
 	$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
+
+$out = str_replace('</head>', $this->lf->head.'</head>', $out);
 
 echo $out;
