@@ -898,7 +898,6 @@ App load times:
 	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
 	{
-		
 		ob_start();
 		if($vars === NULL) $vars = $this->vars;
 		if(!isset($vars[0])) $vars[0] = '';
@@ -921,11 +920,12 @@ App load times:
 				$func = 'main'; // default to main()
 		}
 		
+		$this->hook_run('pre app');
 		$this->hook_run('pre app '.$controller);
 		if($func != $vars[0]) $this->hook_run('pre app '.$controller.' '.$func);
 		
 		$varstr = array();
-		foreach($vars as $var)
+		foreach($vars as $var) // add vars until they are all there
 		{
 			$varstr[] = $var;
 			echo $this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
@@ -933,7 +933,7 @@ App load times:
 		
 		echo $class->$func($vars);
 		
-		while(count($varstr))
+		while(count($varstr)) // subtract vars until they are all gone
 		{	
 			$this->hook_run('post app '.$controller.' '.implode(' ', $varstr));
 			array_pop($varstr);
@@ -942,6 +942,7 @@ App load times:
 		if($func != $vars[0]) $this->hook_run('post app '.$controller.' '.$func);
 		
 		$this->hook_run('post app '.$controller);
+		$this->hook_run('post app');
 		
 		return ob_get_clean();
 	}
@@ -1046,7 +1047,7 @@ App load times:
 		$result = orm::q('lf_plugins')->get();
 		if($result)
 			foreach($result as $plugin)
-				$this->plugins[$plugin['hook']][] = $plugin['plugin'];
+				$this->plugins[$plugin['hook']][$plugin['plugin']] = $plugin['config'];
 	}
 	
 	/*
@@ -1064,10 +1065,9 @@ App load times:
 	public function hook_run($hook)
 	{
 		if(!isset($this->plugins[$hook])) return false;
-		foreach($this->plugins[$hook] as $plugin)
+		foreach($this->plugins[$hook] as $plugin => $config)
 			include ROOT.'plugins/'.$plugin.'/index.php';
 	}
-	
 	
 	// public, read-only access to private variables
 	public function api($var)

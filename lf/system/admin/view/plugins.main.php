@@ -12,11 +12,13 @@
 		<tr>
 			<th>Hooks</th>
 			<th>Plugins</th>
+			<th>Config</th>
 			<th>Status</th>
 		</tr>
 		<tr>
 			<td><input type="text" name="hook" id="lf_hook" placeholder="hook_name" /></td>
 			<td><select name="plugin" id=""><?=$plugins;?></select></td>
+			<td><input type="text" name="config" placeholder="my-secret-id" /></td>
 			<td><input type="submit" value="Hook It Up!" /></td>
 		</tr>
 	<?php
@@ -25,6 +27,7 @@
 		<tr>
 			<td><?=$row['hook'];?></td>
 			<td><?=$row['plugin'];?></td>
+			<td><?=$row['config'];?></td>
 			<td><?=$row['status'];?> <a href="%appurl%rm/<?=$row['id'];?>" class="nav_delete_item">Delete</a></td>
 		</tr>
 	<?php endforeach; ?>
