@@ -21,11 +21,11 @@
 		</tr>
 	<?php
 	
-	foreach($registered_hooks as $id => $row): ?>
+	foreach($registered_hooks as $row): ?>
 		<tr>
 			<td><?=$row['hook'];?></td>
 			<td><?=$row['plugin'];?></td>
-			<td><?=$row['status'];?></td>
+			<td><?=$row['status'];?> <a href="%appurl%rm/<?=$row['id'];?>" class="nav_delete_item">Delete</a></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>

@@ -15,20 +15,28 @@ class plugins extends app
 		include 'view/plugins.main.php';
 	}
 	
+	public function rm($args)
+	{
+		orm::q('lf_plugins')->filterByid($args[1])->delete();
+		redirect302($this->lf->appurl);
+	}
+	
 	public function hookup($args)
 	{
 		
 		//$plugin_hooks = $this->db->fetch("SELECT * FROM lf_settings WHERE var = 'plugins'");
-		$plugin_hooks = orm::q('lf_plugins')->get();
+		$plugin_hook = orm::q('lf_plugins')->filterByhook($_POST['hook'])->filterByplugin($_POST['plugin'])->first();
 		
-		if(!$plugin_hooks)
+		$_POST['status'] = 'active';
+		if(!$plugin_hook)
 		{
 			//$hooks = json_encode(array($_POST['hook'][$_POST['plugin']] => true));
 			//$this->db->query("INSERT INTO lf_plugins VALUES (NULL, , '".$this->db->escape($hooks)."')");
-			$plugin_hooks = orm::q('lf_plugins')->insertArray($_POST);
+			orm::q('lf_plugins')->insertArray($_POST);
 		}
 		else
 		{
+			/*
 			//echo 'update';
 			$plugin_hooks = json_decode($plugin_hooks['val'], 1);
 			
@@ -45,10 +53,12 @@ class plugins extends app
 			//var_dump($hooks);
 			
 			
-			//echo '</pre>';
+			//echo '</pre>';*/
 			
 			
-			$this->db->query("UPDATE lf_settings SET val = '".$this->db->escape($hooks)."' WHERE var = 'plugins'");
+			//$this->db->query("UPDATE lf_settings SET val = '".$this->db->escape($hooks)."' WHERE var = 'plugins'");
+			
+			orm::q('lf_plugins')->updateById($plugin_hook['id'], $_POST);
 		}
 		
 		redirect302();

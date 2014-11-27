@@ -922,11 +922,25 @@ App load times:
 		}
 		
 		$this->hook_run('pre app '.$controller);
-		$this->hook_run('pre app '.$controller.' '.$func);
-		$this->hook_run('pre app '.$controller.' '.$func.' '.implode(' ', $vars));
+		if($func != $vars[0]) $this->hook_run('pre app '.$controller.' '.$func);
+		
+		$varstr = array();
+		foreach($vars as $var)
+		{
+			$varstr[] = $var;
+			echo $this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
+		}
+		
 		echo $class->$func($vars);
-		$this->hook_run('post app '.$controller.' '.$func.' '.implode(' ', $vars));
-		$this->hook_run('post app '.$controller.' '.$func);
+		
+		while(count($varstr))
+		{	
+			$this->hook_run('post app '.$controller.' '.implode(' ', $varstr));
+			array_pop($varstr);
+		}
+		
+		if($func != $vars[0]) $this->hook_run('post app '.$controller.' '.$func);
+		
 		$this->hook_run('post app '.$controller);
 		
 		return ob_get_clean();
