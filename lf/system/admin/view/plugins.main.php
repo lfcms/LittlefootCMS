@@ -12,25 +12,27 @@
 		<tr>
 			<th>Hooks</th>
 			<th>Plugins</th>
+			<th>Status</th>
 		</tr>
 		<tr>
-			<td><select name="hook" id=""><?=$hooks;?></select></td>
-			<td><select name="plugin" id=""><?=$plugins;?></select> <input type="submit" value="Hook It Up!" /></td>
+			<td><input type="text" name="hook" id="lf_hook" placeholder="hook_name" /></td>
+			<td><select name="plugin" id=""><?=$plugins;?></select></td>
+			<td><input type="submit" value="Hook It Up!" /></td>
 		</tr>
-	<?php 
+	<?php
 	
-	var_dump($registered_hooks);
-	
-	
-	
-	foreach($registered_hooks as $hook => $plugins): ?>
+	foreach($registered_hooks as $id => $row): ?>
 		<tr>
-			<td colspan="2"><?=$hook;?></td>
-		</tr>
-		<tr>
-			<td><?=$plugin;?></td>
-			<td><?=var_dump($hook);?></td>
+			<td><?=$row['hook'];?></td>
+			<td><?=$row['plugin'];?></td>
+			<td><?=$row['status'];?></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 </form>
+<h3>Available Littlefoot Hooks</h3>
+<p>pre_render</p>
+<p>pre_auth</p>
+<p></p>
+<p></p>
+<p></p>

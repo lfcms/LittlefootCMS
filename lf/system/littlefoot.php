@@ -898,6 +898,7 @@ App load times:
 	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
 	{
+		
 		ob_start();
 		if($vars === NULL) $vars = $this->vars;
 		if(!isset($vars[0])) $vars[0] = '';
@@ -920,7 +921,14 @@ App load times:
 				$func = 'main'; // default to main()
 		}
 		
+		$this->hook_run('pre app '.$controller);
+		$this->hook_run('pre app '.$controller.' '.$func);
+		$this->hook_run('pre app '.$controller.' '.$func.' '.implode(' ', $vars));
 		echo $class->$func($vars);
+		$this->hook_run('post app '.$controller.' '.$func.' '.implode(' ', $vars));
+		$this->hook_run('post app '.$controller.' '.$func);
+		$this->hook_run('post app '.$controller);
+		
 		return ob_get_clean();
 	}
 	
