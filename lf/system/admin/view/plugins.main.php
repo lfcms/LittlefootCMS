@@ -34,8 +34,7 @@
 	</table>
 </form>
 <h3>Available Littlefoot Hooks</h3>
-<p>pre_render</p>
-<p>pre_auth</p>
-<p></p>
-<p></p>
-<p></p>
+<p>pre lf render</p>
+<p>post app blog view</p>
+<p>pre app pages</p>
+<p>post wiki view</p>

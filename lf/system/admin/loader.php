@@ -73,7 +73,7 @@ foreach($links[2] as $id => $request)
 $replace = str_replace('<li>', '<li class="current">', $links[0][$match]);
 $nav = str_replace($links[0][$match], $replace, $nav);
 
-$this->hook_run('pre_render');
+$this->hook_run('pre lf render');
 
 ob_start();
 include('skin/'.$admin_skin.'/index.php');
