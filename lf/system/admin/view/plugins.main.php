@@ -37,4 +37,4 @@
 <p>pre lf render</p>
 <p>post app blog view</p>
 <p>pre app pages</p>
-<p>post wiki view</p>
+<p>post app wiki view</p>
