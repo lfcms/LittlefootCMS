@@ -73,6 +73,8 @@ foreach($links[2] as $id => $request)
 $replace = str_replace('<li>', '<li class="current">', $links[0][$match]);
 $nav = str_replace($links[0][$match], $replace, $nav);
 
+$this->hook_run('pre lf render');
+
 ob_start();
 include('skin/'.$admin_skin.'/index.php');
 
@@ -80,10 +82,13 @@ $out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_s
 
 /* csrf form auth */
 
+$out = str_replace('</head>', $this->lf->head.'</head>', $out);
+
 // Generate CSRF token to use in form hidden field
 $token = NoCSRF::generate( 'csrf_token' );
 preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
 for($i = 0; $i < count($match[0]); $i++)
 	$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
+
 
 echo $out;

@@ -23,31 +23,29 @@
  * 
  * In a littlefoot app a database object is accessible at `$this->db`
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
  */
 class Database
 {
-	private $db_link;
-	private $mysqli;
-	private $db_result;
-	private $query_count;
-	private $db_name;
-	private $conf;
+	/** @var string[] $error Multiple errors can occur. They are stored in this array. */
 	public $error = '';
 	
+	/** @var MySQLi $mysql MySQLi connection object */
+	private $mysqli;
+	
+	/** @var Result Most recent MySQL result */
+	private $db_result;
+	
+	/** @var int $query_count This is incremented every time a query is performed */
+	private $query_count;
+	
+	/** @var string[] $conf Database configuration is saved for auto dump/import */
+	private $conf;
+	
+	/**
+	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
+	 * 
+	 * @param string[] $database_config 
+	 */
 	function __construct( $database_config )
 	{
 		$this->mysqli = new mysqli( 
@@ -66,11 +64,17 @@ class Database
 		$this->conf = $database_config;
 	}
 	
+	/**
+	 * Close MySQLI connection object
+	 */
 	function __destruct()
 	{
 		$this->mysqli->close();
 	}
 	
+	/**
+	 * Free last database result
+	 */
 	function free()
 	{
 		$this->dbresult->free();
@@ -94,7 +98,7 @@ class Database
 	}
 	
 	/**
-	 * Fetch single row of results of a query, returns array(id => 1, col1' => 'val1', ...)
+	 * Fetch single row of results of a query, returns array('id' => 1,'col1' => 'val1')
 	 * 
 	 * @param string $result If this is a string, it is run as SQL and the first row is returned. If it is a MySQL resource, the fetch is run from the resource.
 	 */
@@ -118,7 +122,7 @@ class Database
 	}
 	
 	/**
-	 * Fetch all rows from a query, returns matrix array of the rows: array(0 => array(id = 1, col1 => 'val1', ...), 1 => array(id => 2, col1 => 'val1', ...))
+	 * Fetch all rows from a query, returns matrix array of the rows: array(0 => array(id = 1, col1 => 'val1'), 1 => array(id => 2, col1 => 'val1'))
 	 * 
 	 * @param string $result If this is a string, it is run as SQL and all rows are returned. If it is a MySQL resource, the fetch is run from the resource.
 	 */
@@ -152,6 +156,11 @@ class Database
 		return $this->query_count;
 	}
 	
+	/**
+	 * Prints number of rows in the MySQL result
+	 * 
+	 * @param bool $make_conversion_easier Don't think this does anything.
+	 */
 	function numrows($make_conversion_easier = true)
 	{
 		return $this->db_result->num_rows;
@@ -177,6 +186,8 @@ class Database
 	
 	/**
 	 * Queries the information schema for a table called $table in this database
+	 * 
+	 * @param string $table Check to see if $table exists.
 	 */
 	function is_table($table)
 	{
@@ -200,7 +211,9 @@ class Database
 	
 	
 	/**
-	 * $string is usually user-supplied supplied data. Don't forget to sanatize input!
+	 * $str is usually user-supplied supplied data. Don't forget to sanatize input!
+	 * 
+	 * @param string $string String to be escaped for database input.
 	 */
 	function escape($str)
 	{
@@ -210,6 +223,8 @@ class Database
 	
 	/**
 	 * SQL commands are preg_match()'d out of $file and run in a loop with errors suppressed
+	 * 
+	 * @param string $file Path to .sql backup file to be imported into the configured database.
 	 */
 	function import($file)
 	{
@@ -225,10 +240,13 @@ class Database
 			$this->query($sql);
 		return ob_get_clean();
 	}
-	/**
-	 * $folder is the destination, $table will print only the table instead of the whole database
-	 */
 	
+	/**
+	 * Dumps database or table to file.
+	 * 
+	 * @param string $table empty by default. If specified, only that table will be dumped from the database
+	 * @param string $folder Defaults to ROOT.'lf/backup/'.
+	 */
 	function dump($table = '', $folder = NULL)
 	{
 		if($folder !== NULL)

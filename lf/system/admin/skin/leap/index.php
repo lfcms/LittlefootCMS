@@ -36,6 +36,7 @@
                 <div class="userbar">
                         <header>
                             <h1><a href="<?=$this->base;?>">littlefoot</a></h1>
+							<span id="site_preview"><a href="<?=$this->relbase;?>"><?=$this->domain;?><?=$this->relbase;?></a></span>
 							<div id="greeting">
 							<?php 
 							

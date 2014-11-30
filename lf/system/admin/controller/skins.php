@@ -133,7 +133,7 @@ class skins extends app
 		$data = '<html>
 	<head>
 		<title>%title%</title>
-		<link rel="stylesheet" type="text/css" href="%{skinbase}%/css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="%skinbase%/css/styles.css" />
 	</head>
 	<body>
 		<h1>Blank Template</h1>
