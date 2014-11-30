@@ -7,6 +7,8 @@
 	// $this->settings
 ?>
 <ul>
+	<?php $this->lf->hook_run('pre lf admin nav'); ?>
+	
 	<?php /*<li><a href="<?=$this->base;?>dashboard/">Dashboard</a></li>*/ ?>
 	<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a>
 		<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
@@ -32,5 +34,7 @@
     <!-- <li><a class="buttons" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
 	<li><a class="buttons" href="<?=$this->base;?>settings/"><span>Settings</span></a></li>
 	<!--<li><a class="elements" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
+	
+	<?php $this->lf->hook_run('post lf admin nav'); ?>
 	
 </ul>
