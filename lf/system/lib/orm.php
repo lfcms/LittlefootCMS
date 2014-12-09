@@ -165,7 +165,18 @@ class orm {
 		$this->data = $cols;
 		return $this;
 	}
-	
+
+	public function count()
+	{
+		$this->data = 'count(*) as count';
+		
+		$crud = $this->crud;
+		$result = $this->$crud();
+		if(isset($result[0]))
+			$result = $result[0];
+		return $result['count'];
+	}	
+
 	// Where override
 	public function where($clause)
 	{
