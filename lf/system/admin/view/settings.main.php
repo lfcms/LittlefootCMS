@@ -99,9 +99,22 @@ echo '
 		}
 		echo '
 		</div>
-	</div>
-	<div>
-		<h3>APP MANAGEMENT</h3>
+	</div>';
+	
+	echo '<div><h3>APP MANAGEMENT</h3>';
+	
+	$installs = glob(ROOT.'apps/*/install.sql');
+	//var_dump($installs);
+	foreach($installs as $install)
+	{
+		preg_match('/([^\/]+)\/install.sql$/', $install, $match);
+		//print_r($match);
+		
+		echo '[<a href="%appurl%reinstall/'.$match[1].'">reinstall</a>] '.$match[1].'<br />';
+	}
+	
+	echo '
+		
 	</div>
 	
 </div>';
