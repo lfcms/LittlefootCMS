@@ -7,6 +7,9 @@ if(!extension_loaded('mysqli'))
 	exit();
 }
 
+/**
+ * @ignore
+ */
 class install
 {
 	public function noconfig()

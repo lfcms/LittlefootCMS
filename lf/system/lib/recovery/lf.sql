@@ -219,3 +219,11 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2012-11-25 17:27:45
+CREATE TABLE IF NOT EXISTS lf_plugins (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  hook varchar(128) NOT NULL,
+  plugin varchar(128) NOT NULL,
+  status varchar(64) NOT NULL,
+  config varchar(1024) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;

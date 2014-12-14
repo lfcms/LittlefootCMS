@@ -101,6 +101,9 @@ function make_table($data, $type, $db)
 	return $ret;
 }
 
+/**
+ * @ignore
+ */
 class acl
 {
 	private $db = NULL;

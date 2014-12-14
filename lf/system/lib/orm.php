@@ -18,6 +18,10 @@
  * // returns result of $this->db->query($sql);
  * orm::q('my_table')->settitle('new title')->filterByid(34)->save();
  *
+ * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
+ * // returns result of $this->db->query($sql);
+ * orm::q('my_table')->updateById(34, $_POST);
+ *
  * // INSERT INTO mydb.my_table (id, title, body) VALUES (NULL, 'my title', 'my body')
  * $_POST = array('title' => 'my title', 'body' => 'my body');
  * orm::q('my_table')->insertArray($_POST);

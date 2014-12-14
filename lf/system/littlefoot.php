@@ -35,38 +35,86 @@ class Littlefoot
 	/** @var Database $db Database Wrapper */
 	public $db;
 	
-	public $auth; // use api to read
+	/** @var Littlefoot $lf Littlefoot instance. = &$this; */
+	public $lf;
+	
+	/** @var array $auth Current an array of auth information. Hoping to move to an auth object. Accessible through $lf->api() */
+	public $auth;
+	
+	/** @var auth $auth_obj The auth object. Hoping to replace the old array system with it. */
 	public $auth_obj; // system/lib/auth.php
+	
+	/** @var string $absbase Backward compatible. Replaced by defined 'ROOT' */
 	public $absbase;
+	
+	/** @var string $base Pre-rendered data for %baseurl% */
 	public $base;
+	
+	/** @var string $basenoget Pre-rendered data for %baseurl%. With $_GET data stripped. */
 	public $basenoget;
+	
+	/** @var string $relbase Pre-rendered data for %relbase%. */
 	public $relbase;
+	
+	/** @var string $appurl Pre-rendered data for %appurl% (per app). */
 	public $appurl; // allow it to change
 	
+	/** @var array $action After $lf->request(), this array is filled with the chopped up URI */
 	public $action;
-	public $select; // chosen nav item from request (include nav id)
-	private $alias;
 	
-	public $admin;
-	
-	public $get;
-	public $post;
+	/** @var array $vars After $lf->nav(), the URI is chopped up into the navigation elements followed by the app variables. */
 	public $vars;
 	
+	/** @var array $select Array of data for present request (template, nav_id, alias) */
+	public $select;
+	
+	/** @var string $alias Not sure if I still use this. It would be 'alias' from $select */
+	private $alias;
+	
+	/** @var bool $admin If /admin is requested, this is set to true to fork to admin during $lf->cms() */
+	public $admin;
+	
+	/** @var array $get Copied contents of $_GET */
+	public $get;
+	
+	/** @var array $get Copied contents of $_POST */
+	public $post;
+	
+	/** @var float $start Start time of $lf execution. */
 	private $start;
+	
+	/** @var bool $debug Whether or not to display errors and render execution times. */
 	public $debug;
+	
+	/** @var string $msgg Not sure if used. */
+	public $msgg = '';
+	
+	/** @var string $note Old message function. Not sure if used. */
 	private $note;
+	
+	/** @var string $error I think this is also an old message function. Not sure. */
 	private $error;
+	
+	/** @var string $version Current littlefoot version. Pulled from ROOT.'system/version' */
 	private $version;
 	
+	/** @var array $app_timer A list of execution times for each function */
 	private $app_timer = array();
-	public $function_timer = array();
-	public $settings;
-	public $msgg = '';
-	 
-	private $plugin_listen = array();
 	
-	public $head = ''; // just to put stuff in <head>
+	/** @var array $function_timer A list of execution times for each function */
+	public $function_timer = array();
+	
+	/** @var string[] $settings array of littlefoot settings pulled from lf_settings */
+	public $settings;
+	 
+	/** @var array $plugins Array of plugins waiting to run array('pre_auth' => 'plugin1', 'plugin2', 'etc'). */
+	private $plugins = array();
+	
+	/** @var string $head just to put stuff in <head>. this prints just before </head> in DOM */
+	public $head = '';
+	
+	/** @var string $domain The domain used to access this application */
+	public $domain = '';
 	
 	public function __construct($db)
 	{
@@ -122,7 +170,9 @@ App load times:
 	
 	/**
 	 * Execute as CMS
-	 *
+	 * 
+	 * Run littlefoot as CMS with request routed to app based on lf_actions and lf_links tables
+	 * 
 	 * ## Flow
 	 *
 	 * 1. pull lf_settings
@@ -156,16 +206,20 @@ App load times:
 	 * @param string $debug Is debug set to true
 	 * 
 	 */
-	public function cms($debug = false) // run littlefoot as CMS
+	public function cms($debug = false)
 	{
 		// Apply settings 
 		$this->db->query('SELECT * FROM lf_settings');
 		while($row = $this->db->fetch())
 			$this->settings[$row['var']] = $row['val'];
 		
+		
+		
+		/* OOOOOLD plugin stuff
+		
 		// JSON => array
 		if(isset($this->lf->settings['plugins']))
-			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);
+			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);*/
 		
 		/* load plugins old
 		foreach(scandir('plugins') as $file)
@@ -178,6 +232,10 @@ App load times:
 		//if(is_dir('plugins/plugins_loaded_FALSE'))
 		//	foreach(preg_grep('/^([^.])/', scandir('plugins/plugins_loaded')) as $plugin)
 		//		include 'plugins/plugins_loaded/'.$plugin;
+		
+		
+		$this->load_plugins();
+		
 		
 		$this->hook_run('plugins_loaded');
 			
@@ -370,6 +428,7 @@ App load times:
 	 */
 	public function request()
 	{
+		$this->hook_run('pre lf request');
 		// detect file being used as base (for API)
 		$filename = 'index.php';
 		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
@@ -403,6 +462,8 @@ App load times:
 			$request[2] = $filename.'/';
 		}
 		
+		$this->domain = $_SERVER['HTTP_HOST'];
+		
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
 		else $port = '';
@@ -432,6 +493,8 @@ App load times:
 		}
 		
 		$this->admin = $request[3] == 'admin/' ? true : false; // for API
+		
+		$this->hook_run('post lf request');
 		
 		// Whether or not this is an admin/ request
 		return $request[3] == 'admin/' ? true : false;
@@ -641,6 +704,7 @@ App load times:
 	private function getcontent()
 	{
 		$funcstart = microtime(true);
+		$this->hook_run('pre lf getcontent');
 		
 		
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
@@ -690,6 +754,10 @@ App load times:
 			if($this->action[0] != '') $appurl .= '/'; // account for home page
 			$this->appurl = $appurl;
 			
+			$appbase = $this->relbase.implode('/',$this->action);
+			if($this->action[0] != '') $appbase .= '/'; // account for home page
+			$this->appbase = $appbase;
+			
 			// collect app output
 			ob_start();
 			chdir($path); // set current working dir to app base path
@@ -728,11 +796,15 @@ App load times:
 			include ROOT.'plugins/'.$plugin.'/index.php';*/
 		// END DEV DEV DEV DEV
 		
+		$this->hook_run('pre lf getcontent');
+		
 		return $content;
 	}
 	
 	public function render($replace)
 	{
+		$this->hook_run('pre lf render');
+		
 		ob_start();
 		include ROOT.'system/template/login.php';
 		$login = ob_get_clean();
@@ -741,7 +813,6 @@ App load times:
 		$file = 'index';
 		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
 			$file = 'home';
-		
 		
 		// Get Template code
 		ob_start();
@@ -797,10 +868,13 @@ App load times:
 			$template = str_replace('%debug%', $debug, $template);
 		}
 		
-		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
+		ob_start();
+		echo str_replace('</head>', $this->lf->head.'</head>', $template);
+		
+		$this->hook_run('pre lf render');
 		
 		// Clean up unused %replace%
-		return preg_replace('/%[a-z]+%/', '', $template);
+		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
 	}
 	
 	/**
@@ -855,7 +929,30 @@ App load times:
 				$func = 'main'; // default to main()
 		}
 		
+		$this->hook_run('pre app');
+		$this->hook_run('pre app '.$controller);
+		if($func != $vars[0]) $this->hook_run('pre app '.$controller.' '.$func);
+		
+		$varstr = array();
+		foreach($vars as $var) // add vars until they are all there
+		{
+			$varstr[] = $var;
+			echo $this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
+		}
+		
 		echo $class->$func($vars);
+		
+		while(count($varstr)) // subtract vars until they are all gone
+		{	
+			$this->hook_run('post app '.$controller.' '.implode(' ', $varstr));
+			array_pop($varstr);
+		}
+		
+		if($func != $vars[0]) $this->hook_run('post app '.$controller.' '.$func);
+		
+		$this->hook_run('post app '.$controller);
+		$this->hook_run('post app');
+		
 		return ob_get_clean();
 	}
 	
@@ -951,11 +1048,18 @@ App load times:
 		//echo $output;
 	}
 	
-	/*private load_plugin() {
+	/**
+	 * Initializes the plugin listener from lf_plugins table
+	 */
+	public function load_plugins()
+	{
+		$result = orm::q('lf_plugins')->get();
+		if($result)
+			foreach($result as $plugin)
+				$this->plugins[$plugin['hook']][$plugin['plugin']] = $plugin['config'];
+	}
 	
-	}*/
-	
-	
+	/*
 	// Add plugin function to execute when $hook happens
 	private function hook_add($hook, $function)
 	{
@@ -964,20 +1068,15 @@ App load times:
 		$this->plugin_listen[$hook][] = $function;
 		
 		return true;
-	}
+	}*/
 	
 	// Run hooks to execute plugins attached to them
 	public function hook_run($hook)
 	{
-		if(!isset($this->plugin_listen[$hook])) return false;
-		
-		$return = array();
-		foreach($this->plugin_listen[$hook] as $function)
-			$return[$function] = $function($this);
-			
-		return $return;
+		if(!isset($this->plugins[$hook])) return false;
+		foreach($this->plugins[$hook] as $plugin => $config)
+			include ROOT.'plugins/'.$plugin.'/index.php';
 	}
-	
 	
 	// public, read-only access to private variables
 	public function api($var)

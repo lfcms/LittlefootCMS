@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @ignore
+ */
 class users extends app
 {
 	public function main($vars)
