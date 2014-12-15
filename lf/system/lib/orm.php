@@ -385,8 +385,4 @@ class orm {
 		}
 		$page->save();
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> orm_count
