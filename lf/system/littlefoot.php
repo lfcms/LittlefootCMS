@@ -116,6 +116,12 @@ class Littlefoot
 	/** @var string $domain The domain used to access this application */
 	public $domain = '';
 	
+	/**
+	 * Initialize Littlefoot Object
+	 * 
+	 * $this->lf = &$this; // ensures universal availability of "$this->lf"
+	 * 
+	 */
 	public function __construct($db)
 	{
 		$this->start = microtime(true);

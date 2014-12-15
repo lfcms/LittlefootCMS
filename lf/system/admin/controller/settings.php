@@ -45,9 +45,7 @@ class settings extends app
 		}
 		
 		
-		
-		
-		/* UPGRADE   */
+		/* UPGRADE */
 		
 		$newest = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
 		
