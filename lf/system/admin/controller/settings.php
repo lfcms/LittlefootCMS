@@ -224,6 +224,20 @@ class settings extends app
 		redirect302();
 	}
 	
+	public function reinstall($args)
+	{
+		if(!isset($args[1])) return 'invalid request';
+		
+		if(!preg_match('/^[a-zA-Z0-9_\.]+$/', $args[1], $match))
+			return 'bad app specified';
+		
+		chdir(ROOT.'apps/'.$match[0]);
+		
+		$this->db->import('install.sql');
+		
+		redirect302();
+	}
+	
 	public function restore($vars)
 	{
 		if(!isset($vars[1])) redirect302();
