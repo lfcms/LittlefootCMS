@@ -175,7 +175,7 @@ class orm {
 		if(isset($result[0]))
 			$result = $result[0];
 		return $result['count'];
-	}	
+	}
 	
 	// Where override
 	public function where($clause)
