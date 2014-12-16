@@ -9,6 +9,7 @@
                 <link href="%skinbase%css/styles.css" rel="stylesheet">
                 <link href="%skinbase%css/nav.css" rel="stylesheet">
 				<link href="%skinbase%css/apps.css" rel="stylesheet">
+				<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 
                 <!-- Load in jQuery for handy hover function | Removes titles of links on hover-->
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
