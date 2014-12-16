@@ -1,6 +1,5 @@
  @font-face {
-	font-family: ubuntu;
-	src: url('../includes/fonts/Ubuntu-L.ttf');
+	font-family: 'Open Sans', Arial, sans-serif;
 }
 * {
     margin: 0;
@@ -8,7 +7,7 @@
 	background-color 0.25s linear 0s;
 }
 html {
-	font-family: ubuntu;
+	font-family: 'Open Sans', Arial, sans-serif;
     overflow-y: scroll;
 }
 a {
@@ -106,7 +105,6 @@ input[type="submit"] {
 	border: 1px solid #bbb;
 	padding: 5px;
 	margin: 5px 0;
-	font-family: ubuntu;
 }
 input[type="submit"]:hover {
 	background-color: #efefef;
@@ -126,7 +124,6 @@ div.loginbox {
     background-color: #333;
     border-radius: 5px;
     box-shadow: 0 0 10px 1px #777777;
-    font-family: arial;
     left: 50%;
     margin-left: -160px;
     margin-top: -145px;
