@@ -1,4 +1,23 @@
 <?php
+/*
+# LF Admin
+
+* %adminurl%
+* match request[0] to a class in controller/
+* extract variables from request
+* pull latest available lf version
+* check nocsrf on POST (should do it on GET too...)
+* %variable% replace
+* load nav.php
+* highlight active navigation item
+* hook_run(pre lf render)
+* load $admin_skin
+* replace %skinbase%
+* include $this->lf->head before </head>
+* csrf_token replace in <forms>
+* print final rendered output
+
+*/
 
 $request = $this->action;
 
