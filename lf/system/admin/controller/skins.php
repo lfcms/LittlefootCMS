@@ -257,10 +257,15 @@ class skins extends app
 							//display message back to user here
 							$(".ajax_message").remove();
 							
-							$('#skin_nav').append('<p class="ajax_message">saved</p>');
+							$('#skin_nav').append('<p class="ajax_message">Saved!</p>');
 							
+							var options = { direction: 'down' };
 							
-							$(".ajax_message").hide('slow');
+							$(".ajax_message")
+								.hide()
+								.slideToggle('slow')
+								.delay(2000)
+								.slideToggle('slow');
 							
 							
 							//$("#ajax_message").remove();
