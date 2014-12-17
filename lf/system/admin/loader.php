@@ -3,9 +3,12 @@
 # LF Admin
 
 * %adminurl%
+* pull latest available lf version
+
+## Route action to controller
+
 * match request[0] to a class in controller/
 * extract variables from request
-* pull latest available lf version
 * check nocsrf on POST (should do it on GET too...)
 * %variable% replace
 * load nav.php
@@ -25,7 +28,24 @@ $request = $this->action;
 if($this->auth['access'] != 'admin')
 	redirect302($this->base);
 
-$this->base .= 'admin/';
+// so baseurl never changes. make a new one for local admin reference.
+$this->adminurl = $this->base.'admin/';
+
+$this->base .= 'admin/'; // backward compatible
+
+// get latest version
+if(!isset($_SESSION['upgrade']))
+{
+	$newversion = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+	if($this->lf->version != $newversion && $this->lf->version != '1-DEV')
+		$_SESSION['upgrade'] = $newversion;
+	else
+		$_SESSION['upgrade'] = false;
+}
+
+
+/* */
+
 
 // Get a list of admin tools
 foreach(scandir('controller') as $controller)
@@ -42,14 +62,7 @@ if(!$success) $match[0] = 'dashboard';
 
 $this->vars = array_slice($this->action, 1);
 
-if(!isset($_SESSION['upgrade']))
-{
-	$newversion = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
-	if($this->lf->version != $newversion && $this->lf->version != '1-DEV')
-		$_SESSION['upgrade'] = $newversion;
-	else
-		$_SESSION['upgrade'] = false;
-}
+
 
 //formauth
 require_once(ROOT.'system/lib/nocsrf.php');
@@ -74,9 +87,10 @@ $class = $match[0];
 $this->appurl = $this->base.$class.'/';
 echo $this->apploader($class);
 $replace = array(
-	'%baseurl%' => $this->base,
-	'%relbase%' => $this->relbase,
-	'%appurl%' 	=> $this->base.$class.'/'
+	'%baseurl%' => $this->lf->base,
+	'%relbase%' => $this->lf->relbase,
+	'%appurl%' 	=> $this->lf->base.$class.'/',
+	'%adminurl%' => $this->lf->adminurl
 );
 
 $app = str_replace(array_keys($replace), array_values($replace), ob_get_clean());
@@ -85,6 +99,7 @@ ob_start();
 include('view/nav.php');
 $nav = ob_get_clean();
 
+// find current nav item
 preg_match_all('/<li><a class="[a-z]+" href="('.preg_quote($this->base, '/').'([^\"]+))"/', $nav, $links);
 $match = -1;
 foreach($links[2] as $id => $request)
@@ -92,9 +107,11 @@ foreach($links[2] as $id => $request)
 $replace = str_replace('<li>', '<li class="current">', $links[0][$match]);
 $nav = str_replace($links[0][$match], $replace, $nav);
 
-$this->hook_run('pre lf render');
 
 ob_start();
+
+echo $this->hook_run('pre lf render');
+
 include('skin/'.$admin_skin.'/index.php');
 
 $out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());

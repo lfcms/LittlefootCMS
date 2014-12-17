@@ -304,7 +304,10 @@ App load times:
 		{
 			chdir('system/admin');
 			
-			$admin_skin = 'leap'; // this needs to be an option instead of hard coded
+			//ob_start();
+			include 'index.php';
+			//return ob_get_clean();
+			/*$admin_skin = 'leap'; // this needs to be an option instead of hard coded
 			
 			// maybe you are an admin, but I need you to login first
 			if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
@@ -346,8 +349,7 @@ App load times:
 				
 				echo $out;
 				return 0;
-			}
-				
+			}*/	
 		}
 								
 		$this->auth['acl'] = $this->apply_acl();
@@ -482,6 +484,9 @@ App load times:
 		
 		
 		$this->base = $protocol.$_SERVER['HTTP_HOST'].$port.$request[1].$request[2]; // account for use of index.php/
+		
+		$this->baseurl = $this->base; // keep $Xurl usage
+		
 		$this->relbase = $request[1]; // /subdir/ for use with web relative file reference
 		
 		$this->basenoget = $this->base.$request[3].$request[4];
