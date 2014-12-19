@@ -4,7 +4,7 @@
 		<li><input type="text" name="user" value="<?=$values['user'];?>" /> Username</li>
 		<li><input type="password" name="pass" /> Password</li>
 		<li><input type="password" name="pass2" /> Confirm Password</li>
-		<li><input type="text" name="email" value="<?=$values['email'];?>" /> Email</li>
+		<li><input type="email" name="email" value="<?=$values['email'];?>" required> Email</li>
 		<li><input type="text" name="nick" value="<?=$values['nick'];?>" /> Nickname</li>
 		<li><input type="text" name="group" value="<?=$values['group'];?>" /> Group (user, admin, etc)</li>
 		
