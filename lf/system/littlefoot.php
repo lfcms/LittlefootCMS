@@ -839,7 +839,7 @@ App load times:
 		// replace global variables
 		$global_replace = array(
 			'%login%' => $login,
-			'%title%' => $this->select['title']." | ".$_SERVER['HTTP_HOST'],
+			'%title%' => $this->select['title']/*." | ".$_SERVER['HTTP_HOST']*/,
 			'%skinbase%' => $this->relbase.'lf/skins/'.$this->select['template'],
 			'%baseurl%' => $this->base,
 			'%relbase%' => $this->relbase
