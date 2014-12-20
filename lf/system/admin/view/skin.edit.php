@@ -58,22 +58,21 @@ echo '
 		editor.setTheme("ace/theme/textmate");
 		editor.getSession().setMode("ace/mode/<?php echo $ext; ?>");
 		editor.focus(); //To focus the ace editor
-			
-		 
 		
 		$("#skinform").append('<textarea style="display: none" name="file" id="file" cols="30" rows="10"></textarea>');
 		
 		$("#skinform").submit(function(){
+		
 			$("textarea#file").val(editor.getValue());
 			
 			$("#skinform").append('<input type="hidden" id="hidden_ajax" name="ajax" value="true" />');
 			
 			//   var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
-			$.ajax({ 
-			  type: "POST", 
-			  url: $("#skinform").attr("action"),  
-			  data: $("#skinform").serialize(),  
-			  success: function(data) {  
+			$.ajax({
+			  type: "POST",
+			  url: $("#skinform").attr("action"),
+			  data: $("#skinform").serialize(),
+			  success: function(data) {
 				$("#hidden_ajax").remove(); // unset ajax
 				$("#skinform input[name=csrf_token]").val(data);
 				
