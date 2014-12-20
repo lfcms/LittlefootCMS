@@ -27,8 +27,7 @@ echo '
 				right: 0;
 				bottom: 0;
 				left: 0;
-				height: 600px;
-				/*height: '.($linecount*16).'px;*/
+				height: '.($linecount*16).'px;
 			}
 		</style>
 		<div id="editor">'.htmlentities($data).'</div>
@@ -82,8 +81,6 @@ echo '
 				$(".ajax_message").remove();
 				
 				$('#skin_nav').append('<p class="ajax_message">Saved!</p>');
-				
-				var options = { direction: 'down' };
 				
 				$(".ajax_message")
 					.hide()
