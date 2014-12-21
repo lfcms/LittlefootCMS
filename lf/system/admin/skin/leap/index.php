@@ -7,6 +7,7 @@
                 <meta name="keywords" content="cms, content management system, website, web development, web design, littlefoot, littlefoot cms" />
                 <!-- Le styles -->
                 <link href="%skinbase%css/styles.css" rel="stylesheet">
+                <!-- <link href="%skinbase%css/fresh.css" rel="stylesheet"> -->
                 <link href="%skinbase%css/nav.css" rel="stylesheet">
 				<link href="%skinbase%css/apps.css" rel="stylesheet">
 				<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
