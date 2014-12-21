@@ -1,7 +1,15 @@
 <?php
 
 // Settings form
-$rewrite = 'URL Rewrite:<br />  <select name="setting[rewrite]" id=""><option value="on">on</option><option value="off">off</option></select>';
+
+$rewrote = '';
+if(!isset($settings['rewrite']) || $settings['rewrite'] == 'off')
+{
+	$rewrote = ' (if you <a target="_blank" href="'.str_replace('/index.php', '', $this->lf->base.'settings/').'">click here</a> and get 404, this should remain off)';
+}
+
+
+$rewrite = 'URL Rewrite:'.$rewrote.'<br />  <select name="setting[rewrite]" id=""><option value="on">on</option><option value="off">off</option></select>';
 if(!isset($settings['rewrite']) || $settings['rewrite'] == 'off')
 	$rewrite = str_replace(' value="off"', ' selected="selected" value="off"', $rewrite);
 	
