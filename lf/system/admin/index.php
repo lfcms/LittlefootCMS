@@ -1,9 +1,5 @@
 <?php
 
-// hoping one day to make admin/ get loaded more like a standard LF app
-
-exit();
-
 $admin_skin = 'leap'; // this needs to be an option instead of hard coded
 			
 // maybe you are an admin, but I need you to login first
@@ -15,7 +11,6 @@ if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') ===
 	ob_start();
 	include('skin/'.$admin_skin.'/login.php'); 
 	echo str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-	exit; 
 }
 
 if($this->auth['access'] == 'admin')
@@ -23,7 +18,6 @@ if($this->auth['access'] == 'admin')
 	include('loader.php');
 	$this->function_timer['admin'] = microtime(true) - $funcstart;
 	$this->app_timer['no apps, just admin'] = 0;
-	return 0;
 }
 
 if(strpos($this->auth['access'], 'app_') !== false)
@@ -45,5 +39,7 @@ if(strpos($this->auth['access'], 'app_') !== false)
 	$out = str_replace('class="content"', 'class="content" style="margin: 10px;"', $out);
 	
 	echo $out;
-	return 0;
 }
+
+
+exit; 
