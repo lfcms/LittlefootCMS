@@ -19,11 +19,13 @@ if($this->auth['user'] != 'anonymous')
 					<input type="hidden" name="dest" value="<?php $_SERVER['REQUEST_URI']; ?>" />
 					<li class="auth_user"><input type="text" name="user" placeholder="username" /></li>
 					<li class="auth_pass"><input type="password" name="pass" placeholder="password" /></li>
-					<li class="auth_submit"><input type="submit" value="Log In" /></li>
+					<li class="auth_submit"><input class="light_gray button" type="submit" value="Log In" /></li>
 					<li class="auth_links">
 						<a href="%baseurl%_auth/forgotform">Forgot?</a>
+					</li>
+					<li class="auth_links">
 						<?php if($this->settings['signup'] == 'on') { ?>
-							or <a href="%baseurl%_auth/signup">Sign Up</a>
+						<a href="%baseurl%_auth/signup">Sign Up</a>
 						<?php } ?>
 					</li>
 				</ul>

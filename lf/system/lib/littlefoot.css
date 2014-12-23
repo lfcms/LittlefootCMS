@@ -37,6 +37,10 @@ html {
 	box-sizing: inherit;
 }
 
+.banner {
+	padding: 20px 0;
+}
+
 .container {
 	display: block;
 	margin-left: auto;

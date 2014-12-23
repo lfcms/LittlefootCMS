@@ -9,10 +9,10 @@
 				<h2>Login</h2>
 				<form action="%baseurl%_auth/login" method="post">
 					<ul class="vlist">
-						<li>Username: <input type="text" name="user" /></li>
-						<li>Password: <input type="password" name="pass" /></li>
+						<li><input type="text" name="user" placeholder="Username" /></li>
+						<li><input type="password" name="pass" placeholder="Password" /></li>
 						<li><a href="%appurl%forgotform/">Forgot your password?</a></li>
-						<input class="gray button" type="submit" name="submit" value="Log In" />
+						<input class="light_gray button" type="submit" name="submit" value="Log In" />
 					</ul>
 				</form>
 			</div>
@@ -40,9 +40,9 @@
 				<h2>Sign up!</h2>
 				<form action="%appurl%create/" method="post">
 					<ul class="vlist">
-						<li>Username:<input type="text" name="user" /></li>
-						<li>Password:<input type="password" name="pass"/></li>
-						<li>Email:<input type="text" name="email" /></li>
+						<li><input type="text" name="user" placeholder="Username"/></li>
+						<li><input type="password" name="pass" placeholder="Password"/></li>
+						<li><input type="text" name="email" placeholder="Email Address"/></li>
 						<!-- <li><input type="checkbox" name="terms" /> I accept the <a href="%baseurl%terms/" target="_blank">terms and conditions</a>.</li> -->
 						<li><input class="light_gray button" type="submit" value="Sign Up!"/></li>
 					</ul>
