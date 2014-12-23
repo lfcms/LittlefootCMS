@@ -880,7 +880,9 @@ App load times:
 		}
 		
 		ob_start();
-		echo str_replace('</head>', $this->lf->head.'</head>', $template);
+		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
+		echo str_replace('<head>', '<head>
+		<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/littlefoot.css" />', $template);
 		
 		$this->hook_run('pre lf render');
 		
