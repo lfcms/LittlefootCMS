@@ -333,4 +333,10 @@ function jsprompt($msg = 'Are you sure?')
 	return 'onclick="return confirm(\''.$msg.'\');"';
 }
 
+function strdump($str)
+{
+	for($i = 0; $i < strlen($str); $i++)
+		echo '# '.$i.': "'.$str[$i].'" "'.ord($str[$i]).'<br />';
+}
+
 ?>
