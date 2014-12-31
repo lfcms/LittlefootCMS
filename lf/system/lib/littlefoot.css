@@ -117,6 +117,14 @@ html {
 	border-radius: 5px;
 }
 
+.martop {
+	margin-top: 1.414rem !important;
+}
+
+.marbot {
+	margin-bottom: 1.414rem !important;
+}
+
 .rounded li:first-child {
     border-radius: 5px 5px 0px 0px;
 }
@@ -214,6 +222,7 @@ html {
 .fvlist li:last-child {
 	border-bottom: 1px solid #777;
 }
+
 .efvlist li {
 	padding: 0.618rem;
 	display: block;
@@ -231,6 +240,24 @@ html {
 
 .efvlist li:hover {
 	border-left-color: #1195AA;
+}
+
+.efvlist li:active,
+.efvlist li.active {
+	border-left-color: #00AA63;
+}
+
+nav.vlist li,
+nav.fvlist li,
+nav.efvlist li {
+	padding: 0;
+}
+
+nav.vlist li a,
+nav.fvlist li a,
+nav.efvlist li a {
+	display: block;
+	padding: 0.618rem;
 }
 
 small, .font_small {
