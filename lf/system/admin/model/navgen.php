@@ -9,7 +9,7 @@ function build_menu($menu, $edit, $parent = -1, $depth = -1, $prefix = '', $snip
 	static $release = 0;
 	$items = $menu[$parent];
 	
-	$html = '<ol>';
+	$html = '<ol class="efvlist rounded">';
 	if(count($items) > 0)
 	foreach($items as $item)
 	{
@@ -104,7 +104,7 @@ function build_hidden($items, $edit)
 	
 	static $release = 0;
 	
-	$html = '<ul>';
+	$html = '<ul class="efvlist rounded">';
 	if(count($items) > 0)
 		foreach($items as $item)
 		{

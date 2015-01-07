@@ -51,7 +51,7 @@ function make_table($data, $type, $db)
 	
 	$ret .= '<input type="submit" value="Add New" />
 			</form>
-			<table>
+			<table class="table">
 				<tr>
 					<th>'.implode('</th><th>', $keys).'</th>
 					<th></th>

@@ -36,24 +36,22 @@ $(document).ready(function(){
 
 <body class="login">
 
-<div class="loginbox radius3">
-	<div class="loginboxinner radius3">
+<div class="loginbox">
+	<div class="loginboxinner">
     	<div class="loginheader">
     		<h1 class="bebas">Sign In</h1>
-        	<div class="logo"><h1 class="bebas" style="color: #DDD">LittleFoot CMS</h1></div>
+        	<div class="logo"><h1>LittleFoot CMS</h1></div>
     	</div><!--loginheader-->
         
         <div class="loginform">
         	<div class="loginerror"><p>Invalid username or password</p></div>
         	<form id="login" action="%baseurl%_auth/login" method="post"> 
             	<p>
-                	<label for="username" class="bebas">Username</label>
-                    <input type="text" id="username" name="user" class="radius2" />
+                    <input type="text" id="username" name="user" placeholder="Username" />
 					<input type="hidden" name="submit" value="Log In" />
                 </p>
                 <p>
-                	<label for="password" class="bebas">Password</label>
-                    <input type="password" id="password" name="pass" class="radius2" />
+                    <input type="password" id="password" name="pass" placeholder="Password" />
                 </p>
                 <p>
                 	<button class="radius3 bebas">Sign in</button>

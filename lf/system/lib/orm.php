@@ -79,6 +79,12 @@ class orm {
 			echo $this->sql;
 	}
 	
+	public function debug()
+	{
+		$this->debug = true;
+		return $this;
+	}
+	
 	public function __toString() 
 	{
 		ob_start();
