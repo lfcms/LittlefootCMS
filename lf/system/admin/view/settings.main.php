@@ -1,130 +1,127 @@
-<?php
-
-// Settings form
-
-$rewrote = '';
-if(!isset($settings['rewrite']) || $settings['rewrite'] == 'off')
-{
-	$rewrote = ' (if you <a target="_blank" href="'.str_replace('/index.php', '', $this->lf->base.'settings/').'">click here</a> and get 404, this should remain off)';
-}
-
-
-$rewrite = 'URL Rewrite:'.$rewrote.'<br />  <select name="setting[rewrite]" id=""><option value="on">on</option><option value="off">off</option></select>';
-if(!isset($settings['rewrite']) || $settings['rewrite'] == 'off')
-	$rewrite = str_replace(' value="off"', ' selected="selected" value="off"', $rewrite);
-	
-if(!isset($settings['force_url']) || $settings['force_url'] != '')
-	$url = $settings['force_url'];
-else $url = '';
-$force_url = 'Force URL (empty to not force URL):<br /> <input type="text" name="setting[force_url]" size="50" value="'.$url.'" />';
-
-if(!isset($settings['nav_class']) || $settings['nav_class'] != '')
-	$class = $settings['nav_class'];
-else $class = '';
-$navclass = 'Navigation CSS class:<br /> <input type="text" name="setting[nav_class]" value="'.$class.'" />';
-
-$debug = 'Debug:<br />  <select name="setting[debug]" id=""><option value="on">on</option><option value="off">off</option></select>';
-if(!isset($settings['debug']) || $settings['debug'] == 'off')
-	$debug = str_replace(' value="off"', ' selected="selected" value="off"', $debug);
-
-$apps = scandir(ROOT.'apps'); // get app list
-unset($apps[1], $apps[0]);
-$simple_options = '<option value="_lfcms">Full CMS</option>';
-foreach($apps as $app)
-{
-	if(is_file(ROOT.'apps/'.$app.'/index.php'))
-		$simple_options .= '<option value="'.$app.'">'.$app.'</option>';
-}
-$simple_options = str_replace(' value="'.$settings['simple_cms'].'"', ' selected="selected" value="'.$settings['simple_cms'].'"', $simple_options);
-$simplecms = 'Simple CMS: <br /> <select name="setting[simple_cms]" id="">'.$simple_options.'</select>';
-
-// Settings form
-$signup = 'Enable Signup:<br />  <select name="setting[signup]" id=""><option value="on">on</option><option value="off">off</option></select>';
-if(!isset($settings['signup']) || $settings['signup'] == 'off')
-	$signup = str_replace(' value="off"', ' selected="selected" value="off"', $signup);
- 
-echo '
-	<div id="admin_settings">
-		<h2>Settings</h2>
+<h2>Settings</h2>
+<div class="row">
+	<div class="col-6">	
 		<form action="?" method="post">
-			<ul>
-				<li><input type="submit" value="Save Changes" /></li>
-				<li>'.$rewrite.'</li>
-				<li>'.$force_url.'</li>
-				<li>'.$navclass.'</li>
-				<li>'.$debug.'</li>
-				<li>'.$signup.'</li>
-				<li>'.$simplecms.' (works, but no option for ini yet)</li>
+			<ul class="efvlist rounded">
+				<li>
+					<label for="rewrite">URL Rewrite:</label>
+					<?php foreach($rewrite['options'] as $option):
+						$checked = $rewrite['value']==$option?'checked':'';
+					?>
+					<input id="rewrite" type="radio" <?=$checked;?> name="rewrite" value="<?=$option;?>" /> <?=ucfirst($option);?>
+					<?php endforeach; ?>
+				</li>
+				<li>
+					<label for="debug">Debug</label>
+					<?php foreach($debug['options'] as $option):
+						$checked = $debug['value']==$option?'checked':'';
+					?>
+					<input id="debug" type="radio" <?=$checked;?> name="debug" value="<?=$option;?>" /> <?=ucfirst($option);?>
+					<?php endforeach; ?>
+				</li>
+				<li>
+					<label for="signup">Sign Up</label>
+					<?php foreach($signup['options'] as $option):
+						$checked = $signup['value']==$option?'checked':'';
+					?>
+					<input id="signup" type="radio" <?=$checked;?> name="signup" value="<?=$option;?>" /> <?=ucfirst($option);?>
+					<?php endforeach; ?>
+				</li>
+				<li>
+					<label for="setting[simple_cms]">Simple CMS: (works, but no option for ini yet)</label> 
+					<select id="setting[simple_cms]" name="setting[simple_cms]">
+						<option value="_lfcms">Full CMS</option>
+
+						<?php foreach($simplecms['options'] as $option): 
+							$selected = $simplecms['value'] == $option ? 'selected="selected"' : '';
+						?>
+						<option <?=$selected;?> value="<?=$option;?>"><?=$option;?></option>
+					<?php endforeach; ?>
+					</select> 
+				</li>
+				<li>
+					<label for="setting[force_url]">Force URL (empty to not force URL):</label>
+					<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=$force_url;?>" />
+				</li>
+				<li>
+					<label for="setting[nav_class]">Navigation CSS class:</label>
+					<input id="setting[nav_class]" type="text" name="setting[nav_class]" value="<?=$nav_class;?>" />
+				</li>
 			</ul>
+			<input class="blue button martop" type="submit" value="Save Changes" />
 		</form>
 	</div>
-	
-	<div id="admin_upgrade">
-		<div id="current">
-		<div class="upgrade-button">
-			<a href="%appurl%lfup/">Upgrade Littlefoot</a>
-		</div>
-		<div class="upgrade-info">
-			<h4>Current version: '.$this->request->api('version').'</h4>';
-	
-if($newest != $this->request->api('version'))
-	echo '<p>Latest version available: '.$newest.'</p>';
-else
-	echo '<p>You are up to date!</p>';
+	<div class="col-6">
+		<ul class="efvlist rounded">
+			<li>
+				<h4>Current version: <?=$this->request->api('version');?></h4>
+				
+				<?php if($newest != $this->request->api('version')): ?>
+					<p>Latest version available: <?=$newest;?></p>
+				<?php else: ?>
+					<p>You are up to date!</p>
+				<?php endif; ?>
 
-if($this->request->api('version') == '1-DEV')
-{
-	echo '<p><a href="%appurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>';
-}
-
-echo '
-		</div>
+				<?php if($this->request->api('version') == '1-DEV'): ?> 
+					<p><a href="%baseurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
+				<?php endif; ?>
+				
+			</li>
+			<li>
+				<div id="restore">
+					<h4>Restore Old Version</h4>
+					<div class="old-version-info">
+					
+					<?php if(is_dir(ROOT.'backup')) {
+							$backups = scandir(ROOT.'backup/');
+							$backup_count = 0;
+							
+							foreach($backups as $backup) {
+								if($backup == '.' || $backup == '..') continue;
+								
+								if(is_file(ROOT.'backup/'.$backup.'/version'))
+									$version = file_get_contents(ROOT.'backup/'.$backup.'/version');
+								else
+									continue;
+								?>
+								
+								<p><?=$version;?> - <a href="%baseurl%restore/<?=$backup;?>/">restore</a> -
+								<a href="%baseurl%rm/<?=$backup;?>/" class="delete_item">delete</a></p>
+								
+								<?php
+								$backup_count++;
+							}
+							
+							if($backup_count == 0)
+								echo '<p>No system restore points are available.</p>';
+						}
+					?>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div>
+					<h3>Reinstall</h3>
+					<?php
+					
+						$installs = glob(ROOT.'apps/*/install.sql');
+						//var_dump($installs);
+						foreach($installs as $install)
+						{
+							preg_match('/([^\/]+)\/install.sql$/', $install, $match);
+							//print_r($match);
+							
+							?>
+							
+							[<a href="%baseurl%reinstall/<?=$match[1];?>">reinstall</a>] <?=$match[1];?><br />
+							
+							<?php
+						}
+						
+					?>		
+				</div>
+			</li>
+		</ul>
+		<a class="blue button martop" href="%baseurl%lfup/">Upgrade Littlefoot</a>
 	</div>
-	<div id="restore">
-		<h4>Restore Old Version</h4>
-		<div class="old-version-info">';
-		if(is_dir(ROOT.'backup'))
-		{
-			$backups = scandir(ROOT.'backup/');
-			$backup_count = 0;
-			foreach($backups as $backup)
-			{
-				if($backup == '.' || $backup == '..') continue;
-				
-				if(is_file(ROOT.'backup/'.$backup.'/version'))
-					$version = file_get_contents(ROOT.'backup/'.$backup.'/version');
-				else
-					continue;
-				
-				echo '<p>'.$version.' - <a href="%appurl%restore/'.$backup.'/">restore</a> -
-				<a href="%appurl%rm/'.$backup.'/" class="delete_item">delete</a></p>';
-				
-				$backup_count++;
-			} 
-			
-			if($backup_count == 0)
-				echo '<p>No system restore points are available.</p>';
-		}
-		echo '
-		</div>
-	</div>';
-	
-	echo '<div><h3>APP MANAGEMENT</h3>';
-	
-	$installs = glob(ROOT.'apps/*/install.sql');
-	//var_dump($installs);
-	foreach($installs as $install)
-	{
-		preg_match('/([^\/]+)\/install.sql$/', $install, $match);
-		//print_r($match);
-		
-		echo '[<a href="%appurl%reinstall/'.$match[1].'">reinstall</a>] '.$match[1].'<br />';
-	}
-	
-	echo '
-		
-	</div>
-	
-</div>';
-		
-?>
+</div>

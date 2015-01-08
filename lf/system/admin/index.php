@@ -10,7 +10,15 @@ if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') ===
 	
 	ob_start();
 	include('skin/'.$admin_skin.'/login.php'); 
-	echo str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
+
+	$out = ob_get_clean();
+
+	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
+        $out = str_replace('%baseurl%', $this->base.'admin/', $out);
+        $out = str_replace('%relbase%', $this->relbase, $out);
+	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
+
+	echo $out;
 }
 
 if($this->auth['access'] == 'admin')

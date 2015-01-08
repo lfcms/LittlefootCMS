@@ -4,116 +4,44 @@
  * @ignore
  */
 class users extends app
-{
-	public function main($vars)
-	{		
-		$result = $this->db->query('SELECT id, user, email, display_name, access, status FROM lf_users ORDER BY user');
-		$row = $this->db->fetch();
-		$row_id = $row['id'];
-		unset($row['id']);
-		$headers = implode('</th><th>', array_keys($row));
-		include 'model/getusers.php';
-		
-		$action = 'create';
-		$link = '';
-		$id = '';
-		$values = array(
-			'',
-			'',
-			'',
-			'',
-			''
-		);
-		
-		
-		
-		include 'view/users.view.php';
+{	
+	public function main($args)
+	{
+		$users = orm::q('lf_users')->order()->get();
+		$usercount = count($users); 
+		include 'view/users.main.php';
 	}
 	
-	public function edit($vars)
+	public function edit($args)
 	{
-		$save = $this->db->fetch('
-			SELECT id, user, email, display_name, access 
-			FROM lf_users WHERE id = '.intval($vars[1]));
-		//$row_id = $row['id'];
-		//unset($row['id']);
-		//$headers = implode('</th><th>', array_keys($row));
-		//include 'model/getusers.php';
+		$user = orm::q('lf_users')->filterByid($args[1])->first();
+		include 'view/users.edit.php'; 
+	}
+	
+	public function update($args)
+	{
+		if($_POST['pass'] != '')
+			$pass = sha1($vars['pass']);
 		
-		$action = 'update';
-		$link = ' ( <a href="%appurl%newuser/">Create New User</a> )';
+		unset($_POST['pass']);
+		unset($_POST['pass2']);
 		
-		$id = '<input type="hidden" name="id" value="'.$save['id'].'" />';
+		if(isset($pass))
+			$_POST['pass'] = $pass;
 		
+		orm::q('lf_users')->debug()->updateById($args[1], $_POST);
 		
+		$this->notice('User Saved');
 		
-		$values = array(
-			'user' => $save['user'],
-			'email' => $save['email'],
-			'nick' => $save['display_name'],
-			'group' => $save['access']
-		);
-		
+		redirect302($this->lf->appurl);
+	}
+	
+	public function newuser($args)
+	{
 		include 'view/users.create.php';
 	}
 	
-	public function update($vars)
-	{
-		$template = array(
-			'html' => '<td>(<a href="%href%">%text%</a>)</td>',
-			'replace' => array( '%href%', '%text%')
-		);
-		
-		$vars = $this->request->post;
-		$id = $this->db->escape($vars['id']);
-		
-		$insert = array(
-			"user = '"			.$this->db->escape($vars['user']) ."'",
-			"email = '"		.$this->db->escape($vars['email'])."'",
-			"display_name = '"	.$this->db->escape($vars['nick'])."'",
-			"access = '"		.$this->db->escape($vars['group'])."'",
-		);
-		
-		if($vars['pass'] != '')
-			$insert[] = "pass = '".sha1($vars['pass'])."'";
-		
-		$sql = "UPDATE lf_users 
-				SET ".implode(', ', $insert)." 
-				WHERE id = ".$id;
-		$this->db->query($sql);
-		
-		redirect302();
-	}
-	
-	public function newuser($vars)
-	{
-		$result = $this->db->query('SELECT id, user, email, display_name, access FROM lf_users ORDER BY user');
-		$row = $this->db->fetch();
-		$row_id = $row['id'];
-		unset($row['id']);
-		$headers = implode('</th><th>', array_keys($row));
-		
-		include 'model/getusers.php';
-		
-		$action = 'create';
-		$link = '';
-		$id = '';
-		
-		if(!count($_POST))
-			$values = array(
-				'user' => '',
-				'email' => '',
-				'nick' => '',
-				'access' => '',
-				'sendmail' => ''
-			);
-		else
-			$values = $_POST;
-		
-		include 'view/users.create.php';
-	}
-	
-	public function create($vars)
+	public function create($args)
 	{
 		$postnames = array(
 			'user' => "Username",
@@ -124,6 +52,7 @@ class users extends app
 			'group' => "Group",
 			'adminpass' => "Admin password"
 		);
+		
 		foreach($postnames as $name => $text)
 			if(!isset($_POST[$name]) || $_POST[$name] == '')
 				$error[] = "'$text' is empty";
@@ -135,8 +64,8 @@ class users extends app
 		
 		if(isset($error))
 		{
-			echo '<span class="admin_error">Unable to create user:<br/>* '.implode('<br />* ', $error).'</span>';
-			return $this->newuser($vars);
+			$this->notice('Unable to create user:<br/>* '.implode('<br />* ', $error));
+			redirect302();
 		}
 		
 		$sql = "SELECT id FROM lf_users WHERE id = ".$this->request->api('getuid')." AND pass = '".sha1($_POST['adminpass'])."'";
@@ -161,16 +90,21 @@ class users extends app
 				lf_users 	( `id`, `last_request`, `".implode('`, `',array_keys($insert))."`)
 				VALUES	( NULL, NOW(), '".implode("', '",array_values($insert))."')
 		";
+		
 		$this->db->query($sql);
 		
 		if(isset($_POST['sendmail']))
-			mail($vars['email'], 'You have a new account at '.$_SERVER['SERVER_NAME'], 'Hello,
+			mail(
+				$_POST['email'], 
+				'You have a new account at '.$_SERVER['SERVER_NAME'], 
+/*outdented to not break email*/				
+'Hello,
 
 You can log in to your new account with the following credentials:
 
 Host: http://'.$_SERVER['SERVER_NAME'].$this->request->relbase.'
-User: '.$vars['user'].'
-Pass: '.$vars['pass'].'
+User: '.$_POST['user'].'
+Pass: '.$_POST['pass'].'
 
 Do not reply to this email. It was generated automatically.', 
 'From: noreply@'.$_SERVER['SERVER_NAME']);
@@ -183,8 +117,7 @@ Do not reply to this email. It was generated automatically.',
 		$sql = "DELETE FROM lf_users WHERE id = ".intval($vars[1]);
 		$this->db->query($sql);
 		
-		header("Location: ".$this->request->appurl);
-		exit();
+		redirect302($this->request->appurl);
 	}
 }
 

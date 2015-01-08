@@ -1,834 +1,272 @@
- @font-face {
-	font-family: 'Open Sans', Arial, sans-serif;
+/* The Basics */
+html, body {
+	height: 100%;
+	width: 100%;
 }
-* {
-    margin: 0;
-	transition: border-color 0.25s linear 0s,
-	background-color 0.25s linear 0s;
-}
+
 html {
-	font-family: 'Open Sans', Arial, sans-serif;
-    overflow-y: scroll;
+	font-size: 16px;
 }
-a {
-    color: #0063aa;
-    text-decoration: none;
-}
-a#forgot {
-    color: #F0F0F0;
-    display: block;
-    margin-top: 10px;
-    text-decoration: none;
-}
-a:hover {
-    color: #3878A7;
-}
-input:focus {
-    outline: 0 none;
-}
-.admin_error {
-	background: none repeat scroll 0 0 #DDAAAA;
-    border: medium solid #BB0000;
-    color: #BB3333;
-    display: block;
-    font-weight: bold;
-    margin: 10px 0;
-    padding: 10px;
-}
-.delete_item:hover,
-.nav_delete_item:hover {
-	color: red;
-}
-.login h1 {
-    color: rgba(20, 20, 20, 0.6);
-    font-size: 30px;
-    padding: 0;
-}
-.login #recaptcha_widget_div {
-    margin: 0 auto 15px;
-    text-align: center;
-}
-.login .error {
-    background: none repeat scroll 0 0 #FFAAAA;
-    border: 3px solid #FF0000;
-    margin-top: 15px;
-    padding: 5px;
-    text-align: center;
-}
-h2 {
-	font-size: 1.27em;
-	margin-bottom: 10px;
-	color: #000;
-}
-h2 a {
-	color: #0063aa;
-}
-h3 {
-    /* font-size: 14px; */
-    color: #444;
-}
-h4 {
-    color: #444;
-}
-ul, ol {
-	padding-left: 0px;
-}
+
 body {
-    overflow-x:  hidden;
-    width: 100%;
-    color: #222;
-}
-footer {
-    bottom: 0;
-    position: static;
-    padding: 10px 0;
-}
-footer .footer-credits {
-}
-header {
-    color: #ffffff;
-}
-li {
-	list-style-type: none;
-}
-input, select {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	padding: 5px;
-}
-option {
-	transition: none;
-}
-input[type="submit"] {
-	font-size: 16px;
-	color: #222;
-	border: 1px solid #bbb;
-	padding: 5px;
-	margin: 5px 0;
-}
-input[type="submit"]:hover {
-	background-color: #efefef;
-}
-textarea {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	padding: 5px;
-}
-body.login {
-    background-color: rgba(0,0,0,.1);
-}
-div.loginbox {
-    -moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-    background-color: #333;
-    border-radius: 5px;
-    box-shadow: 0 0 10px 1px #777777;
-    left: 50%;
-    margin-left: -160px;
-    margin-top: -145px;
-    padding: 15px;
-    position: absolute;
-    top: 50%;
-    width: 320px;
-}
-div.loginbox h1 {
-}
-div.loginbox form {
-    margin-top: 10px;
-}
-div.loginbox form label {
-    color: #F0F0F0;
-    font-size: 24px;
-}
-div.loginbox form input#username, div.loginbox form input#password {
-    -moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-    background-color: rgba(100, 100, 100, 0.4);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    color: #BBBBBB;
-    font-size: 22px;
-    margin-bottom: 15px;
-    padding: 5px 10px;
-    width: 100%;
-}
-div.loginbox form input#username:focus, div.loginbox form input#password:focus {
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-div.loginbox form button {
-    background-color: #CCCCCC;
-    border: medium none;
-    border-radius: 2px;
-    color: #555555;
-    font-size: 25px;
-    margin-bottom: 0;
-    padding: 8px 40px;
-    text-decoration: none;
-    width: 100%;
-}
-div.loginbox form button:hover {
-    background-color: #EEEEEE;
-}
-div.loginbox a.whitelink {
-    color: #FFFFFF;
-}
-div.loginbox a.whitelink:hover {
-    color: #EEEEEE;
-    text-decoration: underline;
-}
-.loginheader .logo {
-    float: left;
-}
-.loginheader .bebas {
-    float: right;
-}
-.container {
-    min-height: 100%;
-    position: absolute;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-.container .wrapper {
-    float: left;
-    margin-top: 10px;
-    width: 100%;
-}
-.content {
-    padding: 0px 15px;
-    margin: 40px 0px 0px 170px;
-}
-.dashboard_manage {
-	min-width: 630px;
-	float: left;
-	background: #fff;
-	border: 1px solid #bbb;
-	padding: 15px;
-}
-.small {
-    font-weight: normal;
-}
-.clear {
-    clear: both;
-}
-.userbar {
-    
-    background: #333;
-    width: 100%;
-    height: 40px;
-    top: 0px;
-    position: fixed;
-    z-index: 999;
-    color: #DDDDDD;
-    overflow: hidden;
-    text-align: right;
+	line-height: 1;
+	font-family: 'Open Sans', Arial, sans-serif;
+	font-weight: 400;
+	overflow-y: scroll;
+	color: #444;
 }
 
-.userbar h1 a {
-    transition: color 0.5s ease-in-out 0s;
-    text-align:  center;
-    width: 170px;
-    display:  block;
-	
-    color: lightgray;
-    float: left;
-    font-size: 24px;
-    padding: 4px 0px;
+ol, ul {
+	list-style: none;
 }
 
-#site_preview { float: left; margin: 0; padding: 10px 0; background: #555; }
-#site_preview:hover { background: #BBB; }
-#site_preview a { color: #EEE; padding: 10px;  }
+blockquote, q {
+	quotes: none;
+}
 
-.userbar h1 a:hover {
-	color: #fff;
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
 }
-.userbar #greeting {
-    margin-right: 10px;
-    float: right;
-    padding: 9px 0px 10px 0px;
-}
-.userbar a {
-    transition: background-color 0.25s linear 0s, color 0.25s linear 0s;
-    color: lightgray;
-    padding: 10px;
-}
-.userbar #greeting a:hover {
-    color: red;
-}
-.dash-admin-app {
-    background-color: #FAFAFA;
-    border-radius: 3px;
-    box-shadow: 0 0 5px 0 #AAAAAA;
-    color: #444444;
-    float: left;
-    margin: 10px;
-    padding: 15px;
-    width: 350px;
-}
-.dash-admin-app > h3 {
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-#app-dashboard {
-	margin-bottom: 10px;
-}
-#app-dashboard #appgallery {
-    width: 650px;
-    /* top: 50px; */
-    /* right: 15px; */
-    /* position: fixed; */
-    float: left;
-}
-#app-dashboard #appgallery li {
-    list-style-type: none;
-}
-#app-dashboard #appgallery #appgallery-container {
-	border: 1px solid #bbb;
-}
-#app-dashboard #appgallery #appgallery-container div#new-app {
-    clear: both;
-    border-bottom: 1px solid #bbb;
-    border-left: solid 3px #bbb;
-	padding: 5px;
-    background-color: #fff;
-    box-shadow: 0 1px 3px 0px #bbb;
-    display: block;
-	overflow: auto;
-}
-#app-dashboard #appgallery #appgallery-container div#new-app:hover {
-	border-left-color: #0063aa;
-}
-#app-dashboard #appgallery #appgallery-container div#new-app form {
-	font-size: 14px;
-    padding: 5px;
-}
-#app-dashboard #appgallery #appgallery-container div#new-app form div {
-	float: left;
-	margin: 10px 15px 5px 0;
-}
-#app-dashboard #appgallery #appgallery-container div#new-app form div input{
-}
-#app-dashboard #appgallery #appgallery-container div#new-app form div input[type="file"] {
-	border: 1px solid #bbb;
-	padding: 5px;
-}
-#app-dashboard #appgallery #appgallery-container div#new-app form div input[type="submit"] {
-	margin: 0px 0px 5px 5px;
-} 
-#app-dashboard #appgallery #appgallery-container div#new-app form div span{
-	font-size: 13px;
-}
-#app-dashboard #appgallery #appgallery-container > ul.applist {
-	overflow: auto;
-}
-#app-dashboard #appgallery #appgallery-container > ul.applist > li {
-    border-bottom: 1px solid #e2e2e2;
-    border-left: solid 3px #bbb;
-    min-height: 75px;
-    padding: 5px;
-    background-color: #f5f5f5;
-    display: block;
-    /* margin: 1px 0; */
-}
-#app-dashboard #appgallery #appgallery-container > ul.applist > li:first-child {
-    margin-top: 0;
-}
-#app-dashboard #appgallery #appgallery-container > ul.applist > li:last-child {
-	margin-bottom: 0;
-}
-#app-dashboard #appgallery #appgallery-container > ul.applist > li:hover {
-    border-bottom-color: #bbb;
-    background-color: #fff;
-    border-left-color: #0063aa;
-}
-#app-dashboard #appgallery #appgallery-container > ul.applist > li a {
-    font-size: 18px;
-}
-#app-dashboard #appgallery #appgallery-container  > ul.applist > li div.left_header a {
-    font-size: 18px;
-}
-#app-dashboard #appgallery #appgallery-container .left_header {
-	float: left;
-}
-#app-dashboard #appgallery #appgallery-container .right_header {
-	float: right;
-}
- {
-}
-#app-dashboard #appgallery #appgallery-container .left_header,
-#app-dashboard #appgallery #appgallery-container .right_header {
-	padding: 0 5px;
-}
-#app-dashboard #appgallery #appgallery-container .left_header a,
-#app-dashboard #appgallery #appgallery-container .right_header a {
-	font-size: small;
-}
-#app-dashboard #actions {
-    margin-right: 15px;
-    width: 650px;
-    border-radius: 3px;
-    float: left;
-}
-#app-dashboard #actions li {
-    list-style-type: none;
-}
-#app-dashboard #actions > ol,
-#app-dashboard #actions > ul {
-    border: 1px solid #bbb;
-    margin: 5px 0 10px 0;
-}
-#app-dashboard #actions > ol li, #actions > ul li {
-    color: gray;
-    /* border-right: 1px solid #bbb; */
-    border-bottom: 1px solid #e2e2e2;
-    transition:  none;
-    font-size: 18px;
-    border-left: 3px solid #bbb;
-    background-color: #f5f5f5;
-    /* border-top: 1px solid #e2e2e2; */
-    /* margin: 1px 0; */
-    padding: 10px;
-}
-#app-dashboard #actions > ol li:hover, #actions > ul li:hover {
-    border-left-color: #0063aa;
-    background-color: #fff;
-    border-bottom-color: #bbb;
-}
-#app-dashboard #actions > ol li .cancel_edit {
-}
-#app-dashboard #actions .selected {
-    background-color: #fff;
-    /* border: 3px solid #00aa63; */
-    border-bottom-color: #bbb;
-}#app-dashboard #actions .selected > ol {
-	margin-top: 10px;
-}
-#app-dashboard #actions .selected:hover {
-	border-left-color: #00aa63;
-}
-#app-dashboard #actions .selected form {
-}
-#app-dashboard #actions .selected form input,
-#app-dashboard #actions .selected form select {
-	padding: 5px;
-}
-#app-dashboard #actions .selected form ul {
-	margin: 10px 0;
-}
-#app-dashboard #actions .selected form ul li {
-	border-right: none;
-	border-bottom: none;
-	border-top: 1px dashed #bbb;
-	box-shadow: none;
-	border-radius: 0;
-	margin:  0;
-	background-color: transparent;
-	border-left: none;
-}
-#app-dashboard #actions .selected form ul li:last-child {
-	border-bottom: 1px dashed #bbb;
-}
-#app-dashboard #actions .nav_delete_item {
-	float: right;
-}
- {	
-}
-#app-dashboard #actions .nav_manage_link {
-    margin-right: 20px;
-    float: right;
 
-}
-#app-dashboard #actions .no_admin {
-	margin-right: 20px;
-	float: right;
-}
-#app-skins li {
-    list-style-type: none;
-}
-#app-skins ul.applist {
-    float: left;
-    margin: 0 0 10px 0;
-}
-#app-skins ul.applist li {
-    border-bottom: 1px solid #bbb;
-    border-right: 1px solid #bbb;
-    border-left: 1px solid #bbb;
-    background-color: #FFFFFF;
-    border-top: 5px solid #bbb;
-    float: left;
-    margin: 5px 15px 10px 0px;
-	padding:  15px;
-    height: 295px;
-    width: 325px;
-}
-#app-skins ul.applist li:hover {
-    border-top-color: #0063aa;
-}
-#app-skins ul.applist li.current_skin {
-	border-top-color: #00aa63;
-}
-#app-skins ul.applist li.current_skin div.skin-name {
-	font-weight: bold;
-}
-#app-skins ul.applist li.current_skin div.default a {
-	color: gray;
-}
-#app-skins ul.applist li div.skin-name {
-	font-size: 22px;
-}
-#app-skins ul.applist li div.skin-name:hover {
-}
-#app-skins ul.applist li div.default {
-}
-#app-skins ul.applist li div.default a {
-    margin-bottom: 15px;
-    margin-right: 10px;
-    float: left;
-    width: 145px;
-    color: #222;
-    margin-top: 10px;
-    text-align: center;
-    background-color: #e2e2e2;
-    display: block;
-
-    border: 1px solid #bbb;
-    padding: 5px;
-}
-#app-skins ul.applist li div.default a:hover {
-	background-color: #efefef;
-}
-#app-skins ul.applist li div.edit {
-}
-#app-skins ul.applist li div.edit a {
-    margin-bottom: 15px;
-    float: left;
-    width: 145px;
-    color: #222;
-    margin-top: 10px;
-    text-align: center;
-    background-color: #e2e2e2;
-    display: block;
-
-    border: 1px solid #bbb;
-    padding: 5px;
-}
-#app-skins ul.applist li div.edit a:hover {
-	background-color: #efefef;
-}
-#app-skins ul.applist li div.delete,
-#app-skins ul.applist li div.skin-zip {
-	font-size: 18px;
-	margin-left: 15px;
-	float: right;
-}
-#app-skins ul.applist li div.delete {
-    font-size: 18px;
-}
-#app-skins ul.applist li div.delete a {
-}
-#app-skins ul.applist li div.screenshot {
-    color: #bbb;
-    margin-top: 15px;
-	
-}
-#app-skins ul.applist li div.screenshot img {
-    display: block;
-    max-height: 200px;
-    max-width: 100%;
-    margin: auto;
-	clear: both;
-}
-#app-skins #new_skins {
-	background-color: #fff;
-	padding: 15px;
-}
-#app-skins #new_skins h3 {
-	margin-bottom: 5px;
-}
-#app-skins #new_skins h4 {
-	border-top: 2px dashed #ddd;
-	margin-top: 10px;
-	padding-top: 5px;
-}
-#app-skins #new_skins #upload_skin_form  input[type="file"] {
-	padding: 5px;
-}
-#app-skins #new_skins #upload_skin_form  input[type="submit"] {
-	width: 100%;
-	margin: 5px 0;
-}
-#app-skins #new_skins #upload_skin_form span{
-	text-align: center;
-	font-size: 13px;
-}
-#app-skins #create_skin_form {
-}
-#app-skins #create_skin_form input[type="submit"] {
-	font-size: 16px;
-	width: 100%;
-	color: #fff;
-	color: #222;
-	border: 1px solid #bbb;
-	padding: 5px;
-	margin: 5px 0;
-}
-#app-skins #create_skin_form input[type="submit"]:hover {
-	background-color: #efefef;
-}
-#app-skins #create_skin_form #create_skin_namebox {
-    margin: 5px 0;
-    border: 1px solid #bbb;
-    width: 100%;
-    padding: 5px;
-    font-size: 16px;
-}
-#app-skins #create_skin_form #create_skin_namebox:focus {
-	border-color: #24AF68;
-}	
-#app-skins #upload_skin_form {
-    margin-bottom: 10px;
-}
-#app-skins #upload_skin_form #upload_skin_file {
-	width: 100%;
-	border: 1px solid #bbb;
-	margin: 5px 0;
-}
-#app-skins #skin_nav {
-    max-height: 85%;
-    right: 10px;
-    position: fixed;
-    overflow: auto;
-    width: 195px;
-}
-#app-skins #skin_nav > a {
-    overflow: hidden;
-    padding: 5px;
-    display: block;
-    margin-left: 10px;
-    border-left: 5px solid #bbb;
-    padding-left: 5px;
-}
-#app-skins #skin_nav > a:hover {
-    text-decoration: underline;
-}
-#app-skins #skin_nav > a.selected {
-    border-left-color: #00aa63;
-}
-#app-skins #skin_nav h3 {
-	margin-left: 10px;
-	margin-bottom: 5px;
-}
-#app-skins #skin_nav h3 a {
-}
-#app-skins #skin_nav input {
-	margin: 10px 0px 10px 10px;
-}
-#app-skins #skin_nav .ajax_message {
-    margin: 0px 0px 10px 15px;
-	
-}
-#app-skins div#editor {
-	border: 1px solid #bbb;
-	margin-top: 5px;
-	margin-right: 200px;
-	background-color: #fff;
-}
-#app-users ul {
-}
-#app-users form ul li {
-    list-style-type: none;
-    margin-top: 10px;
-}
-#app-users form ul li:first-child {
-	margin-top: 0;
-}
-#app-users form li input {
-	margin: 0;
-    color: #555555;
-}
-#app-users form li input:focus {
-    color: #222222;
-}
-#app-users table {
+table {
+	border-collapse: collapse;
 	border-spacing: 0;
-	width: 100%;
-	background-color: #FFFFFF;
-	border: 1px solid #bbb;
 }
-#app-users table tr {
-    border-bottom: 1px solid #e2e2e2;
-    background-color: #f5f5f5;
-}
-#app-users table tr:hover {
-	background-color: #fff;
-}
-#app-users table tr:hover > td {
-	border-bottom-color: #bbb;
-}
-#app-users table tr:first-child {
-	background-color: #fff;
-}
-#app-users table tr:last-child td {
-	border-bottom: none;
-}
-#app-users table tr:nth-child(2n+1) {
-}
-#app-users table tr > th {
-	border-bottom: 1px solid #bbb;
-	padding:15px
-}
-#app-users table tr > td {
-	text-align: center;
-	padding: 15px 0px;
-	border-bottom: 1px solid #e2e2e2;
-}
-#app-acl form.add {
-	padding: 0;
-	margin: 5px 0px 10px 0px;
-}
-#app-acl form.add select {
-	padding: 5px;
-}
-#app-acl form.add input{
-	padding: 5px;
-}
-#app-acl table {
-	border-spacing: 0;
-	width: 100%;
-	background-color: #FFFFFF;
-	border: 1px solid #bbb;
-}
-#app-acl table tr {
-    border-bottom: 1px solid #e2e2e2;
-    background-color: #f5f5f5;
-}
-#app-acl table tr:hover {
-	background-color: #fff;
-}
-#app-acl table tr:hover > td {
-	border-bottom-color: #bbb;
-}
-#app-acl table tr:first-child {
-	background-color: #fff;
-}
-#app-acl table tr:last-child td {
-	border-bottom: none;
-}
-#app-acl table tr:nth-child(2n+1) {
-}
-#app-acl table tr > th {
-	border-bottom: 1px solid #bbb;
-	padding:15px
-}
-#app-acl table tr > td {
-	text-align: center;
-	padding: 15px 0px;
-	border-bottom: 1px solid #e2e2e2;
-}
-#app-settings  ul {
-	width: 630px;
-	margin: 5px 15px 10px 0;
-	float: left;
-	list-style-type: none;
-    
-	border: 1px solid #bbb;
-    background-color: #FFFFFF;
-    
-}
-#app-settings  ul  li {
-	border-left: 3px solid #bbb;
-	background-color: #f5f5f5;
-	border-bottom: 1px solid #E2E2E2;
-	padding: 15px;
-}
-#app-settings  ul  li:hover {
-	border-bottom-color: #bbb;
-	border-left-color: #0063aa;
-	background-color: #fff;
-}
-#app-settings  ul  li:first-child {
-	border-left: none;
-	background-color: #fff;
-	border-bottom: 1px solid #bbb;
+
+nav {
 
 }
-#app-settings  ul  li:last-child {
-    border-bottom: none;
+
+nav a {
+	text-decoration: none;
 }
-#app-settings  ul  li input,
-#app-settings  ul  li select {
-	margin-top: 10px;
-	width: 100%;
-}
-#app-settings  ul  li input[type="submit"] {
-	font-size: 14px;
-	color: #fff;
-	background-color: #00884F;
-	margin: auto;
+
+/* Typography */
+h1, h2, h3, h4, h5, h6, p {
 	display: block;
-	width: 80%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 1.414rem 0 0.5rem;
+  font-weight: inherit;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 6.854rem;
+}
+
+h2 {
+	font-size: 4.236rem;
+	margin-top: 0;
+	opacity: 0.9;
+}
+
+h3 {
+	font-size: 2.618rem;
+	opacity: 0.8;
+}
+
+h4 {
+	font-size: 1.618rem;
+	opacity: 0.7;
+}
+
+p {
+	margin-top: 1.3rem;
+	margin-bottom: 1.3rem;
+}
+
+a {
+	text-decoration: none;
+	color: #1195AA;
+}
+
+code {
+	overflow: auto;
+	display: block;
+	font-family: Courier, monospace;
+	padding: 5px 10px;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	background-color: rgba(51,51,51, 0.25);
+	white-space: pre;
+}
+
+ul li {
+	margin-right: 20px;
+	display: inline;
+	float: left;
+}
+
+hr {
+	border: none;
+	border-bottom: 1px solid rgba(68,68,68,0.25);
+	clear: both;
+	margin: 20px 0 19px 0;
+	width: 100%;
+}
+
+.userbar a,
+.userbar span {
+	font-size: 1.618rem;
+}
+
+#admin_title {
+	display: block;
+	padding: 15px 0;
+}
+
+#site_preview {
+	display: block;
+	padding: 15px 0;
+}
+
+#admin_greeting {
+	padding: 15px 0;
+}
+
+#logout_button a {
+	display: block;
+	padding: 15px 0;
+	margin-left: 15px;
+}
+
+#admin_title:hover,
+#site_preview:hover {
+	color: #FFF !important;
+}
+
+/* Forms and Login */
+input[type=text],
+input[type=url],
+input[type=tel],
+input[type=number],
+input[type=color],
+input[type=email],
+input[type=password],
+input[type=date],
+select {
+	background: #FFF;
+	background-clip: padding-box;
+	border: #AAA 1px solid;
+	border-top: #777 1px solid;
+	border-radius: 4px;
+	display: block;
+	font-size: 16px;
+	height: 40px;
+	line-height: 20px;
+	margin-bottom: 10px;
 	padding: 10px;
+	width: 100%;
 }
-#app-settings  ul  li input[type="submit"]:hover {
+
+select {
+	background-image: url('data:image/gif;base64,R0lGODlhFAAUALMAAP////r6+vT09O3t7eTk5Nvb29nZ2dbW1tTU1NHR0c/Pz6Skq5qaolVVYgAAAAAAACH5BAEHAAAALAAAAAAUABQAAARHEMhJaw02W6G7HNrCdES2NM2YFdaJpplRuS9cHRRd2xPidYmfRiHMBIsV30RXU01wuR1vIps1VyaUs1IybSsgJIUjnmDKkggAOw==');
+	background-position: center right;
+	background-repeat: no-repeat;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+input[type=text]:focus,
+input[type=url]:focus,
+input[type=tel]:focus,
+input[type=number]:focus,
+input[type=color]:focus,
+input[type=email]:focus,
+input[type=password]:focus,
+input[type=date]:focus,
+select:focus {
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(17, 149, 170, 0.35);
+	box-shadow: 0px 0px 10px 0px rgba(17, 149, 170, 0.35);
+	border: #1195AA 1px solid;
+	outline: 0;
+}
+
+label, .label {
+	overflow: hidden;
+	border: none;
+    border-radius: 4px;
+    color: #222;
+    float: left;
+	font-size: 1rem;
+	line-height: 20px;
+	margin: 0;
+	margin-right: 10px;
+    padding: 10px 20px 10px 20px;
+	text-align: center; 
+    text-decoration: none;
+	width: 100%;
+	background-color: #FFF;	
+}
+
+button, .button, input[type=submit] {
+	overflow: hidden;
+	border: none;
+    border-radius: 4px;
+    color: white;
+    float: left;
+	font-size: 1rem;
+	line-height: 20px;
+	margin: 0;
+	margin-right: 10px;
+    padding: 10px 20px 10px 20px;
+	text-align: center; 
+    text-decoration: none;
+	width: 100%;
+	background-color: #AAA;
+}
+
+.button_default {
 	background-color: #00aa63;
 }
-#app-settings #admin_upgrade {
-	width: 630px;
-	border: 1px solid #bbb;
-	float: left;
-	margin: 5px 15px 0 0;
-	background-color: #FFFFFF;
+
+#auth_lf {
+	overflow: hidden;
+	width: 100%;
 }
-#app-settings #admin_upgrade h4 {
+
+#auth_lf .auth_welcome {
+
 }
-#app-settings #admin_upgrade .upgrade-button {
-	border-bottom: 1px solid #bbb;
-	padding: 15px;
+
+#auth_lf .auth_welcome a  {
+	margin-left: 20px;
 }
-#app-settings #admin_upgrade .upgrade-button a {
-    margin: auto;
-    text-align:  center;
-    display: block;
-    width: 80%;
-    font-size: 14px;
-    padding: 10px 0;
-    color:  #fff;
-    border: 1px solid #bbb;
-    background-color: #00884F;
+
+#auth_lf .auth_login {
+	
 }
-#app-settings #admin_upgrade .upgrade-button a:hover {
-	background-color: #00aa63;
+
+#auth_lf .auth_login a {
 }
-#app-settings #admin_upgrade .upgrade-info {
-	border-left: 3px solid #bbb;
-	border-bottom: 1px solid #E2E2E2;
-	background-color: #f5f5f5;
-	padding: 15px 15px 15px 15px;
+
+#auth_lf .auth_links {
+    padding-top: 8px;
+	
 }
-#app-settings #admin_upgrade .upgrade-info:hover {
-	border-bottom-color: #bbb;
-	border-left-color: #0063aa;
-	background-color: #fff;
+
+/*Tables */
+.table {
+    width: 100%;
+
 }
-#app-settings #admin_upgrade .old-version-info {
+
+.table th {
+    font-weight: bold;
+    padding: 0.618rem;
+    border: 1px solid #AAA;
+
 }
-#app-settings #admin_upgrade .old-version-info p {
+
+.table td {
+    padding: 0.618rem;
+    border: 1px solid #AAA;
+
 }
-#app-settings #admin_upgrade #current {
-}
-#app-settings #admin_upgrade #restore {
-    padding: 15px;
-    background-color:  #f5f5f5;
-    border-left: 3px solid #bbb;
-}
-#app-settings #admin_upgrade #restore:hover {
-	border-left-color: #0063aa;
-	background-color: #fff;
-}
-#store-wrapper {
-	padding: 15px;
-	background-color: #fff;
-	min-width: 630px;
-	float: left;
-}
+
+/* Custom CSS */

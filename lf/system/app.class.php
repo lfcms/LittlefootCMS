@@ -233,6 +233,11 @@ class app
 			return implode(', ', $temp);
 		}
 	}
+	
+	public function hasnotice($namespace = 'lf')
+	{
+		return isset($_SESSION['notice_'.$namespace]);
+	}
 }
 
 ?>
