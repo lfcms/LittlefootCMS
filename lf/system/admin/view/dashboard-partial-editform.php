@@ -5,17 +5,12 @@ $thelink = $this->links[$save['id']][0];
 $save['app'] = $thelink['app'];
 $save['ini'] = $thelink['ini'];
 
+// Default args is an input with the current value. Customizable by app.
 $args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';
 
-$pwd = ROOT.'apps/';
-//if(is_file($pwd.$save['app'].'/args.php'))
-//	include $pwd.$save['app'].'/args.php';
-
-/* -=-=-=-=-=- %EDITFORM% -=-=-=-=-=-*/
+// Args for app config ini
 if(is_file(ROOT.'apps/'.$save['app'].'/args.php'))
-{
 	include ROOT.'apps/'.$save['app'].'/args.php';
-}
 
 ?>
 

@@ -99,6 +99,25 @@
  * 
  * And links back to the main function. Follow the [Littlefoot app tutorial]() for a more in-depth guide.
  * 
+ * ## Variable Scope
+ * 
+ * If you need a value to be accessible throughout an app (including within a partial) without needing to pass by value or reference, you can simply set the variable as such:
+ * 
+ * `$this->mySpecialVar = 'some value I want to use everywhere, or just for this part';`
+ * `$this->myOtherSpecialVar = array('something' => 'cool');`
+ * 
+ * And these will be accessible everywhere in the app (helpful for recursive partials)
+ * 
+ * ## Partials
+ * 
+ * $this->partial('some-partial', array('myvar' => 'someval');
+ * 
+ * ```
+ * <?php // view/some-partial.php
+ * 
+ * echo $myvar; // "someval"
+ * ```
+ * 
  */
 class app
 {

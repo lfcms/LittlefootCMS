@@ -30,14 +30,6 @@ $(document).ready(function() {
 				<ul class="efvlist">
 					<?=$this->partial('dashboard-partial-nav', array('actions' => $actions));?>
 				</ul>
-				<?php /*
-					if(isset($nav['html']))
-					{
-							echo $nav['html'];
-					}
-					else
-							echo '<p>- No nav set -</p>'; */
-				?>
 			</div>
         </div>
         <h3>Hidden Navigation</h3>
@@ -45,14 +37,8 @@ $(document).ready(function() {
         <div class="row">
 			<div class="col-12">
 				<ul class="efvlist">
-					<?=$this->partial('dashboard-partial-hidden', array('actions' => $actions));?>
+					<?=$this->partial('dashboard-partial-hidden', array('actions' => $hidden));?>
 				</ul>
-				<?php /*
-					if(isset($hooks['html']))
-							echo $hooks['html'];
-					else
-							echo '<p>Hide nav items from the main menu by setting the position to 0</p>';*/
-				?>
 			</div>
 		</div>
 	</div>
@@ -70,31 +56,17 @@ $(document).ready(function() {
 				<p>Click an app to add it to the nav. <a href="%appurl%download/">Download more apps from the Store</a></p>
 			</div>
 			<ul class="efvlist rounded">
-			<?php
-					foreach(scandir($pwd) as $file)
-					{
-							if($file == '.' || $file == '..') continue;
-
-							$app = $pwd.'/'.$file;
-
-							if(is_dir($app)):
-									?>
-									<li>
-											<div class="right_header">
-													<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$file;?>/" class="delete_item">x</a>
-											</div>
-											<div class="left_header">
-													<a href="%appurl%linkapp/<?=$file;?>/"><?=$file;?></a>
-											</div>
-											<div style="clear:both"></div>
-									</li>
-							<?php
-
-							endif;
-							if(isset($vars['app']) && $vars['app'] == $file)
-									$save = $file;
-					}
-			?>
+				<?php foreach($apps as $app): ?>
+				<li>
+					<div class="right_header">
+						<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$app;?>/" class="delete_item">x</a>
+					</div>
+					<div class="left_header">
+						<a href="%appurl%linkapp/<?=$app;?>/"><?=$app;?></a>
+					</div>
+					<div style="clear:both"></div>
+				</li>			
+				<?php endforeach; ?>
 			</ul>
 		</div>
 	</div>
