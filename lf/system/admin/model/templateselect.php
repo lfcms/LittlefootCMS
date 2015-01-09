@@ -4,7 +4,7 @@ $match_file = 'default';
 if(isset($save['template']))
 	$match_file = $save['template'];
 	
-$pwd = $this->request->absbase.'skins';
+$pwd = ROOT.'skins';
 
 
 
@@ -56,4 +56,6 @@ foreach(scandir($pwd) as $file)
 		$template_select .= ' value="'.$file.'">'.$template_name.'</option>';
 	}
 }
+
+
 ?>

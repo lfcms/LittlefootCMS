@@ -29,13 +29,15 @@ class dashboard extends app
 	}
 	
 	public function main($vars)
-	{	
+	{
+		
 		if($this->simple) return;
 		
 		$this->updatenavcache(); // idk if this needs to be here lol
 	
 		// admin load edit from ini
 		include('model/navgen.php');
+		
 			$result = $this->db->query("
 				SELECT a.*, a.app as isapp, l.id as lid, l.app, l.section, l.ini
 				FROM lf_actions a 
@@ -93,7 +95,18 @@ class dashboard extends app
 			? '<input type="submit" value="Upload" /> <span>('.ini_get('upload_max_filesize').' Upload Limit)</span>'
 			: "<strong>Error: PHP Zip Extension missing.</strong>";
 		
-		include('view/dashboard.main.php');
+		
+		
+		
+		include 'model/dashboard.main.php';
+		
+		ob_start();
+		
+		include 'view/dashboard.main.php';
+		
+		echo str_replace('%subalias%', $this->subalias, ob_get_clean());
+		
+		
 	}
 
 	public function linkapp($vars)

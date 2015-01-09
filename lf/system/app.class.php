@@ -152,6 +152,22 @@ class app
 		echo '::default main function::';
 	}
 	
+	/**
+	 * Used for loading partial views given an argument
+	 * 
+	 * @param string $file The name of the view. Loaded from view/$file.php
+	 * @param array $args Associative array of $var => $val passed to the partial.
+	 */
+	public function partial($file, $args)
+	{
+		foreach($args as $var => $val)
+			$$var = $val;
+		
+		ob_start();
+		include 'view/'.$file.'.php';
+		return ob_get_clean();
+	}
+	
 	/** 
 	 * used to route based on args[0] as instance
 	 *

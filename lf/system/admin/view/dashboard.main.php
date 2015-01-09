@@ -27,13 +27,16 @@ $(document).ready(function() {
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row">
         	<div class="col-12">
-				<?php
+				<ul class="efvlist">
+					<?=$this->partial('dashboard-partial-nav', array('actions' => $actions));?>
+				</ul>
+				<?php /*
 					if(isset($nav['html']))
 					{
 							echo $nav['html'];
 					}
 					else
-							echo '<p>- No nav set -</p>';
+							echo '<p>- No nav set -</p>'; */
 				?>
 			</div>
         </div>
@@ -41,11 +44,14 @@ $(document).ready(function() {
         <!-- <p>This works just like the nav menu manager above, but these nav items will be hidden from nav menu of your website. This feature is useful for hiding apps like /signup, /secret-blog</p> -->
         <div class="row">
 			<div class="col-12">
-				<?php
+				<ul class="efvlist">
+					<?=$this->partial('dashboard-partial-hidden', array('actions' => $actions));?>
+				</ul>
+				<?php /*
 					if(isset($hooks['html']))
 							echo $hooks['html'];
 					else
-							echo '<p>Hide nav items from` the main menu by setting the position to 0</p>';
+							echo '<p>Hide nav items from the main menu by setting the position to 0</p>';*/
 				?>
 			</div>
 		</div>
