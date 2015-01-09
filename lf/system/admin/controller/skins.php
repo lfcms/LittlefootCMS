@@ -15,6 +15,18 @@ class skins extends app
 		$pwd = $this->pwd;
 		$request = $this->request;
 		$install = extension_loaded('zip') ? '<input type="submit" value="Install" />' : "Error: Zip Extension missing.";
+		
+		$skins = array();
+		foreach(scandir($pwd) as $file)
+		{
+			if($file == '.' || $file == '..') continue;
+			
+			$skin = $pwd.'/'.$file;	
+			
+			if(is_file($skin.'/index.php') || is_file($skin.'/index.html'))
+				$skins[] = $file;
+		}
+		
 		include 'view/skins.main.php';
 	}
 	
