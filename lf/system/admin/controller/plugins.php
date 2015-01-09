@@ -30,34 +30,10 @@ class plugins extends app
 		$_POST['status'] = 'active';
 		if(!$plugin_hook)
 		{
-			//$hooks = json_encode(array($_POST['hook'][$_POST['plugin']] => true));
-			//$this->db->query("INSERT INTO lf_plugins VALUES (NULL, , '".$this->db->escape($hooks)."')");
 			orm::q('lf_plugins')->insertArray($_POST);
 		}
 		else
 		{
-			/*
-			//echo 'update';
-			$plugin_hooks = json_decode($plugin_hooks['val'], 1);
-			
-			//echo '<pre>';
-			//print_r($plugin_hooks);
-			
-			$plugin_hooks[$_POST['hook']][$_POST['plugin']] = true;
-			
-			//print_r($plugin_hooks);
-			
-			$hooks = json_encode($plugin_hooks);
-			
-			
-			//var_dump($hooks);
-			
-			
-			//echo '</pre>';*/
-			
-			
-			//$this->db->query("UPDATE lf_settings SET val = '".$this->db->escape($hooks)."' WHERE var = 'plugins'");
-			
 			orm::q('lf_plugins')->updateById($plugin_hook['id'], $_POST);
 		}
 		
