@@ -104,16 +104,9 @@ function make_table($data, $type, $db)
 /**
  * @ignore
  */
-class acl
+class acl extends app
 {
-	private $db = NULL;
-	private $request;
-	
-	function __construct($request, $dbconn)
-	{
-		$this->db = $dbconn;
-		$this->request = $request;
-	}
+	//public $default_method = 'user';
 	
 	public function main($vars)
 	{
@@ -152,47 +145,87 @@ class acl
 		
 		
 		echo $table;
-		
-		/*
-		<div class="widgetbox">
-			<div class="title"><h3 class="tabbed"><span>User</span></h3></div>
-			<div class="widgetcontent padding10">
-				<div><?php echo make_table($user, 'user', $this->db); ?></div>
-			</div><!--widgetcontent-->
-		</div><!--widgetbox-->
-		<div class="widgetbox">
-			<div class="title"><h3 class="tabbed"><span>Inherit</span></h3></div>
-			<div class="widgetcontent padding10">
-				<div><?php echo make_table($inherit, 'inherit', $this->db); ?></div>
-			</div><!--widgetcontent-->
-		</div><!--widgetbox-->
-		<div class="widgetbox">
-			<div class="title"><h3 class="tabbed"><span>Global</span></h3></div>
-			<div class="widgetcontent padding10">
-				<div><?php echo make_table($global, 'global', $this->db); ?></div>
-			</div><!--widgetcontent-->
-		</div><!--widgetbox-->
-		*/ ?>
-		
-		<?php // http://dev4.bioshazard.com/littlefoot/index.php/admin/acl/#tabs-2
-		//echo make_table($user, 'user');
-		//echo make_table($inherit, 'inherit');
-		//echo make_table($global, 'global');
 	}
 	
-	private function acl_user($vars)
+	public function user($vars)
 	{
+		// Pull links from nav cache
+		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
+		$nav = str_replace('%baseurl%', '', $nav);
 		
+		// Extract action list
+		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
+	
+		// List all Users/Groups
+		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
+		
+		$users = array();
+		$groups = array();
+		foreach($result as $user)
+		{
+			$users[$user['id']] = $user['display_name'];
+			$groups[] = $user['access'];
+		}
+		
+		$groups = array_unique($groups);
+		
+		$acls = orm::q('lf_acl_user')->get();
+	
+		include 'view/acl.user.php';
 	}
 	
-	private function acl_inherit($vars)
+	public function inherit($vars)
 	{
+		// Pull links from nav cache
+		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
+		$nav = str_replace('%baseurl%', '', $nav);
 		
+		// Extract action list
+		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
+	
+		// List all Users/Groups
+		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
+		
+		$users = array();
+		$groups = array();
+		foreach($result as $user)
+		{
+			$users[$user['id']] = $user['display_name'];
+			$groups[] = $user['access'];
+		}
+		
+		$groups = array_unique($groups);
+		
+		$acls = orm::q('lf_acl_inherit')->get();
+	
+		include 'view/acl.inherit.php';	
 	}
 	
-	private function acl_global($vars)
+	public function acl_global($vars)
 	{
+		// Pull links from nav cache
+		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
+		$nav = str_replace('%baseurl%', '', $nav);
 		
+		// Extract action list
+		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
+	
+		// List all Users/Groups
+		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
+		
+		$users = array();
+		$groups = array();
+		foreach($result as $user)
+		{
+			$users[$user['id']] = $user['display_name'];
+			$groups[] = $user['access'];
+		}
+		
+		$groups = array_unique($groups);
+		
+		$acls = orm::q('lf_acl_global')->get();
+	
+		include 'view/acl.global.php';
 	}
 	
 	public function edit($vars)

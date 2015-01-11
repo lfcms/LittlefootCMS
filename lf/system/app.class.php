@@ -177,13 +177,13 @@ class app
 	 * @param string $file The name of the view. Loaded from view/$file.php
 	 * @param array $args Associative array of $var => $val passed to the partial.
 	 */
-	public function partial($file, $args)
+	public function partial($partial, $args = array())
 	{
 		foreach($args as $var => $val)
 			$$var = $val;
 		
 		ob_start();
-		include 'view/'.$file.'.php';
+		include 'view/'.$partial.'.php';
 		return ob_get_clean();
 	}
 	
