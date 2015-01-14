@@ -89,7 +89,7 @@ code {
 	overflow: auto;
 	display: block;
 	font-family: Courier, monospace;
-	padding: 5px 10px;
+	padding: 0 10px;
 	border: 1px solid rgba(0, 0, 0, 0.25);
 	background-color: rgba(51,51,51, 0.25);
 	white-space: pre;
@@ -109,36 +109,6 @@ hr {
 	width: 100%;
 }
 
-.userbar a,
-.userbar span {
-	font-size: 1.618rem;
-}
-
-#admin_title {
-	display: block;
-	padding: 15px 0;
-}
-
-#site_preview {
-	display: block;
-	padding: 15px 0;
-}
-
-#admin_greeting {
-	padding: 15px 0;
-}
-
-#logout_button a {
-	display: block;
-	padding: 15px 0;
-	margin-left: 15px;
-}
-
-#admin_title:hover,
-#site_preview:hover {
-	color: #FFF !important;
-}
-
 /* Forms and Login */
 input[type=text],
 input[type=url],
@@ -155,7 +125,7 @@ select {
 	border-top: #777 1px solid;
 	border-radius: 4px;
 	display: block;
-	font-size: 16px;
+	font-size: 1rem;
 	height: 40px;
 	line-height: 20px;
 	margin-bottom: 10px;
@@ -218,7 +188,7 @@ button, .button, input[type=submit] {
 	text-align: center; 
     text-decoration: none;
 	width: 100%;
-	background-color: #AAA;
+	background-color: #777;
 }
 
 .button_default {
@@ -269,4 +239,28 @@ button, .button, input[type=submit] {
 
 }
 
-/* Custom CSS */
+/* Mobile */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+	html {
+		font-size: 36px;
+	}
+	button, .button, input[type=submit] {
+		padding: 40px 20px;
+	}
+	/* Forms and Login */
+	input[type=text],
+	input[type=url],
+	input[type=tel],
+	input[type=number],
+	input[type=color],
+	input[type=email],
+	input[type=password],
+	input[type=date],
+	select {
+		padding: 40px 20px;
+	}
+}
+
+/* Custom */
