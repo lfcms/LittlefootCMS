@@ -35,4 +35,8 @@ if(count($actions)):
 	
 	<?php 
 	endforeach; 
-endif; 
+else: ?>
+
+Set positions to 0 to hide from main nav
+
+<?php endif; ?>
