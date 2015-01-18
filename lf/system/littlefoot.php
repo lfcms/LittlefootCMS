@@ -483,7 +483,7 @@ App load times:
 			$protocol = 'http://';
 		
 		
-		$this->base = $protocol.$_SERVER['HTTP_HOST'].$port.$request[1].$request[2]; // account for use of index.php/
+		$this->base = $protocol.$_SERVER['HTTP_HOST'].$request[1].$request[2]; // account for use of index.php/
 		
 		$this->baseurl = $this->base; // keep $Xurl usage
 		
