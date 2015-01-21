@@ -326,6 +326,7 @@ nav.efvlist li a {
 
 
 
+
 small, .font_small {
 	font-size: 0.618rem;
 }
@@ -339,6 +340,8 @@ small, .font_small {
 	border-top: 1px solid rgba(51,51,51, 0.25);
 	border-right: 1px solid rgba(51,51,51, 0.25);
 	border-bottom: 1px solid rgba(51,51,51, 0.25);
+	overflow-wrap: break-word;
+	line-height: 1.414rem;
 }
 
 /*Images*/
