@@ -21,6 +21,19 @@ $lf->request();
 
 chdir(APP); // give cwd back to app
 
+function quickload($lf)
+{
+	$app = $lf->action[0];
+	
+	if(!is_file("controllers/$app.php"))
+		return "No such $app controller";
+		
+	include "controllers/$app.php";
+	
+	$myapp = new $app($lf, $lf->db);
+	return $myapp->_router($lf->action);
+}
+
 function autoloader($lf, $defaultPath = 'main')
 {
 	ob_start();
@@ -105,6 +118,7 @@ function loader($lf)
 		echo '%login%';
 		exit;
 	}*/
+	
 /*
 	// only admins can see this page
 	//if($lf->auth['access'] != 'admin')

@@ -8,15 +8,19 @@
  * ~~~
  * // SELECT * FROM mydb.my_table WHERE id = 34
  * // returns an array
- * orm::q('my_table')->filterByid(34);
+ * orm::q('my_table')->filterByid(34)->get();
  *
  * // SELECT * FROM mydb.my_table WHERE cost > 25
  * // returns an array
- * orm::q('my_table')->filterBycost('>', 25);
+ * orm::q('my_table')->filterBycost('>', 25)->get();
  *
  * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
  * // returns result of $this->db->query($sql);
  * orm::q('my_table')->settitle('new title')->filterByid(34)->save();
+ *
+ * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
+ * // returns result of $this->db->query($sql);
+ * orm::q('my_table')->updateById(34, $_POST);
  *
  * // INSERT INTO mydb.my_table (id, title, body) VALUES (NULL, 'my title', 'my body')
  * $_POST = array('title' => 'my title', 'body' => 'my body');
@@ -73,6 +77,12 @@ class orm {
 	{
 		if($this->debug)
 			echo $this->sql;
+	}
+	
+	public function debug()
+	{
+		$this->debug = true;
+		return $this;
 	}
 	
 	public function __toString() 
@@ -160,6 +170,17 @@ class orm {
 		
 		$this->data = $cols;
 		return $this;
+	}
+
+	public function count()
+	{
+		$this->data = 'count(*) as count';
+		
+		$crud = $this->crud;
+		$result = $this->$crud();
+		if(isset($result[0]))
+			$result = $result[0];
+		return $result['count'];
 	}
 	
 	// Where override

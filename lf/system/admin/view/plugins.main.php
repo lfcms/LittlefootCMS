@@ -12,25 +12,29 @@
 		<tr>
 			<th>Hooks</th>
 			<th>Plugins</th>
+			<th>Config</th>
+			<th>Status</th>
 		</tr>
 		<tr>
-			<td><select name="hook" id=""><?=$hooks;?></select></td>
-			<td><select name="plugin" id=""><?=$plugins;?></select> <input type="submit" value="Hook It Up!" /></td>
+			<td><input type="text" name="hook" id="lf_hook" placeholder="hook_name" /></td>
+			<td><select name="plugin" id=""><?=$plugins;?></select></td>
+			<td><input type="text" name="config" placeholder="my-secret-id" /></td>
+			<td><input type="submit" value="Hook It Up!" /></td>
 		</tr>
-	<?php 
+	<?php
 	
-	var_dump($registered_hooks);
-	
-	
-	
-	foreach($registered_hooks as $hook => $plugins): ?>
+	foreach($registered_hooks as $row): ?>
 		<tr>
-			<td colspan="2"><?=$hook;?></td>
-		</tr>
-		<tr>
-			<td><?=$plugin;?></td>
-			<td><?=var_dump($hook);?></td>
+			<td><?=$row['hook'];?></td>
+			<td><?=$row['plugin'];?></td>
+			<td><?=$row['config'];?></td>
+			<td><?=$row['status'];?> <a href="%appurl%rm/<?=$row['id'];?>" class="nav_delete_item">Delete</a></td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 </form>
+<h3>Available Littlefoot Hooks</h3>
+<p>pre lf render</p>
+<p>post app blog view</p>
+<p>pre app pages</p>
+<p>post app wiki view</p>

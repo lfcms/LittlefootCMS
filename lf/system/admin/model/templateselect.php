@@ -4,7 +4,7 @@ $match_file = 'default';
 if(isset($save['template']))
 	$match_file = $save['template'];
 	
-$pwd = $this->request->absbase.'skins';
+$pwd = ROOT.'skins';
 
 
 
@@ -30,7 +30,7 @@ if($match_file == 'default')
 	}
 }
 
-$template_select .= ' value="default">Default</option>';
+$template_select .= ' value="default">-- Default --</option>';
 
 foreach(scandir($pwd) as $file)
 {
@@ -56,4 +56,6 @@ foreach(scandir($pwd) as $file)
 		$template_select .= ' value="'.$file.'">'.$template_name.'</option>';
 	}
 }
+
+
 ?>

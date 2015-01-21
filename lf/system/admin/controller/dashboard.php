@@ -1,5 +1,8 @@
 <?php 
 
+/**
+ * @ignore
+ */
 class dashboard extends app
 {
 	private $pwd;
@@ -26,71 +29,30 @@ class dashboard extends app
 	}
 	
 	public function main($vars)
-	{	
+	{
+		
 		if($this->simple) return;
 		
 		$this->updatenavcache(); // idk if this needs to be here lol
-	
-		// admin load edit from ini
-		include('model/navgen.php');
-			$result = $this->db->query("
-				SELECT a.*, a.app as isapp, l.id as lid, l.app, l.section, l.ini
-				FROM lf_actions a 
-				LEFT JOIN lf_links l
-					ON l.include = a.id
-				ORDER BY ABS(a.position)
-			");
-
-			$save = array();
-			while($row = $this->db->fetch($result))
-			{
-				if(isset($vars[1]) && $row['id'] == $vars[1])
-					$save = $row;
-				
-				if($row['position'] == 0)
-					$hidden[] = $row;
-				else
-					$menu[$row['parent']][$row['position']] = $row;
-			}
-
-			if(isset($vars[1])) $edit = $vars[1];
-			else				$edit = 0;
-
-			if(isset($menu)) 	$nav = build_menu($menu, $save);
-			if(isset($hidden))	$hooks = build_hidden($hidden, $save);
-			
-		include('model/templateselect.php'); // get all nav data
 		
-		
-		$args = '<input type="text" name="ini" placeholder="app ini" />';
-		
-		if($save != array())
-		{
-			$args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';
-			
-			$pwd = ROOT.'apps/';
-			//if(is_file($pwd.$save['app'].'/args.php'))
-			//	include $pwd.$save['app'].'/args.php';
-			
-			/* -=-=-=-=-=- %EDITFORM% -=-=-=-=-=-*/
-			ob_start();
-			if(is_file(ROOT.'apps/'.$save['app'].'/args.php'))
-				include ROOT.'apps/'.$save['app'].'/args.php';
-			include 'view/editform.php';
-			$html = ob_get_clean();
-			
-			$nav['html'] = str_replace('%editform%', $html, $nav['html']);
-			if(isset($hooks))
-				$hooks['html'] = str_replace('%editform%', $html, $hooks['html']);
-		}
-		
-		$pwd = $this->pwd;
+		/*
 		
 		$install = extension_loaded('zip') 
 			? '<input type="submit" value="Upload" /> <span>('.ini_get('upload_max_filesize').' Upload Limit)</span>'
 			: "<strong>Error: PHP Zip Extension missing.</strong>";
 		
-		include('view/dashboard.main.php');
+		*/
+		
+		
+		include 'model/dashboard.main.php';
+		
+		ob_start();
+		
+		include 'view/dashboard.main.php';
+		
+		echo str_replace('%subalias%', $this->subalias, ob_get_clean());
+		
+		
 	}
 
 	public function linkapp($vars)
@@ -108,23 +70,6 @@ class dashboard extends app
 		
 		if(is_file($pwd.$vars[1].'/args.php'))
 			include $pwd.$vars[1].'/args.php';
-		
-		// if the selected app 
-		//include 'view/linkapp.php';
-		
-		
-		/*
-		
-		if(!isset($_POST['title'])) // if simple post, auto-set other settings
-		{
-			if($_POST['alias'] == '') $_POST['alias'] = 'Home';
-			
-			$_POST['title'] = ucwords($_POST['alias']);
-			$_POST['label'] = ucwords($_POST['alias']);
-			$_POST['position'] = 9999; // it will auto adjust to the last position below
-			$_POST['isapp'] = 'off'; // is not an app by default
-			$_POST['template'] = 'default';
-		}*/
 		
 		$result = $this->db->fetchall("
 			SELECT *
@@ -410,25 +355,11 @@ class dashboard extends app
 	{
 		if($this->simple) return;
 		
-		echo '<h2><a href="%appurl%">Apps</a> / Download</h2>';
-		echo '<div id="store-wrapper">';
-			echo '<p>Applications with a link can be installed. Those that are not links are already installed.</p>';
-			
-			$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
-			$apps = array_flip(explode("\n",$apps,-1));
-			$files = array_flip(scandir(ROOT.'apps'));
-			
-			echo '<ul>';
-			foreach($apps as $app => $ignore)
-			{	
-				echo '<li>';
-				
-				if(!isset($files[$app])) echo '<a href="%appurl%getappfromnet/'.$app.'/">'.$app.'</a>';
-				else echo $app;// no updates, handled on the upgrade system. ' [<a href="%appurl%getappfromnet/'.$app.'/update/">Update</a>]';
-				echo '</li>';
-			}
-			echo '</ul>';
-		echo '</div>';
+		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
+		$apps = array_flip(explode("\n",$apps,-1));
+		$files = array_flip(scandir(ROOT.'apps'));
+		
+		include 'view/dashboard.download.php';
 	}
 	
 	public function getappfromnet($vars)
@@ -464,17 +395,15 @@ class dashboard extends app
 			
 		} else echo "App not found: ".$vars[1];
 		
-		header('HTTP/1.1 302 Moved Temporarily');
-		header('Location: '. $_SERVER['HTTP_REFERER']);
-		exit();
+		redirect302();
 	}
 	
 	public function install($vars)
 	{
-		if($this->simple) return;
+		// this has been deprecated for now. kinda works... kinda doesnt...
+		redirect302();
 		
-		header('HTTP/1.1 302 Moved Temporarily');
-		header('Location: '. $_SERVER['HTTP_REFERER']);
+		if($this->simple) return;
 		
 		preg_match('/^([_\-a-zA-Z0-9]+)\.(zip|tar\.gz)/', $_FILES['app']['name'], $match);
 		
@@ -523,7 +452,7 @@ class dashboard extends app
 			}
 		}
 		
-		exit();
+		redirect302();
 	}
 	
 	private function installsql($app)
@@ -690,9 +619,7 @@ class dashboard extends app
 			$menu[$action['parent']][$action['position']] = $action;
 		
 		$nav = build_nav_cache($menu);
-		if(!is_dir(ROOT.'cache')) mkdir(ROOT.'cache', 0777, true); // make if not exists
+		if(!is_dir(ROOT.'cache')) mkdir(ROOT.'cache', 0755, true); // make if not exists
 		file_put_contents(ROOT.'cache/nav.cache.html', $nav);
 	}
 }
-
-?>

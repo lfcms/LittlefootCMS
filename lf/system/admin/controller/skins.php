@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @ignore
+ */
 class skins extends app
 {
 	function init($args)
@@ -12,32 +15,28 @@ class skins extends app
 		$pwd = $this->pwd;
 		$request = $this->request;
 		$install = extension_loaded('zip') ? '<input type="submit" value="Install" />' : "Error: Zip Extension missing.";
+		
+		$skins = array();
+		foreach(scandir($pwd) as $file)
+		{
+			if($file == '.' || $file == '..') continue;
+			
+			$skin = $pwd.'/'.$file;	
+			
+			if(is_file($skin.'/index.php') || is_file($skin.'/index.html'))
+				$skins[] = $file;
+		}
+		
 		include 'view/skins.main.php';
 	}
 	
 	public function download($var)
 	{
-		echo '<h2><a href="%appurl%">Skins</a> / Download</h2>';
-		echo '<div id="store-wrapper">';
-			echo '<p>Skins with a link can be installed. Those that are blank are already installed.</p>';
-			
-			
-			
-			$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
-			$apps = array_flip(explode("\n",$apps,-1));
-			$files = array_flip(scandir(ROOT.'skins'));
-			
-			echo '<ul>';
-			foreach($apps as $app => $ignore)
-			{	
-				echo '<li>';
-				
-				if(!isset($files[$app])) echo '<a href="%appurl%getappfromnet/'.$app.'/">'.$app.'</a>';
-				else echo $app. ' [<a href="%appurl%getappfromnet/'.$app.'/update/">Update</a>]';
-				echo '</li>';
-			}
-			echo '</ul>';
-		echo '</div>';
+		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
+		$apps = array_flip(explode("\n",$apps,-1));
+		$files = array_flip(scandir(ROOT.'skins'));
+		
+		include 'view/skins.download.php';
 	}
 	
 	public function getappfromnet($vars)
@@ -63,9 +62,7 @@ class skins extends app
 			
 		} else echo "App not found: ".$vars[1];
 		
-		header('HTTP/1.1 302 Moved Temporarily');
-		header('Location: '. $_SERVER['HTTP_REFERER']);
-		exit();
+		redirect302();
 	}
 	
 	public function install($vars)
@@ -130,7 +127,7 @@ class skins extends app
 		$data = '<html>
 	<head>
 		<title>%title%</title>
-		<link rel="stylesheet" type="text/css" href="%{skinbase}%/css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="%skinbase%/css/styles.css" />
 	</head>
 	<body>
 		<h1>Blank Template</h1>
@@ -162,127 +159,39 @@ class skins extends app
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$skin = $this->pwd.$matches[0];
 		
-		if(is_dir($skin))
-		{
-			$template = file_get_contents($skin.'/index.php'); 
-			//$data = str_replace('%baseurl%', '%template%', $data);
-			
-			
-			preg_match_all('/"%skinbase%\/([^".]+\.(css|js))"/', $template, $match);
-			$files = $match[1];
-			$files[-1] = 'index.php';
-			
-			if(is_file($skin.'/home.php'))
-				$files[-2] = 'home.php';
-			
-			if(!isset($vars[2])) $vars[2] = -1;
-			$vars[2] = intval($vars[2]);
-			$file = $skin.'/'.$files[$vars[2]];
-			$ext = 'html';
-			if($vars[2] != -1 && $vars[2] != -2) $ext = $match[2][$vars[2]];
-			
-			$data = '';
-			if(is_file($file))
-				$data = file_get_contents($file);
-			
-			$linecount = substr_count( $data, "\n" ) + 1 + 10;
-			
-			$vars[1] .= '/'.$vars[2];
-			
-			echo '<form action="%appurl%update/'.$vars[1].'/" method="post" id="skinform">
-			
-					<div id="skin_nav">';	
-			echo '<h3><a href="%appurl%">Skins</a> / <a href="%appurl%edit/'.$matches[0].'/">'.$matches[0].'</a></h3>';
-			$data = preg_replace('/%([a-z]+)%/', '%{${1}}%', $data);
-			ksort($files);
-			
-			if(!is_file($skin.'/home.php')) echo '<a href="%appurl%makehome/'.$matches[0].'">(create home.php)</a>';
-			
-			foreach($files as $id => $url)
-			{
-				$select = '';
-				if($id == $vars[2]) $select = ' class="selected"';
-				
-				echo '<a title="'.$url.'" '.$select.' href="%appurl%edit/'.$matches[0].'/'.$id.'/">'.$url.'</a>';
-			}
-			echo '
-						<input type="submit" value="Update" />
-					</div>
-					
-					<style type="text/css" media="screen">
-						#editor { 
-							position: relative;
-							top: 0;
-							right: 0;
-							bottom: 0;
-							left: 0;
-							height: '.($linecount*16).'px;
-						}
-					</style>
-					<div id="editor">'.htmlentities($data).'</div>
-					<input type="submit" value="Update" />
-				</form>';
-			?>
-				<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
-				<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-				<script>
-				$(document).ready(function(){
-					var editor = ace.edit("editor");
-					editor.setShowPrintMargin(false);
-					editor.setTheme("ace/theme/textmate");
-					editor.getSession().setMode("ace/mode/<?php echo $ext; ?>");
-					editor.focus(); //To focus the ace editor
-					
-					 
-					
-					$("#skinform").append('<textarea style="display: none" name="file" id="file" cols="30" rows="10"></textarea>');
-					
-					$("#skinform").submit(function(){
-						$("textarea#file").val(editor.getValue());
-						
-						$("#skinform").append('<input type="hidden" id="hidden_ajax" name="ajax" value="true" />');
-						
-						//   var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
-						$.ajax({ 
-						  type: "POST", 
-						  url: $("#skinform").attr("action"),  
-						  data: $("#skinform").serialize(),  
-						  success: function(data) {  
-							$("#hidden_ajax").remove(); // unset ajax
-							$("#skinform input[name=csrf_token]").val(data);
-							
-							//display message back to user here
-							$(".ajax_message").remove();
-							
-							$('#skin_nav').append('<p class="ajax_message">saved</p>');
-							
-							
-							$(".ajax_message").hide('slow');
-							
-							
-							//$("#ajax_message").remove();
-							
-							
-							/*$token = NoCSRF::generate( 'csrf_token' );
-							$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);*/
-						  }  
-						});  
-						return false;  
-					});
-					
-					
-					/*$(window).scroll(function(){
-					  if($(this).scrollTop() > 400$('#editor').position().top){
-						$('#skin_nav').css({position:'fixed',top:10,left:10});
-					  }else{
-						$('#skin_nav').css({position:'relative'});
-					  } 
-
-					});*/
-				});
-				</script>
-			<?php
-		}
+		if(!is_dir($skin)) return 'Skin not found!';
+		
+	
+		$template = file_get_contents($skin.'/index.php'); 
+		//$data = str_replace('%baseurl%', '%template%', $data);
+		
+		
+		preg_match_all('/"%skinbase%\/([^".]+\.(css|js))"/', $template, $match);
+		$files = $match[1];
+		$files[-1] = 'index.php';
+		
+		if(is_file($skin.'/home.php'))
+			$files[-2] = 'home.php';
+		
+		if(!isset($vars[2])) $vars[2] = -1;
+		$vars[2] = intval($vars[2]);
+		$file = $skin.'/'.$files[$vars[2]];
+		$ext = 'html';
+		if($vars[2] != -1 && $vars[2] != -2) $ext = $match[2][$vars[2]];
+		
+		$data = '';
+		if(is_file($file))
+			$data = file_get_contents($file);
+		
+		$linecount = substr_count( $data, "\n" ) + 1 + 10;
+		
+		$vars[1] .= '/'.$vars[2];
+		
+		$data = preg_replace('/%([a-z]+)%/', '%{${1}}%', $data);
+		
+		ksort($files);
+		
+		include 'view/skin.edit.php';
 	}
 	
 	public function makehome($args)

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @ignore
+ */
 class upgrade extends app
 {
 	public function main($var)
