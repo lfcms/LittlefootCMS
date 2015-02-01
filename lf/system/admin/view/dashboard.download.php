@@ -2,7 +2,7 @@
 <div id="store-wrapper">
 	<p>Applications with a link can be installed. Those that are not links are already installed.</p>
 	
-	<ul>
+	<ul class="fvlist">
 	<?php foreach($apps as $app => $ignore): ?> 	
 		<li>
 		<?php if(!isset($files[$app])): ?>

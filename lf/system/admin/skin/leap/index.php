@@ -41,22 +41,24 @@
 								
 			?>
 		</header> -->
-		<div class="wrapper userbar dark_gray light light_gray_a">
+		<div class="wrapper userbar dark_gray light">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
-					<div class="col-2">
-						<a id="admin_title" href="<?=$this->base;?>">lf admin</a>
-					</div>
-					<div class="col-7">
-						<a id="site_preview" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
-					</div>
-					<div class="col-3">
-						<span id="logout_button" class="pull-right light_gray_a">
-							<a class="x" href="%baseurl%_auth/logout">logout</a>
-						</span>
-						<span id="admin_greeting" class="pull-right">
-							Hello <?=$this->auth['display_name'];?>.
-						</span>
+					<div class="userbar">
+						<div class="col-2">
+							<a id="admin_title" href="<?=$this->base;?>">lf admin</a>
+						</div>
+						<div class="col-7">
+							<a id="site_preview" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
+						</div>
+						<div class="col-3">
+							<span id="logout_button" class="pull-right">
+								<a class="x" href="%baseurl%_auth/logout">logout</a>
+							</span>
+							<span id="admin_greeting" class="pull-right">
+								Hello <?=$this->auth['display_name'];?>.
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>

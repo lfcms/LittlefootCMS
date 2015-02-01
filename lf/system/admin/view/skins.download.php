@@ -2,7 +2,7 @@
 <div id="store-wrapper">
 	<p>Skins with a link can be installed. Those that are blank are already installed.</p>
 	
-	<ul>
+	<ul class="fvlist">
 	<?php foreach($apps as $app => $ignore): ?> 	
 		<li>
 		<?php if(!isset($files[$app])): ?>
