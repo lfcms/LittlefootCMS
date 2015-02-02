@@ -17,13 +17,13 @@ if(count($_GET))
 
 ?>
 <!DOCTYPE html>
-<html>
+<html class="lf">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Login Page | <?php echo $_SERVER['HTTP_HOST']; ?></title>
-		<link href="%relbase%lf/system/lib/littlefoot.css" rel="stylesheet">
-		<link rel="stylesheet" href="%skinbase%css/styles.css" type="text/css" />
+		<link href="%relbase%lf/system/lib/lf.css" rel="stylesheet">
+		<link rel="stylesheet" href="%skinbase%css/custom.css" type="text/css" />
 	</head>
 
 	<body class="gray">

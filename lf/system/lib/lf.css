@@ -194,6 +194,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .sidebar {
+	float: right;
 	padding-left: 30px;
 }
 .lf .rounded {
@@ -476,20 +477,27 @@ nav.efvlist li a {
 }
 
 /* The Basics */
-.lf, .lf body {
+html.lf, .lf body {
 	height: 100%;
 	width: 100%;
 }
 
-.lf {
+html.lf {
 	font-size: 16px;
+}
+
+html.lf {
+	line-height: 1;
+	font-family: 'Open Sans', Arial, sans-serif;
+	font-weight: 400;
+	overflow-y: scroll;
+	color: #444;
 }
 
 .lf {
 	line-height: 1;
 	font-family: 'Open Sans', Arial, sans-serif;
 	font-weight: 400;
-	overflow-y: scroll;
 	color: #444;
 }
 
@@ -501,7 +509,9 @@ nav.efvlist li a {
 	quotes: none;
 }
 
-.lf blockquote:before, .lf blockquote:after, .lf q:before, .lf q:after {
+.lf blockquote:before,
+.lf blockquote:after,
+.lf q:before, .lf q:after {
 	content: '';
 	content: none;
 }
@@ -520,15 +530,15 @@ nav.efvlist li a {
 }
 
 /* Forms and Login */
-.lf input[type=text], .lf
-input[type=url], .lf
-input[type=tel], .lf
-input[type=number], .lf
-input[type=color], .lf
-input[type=email], .lf
-input[type=password], .lf
-input[type=date], .lf
-select {
+.lf input[type=text],
+.lf input[type=url],
+.lf input[type=tel],
+.lf input[type=number],
+.lf input[type=color],
+.lf input[type=email],
+.lf input[type=password],
+.lf input[type=date],
+.lf select {
 	background: #FFF;
 	background-clip: padding-box;
 	border: #AAA 1px solid;
@@ -552,15 +562,15 @@ select {
 	appearance: none;
 }
 
-.lf input[type=text]:focus, .lf
-input[type=url]:focus, .lf
-input[type=tel]:focus, .lf
-input[type=number]:focus, .lf
-input[type=color]:focus, .lf
-input[type=email]:focus, .lf
-input[type=password]:focus, .lf
-input[type=date]:focus, .lf
-select:focus {
+.lf input[type=text]:focus,
+.lf input[type=url]:focus,
+.lf input[type=tel]:focus,
+.lf input[type=number]:focus,
+.lf input[type=color]:focus,
+.lf input[type=email]:focus,
+.lf input[type=password]:focus,
+.lf input[type=date]:focus,
+.lf select:focus {
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(17, 149, 170, 0.35);
 	box-shadow: 0px 0px 10px 0px rgba(17, 149, 170, 0.35);
 	border: #1195AA 1px solid;
@@ -683,22 +693,36 @@ select:focus {
 @media only screen 
 and (min-device-width : 320px) 
 and (max-device-width : 480px) {
-	html.lf {
+	.lf {
 		font-size: 16px;
 	}
+	
+	.lf .col-1 { width: 100%; }
+	.lf .col-2 { width: 100%; }
+	.lf .col-3 { width: 100%; }
+	.lf .col-4 { width: 100%; }
+	.lf .col-5 { width: 100%; }
+	.lf .col-6 { width: 100%; }
+	.lf .col-7 { width: 100%; }
+	.lf .col-8 { width: 100%; }
+	.lf .col-9 { width: 100%; }
+	.lf .col-10 { width: 100%; }
+	.lf .col-11 { width: 100%; }
+	.lf .col-12 { width: 100%; }
+	
 	.lf button, .lf .button, .lf input[type=submit] {
 		padding: 20px 15px;
 	}
 	/* Forms and Login */
-	.lf input[type=text], .lf
-	input[type=url], .lf
-	input[type=tel], .lf
-	input[type=number], .lf
-	input[type=color], .lf
-	input[type=email], .lf
-	input[type=password], .lf
-	input[type=date], .lf
-	select {
+	.lf input[type=text],
+	.lf input[type=url],
+	.lf input[type=tel],
+	.lf input[type=number],
+	.lf input[type=color],
+	.lf input[type=email],
+	.lf input[type=password],
+	.lf input[type=date],
+	.lf select {
 		padding: 30px 15px;
 	}
 	.lf .lf_login {
