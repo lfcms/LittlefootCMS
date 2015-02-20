@@ -1,5 +1,3 @@
-<?=$this->partial('acl-partial-header', array('user' => '', 'inherit' => 'class="dark_bb"', 'global' => ''));?>
-
 <form action="%appurl%add/inherit" method="post">
 	<ul>
 		<li>
@@ -45,7 +43,7 @@
 		<th>Edit</th>
 		<th>Delete</th>
 	</tr>
-	<?php foreach($acls as $acl):
+	<?php if($acls) foreach($acls as $acl):
 		
 	if(isset($users[$acl['group']]))
 		$acl['group'] = 'User / '.$users[$acl['group']];
@@ -53,7 +51,7 @@
 		$acl['group'] = 'Group / '.$acl['group'];
 	
 	?>
-	<tr>
+	<tr class="text-center">
 		<td><?=$acl['group'];?></td>
 		<td>Group / <?=$acl['inherits'];?></td>
 		<td>Edit</td>

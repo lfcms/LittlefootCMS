@@ -31,7 +31,11 @@ class acl extends app
 		
 		$acls = orm::q('lf_acl_user')->get();
 	
-		include 'view/acl.user.php';
+		//include 'view/acl.user.php';
+		
+		$include = 'user';
+		
+		include 'view/acl.php';
 	}
 	
 	public function inherit($vars)
@@ -58,7 +62,9 @@ class acl extends app
 		
 		$acls = orm::q('lf_acl_inherit')->get();
 	
-		include 'view/acl.inherit.php';	
+		$include = 'inherit';
+		//include 'view/acl.inherit.php';	
+		include 'view/acl.php';	
 	}
 	
 	public function acl_global($vars)
@@ -85,7 +91,9 @@ class acl extends app
 		
 		$acls = orm::q('lf_acl_global ')->get();
 	
-		include 'view/acl.global.php';
+		$include = 'global';
+		//include 'view/acl.global.php';
+		include 'view/acl.php';
 	}
 	
 	public function edit($vars)

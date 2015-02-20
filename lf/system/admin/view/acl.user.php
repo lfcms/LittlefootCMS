@@ -1,5 +1,3 @@
-<?=$this->partial('acl-partial-header', array('user' => 'class="dark_bb"', 'inherit' => '', 'global' => ''));?>
-
 <form action="%appurl%add/user" method="post">
 	<ul>
 		<li>
@@ -11,8 +9,10 @@
 			</select>
 		</li>
 		<li>
-			<input type="radio" name="perm" value="1" checked /> Allow
-			<input type="radio" name="perm" value="0" /> Deny
+			<input type="radio" name="perm" value="1" checked />Allow
+		</li>
+		<li>
+			<input type="radio" name="perm" value="0" />Deny
 		</li>
 		<li>
 			<select name="affects" id="">
@@ -42,14 +42,16 @@
 		<th></th>
 		<th></th>
 	</tr>
-	<?php foreach($acls as $acl): 
+	<?php 
+		if($acls)
+		foreach($acls as $acl): 
 	
 		if(isset($users[$acl['affects']]))
 			$acl['affects'] = 'User / '.$users[$acl['affects']];
 		else
 			$acl['affects'] = 'Group / '.$acl['affects'];
 	?>
-	<tr>
+	<tr class="text-center">
 		<td><?=$acl['action'];?></td>
 		<td><?=$acl['perm']?'Allow':'Deny';?></td>
 		<td><?=$acl['affects'];?></td>

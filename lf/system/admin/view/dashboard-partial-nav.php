@@ -26,39 +26,46 @@ if(isset($actions[$parent])):
 		';
 	?>
 	
-	<li>
-	
+	<div class="tile rounded">
+		<div class="tile-header">
+			<p>
+				<?=str_repeat('- ', $this->depth);?> <?=$action['position'];?>. 
+			
+				<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['alias'];?>">
+					<?=$action['label'];?>
+				</a>
+				<span class="pull-right">
+					<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
+					
+					<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="">admin</a>
+								
+					<?php else: ?>
+							
+					admin
+								
+					<?php endif; ?>
+							
+					<a class="x" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
+				</span>
+			</p>
+		</div>
 		<?php if($this->edit == $action['id']): /* Load form if selected */ ?>
-		
-		<?=$this->partial('dashboard-partial-editform', array('save' => $action));?>
-		
-		<?php else: /* Else load normal nav item */ ?>
-		
-		<?=$action['position'];?>. 
-		
-		<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['alias'];?>">
-			<?=$action['alias'];?>
-		</a>
-		
-		<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
-		<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="nav_manage_link">admin</a>
-		<?php else: ?>
-		admin
+		<div class="tile-content">
+			
+				<?=$this->partial('dashboard-partial-editform', array('save' => $action));?>
+				
+			
+			
+		</div>
 		<?php endif; ?>
-		
-		<a class="x" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
-		
-		<?php endif; ?>
-		
-		<?php if(isset($actions[$action['id']])): ?>
-		
-		<ul>
+	</div>
+	
+	<?php if(isset($actions[$action['id']])): ?>
+		<!-- <ul> -->
 			<?=$this->partial('dashboard-partial-nav', array('actions' => $actions, 'parent' => $action['id']));?>
-		</ul>
+		<!-- </ul> -->
 		
-		<?php endif; ?>
-		
-	</li>
+	<?php endif; ?>
 	
 	<?php 
 	endforeach; 

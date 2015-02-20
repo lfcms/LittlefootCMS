@@ -180,6 +180,14 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	text-align: center;
 }
 
+.lf .text-right {
+	text-align: right;
+}
+
+.lf .text-left {
+	text-align: left;
+}
+
 .lf .center {
 	margin-left: auto !important;
 	margin-right: auto !important;
@@ -197,8 +205,13 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	float: right;
 	padding-left: 30px;
 }
-.lf .rounded {
-	border-radius: 5px;
+
+.lf .spaced > * {
+	margin-bottom: 1.414rem !important;
+}
+
+.lf .spaced > *:last-child {
+	margin-bottom: 0 !important;
 }
 
 .lf .martop {
@@ -209,12 +222,20 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	margin-bottom: 1.414rem !important;
 }
 
+.lf .no_mar {
+	margin: 0 !important;
+}
+
 .lf .no_martop {
 	margin-top: 0 !important;
 }
 
 .lf .no_marbot {
 	margin-bottom: 0 !important;
+}
+
+.lf .rounded {
+	border-radius: 5px;
 }
 
 .lf .rounded li:first-child {
@@ -381,13 +402,13 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .tile-header {
-    border-bottom: 1px solid rgba(51, 51, 51,  0.25);
     overflow: hidden;
     padding: 0 1rem;
 
 }
 
 .lf .tile-content {
+    border-top: 1px solid rgba(51, 51, 51,  0.25);
     overflow: hidden;
     padding: 0 1rem;
 
@@ -549,8 +570,12 @@ html.lf {
 	height: 40px;
 	line-height: 20px;
 	margin-bottom: 10px;
-	padding: 10px;
+	padding: 5px 10px;
 	width: 100%;
+}
+
+.lf input[type=radio] {
+	margin-top: 15px;
 }
 
 .lf select {

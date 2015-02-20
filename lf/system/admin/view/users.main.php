@@ -11,7 +11,7 @@
 	<div class="col-4">
 	</div>
 </div>
-<table class="table">
+<table class="table rounded">
 	<tr class="light_gray light">
 		<th>User</th>
 		<th>eMail</th>
@@ -22,14 +22,14 @@
 		<th>Delete</th>
 	</tr>
 	<?php foreach($users as $user): ?>
-	<tr>
+	<tr class="text-center">
 		<td><?=$user['user'];?></td>
 		<td><a href="mailto:<?=$user['email'];?>"><?=$user['email'];?></a></td>
 		<td><?=$user['display_name'];?></td>
 		<td><?=$user['access'];?></td>
 		<td><?=$user['status'];?></td>
 		<td><a href="%appurl%edit/<?=$user['id'];?>">edit</a></td>
-		<td><a href="%appurl%rm/<?=$user['id'];?>" class="x">delete</a></td>
+		<td><a href="%appurl%rm/<?=$user['id'];?>" class="x">x</a></td>
 	</tr>
 	<?php endforeach; ?>
 </table>

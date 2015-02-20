@@ -26,10 +26,10 @@ $(document).ready(function() {
 		<h3>Navigation</h3>
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row">
-        	<div class="col-12">
-				<ul class="efvlist">
-					<?=$this->partial('dashboard-partial-nav', array('actions' => $actions));?>
-				</ul>
+        	<div class="col-12 spaced">
+				<!-- <ul class="efvlist"> -->
+				<?=$this->partial('dashboard-partial-nav', array('actions' => $actions));?>
+				<!-- </ul> -->
 			</div>
         </div>
         <h3>Hidden Navigation</h3>
@@ -58,12 +58,12 @@ $(document).ready(function() {
 			<ul class="efvlist rounded">
 				<?php foreach($apps as $app): ?>
 				<li>
-					<div class="right_header">
-						<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$app;?>/" class="delete_item">x</a>
+					<div class="pull-right">
+						<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%delapp/<?=$app;?>/" class="x">x</a>
 					</div>
-					<div class="left_header">
+					
 						<a href="%appurl%linkapp/<?=$app;?>/"><?=$app;?></a>
-					</div>
+					
 					<div style="clear:both"></div>
 				</li>			
 				<?php endforeach; ?>
