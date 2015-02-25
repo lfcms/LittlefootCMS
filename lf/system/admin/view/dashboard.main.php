@@ -22,7 +22,7 @@ $(document).ready(function() {
 
 <h2 class="no_marbot">Dashboard</h2>
 <div class="row no_martop">
-	<div class="col-6">
+	<div class="col-7">
 		<h3>Navigation</h3>
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row">
@@ -42,7 +42,7 @@ $(document).ready(function() {
 			</div>
 		</div>
 	</div>
-	<div class="col-6">
+	<div class="col-5">
 		<h3>App Gallery</h3>
 		<!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
 		<div id="appgallery-container">
@@ -53,7 +53,14 @@ $(document).ready(function() {
 					<div><input type="file" name="app" value="Upload" /></div>
 					<div><?=$install;?></div>
 				</form> -->
-				<p>Click an app to add it to the nav. <a href="%appurl%download/">Download more apps from the Store</a></p>
+				<div class="row">
+					<div class="col-6">
+						<a class="button light_gray">Upload App</a>
+					</div>
+					<div class="col-6">
+						<a href="%appurl%download/" class="button blue">App Store</a>
+					</div>
+				</div>
 			</div>
 			<ul class="efvlist rounded">
 				<?php foreach($apps as $app): ?>

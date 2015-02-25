@@ -21,17 +21,17 @@ if(isset($actions[$parent])):
 		
 		$this->subalias .= '
 			<option '.$selected.' value="'.$action['id'].'">
-				'.str_repeat("/ ", $this->depth).$action['alias'].'
+				'.str_repeat("- ", $this->depth).$action['position'].'. '.$action['label'].'
 			</option>
 		';
 	?>
-	
-	<div class="tile rounded">
+	<a id="nav_<?=$action['id'];?>"></a>
+	<div class="tile rounded<?=$this->edit==$action['id']?' active':'';?>">
 		<div class="tile-header">
 			<p>
 				<?=str_repeat('- ', $this->depth);?> <?=$action['position'];?>. 
 			
-				<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['alias'];?>">
+				<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
 					<?=$action['label'];?>
 				</a>
 				<span class="pull-right">
