@@ -1,4 +1,4 @@
-<h2>Password reset form</h2>
+<h2>Password Reset</h2>
 <form action="%appurl%forgotresult/" method="post">
 	Email: <input type="text" name="email" /> <input type="submit" value="Reset Password" />
 </form>

@@ -27,27 +27,30 @@ if(isset($actions[$parent])):
 	?>
 	<a id="nav_<?=$action['id'];?>"></a>
 	<div class="tile rounded<?=$this->edit==$action['id']?' active':'';?>">
-		<div class="tile-header">
-			<p>
-				<?=str_repeat('- ', $this->depth);?> <?=$action['position'];?>. 
+		<div class="tile-header gray_fg">
+			<div class="row">
+				<div class="col-9">
+					<?=str_repeat('- ', $this->depth);?> <?=$action['position'];?>. 
 			
-				<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
-					<?=$action['label'];?>
-				</a>
-				<span class="pull-right">
+					<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
+						<?=$action['label'];?>
+					</a>
+				</div>
+				<div class="col-2">
 					<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
 					
-					<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="">admin</a>
+					<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="pull-right">admin</a>
 								
 					<?php else: ?>
 							
-					admin
+					<span class="pull-right">admin</span>
 								
 					<?php endif; ?>
-							
-					<a class="x" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
-				</span>
-			</p>
+				</div>
+				<div class="col-1">
+					<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
+				</div>
+			</div>
 		</div>
 		<?php if($this->edit == $action['id']): /* Load form if selected */ ?>
 		<div class="tile-content">

@@ -1,55 +1,69 @@
 <h2>Settings</h2>
 <div class="row">
-	<div class="col-7">	
-		<form action="?" method="post">
-			<ul class="efvlist rounded">
-				<li>
-					<label for="rewrite">URL Rewrite:</label>
-					<?php foreach($rewrite['options'] as $option):
-						$checked = $rewrite['value']==$option?'checked':'';
-					?>
-					<input id="rewrite" type="radio" <?=$checked;?> name="rewrite" value="<?=$option;?>" /> <?=ucfirst($option);?>
-					<?php endforeach; ?>
-				</li>
-				<li>
-					<label for="debug">Debug</label>
-					<?php foreach($debug['options'] as $option):
-						$checked = $debug['value']==$option?'checked':'';
-					?>
-					<input id="debug" type="radio" <?=$checked;?> name="debug" value="<?=$option;?>" /> <?=ucfirst($option);?>
-					<?php endforeach; ?>
-				</li>
-				<li>
-					<label for="signup">Sign Up</label>
-					<?php foreach($signup['options'] as $option):
-						$checked = $signup['value']==$option?'checked':'';
-					?>
-					<input id="signup" type="radio" <?=$checked;?> name="signup" value="<?=$option;?>" /> <?=ucfirst($option);?>
-					<?php endforeach; ?>
-				</li>
-				<li>
-					<label for="setting[simple_cms]">Simple CMS: (works, but no option for ini yet)</label> 
-					<select id="setting[simple_cms]" name="setting[simple_cms]">
-						<option value="_lfcms">Full CMS</option>
+	<div class="col-7">
+		<div class="tile rounded">
+			<div class="tile-header light_gray">
+				<h3>Options</h3>
+			</div>
+			<div class="tile-content">
+				<form action="?" method="post">
+					<div class="row">
+						<div class="col-3">
+							<label for="rewrite">URL Rewrite:</label>
+							<?php foreach($rewrite['options'] as $option):
+								$checked = $rewrite['value']==$option?'checked':'';
+							?>
+							<input id="rewrite" type="radio" <?=$checked;?> name="rewrite" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<?php endforeach; ?>
+						</div>
+						<div class="col-3">
+							<label for="debug">Debug:</label>
+							<?php foreach($debug['options'] as $option):
+								$checked = $debug['value']==$option?'checked':'';
+							?>
+							<input id="debug" type="radio" <?=$checked;?> name="debug" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<?php endforeach; ?>
+						</div>
+						<div class="col-3">
+							<label for="signup">Sign Up:</label>
+							<?php foreach($signup['options'] as $option):
+								$checked = $signup['value']==$option?'checked':'';
+							?>
+							<input id="signup" type="radio" <?=$checked;?> name="signup" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<?php endforeach; ?>
+						</div>
+						<div class="col-3">
+							<label for="setting[simple_cms]">Simple CMS:</label> 
+							<select id="setting[simple_cms]" name="setting[simple_cms]">
+								<option value="_lfcms">Full CMS</option>
 
-						<?php foreach($simplecms['options'] as $option): 
-							$selected = $simplecms['value'] == $option ? 'selected="selected"' : '';
-						?>
-						<option <?=$selected;?> value="<?=$option;?>"><?=$option;?></option>
-					<?php endforeach; ?>
-					</select> 
-				</li>
-				<li>
-					<label for="setting[force_url]">Force URL (empty to not force URL):</label>
-					<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=$force_url;?>" />
-				</li>
-				<li>
-					<label for="setting[nav_class]">Navigation CSS class:</label>
-					<input id="setting[nav_class]" type="text" name="setting[nav_class]" value="<?=$nav_class;?>" />
-				</li>
-			</ul>
-			<input class="blue button martop" type="submit" value="Save Changes" />
-		</form>
+								<?php foreach($simplecms['options'] as $option): 
+									$selected = $simplecms['value'] == $option ? 'selected="selected"' : '';
+								?>
+								<option <?=$selected;?> value="<?=$option;?>"><?=$option;?></option>
+							<?php endforeach; ?>
+							</select> 
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<label for="setting[force_url]">Force URL (empty to not force URL):</label>
+							<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=$force_url;?>" />
+						</div>
+						<div class="col-6">
+							<label for="setting[nav_class]">Navigation CSS class:</label>
+							<input id="setting[nav_class]" type="text" name="setting[nav_class]" value="<?=$nav_class;?>" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<input class="blue button" type="submit" value="Save Changes" />
+						</div>
+					</div>		
+				</form>
+			</div>
+		</div>
+		
 	</div>
 	<div class="col-5 spaced">
 		<div class="tile rounded">

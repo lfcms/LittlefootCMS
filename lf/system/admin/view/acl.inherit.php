@@ -1,8 +1,8 @@
-<form action="%appurl%add/inherit" method="post">
-	<ul>
-		<li>
+<div class="row">
+	<form action="%appurl%add/inherit" method="post">
+		<div class="col-2">
 			<select name="group" id="">
-				<option value="">-- Select User/Group --</option>
+				<option value="">Select User/Group</option>
 				<optgroup label="Groups">
 					<?php foreach($groups as $group): ?>
 					<option value="<?=$group;?>"><?=$group;?></option>
@@ -14,10 +14,10 @@
 					<?php endforeach; ?>
 				</optgroup>
 			</select>
-		</li>
-		<li>
+		</div>
+		<div class="col-2">
 			<select name="inherits" id="">
-				<option value="">-- What to Inherit --</option>
+				<option value="">What to Inherit</option>
 				<optgroup label="Groups">
 					<?php foreach($groups as $group): ?>
 					<option value="<?=$group;?>"><?=$group;?></option>
@@ -31,13 +31,15 @@
 				</optgroup>
 				-->
 			</select>
-		</li>
-		<li><button type="submit">Add New</button></li>
-	</ul>
-</form>
+		</div>
+		<div class="col-2">
+			<button type="submit" class="green">Add New</button>
+		</div>
+	</form>
+</div>
 
 <table class="table">
-	<tr class="light_gray light">
+	<tr class="gray light">
 		<th>User or Group</th>
 		<th>Inherits</th>
 		<th>Edit</th>

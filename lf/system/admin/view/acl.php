@@ -1,15 +1,16 @@
 <h2>Access Control Lists</h2>
 
 <div class="row">
-	<div class="col-12">
-		<nav class="hlist">
-			<ul>
-				<li><a <?=$include=='user'?'class="active"':'';?> href="%appurl%user/">User</a></li>
-				<li><a <?=$include=='inherit'?'class="active"':'';?> href="%appurl%inherit/">Inherit</a></li>
-				<li><a <?=$include=='global'?'class="active"':'';?> href="%appurl%acl_global/">Global</a></li>
-			</ul>
-		</nav>
+	<div class="col-2">
+		<a class="<?=$include=='user'?'active':'';?> button" href="%appurl%user/">User</a></li>
 	</div>
+	<div class="col-2">
+		<a class="<?=$include=='inherit'?'active':'';?> button" href="%appurl%inherit/">Inherit</a>
+	</div>
+	<div class="col-2">
+		<a class="<?=$include=='global'?'active':'';?> button" href="%appurl%acl_global/">Global</a>
+	</div>
+	<div class="col-6"></div>
 </div>
 
 <?=$this->partial('acl.'.$include);?>

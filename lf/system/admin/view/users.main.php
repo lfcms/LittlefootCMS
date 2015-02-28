@@ -12,7 +12,7 @@
 	</div>
 </div>
 <table class="table rounded">
-	<tr class="light_gray light">
+	<tr class="gray light">
 		<th>User</th>
 		<th>eMail</th>
 		<th>Display Name</th>

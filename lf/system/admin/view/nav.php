@@ -9,7 +9,7 @@
 <h4 class="no_martop">Control</h4>
 <div class="row">
 	<div class="col-12">
-		<ul class="rounded">
+		<ul class="efvlist rounded">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
 			<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a></li>
@@ -34,7 +34,7 @@
 <h4>Apps</h4>
 <div class="row">
 	<div class="col-12">
-		<ul class="rounded">
+		<ul class="efvlist rounded">
 			<?php foreach($admin_apps as $shortcut): 
 				if(isset($this->vars[1]) && $shortcut == $this->vars[1]) $highlight = ' class="active"';
 				else $highlight = '';
