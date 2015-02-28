@@ -36,6 +36,7 @@
 	</div>
 	
 	<div id="editor"><?=htmlentities($data);?></div>
+	
 	<input type="submit" value="Update" />
 </form>
 

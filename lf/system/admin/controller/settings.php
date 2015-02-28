@@ -83,50 +83,30 @@ class settings extends app
 		if(isset($this->lf->settings['nav_class']))
 			$nav_class = $this->lf->settings['nav_class'];
 			
-		/*
-		$rewrote = '';
-		
-		// Setup settings (should really be in a model
-		if(!isset($settings['rewrite']) || $settings['rewrite'] == 'off')
-		{
-			$rewrote = ' (if you <a target="_blank" href="'.str_replace('/index.php', '', $this->lf->base.'settings/').'">click here</a> and get 404, this should remain off)';
-		}
-
-
-		/*$rewrite = 'URL Rewrite:'.$rewrote.'<br />  <select name="setting[rewrite]" id=""><option value="on">on</option><option value="off">off</option></select>';
-		if(!isset($settings['rewrite']) || $settings['rewrite'] == 'off')
-			$rewrite = str_replace(' value="off"', ' selected="selected" value="off"', $rewrite);
+		// Backup list
+		$backups = array();
+		if(is_dir(ROOT.'backup')) { // this really needs to get moved to a model
+			$result = scandir(ROOT.'backup/');
 			
-		if(!isset($settings['force_url']) || $settings['force_url'] != '')
-			$url = $settings['force_url'];
-		else $url = '';
-		$force_url = 'Force URL (empty to not force URL):<br /> <input type="text" name="setting[force_url]" size="50" value="'.$url.'" />';
-
-		if(!isset($settings['nav_class']) || $settings['nav_class'] != '')
-			$class = $settings['nav_class'];
-		else $class = '';
-		$navclass = 'Navigation CSS class:<br /> <input type="text" name="setting[nav_class]" value="'.$class.'" />';
-
-		$debug = 'Debug:<br />  <select name="setting[debug]" id=""><option value="on">on</option><option value="off">off</option></select>';
-		if(!isset($settings['debug']) || $settings['debug'] == 'off')
-			$debug = str_replace(' value="off"', ' selected="selected" value="off"', $debug);
-
-		$apps = scandir(ROOT.'apps'); // get app list
-		unset($apps[1], $apps[0]);
-		$simple_options = '<option value="_lfcms">Full CMS</option>';
-		foreach($apps as $app)
-		{
-			if(is_file(ROOT.'apps/'.$app.'/index.php'))
-				$simple_options .= '<option value="'.$app.'">'.$app.'</option>';
+			foreach($result as $backup) {
+				if($backup == '.' || $backup == '..') continue;
+				
+				if(is_file(ROOT.'backup/'.$backup.'/version'))
+					$backups[$backup] = file_get_contents(ROOT.'backup/'.$backup.'/version');
+				else
+					continue;
+			}
 		}
-		$simple_options = str_replace(' value="'.$settings['simple_cms'].'"', ' selected="selected" value="'.$settings['simple_cms'].'"', $simple_options);
-		$simplecms = 'Simple CMS: <br /> <select name="setting[simple_cms]" id="">'.$simple_options.'</select>';
-
-		// Settings form
-		$signup = 'Enable Signup:<br />  <select name="setting[signup]" id=""><option value="on">on</option><option value="off">off</option></select>';
-		if(!isset($settings['signup']) || $settings['signup'] == 'off')
-			$signup = str_replace(' value="off"', ' selected="selected" value="off"', $signup);*/
 		
+		// Reinstall
+		$result = glob(ROOT.'apps/*/install.sql');
+		$installs = array();
+		foreach($result as $install)
+		{
+			preg_match('/([^\/]+)\/install.sql$/', $install, $match);
+			$installs[] = $match[1];
+		}
+				
 		// include view
 		include 'view/settings.main.php';
 	}

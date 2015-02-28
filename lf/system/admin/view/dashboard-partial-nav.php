@@ -21,44 +21,54 @@ if(isset($actions[$parent])):
 		
 		$this->subalias .= '
 			<option '.$selected.' value="'.$action['id'].'">
-				'.str_repeat("/ ", $this->depth).$action['alias'].'
+				'.str_repeat("- ", $this->depth).$action['position'].'. '.$action['label'].'
 			</option>
 		';
 	?>
-	
-	<li>
-	
+	<a id="nav_<?=$action['id'];?>"></a>
+	<div class="tile rounded<?=$this->edit==$action['id']?' active':'';?>">
+		<div class="tile-header gray_fg">
+			<div class="row">
+				<div class="col-9">
+					<?=str_repeat('- ', $this->depth);?> <?=$action['position'];?>. 
+			
+					<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
+						<?=$action['label'];?>
+					</a>
+				</div>
+				<div class="col-2">
+					<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
+					
+					<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="pull-right">admin</a>
+								
+					<?php else: ?>
+							
+					<span class="pull-right">admin</span>
+								
+					<?php endif; ?>
+				</div>
+				<div class="col-1">
+					<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
+				</div>
+			</div>
+		</div>
 		<?php if($this->edit == $action['id']): /* Load form if selected */ ?>
-		
-		<?=$this->partial('dashboard-partial-editform', array('save' => $action));?>
-		
-		<?php else: /* Else load normal nav item */ ?>
-		
-		<?=$action['position'];?>. 
-		
-		<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['alias'];?>">
-			<?=$action['alias'];?>
-		</a>
-		
-		<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
-		<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="nav_manage_link">admin</a>
-		<?php else: ?>
-		admin
+		<div class="tile-content">
+			
+				<?=$this->partial('dashboard-partial-editform', array('save' => $action));?>
+				
+			
+			
+		</div>
 		<?php endif; ?>
-		
-		<a class="x" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
-		
-		<?php endif; ?>
-		
-		<?php if(isset($actions[$action['id']])): ?>
-		
-		<ul>
+	</div>
+	
+	<?php if(isset($actions[$action['id']])): ?>
+		<!-- <ul> -->
 			<?=$this->partial('dashboard-partial-nav', array('actions' => $actions, 'parent' => $action['id']));?>
-		</ul>
+		<!-- </ul> -->
 		
-		<?php endif; ?>
-		
-	</li>
+	<?php endif; ?>
 	
 	<?php 
 	endforeach; 

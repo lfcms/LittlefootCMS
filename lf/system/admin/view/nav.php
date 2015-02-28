@@ -9,7 +9,7 @@
 <h4 class="no_martop">Control</h4>
 <div class="row">
 	<div class="col-12">
-		<ul class="rounded">
+		<ul class="efvlist rounded">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
 			<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a></li>
@@ -18,10 +18,11 @@
 			<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->
 			<li><a class="users" href="<?=$this->base;?>users/"><span>Users</span></a></li>
 			<li><a class="editor" href="<?=$this->base;?>acl/"><span>ACL</span></a></li>
-			<!-- <li><a class="buttons" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
-			<li><a class="buttons" href="<?=$this->base;?>settings/"><span>Settings</span></a></li>
-			<li><a class="buttons" target="_blank" href="http://littlefootcms.com/byid/23"><span>Help</span></a></li>
-			<!--<li><a class="elements" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
+			<!-- <li><a class="" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
+			<li><a class="" href="<?=$this->base;?>settings/"><span>Settings</span></a></li>
+			<li><a class="" target="_blank" href="http://littlefootcms.com/byname/Admin+Documentation"><span>Help</span></a></li>
+			<li><a class="" target="_blank" href="https://github.com/bioshazard/littlefootcms/issues/"><span>Report Bug</span></a></li>
+			<!--<li><a class="" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
 			
 			<?php $this->lf->hook_run('post lf admin nav'); ?>
 		</ul>
@@ -33,7 +34,7 @@
 <h4>Apps</h4>
 <div class="row">
 	<div class="col-12">
-		<ul class="rounded">
+		<ul class="efvlist rounded">
 			<?php foreach($admin_apps as $shortcut): 
 				if(isset($this->vars[1]) && $shortcut == $this->vars[1]) $highlight = ' class="active"';
 				else $highlight = '';

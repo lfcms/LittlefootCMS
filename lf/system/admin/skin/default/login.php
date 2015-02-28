@@ -17,33 +17,35 @@ if(count($_GET))
 
 ?>
 <!DOCTYPE html>
-<html>
+<html class="lf">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Login Page | <?php echo $_SERVER['HTTP_HOST']; ?></title>
-		<link href="%relbase%lf/system/lib/littlefoot.css" rel="stylesheet">
-		<link rel="stylesheet" href="%skinbase%css/styles.css" type="text/css" />
+		<link href="%relbase%lf/system/lib/lf.css" rel="stylesheet">
+		<link rel="stylesheet" href="%skinbase%css/custom.css" type="text/css" />
 	</head>
 
-	<body class="light_gray">
-		<div class="wrapper">	
+	<body class="gray">
+		<div class="lf_login wrapper">	
 			<div class="row">
-				<div class="col-5"></div>
-				<div class="col-2 dark_gray rounded">
-					<h4 class="text-center light">Littlefoot CMS</h4>
+				<div class="col-4"></div>
+				<div class="col-4 ">
+					<h2 class="text-center light">Littlefoot CMS</h2>
+					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
 					<form id="login" action="<?=$this->base;?>_auth/login" method="post">
-						<input type="text" id="username" name="user" placeholder="Username" />
-						<input type="password" id="password" name="pass" placeholder="Password" />
+						<ul class="vlist">
+							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
+							<li><input type="password" id="password" name="pass" placeholder="Password" /></li>
+							<li><button class="green button dark_b" href="" >Sign in</button></li>
+							<li><a class="button" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
+						</ul>
 						<!-- <p>
 							<?php echo $recaptcha; ?>
 						</p> -->
-						<button class="green button" href="" >Sign in</button>
-						<a class="button light_gray_fg" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a>
-
-						<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
 					</form>
 				</div>
+				<div class="col-4"></div>
 			</div>
 		</div>
 	</body>

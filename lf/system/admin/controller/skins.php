@@ -191,7 +191,7 @@ class skins extends app
 		
 		ksort($files);
 		
-		include 'view/skin.edit.php';
+		include 'view/skins.edit.php';
 	}
 	
 	public function makehome($args)
