@@ -16,10 +16,10 @@ if(is_file(ROOT.'apps/'.$save['app'].'/args.php'))
 <form id="nav_form" action="%appurl%update/" method="post">
 
 <div class="row">
-	<div class="col-2">
+	<div class="col-3">
 		Position: <input type="number" name="position" value="<?=$save['position'];?>" />
 	</div>
-	<div class="col-10">
+	<div class="col-9">
 		Label: <input type="text" name="label" value="<?=$save['label'];?>" />	
 	</div>
 </div>
