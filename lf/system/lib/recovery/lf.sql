@@ -19,7 +19,7 @@
 -- Table structure for table `lf_acl_global`
 --
 
-DROP TABLE IF EXISTS `lf_acl_global`;
+-- DROP TABLE IF EXISTS `lf_acl_global`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lf_acl_global` (
@@ -72,7 +72,7 @@ CREATE TABLE `lf_acl_user` (
 -- Table structure for table `lf_actions`
 --
 
-DROP TABLE IF EXISTS `lf_actions`;
+-- DROP TABLE IF EXISTS `lf_actions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lf_actions` (
@@ -102,7 +102,7 @@ UNLOCK TABLES;
 -- Table structure for table `lf_links`
 --
 
-DROP TABLE IF EXISTS `lf_links`;
+-- DROP TABLE IF EXISTS `lf_links`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lf_links` (
@@ -130,7 +130,7 @@ UNLOCK TABLES;
 -- Table structure for table `lf_pages`
 --
 
-DROP TABLE IF EXISTS `lf_pages`;
+-- DROP TABLE IF EXISTS `lf_pages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lf_pages` (
@@ -156,7 +156,7 @@ UNLOCK TABLES;
 -- Table structure for table `lf_settings`
 --
 
-DROP TABLE IF EXISTS `lf_settings`;
+-- DROP TABLE IF EXISTS `lf_settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lf_settings` (
@@ -181,7 +181,7 @@ UNLOCK TABLES;
 -- Table structure for table `lf_users`
 --
 
-DROP TABLE IF EXISTS `lf_users`;
+-- DROP TABLE IF EXISTS `lf_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lf_users` (

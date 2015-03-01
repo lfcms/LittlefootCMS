@@ -1,27 +1,5 @@
 <?php
 
-/* if(is_file('config.php') && isset($_GET['install']) && $_GET['install'] == 'delete')
-{
-        //Delete folder function
-        function deleteDirectory($dir) {
-                if (!file_exists($dir)) return true;
-                if (!is_dir($dir) || is_link($dir)) return unlink($dir);
-                foreach (scandir($dir) as $item) {
-                        if ($item == '.' || $item == '..') continue;
-                        if (!deleteDirectory($dir . "/" . $item)) {
-                                chmod($dir . "/" . $item, 0777);
-                                if (!deleteDirectory($dir . "/" . $item)) return false;
-                        };
-                }
-                return rmdir($dir);
-        }
-
-        // remove install folder
-        deleteDirectory(ROOT.'/install');
-        header('Location: http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
-        exit();
-}*/ 
-
 //check for crucial php settings
 if(version_compare(phpversion(), '5.4.0', '<')
 && get_magic_quotes_gpc()) // magic quotes (only affects <5.4)
@@ -31,25 +9,76 @@ if(version_compare(phpversion(), '5.4.0', '<')
 && ini_get('short_open_tag') == false) // php short tags (only affects <5.4)
         $warnings[] = '[<a target="_blank" href="https://www.google.com/search?q=how+to+enable+php+short+tags">Fix it</a>] Short tags is DISABLED ';
 
-/*
-else if(is_file('config.php'))
+if(is_file('config.php'))
 {
-        include 'config.php';
-        $dbconn = new Database($db);
+	include 'config.php';
+	$dbconn = new Database($db);
 
-        if($dbconn->error != '') $errors = $dbconn->error;
-        else
-        {
-                if(!$dbconn->fetch("select * from lf_settings limit 1"))
-                        $msg = 'I found a config file, but can\'t seem to connect to your database. Please verify the contents of lf/config.php or try and reconfigure the credentials.';
-                else
-                        $msg = 'The config file exists, but the database seems to be missing data.';
+	if($dbconn->error != '') $errors = $dbconn->error;
+	else
+	{
+		if(!$dbconn->fetch("select * from lf_settings limit 1"))
+			$msg .= 'I found a config file, but can\'t seem to connect to your database. Please verify the contents of lf/config.php or try and reconfigure the credentials.';
+		else
+			$msg .= 'The config file exists, but the database seems to be missing crucial data in at least lf_settings.';
+	}
+}
 
-
-        }
-}*/
+$host = isset($_POST['host']) ? $_POST['host'] : 'localhost';
+$user = isset($_POST['user']) ? $_POST['user'] : '';
+$dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
+	
 
 ?>
+<html class="lf">
+	<head>
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+		<style type="text/css">
+			<?php readfile(ROOT.'system/lib/lf.css');?>
+		</style>
+	</head>
+	<body>
+		<form action="?" class="wide_container" method="post">
+			<?php 
+				if(isset($msg))
+					echo '<div class="warning martop">'.$msg.'</div>';
+					
+				if(isset($errors))
+					foreach($errors as $error)
+						echo '<div class="martop">'.$error.'</div>';
+			?>
+			<h1>Install Littlefoot</h1>
+			<h2>Database Access</h2>
+			<ul class="vlist">
+				<li>Host: <input type="text" value="<?=$host;?>" name="host" value="localhost" /></li>
+				<li>User: <input type="text" value="<?=$user;?>"name="user" placeholder="Database Username" /></li>
+				<li>Pass: <input type="password" name="pass" placeholder="User's Password" /></li>
+				<li>Database Name: <input type="text" value="<?=$dbname;?>" name="dbname" placeholder="Name of database" /></li>
+				<?php if(is_file('config.php')): ?>
+				<li><label for="">Overwrite Config File:</label> <input class="check" type="checkbox" name="overwrite" checked="checked" /></li>
+				<?php endif; ?>
+
+				<?php if(is_file('config.php')): ?>
+				<li><label for="">Re-install Base Data:</label> <input class="check" type="checkbox" name="data" /></li>
+				<?php else: ?>
+				<li><label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (uncheck this if you are just remaking a lost config):</label></li>
+				<?php endif; ?>
+			</ul>
+			<h2>Default Credentials</h2>
+			<ul class="vlist">
+				<li>Username: <strong>admin</strong></li>
+				<li>Password: <strong>pass</li>
+			</ul>
+			<button class="green">Install</button>
+			<a class="blue button marbot" target="_blank" href="http://littlefootcms.com/">View User Guide</a>
+		</form>
+	</body>
+</html>
+
+
+
+
+<?php /* ?>
 <html>
         <head>
                 <title>LittlefootCMS Installer</title>
@@ -146,4 +175,4 @@ else if(is_file('config.php'))
                         </form>
                 </div>
         </body>
-</html>
+</html>*/
