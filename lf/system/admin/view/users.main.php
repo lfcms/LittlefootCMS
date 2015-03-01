@@ -29,7 +29,13 @@
 		<td><?=$user['access'];?></td>
 		<td><?=$user['status'];?></td>
 		<td><a href="%appurl%edit/<?=$user['id'];?>">edit</a></td>
-		<td><a href="%appurl%rm/<?=$user['id'];?>" class="x">x</a></td>
+		<td>
+		<?php if($user['id'] == $this->lf->api('getuid')): ?>
+		<a title="You can't delete yourself!">you</a>
+		<?php else: ?>
+		<a <?=jsprompt();?> href="%appurl%rm/<?=$user['id'];?>" class="x">x</a>
+		<?php endif; ?>
+		</td>
 	</tr>
 	<?php endforeach; ?>
 </table>
