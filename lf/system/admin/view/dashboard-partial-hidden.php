@@ -22,7 +22,7 @@ if(count($actions)):
 				<div class="col-2">
 					<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
 					
-					<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="pull-right">admin</a>
+					<a href="%baseurl%apps/<?=$theapp;?>/"  class="pull-right">admin</a>
 								
 					<?php else: ?>
 							
@@ -64,7 +64,7 @@ if(count($actions)):
 		</a>
 		
 		<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
-		<a href="%baseurl%dashboard/manage/<?=$theapp;?>/"  class="nav_manage_link">admin</a>
+		<a href="%baseurl%apps/<?=$theapp;?>/"  class="nav_manage_link">admin</a>
 		<?php else: ?>
 		admin
 		<?php endif; ?>
