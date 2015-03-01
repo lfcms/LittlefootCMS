@@ -40,7 +40,7 @@
 				else $highlight = '';
 			?>
 				<li <?=$highlight;?>>
-					<a class="elements" href="<?=$this->base;?>apps/manage/<?php echo $shortcut; ?>/">
+					<a class="elements" href="<?=$this->base;?>apps/<?php echo $shortcut; ?>/">
 						<span><?php echo ucfirst($shortcut); ?></span>
 					</a>
 				</li>
