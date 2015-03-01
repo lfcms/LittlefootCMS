@@ -1,3 +1,5 @@
+<?=$this->partial('acl.header', array('active' => 'global'));?>
+
 <div class="row">
 	<form action="%appurl%add/global" method="post">
 		<div class="col-2">
@@ -21,7 +23,9 @@
 	</form>
 </div>
 
-
+<?php if($this->hasnotice()): ?>
+<div class="notice marbot"><?=$this->notice();?></div>
+<?php endif; ?>
 
 <table class="table">
 	<tr class="gray light">
@@ -35,7 +39,7 @@
 		<td><?=$acl['action'];?></td>
 		<td><?=$acl['perm']?'Allow':'Deny';?></td>
 		<td>Edit</td>
-		<td><a href="" class="x">Delete</a></td>
+		<td><a <?=jsprompt();?> href="%appurl%rm/global/<?=$acl['id'];?>" class="x">Delete</a></td>
 	</tr>
 	<?php endforeach; ?>
 </table>

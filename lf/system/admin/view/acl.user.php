@@ -1,3 +1,6 @@
+<?=$this->partial('acl.header', array('active' => 'user'));?>
+
+
 <div class="row">
 	<form action="%appurl%add/user" method="post">
 		<div class="col-2">
@@ -37,6 +40,9 @@
 </div>
 
 
+<?php if($this->hasnotice()): ?>
+<div class="notice marbot"><?=$this->notice();?></div>
+<?php endif; ?>
 
 <table class="table">
 	<tr class="gray light">
@@ -46,10 +52,10 @@
 		<th>Edit</th>
 		<th>Delete</th>
 	</tr>
-	<?php 
+	<?php
 		if($acls)
-		foreach($acls as $acl): 
-	
+		foreach($acls as $acl):
+		
 		if(isset($users[$acl['affects']]))
 			$acl['affects'] = 'User / '.$users[$acl['affects']];
 		else
@@ -60,7 +66,7 @@
 		<td><?=$acl['perm']?'Allow':'Deny';?></td>
 		<td><?=$acl['affects'];?></td>
 		<td>Edit</td>
-		<td><a href="%appurl%rm/user/<?=$acl['id'];?>" class="x">Delete</a></td>
+		<td><a <?=jsprompt();?> href="%appurl%rm/user/<?=$acl['id'];?>" class="x">Delete</a></td>
 	</tr>
 	<?php endforeach; ?>
 </table>
