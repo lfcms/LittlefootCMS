@@ -20,15 +20,21 @@ class users extends app
 	
 	public function update($args)
 	{
+		// If a password was provided, apply it.
 		if($_POST['pass'] != '')
-			$pass = sha1($vars['pass']);
+		{
+			if($_POST['pass'] != $_POST['pass2'])
+			{
+				$this->notice('User Saved');
+				redirect302($this->lf->appurl);
+			}
+			
+			$_POST['pass'] = sha1($_POST['pass']);
+		}
+		// Else, discard
+		else unset($_POST['pass']);
 		
-		unset($_POST['pass']);
 		unset($_POST['pass2']);
-		
-		if(isset($pass))
-			$_POST['pass'] = $pass;
-		
 		orm::q('lf_users')->debug()->updateById($args[1], $_POST);
 		
 		$this->notice('User Saved');
@@ -59,22 +65,30 @@ class users extends app
 		
 		if($_POST['pass'] != $_POST['pass2'])
 		{
-			$error[] = '"Confirm Password" feild does not match "Password"';
+			$error[] = '"Confirm Password" field does not match "Password"';
 		}
 		
 		if(isset($error))
 		{
 			$this->notice('Unable to create user:<br/>* '.implode('<br />* ', $error));
+			//redirect302();
+			echo "ERROR";
+		}
+		
+		// Verify that an admin requested this action
+		$sql = "SELECT id FROM lf_users WHERE id = ".$this->request->api('getuid')." AND pass = '".sha1($_POST['adminpass'])."'";
+		$result = $this->db->fetch($sql);
+		if($result['id'] != $this->request->api('getuid'))
+		{
+			$this->notice('Admin password rejected.');
 			redirect302();
 		}
 		
-		$sql = "SELECT id FROM lf_users WHERE id = ".$this->request->api('getuid')." AND pass = '".sha1($_POST['adminpass'])."'";
 		
-		$result = $this->db->fetch($sql);
-		if($result['id'] != $this->request->api('getuid')) redirect302();
+		
+		
 		
 		$vars = $_POST;
-					
 		$insert = array(
 			'user' 			=> $this->db->escape($vars['user']),
 			'pass' 			=> sha1($vars['pass']),
@@ -109,7 +123,9 @@ Pass: '.$_POST['pass'].'
 Do not reply to this email. It was generated automatically.', 
 'From: noreply@'.$_SERVER['SERVER_NAME']);
 		
-		redirect302($this->request->appurl);
+		$this->notice('User "'.$_POST['user'].'" created');
+		
+		redirect302($this->lf->appurl);
 	}
 	
 	public function rm($vars)
