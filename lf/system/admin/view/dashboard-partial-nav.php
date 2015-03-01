@@ -5,6 +5,8 @@ if(!isset($parent)) $parent = '-1';
 if(!isset($this->depth)) $this->depth = 0;
 else $this->depth++; // child element
 
+if(!isset($prefix)) $prefix="";
+
 if(isset($actions[$parent])):
 	foreach($actions[$parent] as $action): 
 	
@@ -21,7 +23,7 @@ if(isset($actions[$parent])):
 		
 		$this->subalias .= '
 			<option '.$selected.' value="'.$action['id'].'">
-				'.str_repeat("- ", $this->depth).$action['position'].'. '.$action['label'].'
+				'.$prefix.$action['position'].' '.$action['label'].'
 			</option>
 		';
 	?>
@@ -30,7 +32,9 @@ if(isset($actions[$parent])):
 		<div class="tile-header gray_fg">
 			<div class="row">
 				<div class="col-9">
-					<?=str_repeat('- ', $this->depth);?> <?=$action['position'];?>. 
+					<?/*=str_repeat('- ', $this->depth);*/?> 
+					
+					<?=$prefix?><?=$action['position'];?>
 			
 					<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
 						<?=$action['label'];?>
@@ -65,7 +69,7 @@ if(isset($actions[$parent])):
 	
 	<?php if(isset($actions[$action['id']])): ?>
 		<!-- <ul> -->
-			<?=$this->partial('dashboard-partial-nav', array('actions' => $actions, 'parent' => $action['id']));?>
+			<?=$this->partial('dashboard-partial-nav', array('actions' => $actions, 'parent' => $action['id'], 'prefix' => $prefix.$action['position'].'.'));?>
 		<!-- </ul> -->
 		
 	<?php endif; ?>

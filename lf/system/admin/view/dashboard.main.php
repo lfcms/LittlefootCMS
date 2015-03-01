@@ -27,18 +27,8 @@ $(document).ready(function() {
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row">
         	<div class="col-12 spaced">
-				<!-- <ul class="efvlist"> -->
+				<?=$this->partial('dashboard-partial-hidden', array('actions' => $hidden));?>
 				<?=$this->partial('dashboard-partial-nav', array('actions' => $actions));?>
-				<!-- </ul> -->
-			</div>
-        </div>
-        <h3>Hidden Navigation</h3>
-        <!-- <p>This works just like the nav menu manager above, but these nav items will be hidden from nav menu of your website. This feature is useful for hiding apps like /signup, /secret-blog</p> -->
-        <div class="row">
-			<div class="col-12">
-				<ul class="efvlist">
-					<?=$this->partial('dashboard-partial-hidden', array('actions' => $hidden));?>
-				</ul>
 			</div>
 		</div>
 	</div>
