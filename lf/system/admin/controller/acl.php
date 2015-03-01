@@ -30,12 +30,8 @@ class acl extends app
 		$groups = array_unique($groups);
 		
 		$acls = orm::q('lf_acl_user')->get();
-	
-		//include 'view/acl.user.php';
 		
-		$include = 'user';
-		
-		include 'view/acl.php';
+		include 'view/acl.user.php';
 	}
 	
 	public function inherit($vars)
@@ -62,9 +58,7 @@ class acl extends app
 		
 		$acls = orm::q('lf_acl_inherit')->get();
 	
-		$include = 'inherit';
-		//include 'view/acl.inherit.php';	
-		include 'view/acl.php';	
+		include 'view/acl.inherit.php';
 	}
 	
 	public function acl_global($vars)
@@ -91,9 +85,7 @@ class acl extends app
 		
 		$acls = orm::q('lf_acl_global ')->get();
 	
-		$include = 'global';
-		//include 'view/acl.global.php';
-		include 'view/acl.php';
+		include 'view/acl.global.php';
 	}
 	
 	public function edit($vars)
@@ -120,7 +112,8 @@ class acl extends app
 	
 	public function add($vars)
 	{
-		if($_POST['appurl'] != '') $_POST['action'] = $_POST['action'].'|'.$_POST['appurl'];
+		if($_POST['appurl'] != '') 
+			$_POST['action'] = $_POST['action'].'|'.$_POST['appurl'];
 		
 		unset($_POST['appurl']);
 		
@@ -128,10 +121,11 @@ class acl extends app
 			$_POST[$key] = $this->db->escape($val);
 			
 		$this->db->query("
-			INSERT INTO lf_acl_".$this->db->escape($vars[1])."
-			VALUES (NULL, '".implode("', '", $_POST)."')
+			INSERT INTO lf_acl_".$this->db->escape($vars[1])." (`id`, `".implode("`, `", array_keys($_POST))."`)
+			VALUES (NULL, '".implode("', '", array_values($_POST))."')
 		");
 		
+		$this->notice('Added ACL rule');
 		redirect302();
 	}
 	
@@ -142,6 +136,7 @@ class acl extends app
 			WHERE id = ".intval($vars[2])."
 		");
 		
+		$this->notice('Deleted ACL rule');
 		redirect302();
 	}
 }

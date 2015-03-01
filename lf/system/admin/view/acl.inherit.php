@@ -1,3 +1,4 @@
+<?=$this->partial('acl.header', array('active' => 'inherit'));?>
 <div class="row">
 	<form action="%appurl%add/inherit" method="post">
 		<div class="col-2">
@@ -37,7 +38,9 @@
 		</div>
 	</form>
 </div>
-
+<?php if($this->hasnotice()): ?>
+<div class="notice marbot"><?=$this->notice();?></div>
+<?php endif; ?>
 <table class="table">
 	<tr class="gray light">
 		<th>User or Group</th>
@@ -57,7 +60,7 @@
 		<td><?=$acl['group'];?></td>
 		<td>Group / <?=$acl['inherits'];?></td>
 		<td>Edit</td>
-		<td><a href="%appurl%rm/inherit/<?=$acl['id'];?>" class="x">Delete</a></td>
+		<td><a <?=jsprompt();?> href="%appurl%rm/inherit/<?=$acl['id'];?>" class="x">Delete</a></td>
 	</tr>
 	<?php endforeach; ?>
 </table>
