@@ -45,14 +45,14 @@
 
 		<?php $counter = 0; 
 
-		$imglist = array(
+		/*$imglist = array(
 			'http://cdn.tripwiremagazine.com/wp-content/uploads/2012/11/church-website-templates1.jpg',
 			'http://www.webdesignme.com/wp-content/uploads/revolution-theme-blue.jpg',
 			'http://blog.tmimgcdn.com/wp-content/uploads/2010/12/Free-Website-Template.jpg?7e70d4',
 			'http://blog.tmimgcdn.com/wp-content/uploads/2011/09/Free-Website-Template2.jpg?7e70d4',
 			'http://www.enjin.com/images/games/ffxiv/ffxiv-website-themes.jpg',
 			'http://www.opendesigns.org/od/wp-content/designs/34/34854/thumbnail.jpg'
-		);
+		);*/
 
 
 			foreach($skins as $skin): 
@@ -67,7 +67,10 @@
 			if($skin == $request->settings['default_skin'])
 				$highlight = 'selected';
 				
-			$counter++;
+			if(is_file(ROOT.'skins/'.$skin.'/screenshot.png'))
+				$screenshot = '%relbase%lf/skins/'.$skin.'/screenshot.png';
+			else
+				$screenshot = 'http://placehold.it/350x500';
 		?>
 			<div class="col-6">
 				<div class="tile rounded <?=$highlight;?>">
@@ -78,7 +81,7 @@
 					
 					<!-- Screenshot Example 1-->
 					<div class="h250">
-						<a href="<?=$imglist[$counter%6];?>"><img class="fit" src="<?=$imglist[$counter%6];?>"  /></a>
+						<a href="<?=$screenshot;?>"><img class="fit" src="<?=$screenshot;?>"  /></a>
 					</div>
 					
 					<!-- Screenshot Example 2-->
