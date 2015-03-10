@@ -2,6 +2,8 @@
 
 The Big CMS with a little footprint.
 
+Visit http://littlefootcms.com for documentation.
+
 ## Issues
 
 The preferred convention for issue titles is as follows:
