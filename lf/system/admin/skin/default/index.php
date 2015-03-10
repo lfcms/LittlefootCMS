@@ -10,6 +10,7 @@
 		<!-- Le styles -->
 		<link href="%relbase%lf/system/lib/lf.css" rel="stylesheet">
 		<link href="%skinbase%css/custom.css" rel="stylesheet">
+		<link href="/css/font-awesome.min.css" rel="stylesheet">
 		<!-- <link href="%skinbase%css/styles.css" rel="stylesheet"> -->
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
 
@@ -37,11 +38,11 @@
 
 	<body>
 		<!-- <header class="container">
-			<?php 
-							
-				if($_SESSION['upgrade']) 
-					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>'; 
-								
+			<?php
+
+				if($_SESSION['upgrade'])
+					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>';
+
 			?>
 		</header> -->
 		<div class="wrapper userbar dark_gray light">
