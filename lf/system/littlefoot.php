@@ -881,8 +881,10 @@ App load times:
 		
 		ob_start();
 		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
-		echo str_replace('<head>', '<head>
-		<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />', $template);
+		echo str_replace('<head>','<head>
+			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />
+			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/icons.css" />
+		', $template);
 		
 		$this->hook_run('pre lf render');
 		
