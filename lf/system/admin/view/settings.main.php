@@ -73,7 +73,7 @@
 			</div>
 			<div class="tile-content">
 			
-				<a class="blue button martop marbot" href="%baseurl%lfup/">Upgrade Littlefoot</a>
+				<a class="blue button martop marbot" href="%appurl%lfup/">Upgrade Littlefoot</a>
 				
 				<h4>Current version: <?=$this->request->api('version');?></h4>
 				

@@ -116,12 +116,12 @@ class settings extends app
 		
 		if(!is_file(ROOT.'system.zip'))
 		{
-			echo ROOT.'system.zip does not exist';
+			$this->notice(ROOT.'system.zip does not exist');
 		}
 		else if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) 
 		{
 			// if unable to rename...
-			echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
+			$this->notice('Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time);
 		} 
 		else
 		{
@@ -131,7 +131,7 @@ class settings extends app
 			Unzip($dir,$file);
 			
 			if(!is_dir(ROOT.'system'))
-				echo 'Failed to unzip system.zip';
+				$this->notice('Failed to unzip system.zip');
 			else
 			{
 				unlink(ROOT.'system.zip');
@@ -145,16 +145,11 @@ class settings extends app
 					//exit(); 
 				}
 				
-				redirect302();
+				$this->notice('Upgraded Littlefoot successfully.');
 			}
 		}
 		
-		
-		/*
-		//redirect302();
-			
-		echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
-		exit();*/
+		redirect302();
 	}
 
 	public function rm($vars)
