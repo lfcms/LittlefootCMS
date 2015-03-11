@@ -7,44 +7,6 @@ class settings extends app
 {
 	public function main($var)
 	{
-		// Query for settings, save as array[var] = val)
-		/*$sql = 'SELECT * FROM lf_settings ORDER BY var';
-		$this->db->query($sql);
-		$result = $this->db->fetchall();
-		foreach($result as $setting)
-			$settings[$setting['var']] = $setting['val'];*/
-			
-		if(count($_POST))
-		{
-			/*if(isset($_POST['newvar']) && isset($_POST['newval']) && $_POST['newval'] != '' && !array_key_exists($_POST['newvar'], $_POST['setting']))
-			{
-				$sql = "
-					INSERT INTO lf_settings (id, var, val)
-					VALUES (NULL, '".$this->db->escape($_POST['newvar'])."', '".$this->db->escape($_POST['newval'])."')
-				";
-				$this->db->query($sql);
-			}*/
-			
-			if(isset($_POST['setting']))
-			{
-				$sql = "UPDATE lf_settings SET val = CASE var";
-			
-				foreach($_POST['setting'] as $var => $val)
-				{
-				
-					$sql .= " WHEN '".$this->db->escape($var)."' THEN '".$this->db->escape($val)."'";
-					$params[] = $this->db->escape($var);
-				}
-				
-				$sql .= " END WHERE var IN ('".implode("', '", $params)."')";
-				
-				$this->db->query($sql);
-			}
-			
-			redirect302();
-		}
-		
-		
 		/* UPGRADE */
 		
 		$newest = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
@@ -109,6 +71,29 @@ class settings extends app
 				
 		// include view
 		include 'view/settings.main.php';
+	}
+	
+	public function saveoptions($args)
+	{
+		if(count($_POST))
+		{
+			if(isset($_POST['setting']))
+			{
+				$sql = "UPDATE lf_settings SET val = CASE var";
+			
+				foreach($_POST['setting'] as $var => $val)
+				{
+					$sql .= " WHEN '".$this->db->escape($var)."' THEN '".$this->db->escape($val)."'";
+					$params[] = $this->db->escape($var);
+				}
+				
+				$sql .= " END WHERE var IN ('".implode("', '", $params)."')";
+				$this->db->query($sql);
+				
+				$this->notice('Options saved');
+			}
+			redirect302();
+		}
 	}
 	
 	public function upgradedev($args)
