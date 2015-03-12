@@ -19,7 +19,7 @@ class acl extends app
 		// List all Users/Groups
 		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
 		
-		$users = array();
+		$users = array(0 => 'Anonymous');
 		$groups = array();
 		foreach($result as $user)
 		{
@@ -73,7 +73,7 @@ class acl extends app
 		// List all Users/Groups
 		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
 		
-		$users = array();
+		$users = array(0 => 'Anonymous');
 		$groups = array();
 		foreach($result as $user)
 		{
