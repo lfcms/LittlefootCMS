@@ -1,7 +1,5 @@
 Options -Indexes
 
-suPHP_ConfigPath /home/wightdev/www/php.ini
-
 # BEGIN LF
 <IfModule mod_rewrite.c>
 
