@@ -60,6 +60,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf p {
+	line-height: 1.5rem;
 	margin-top: 1.3rem;
 	margin-bottom: 1.3rem;
 }
@@ -76,12 +77,6 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf .code_box {
 	max-height: 20rem;
-}
-
-.lf ul li {
-	margin-right: 20px;
-	display: inline;
-	float: left;
 }
 
 .lf hr {
@@ -342,8 +337,16 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 /*Lists*/
 .lf .hlist {
+	margin-right: 20px;
+	display: inline;
 	float: left;
 }
+
+/*.lf ul li {
+	margin-right: 20px;
+	display: inline;
+	float: left;
+}*/
 
 .lf .vlist, .lf
 .fvlist, .lf
@@ -443,6 +446,46 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
     padding: 1.618rem;
 }
 
+.lf .main_nav > ul > li > ul {
+    display: none;
+}
+
+.lf .main_nav > ul > li:hover > ul {
+    max-width: 200px;
+    display: block;
+    background-color: white;
+    position: absolute;
+    z-index: 999;
+	border-left: 1px solid rgba(51, 51, 51, 0.25);
+	border-right: 1px solid rgba(51, 51, 51, 0.25);
+	border-bottom: 1px solid rgba(51, 51, 51, 0.25);
+}
+
+.lf .main_nav > ul > li:hover > ul li {
+    background: white;
+	width: 100%;
+}
+
+.lf .main_nav > ul > li:hover > ul li ul li {
+	/*border-left: 1px dashed rgba(100, 100, 100, 0.5);*/
+	padding-left: 5px;
+	font-size: 0.9rem;
+}
+
+/*.lf .main_nav > ul > li:hover > ul li ul li:first-child {
+	border-top: 1px dashed rgba(100, 100, 100, 0.5);
+	padding-left: 5px;
+}
+
+.lf .main_nav > ul > li:hover > ul li ul li:last-child {
+	border-bottom: 1px dashed rgba(100, 100, 100, 0.5);
+	padding-left: 5px;
+}*/
+
+.lf .main_nav > ul > li > ul li:hover a {
+    /*opacity: 0.8;*/
+}
+
 .lf nav.vlist li,
 .lf nav.fvlist li,
 .lf nav.efvlist li {
@@ -523,6 +566,10 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 /*Images*/
 .lf img {
 	max-width: 100%;
+}
+
+.lf img.fit {
+	width: 100%;
 }
 
 .lf img.small {
@@ -674,7 +721,7 @@ html.lf, .lf body {
 	min-height: 40px;
 	line-height: 20px;
 	margin-bottom: 10px;
-	padding: 5px 10px;
+	padding: 0.5rem 0.75rem;
 	width: 100%;
 }
 
@@ -686,9 +733,9 @@ html.lf, .lf body {
 	background-image: url('data:image/gif;base64, .lfR0lGODlhFAAUALMAAP////r6+vT09O3t7eTk5Nvb29nZ2dbW1tTU1NHR0c/Pz6Skq5qaolVVYgAAAAAAACH5BAEHAAAALAAAAAAUABQAAARHEMhJaw02W6G7HNrCdES2NM2YFdaJpplRuS9cHRRd2xPidYmfRiHMBIsV30RXU01wuR1vIps1VyaUs1IybSsgJIUjnmDKkggAOw==');
 	background-position: center right;
 	background-repeat: no-repeat;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
+	/* -webkit-appearance: none; */
+	/* -moz-appearance: none; */
+	/* appearance: none; */
 }
 
 .lf input[type=text]:focus,
@@ -781,7 +828,7 @@ html.lf, .lf body {
 
 
 /*Mobile*/
-@media (min-width : 320px) 
+@media (min-width : 0px) 
 and (max-width : 850px) {
 	
 	/*Mobile - Userbar*/
