@@ -579,11 +579,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 /* The Basics */
 html.lf {
 	font-size: 16px;
-	line-height: 1;
-	font-family: 'Open Sans', Arial, sans-serif;
-	font-weight: 400;
 	overflow-y: scroll;
-	color: #444;
 }
 
 .lf {
