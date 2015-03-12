@@ -429,12 +429,11 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .main_nav {
-    float: left;
     overflow: hidden;
 }
 
 .lf .main_nav li {
-	margin-right: 0;
+	float: left;
 }
 
 .lf .main_nav li.active{
