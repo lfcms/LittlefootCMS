@@ -52,7 +52,7 @@ if(isset($actions[$parent])):
 					<?php endif; ?>
 				</div>
 				<div class="col-1">
-					<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%apps/rm/<?=$action['id'];?>/">x</a>
+					<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/">x</a>
 				</div>
 			</div>
 		</div>
