@@ -342,12 +342,6 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	float: left;
 }
 
-/*.lf ul li {
-	margin-right: 20px;
-	display: inline;
-	float: left;
-}*/
-
 .lf .vlist, .lf
 .fvlist, .lf
 .efvlist {
