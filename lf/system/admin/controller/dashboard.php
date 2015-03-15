@@ -558,7 +558,7 @@ class dashboard extends app
 			$this->db->query($sql);
 		}
 		$this->updatenavcache();
-		redirect302();
+		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function updatenavcache()
