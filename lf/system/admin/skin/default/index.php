@@ -49,11 +49,11 @@
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
 					<div class="userbar">
-						<div class="col-2">
-							<a id="admin_title" href="<?=$this->base;?>">lf admin</a>
+						<div class="col-2 blue">
+							<a id="admin_title" class="light" href="<?=$this->base;?>">lf admin</a>
 						</div>
 						<div class="col-7">
-							<a id="site_preview" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
+							<a id="site_preview" class="light" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
 						</div>
 						<div class="col-3">
 							<span id="logout_button" class="pull-right">
