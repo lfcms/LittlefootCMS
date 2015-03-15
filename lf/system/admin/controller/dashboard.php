@@ -96,7 +96,7 @@ class dashboard extends app
 		
 		$id = $this->create($vars);
 		
-		redirect302($this->request->appurl.'main/'.$id);
+		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function create($vars) // nav/item create
