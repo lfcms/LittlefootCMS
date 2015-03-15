@@ -1,7 +1,7 @@
 <?php
 
 // Query lf_actions navigation items, loop to generate parent => child hierarchy
-$result = orm::q('lf_actions')->filterByposition('!=', 0)->order('position')->get();
+$result = orm::q('lf_actions')->filterByposition('!=', 0)->order('ABS(position)')->get();
 $actions = array();
 foreach($result as $action)
 	$actions[$action['parent']][] = $action;
