@@ -60,6 +60,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf p {
+	line-height: 1.5rem;
 	margin-top: 1.3rem;
 	margin-bottom: 1.3rem;
 }
@@ -76,12 +77,6 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf .code_box {
 	max-height: 20rem;
-}
-
-.lf ul li {
-	margin-right: 20px;
-	display: inline;
-	float: left;
 }
 
 .lf hr {
@@ -342,6 +337,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 /*Lists*/
 .lf .hlist {
+	margin-right: 20px;
+	display: inline;
 	float: left;
 }
 
@@ -426,12 +423,11 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .main_nav {
-    float: left;
     overflow: hidden;
 }
 
 .lf .main_nav li {
-	margin-right: 0;
+	float: left;
 }
 
 .lf .main_nav li.active{
@@ -583,11 +579,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 /* The Basics */
 html.lf {
 	font-size: 16px;
-	line-height: 1;
-	font-family: 'Open Sans', Arial, sans-serif;
-	font-weight: 400;
 	overflow-y: scroll;
-	color: #444;
 }
 
 .lf {

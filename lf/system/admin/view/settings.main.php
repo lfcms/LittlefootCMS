@@ -1,4 +1,5 @@
 <h2>Settings</h2>
+<?=$this->notice();?>
 <div class="row">
 	<div class="col-7">
 		<div class="tile rounded">
@@ -6,14 +7,14 @@
 				<h3>Options</h3>
 			</div>
 			<div class="tile-content">
-				<form action="?" method="post">
+				<form action="%appurl%saveoptions" method="post">
 					<div class="row">
 						<div class="col-3">
 							<label for="rewrite">URL Rewrite:</label>
 							<?php foreach($rewrite['options'] as $option):
 								$checked = $rewrite['value']==$option?'checked':'';
 							?>
-							<input id="rewrite" type="radio" <?=$checked;?> name="rewrite" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<input id="rewrite" type="radio" <?=$checked;?> name="setting[rewrite]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 						</div>
 						<div class="col-3">
@@ -21,7 +22,7 @@
 							<?php foreach($debug['options'] as $option):
 								$checked = $debug['value']==$option?'checked':'';
 							?>
-							<input id="debug" type="radio" <?=$checked;?> name="debug" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<input id="debug" type="radio" <?=$checked;?> name="setting[debug]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 						</div>
 						<div class="col-3">
@@ -29,7 +30,7 @@
 							<?php foreach($signup['options'] as $option):
 								$checked = $signup['value']==$option?'checked':'';
 							?>
-							<input id="signup" type="radio" <?=$checked;?> name="signup" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<input id="signup" type="radio" <?=$checked;?> name="setting[signup]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 						</div>
 						<div class="col-3">
@@ -72,7 +73,7 @@
 			</div>
 			<div class="tile-content">
 			
-				<a class="blue button martop marbot" href="%baseurl%lfup/">Upgrade Littlefoot</a>
+				<a class="blue button martop marbot" href="%appurl%lfup/">Upgrade Littlefoot</a>
 				
 				<h4>Current version: <?=$this->request->api('version');?></h4>
 				
