@@ -1,6 +1,5 @@
 <?php
 
-#Do not change methods in here at all
 /**
 *@author kyle S <kyle@kylesorrels.com>
 *@license whatever littlefootcms is
@@ -10,25 +9,47 @@
 class Template
 {
 	//should have contants to define application root
-	protected $docRoot = APPLICATION_ENV;
+	protected $docRoot = DOCUMENT_ROOT;
+	private $ajaxMode = false;
 	public function __construct($vars =null,$templateName = null){
 		//set templatename
 		$this->templateName=(is_null($templateName))?'':$templateName;
+
 		//first off we need the url
-		$uri = $_SERVER['REDIRECT_URL'];
-		$this->uriPath = $uri;
-		$uri = explode('/',$uri);
-		array_shift($uri);
-		$this->uri = $uri;
+
 
 		//get the view variables
 		if(!is_null($vars)){
-			foreach($vars as $key => $var){
-				$this->$key = $var;
+			if(is_array($vars)){
+				foreach($vars as $key => $var){
+					$this->$key = $var;
+				}
+			}else{
+				$this->vars = $vars;
 			}
 		}
+		// ajax mode
+		if( (!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+		  && ( strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
+		  || (strpos($this->action,'ajax')=== 0)
+		  ){
+	            $this->ajaxMode = true;
+	    }
+
+	}
+	public function getUriAsArray(){
+		$uri = $_SERVER['REDIRECT_URL'];
+		//set the uriPath as string.
+		$this->uriPath = $uri;
+		$uri = explode('/',$uri);
+		//take the first / out
+		array_shift($uri);
+		return $this->uri = $uri;
 	}
 	public function display($viewPath){
+		if($this->ajaxMode){
+			return $this->ajaxRender();
+		}
 		$this->renderHeader();
 		$this->includeScripts();
 		$this->renderNavbar();
@@ -37,10 +58,6 @@ class Template
 		include($viewPath);
 		$this->renderFooter();
 		unset($_POST);
-		return;
-	}
-	public function ajaxRender($viewPath){
-		include($viewPath);
 		return;
 	}
 	public function render404(){
