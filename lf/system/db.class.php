@@ -30,7 +30,7 @@ class Database
 	public $error = '';
 	
 	/** @var MySQLi $mysql MySQLi connection object */
-	private $mysqli;
+	protected $mysqli;
 	
 	/** @var Result Most recent MySQL result */
 	private $db_result;
@@ -46,7 +46,7 @@ class Database
 	 * 
 	 * @param string[] $database_config 
 	 */
-	function __construct( $database_config )
+	public function __construct( $database_config )
 	{
 		$this->mysqli = new mysqli( 
 			$database_config['host'], 

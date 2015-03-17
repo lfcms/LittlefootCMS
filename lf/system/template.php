@@ -60,8 +60,8 @@ class Template
 		unset($_POST);
 		return;
 	}
-	public function render404(){
-		include($this->docRoot.'/errors/404.html');
+	public static function render404(){
+		include(ROOT.'system/view/errors/404.html');
 	}
 	public function renderHeader(){
 		include($this->docRoot.'/html/template/topbar.php');

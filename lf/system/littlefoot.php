@@ -513,6 +513,7 @@ App load times:
 	
 	public function authenticate()
 	{
+
 		$this->hook_run('pre_auth'); 
 		
 		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
