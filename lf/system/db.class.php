@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Database wrapper object
+ * Database wrapper object [DEPRECATED]
  * 
  * ## Instantiation
  * 

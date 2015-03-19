@@ -127,18 +127,24 @@ class Littlefoot
 		$this->start = microtime(true);
 		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
+		$this->absbase = ROOT; // backward compatible // getcwd().'/';
+		
+		$this->load_plugins();
+		$this->hook_run('plugins_loaded');
+		
 		$this->version = file_get_contents(ROOT.'system/version');
-		$this->db = new Database($db);
+		$this->db = db::init(); //new Database($db);
+		$this->hook_run('lf db init');
 		
 		// check install
 		install::testinstall();
-		
-		$this->absbase = ROOT; // backward compatible // getcwd().'/';
 		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
 		$this->auth = $_SESSION['_auth'];
 		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
+		
+		$this->hook_run('lf __construct');
 	}
 	
 	public function __destruct()
@@ -147,13 +153,12 @@ class Littlefoot
 		unset($this->auth['acl']); // so it is not in session
 		$_SESSION['_auth'] = $this->auth;
 		
-		//var_dump($this->settings['debug']);
-		//exit();
-		
 		//if($this->debug)
+		if($this->settings['debug'] == 'on')
+			$this->debug = true;
 		
 		// actual speed
-		if($this->settings['debug'] == 'on')
+		if($this->debug)
 		{
 			$exectime = round((microtime(true) - $this->start), 6)*(1000);
 			$memusage = round(memory_get_peak_usage()/1024/1024,2);
@@ -217,55 +222,20 @@ App load times:
 	 * @param string $debug Is debug set to true
 	 * 
 	 */
-	public function cms($debug = false)
+	public function cms()
 	{
-		$this->load_plugins();
-		$this->hook_run('plugins_loaded');
-		
-		// Apply settings 
-		$this->db->query('SELECT * FROM lf_settings');
-		while($row = $this->db->fetch())
-			$this->settings[$row['var']] = $row['val'];	
-		
-		$this->hook_run('settings_loaded');
-			
-		// redirect to URL specified in 'force_url' setting
-		if(isset($this->settings['force_url']) && $this->settings['force_url'] != '')
-		{
-			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
-			$request = $_SERVER['HTTP_HOST'].$relbase;
-			$compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
-			
-			// ty Anoop K [ http://stackoverflow.com/questions/4503135/php-get-site-url-protocol-http-vs-https ]
-			$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-			
-			if($request != $compare)
-			{
-				$redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-				$redirect = preg_replace('/^'.preg_quote($request, '/').'/', $compare, $redirect);
-				redirect302($protocol.$redirect);
-			}
-		}
-		
-		$this->select['template'] = $this->settings['default_skin'];
-		$this->select['title'] = 'LFCMS';
-		$this->select['alias'] = '404';
-		
-		
-		if(is_dir(ROOT.'lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'lib');
-		if(is_dir(ROOT.'system/lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'system/lib');
-		
-		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
+		$this->loadSettings();
 		
 		// request
 		$funcstart = microtime(true);
-		/*$this->admin = */$this->request();
+		$this->request();
 		$this->function_timer['request'] = microtime(true) - $funcstart;
-		$funcstart = microtime(true);
 		
 		// auth
+		$funcstart = microtime(true);
 		$this->authenticate();
 		$this->function_timer['auth'] = microtime(true) - $funcstart;
+		
 		$funcstart = microtime(true);
 		
 		// if requested, load admin/
@@ -274,21 +244,8 @@ App load times:
 			chdir('system/admin');
 			include 'index.php';
 		}
-								
+		
 		$this->auth['acl'] = $this->apply_acl();
-		/*
-								//CACHING - will not account for update to page...
-								if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
-								{
-									$auth = $this->auth;
-									unset($auth['last_request'], $auth['timeout']);
-									$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
-									if(is_file(ROOT.'cache/'.$file))
-									{
-										readfile(ROOT.'cache/'.$file);
-										exit();
-									}
-								}*/
 		
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
 		{
@@ -331,22 +288,53 @@ App load times:
 		}
 		
 		if($this->settings['simple_cms'] == '_lfcms') #DEV
-		{
 			$content['%nav%'][] = $nav;
-		}
 		
 		// display in skin
 		echo $this->render($content);
 		$this->function_timer['render'] = microtime(true) - $funcstart;
+	}
+	
+	public function loadSettings()
+	{
+		foreach(orm::q('lf_settings')->get() as $setting)
+			$this->settings[$setting['var']] = $setting['val'];
+			
+		if(isset($this->settings['debug']) && $this->settings['debug'] == 'on') 
+			$this->debug = true;
+		
+		$this->hook_run('settings_loaded');
+		
+		return $this->settings;
+	}
+	 
+	private function cache() // not a thing yet
+	{
 		/*
-								//CACHING - will not account for update to page...
-								if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
-								{
-									$auth = $this->auth;
-									unset($auth['last_request'], $auth['timeout']);
-									$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
-									file_put_contents(ROOT.'cache/'.$file, $output);
-								}*/
+		
+		//CACHING - will not account for update to page...
+		if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
+		{
+			$auth = $this->auth;
+			unset($auth['last_request'], $auth['timeout']);
+			$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
+			if(is_file(ROOT.'cache/'.$file))
+			{
+				readfile(ROOT.'cache/'.$file);
+				exit();
+			}
+		}
+		
+		//CACHING - will not account for update to page...
+		if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
+		{
+			$auth = $this->auth;
+			unset($auth['last_request'], $auth['timeout']);
+			$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
+			file_put_contents(ROOT.'cache/'.$file, $output);
+		}
+		
+		*/
 	}
 	
 	/**
@@ -358,6 +346,31 @@ App load times:
 	public function request()
 	{
 		$this->hook_run('pre lf request');
+		
+		// Default values
+		$this->select['template'] = $this->settings['default_skin'];
+		$this->select['title'] = 'LFCMS';
+		$this->select['alias'] = '404';
+		
+		// redirect to URL specified in 'force_url' setting
+		if(isset($this->settings['force_url']) 
+		  && $this->settings['force_url'] != '' )
+		{
+			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
+			$request = $_SERVER['HTTP_HOST'].$relbase;
+			$compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
+			
+			// ty Anoop K [ http://stackoverflow.com/questions/4503135/php-get-site-url-protocol-http-vs-https ]
+			$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+			
+			if($request != $compare)
+			{
+				$redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				$redirect = preg_replace('/^'.preg_quote($request, '/').'/', $compare, $redirect);
+				redirect302($protocol.$redirect);
+			}
+		}
+		
 		// detect file being used as base (for API)
 		$filename = 'index.php';
 		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
@@ -369,50 +382,55 @@ App load times:
 		
 		// Break up request URI and extract GET request
 		$url = explode('?', $_SERVER['REQUEST_URI'], 2);
-		if(substr($url[0], -1) != '/') $url[0] .= '/'; //Force trailing slash
+		if(substr($url[0], -1) != '/')
+			$url[0] .= '/'; //Force trailing slash
 		
 		$this->get = $_GET;
 		$this->post = $_POST;
 		
 		// Detect subdirectory, use of index.php, request of admin, other URI variables and the GET request
-		preg_match('/(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?([^\?]*)(.*)/', $url[0], $request);
-		//$regex = '/('.str_replace('/', '\/', $subdir).')(.+.php\/)?/';
-		//preg_match($regex, $url[0], $request);
+		$urlregex = '/(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?([^\?]*)(.*)/';
+		preg_match($urlregex, $url[0], $request);
+		
+		// Simplify request matches
+		$subdir = $request[1];
+		$index = $request[2];
+		$admin = $request[3];
+		$action = $request[4];
+		$rawget = $request[5];
 		
 		$fixrewrite = false; // add in 302 to fix rewrite duplicate content #FIX
-		if($this->settings['rewrite'] == 'on') 
+		if($this->settings['rewrite'] == 'on')
 		{
-			if($request[2] == 'index.php/') $fixrewrite = true;
-			$request[2] = '';
+			if($index == 'index.php/') 
+				$fixrewrite = true;
+			$index = '';
 		}
 		if($this->settings['rewrite'] == 'off')
 		{
-			if($request[2] == '') $fixrewrite = true;
-			$request[2] = $filename.'/';
+			if($index == '') 
+				$fixrewrite = true;
+			$index = $filename.'/';
 		}
-		
-		$this->domain = $_SERVER['HTTP_HOST'];
 		
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
-		else $port = '';
+		else 
+			$port = '';
 		
 		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
-		{
 			$protocol = 'https://';
-		} else
+		else
 			$protocol = 'http://';
 		
-		
+		$this->domain = $_SERVER['HTTP_HOST'];
 		$this->base = $protocol.$_SERVER['HTTP_HOST'].$request[1].$request[2]; // account for use of index.php/
-		
 		$this->baseurl = $this->base; // keep $Xurl usage
-		
 		$this->relbase = $request[1]; // /subdir/ for use with web relative file reference
-		
 		$this->basenoget = $this->base.$request[3].$request[4];
 		
-		if($fixrewrite) redirect302($this->base.$request[3].$request[4].$request[5]);
+		if($fixrewrite) 
+			redirect302($this->base.$request[3].$request[4].$request[5]);
 		
 		if(substr_count($request[4], '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
@@ -427,9 +445,6 @@ App load times:
 		$this->admin = $request[3] == 'admin/' ? true : false; // for API
 		
 		$this->hook_run('post lf request');
-		
-		// Whether or not this is an admin/ request
-		return $request[3] == 'admin/' ? true : false;
 	}
 	
 	public function authenticate()
@@ -854,7 +869,7 @@ App load times:
 		if(!class_exists($controller)) // include specified controller class
 			include 'controller/' . $controller . '.php';
 		
-		$class = new $controller($this->lf, $this->db, $ini, $vars); // init class specified by $controller
+		$class = new $controller($this->lf, $ini, $vars); // init class specified by $controller
 		if(is_callable(array($class, $vars[0])))
 			$func = $vars[0];
 		else

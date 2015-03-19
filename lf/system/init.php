@@ -3,7 +3,9 @@
 // chdir to lf/ folder and define as ROOT
 $folder = dirname(__FILE__).'/../';
 if(!chdir($folder)) die('Access Denied to '.$folder); // if unable to cd there, kill script
-define('ROOT', getcwd().'/'); // The absolute path to the lf/ directory is the ROOT of the application
+define('LF', getcwd().'/'); // The absolute path to the lf/ directory is the ROOT of the application
+
+define('ROOT', LF); // backward compatible
 
 require_once('system/bootstrap.php'); // include lf library
 
@@ -22,4 +24,4 @@ else
 	include 'config.php'; // load $db config
 
 $lf = new LittleFoot($db); // initialize $lf with $db connection
-$lf->cms($debug); // execute littlefoot as cms() and render() ouput
+$lf->cms(); // execute littlefoot as cms() and render() ouput
