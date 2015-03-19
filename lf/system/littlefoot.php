@@ -133,6 +133,8 @@ class Littlefoot
 		// check install
 		install::testinstall();
 		
+		$this->absbase = ROOT; // backward compatible // getcwd().'/';
+		
 		// Recover session variables from last page load
 		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
 		$this->auth = $_SESSION['_auth'];
@@ -153,10 +155,13 @@ class Littlefoot
 		// actual speed
 		if($this->settings['debug'] == 'on')
 		{
+			$exectime = round((microtime(true) - $this->start), 6)*(1000);
+			$memusage = round(memory_get_peak_usage()/1024/1024,2);
+			
 			echo ' <!-- lf Stat Info
 Version: '.$this->version.'
-PHP Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
-Peak Memory Usage: '.round(memory_get_peak_usage()/1024/1024,2).' MB
+PHP Execution Time: '.$exectime.'ms
+Peak Memory Usage: '.$memusage.' MB
 Num Queries: '.$this->db->getNumQueries().'
 Littlefoot function load times:
 	';
@@ -214,36 +219,15 @@ App load times:
 	 */
 	public function cms($debug = false)
 	{
+		$this->load_plugins();
+		$this->hook_run('plugins_loaded');
+		
 		// Apply settings 
 		$this->db->query('SELECT * FROM lf_settings');
 		while($row = $this->db->fetch())
-			$this->settings[$row['var']] = $row['val'];
+			$this->settings[$row['var']] = $row['val'];	
 		
-		
-		
-		/* OOOOOLD plugin stuff
-		
-		// JSON => array
-		if(isset($this->lf->settings['plugins']))
-			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);*/
-		
-		/* load plugins old
-		foreach(scandir('plugins') as $file)
-		{
-			if(substr($file, -4) != '.php') continue;
-			include 'plugins/'.$file;
-		}*/
-		
-		//plug-ins v2
-		//if(is_dir('plugins/plugins_loaded_FALSE'))
-		//	foreach(preg_grep('/^([^.])/', scandir('plugins/plugins_loaded')) as $plugin)
-		//		include 'plugins/plugins_loaded/'.$plugin;
-		
-		
-		$this->load_plugins();
-		
-		
-		$this->hook_run('plugins_loaded');
+		$this->hook_run('settings_loaded');
 			
 		// redirect to URL specified in 'force_url' setting
 		if(isset($this->settings['force_url']) && $this->settings['force_url'] != '')
@@ -265,11 +249,8 @@ App load times:
 		
 		$this->select['template'] = $this->settings['default_skin'];
 		$this->select['title'] = 'LFCMS';
-		
-		$this->hook_run('settings_loaded');
-		
-		$this->absbase = ROOT; // backward compatible // getcwd().'/';
 		$this->select['alias'] = '404';
+		
 		
 		if(is_dir(ROOT.'lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'lib');
 		if(is_dir(ROOT.'system/lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'system/lib');
@@ -287,69 +268,11 @@ App load times:
 		$this->function_timer['auth'] = microtime(true) - $funcstart;
 		$funcstart = microtime(true);
 		
-		/*
-		// to post to a specific app without loading the rest of the CMS (should be to link in db, not app folder, this does not seem secure at the moment)
-		if( isset($this->action[0]) && $this->action[0] == 'post' && 
-			preg_match('/[0-9]+/', $this->action[1], $match) && count($_POST) )
-		{
-			$link = $match[0];
-			$this->vars = array_slice($this->action, 2);
-			//include('system/post.php');
-			$this->post($match[0]);
-			return 0;
-		}*/
-		
 		// if requested, load admin/
 		if($this->admin)
 		{
 			chdir('system/admin');
-			
-			//ob_start();
 			include 'index.php';
-			//return ob_get_clean();
-			/*$admin_skin = 'leap'; // this needs to be an option instead of hard coded
-			
-			// maybe you are an admin, but I need you to login first
-			if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
-			{
-				//$publickey = '6LffguESAAAAAKaa8ZrGpyzUNi-zNlQbKlcq8piD'; // littlefootcms public key
-				$recaptcha = '';//recaptcha_get_html($publickey);
-				
-				ob_start();
-				include('skin/'.$admin_skin.'/login.php'); 
-				echo str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-				exit; 
-			}
-			
-			if($this->auth['access'] == 'admin')
-			{
-				include('loader.php');
-				$this->function_timer['admin'] = microtime(true) - $funcstart;
-				$this->app_timer['no apps, just admin'] = 0;
-				return 0;
-			}
-			
-			if(strpos($this->auth['access'], 'app_') !== false)
-			{
-				$admin_skin = 'fresh';
-				$app = explode('_', $this->auth['access']);
-				$app_name = $app[1];
-				$app = $this->loadapp($app_name, true, '', $this->action);
-				
-				$app = str_replace('%appurl%', $this->base.'admin/', $app);
-				
-				ob_start();
-				include('skin/'.$admin_skin.'/index.php');
-				$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-				$out = str_replace('%baseurl%', $this->base.'admin/', $out);
-				$out = str_replace('%relbase%', $this->relbase, $out);
-				$out = str_replace('Littlefoot CMS', ucfirst($app_name).' Admin', $out);
-				$out = str_replace(array('<nav>', '</nav>'), '', $out);
-				$out = str_replace('class="content"', 'class="content" style="margin: 10px;"', $out);
-				
-				echo $out;
-				return 0;
-			}*/	
 		}
 								
 		$this->auth['acl'] = $this->apply_acl();
@@ -413,7 +336,7 @@ App load times:
 		}
 		
 		// display in skin
-		$output = $this->render($content);
+		echo $this->render($content);
 		$this->function_timer['render'] = microtime(true) - $funcstart;
 		/*
 								//CACHING - will not account for update to page...
@@ -424,8 +347,6 @@ App load times:
 									$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
 									file_put_contents(ROOT.'cache/'.$file, $output);
 								}*/
-								
-		echo $output;
 	}
 	
 	/**

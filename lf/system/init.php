@@ -13,6 +13,7 @@ require_once('system/bootstrap.php'); // include lf library
 session_name(md5(ROOT.$_SERVER['SERVER_NAME']));
 session_start();
 
+// this is handled by db.php
 // check to make sure configuration file is there
 // config.php contains database credentials
 if(!is_file('config.php')) 	
