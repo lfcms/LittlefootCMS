@@ -398,25 +398,27 @@ App load times:
 			$protocol = 'http://';
 		
 		$this->domain = $_SERVER['HTTP_HOST'];
-		$this->base = $protocol.$_SERVER['HTTP_HOST'].$request[1].$request[2]; // account for use of index.php/
+		
+		// account for use of index.php/
+		$this->base = $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		$this->baseurl = $this->base; // keep $Xurl usage
-		$this->relbase = $request[1]; // /subdir/ for use with web relative file reference
-		$this->basenoget = $this->base.$request[3].$request[4];
+		$this->relbase = $subdir; // /subdir/ for use with web relative file reference
+		$this->basenoget = $this->base.$admin.$action;
 		
 		if($fixrewrite) 
-			redirect302($this->base.$request[3].$request[4].$request[5]);
+			redirect302($this->base.$admin.$action.$rawget);
 		
-		if(substr_count($request[4], '/') > 60) die('That is a ridiculous number of slashes in your URI.');
+		if(substr_count($action, '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
 		{
-			$this->action = explode('/', $request[4], -1);
+			$this->action = explode('/', $action, -1);
 			
 			// Ensure action variable isn't empty
 			if(count($this->action) < 1)
 				$this->action[] = '';
 		}
 		
-		$this->admin = $request[3] == 'admin/' ? true : false; // for API
+		$this->admin = $admin == 'admin/' ? true : false; // for API
 		
 		$this->hook_run('post lf request');
 	}

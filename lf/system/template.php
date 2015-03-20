@@ -1,16 +1,16 @@
 <?php
 
 /**
-*@author kyle S <kyle@kylesorrels.com>
 *@license whatever littlefootcms is
 *@package littlefootcms
 *
 */
 class Template
 {
-	//should have contants to define application root
-	protected $docRoot = DOCUMENT_ROOT;
+	//should have constants to define application root
+	protected $docRoot = LF;
 	private $ajaxMode = false;
+	
 	public function __construct($vars =null,$templateName = null){
 		//set templatename
 		$this->templateName=(is_null($templateName))?'':$templateName;
@@ -19,15 +19,13 @@ class Template
 
 
 		//get the view variables
-		if(!is_null($vars)){
-			if(is_array($vars)){
-				foreach($vars as $key => $var){
+		if(!is_null($vars))
+			if(is_array($vars))
+				foreach($vars as $key => $var)
 					$this->$key = $var;
-				}
-			}else{
+			else
 				$this->vars = $vars;
-			}
-		}
+			
 		// ajax mode
 		if( (!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
 		  && ( strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
