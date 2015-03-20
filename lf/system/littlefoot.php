@@ -217,8 +217,6 @@ App load times:
 	 *
 	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
 	 * 
-	 * 
-	 * 
 	 * @param string $debug Is debug set to true
 	 * 
 	 */
@@ -236,61 +234,37 @@ App load times:
 		$this->authenticate();
 		$this->function_timer['auth'] = microtime(true) - $funcstart;
 		
-		$funcstart = microtime(true);
-		
 		// if requested, load admin/
 		if($this->admin)
 		{
 			chdir('system/admin');
 			include 'index.php';
+			exit;
 		}
 		
 		$this->auth['acl'] = $this->apply_acl();
 		
-		if($this->settings['simple_cms'] != '_lfcms') #DEV
-		{
-			$this->select['title'] = 'SimpleCMS';
-			$this->select['template'] = $this->settings['default_skin'];
-			
-			$this->vars = $this->action;
-			$this->action = array('');
-		}
-		else
-		{
-			// generate nav bar and process request against available actions
-			$nav = $this->nav();
-			$this->function_timer['nav'] = microtime(true) - $funcstart;
-			$funcstart = microtime(true);
-			
-			// if no items match the request, return 404
-			if($this->select['alias'] == '404')
-			{
-				header('HTTP/1.1 404 Not Found');
-				echo '<p>404 No menu items match your request</p>';
-				return 0;
-			}
-		}
-		
-		$this->appurl = $this->base.implode('/', $this->action).'/';
+		// generate nav bar and process request against available actions
+		$funcstart = microtime(true);
+		$nav = $this->navSelect();
+		$this->function_timer['nav'] = microtime(true) - $funcstart;
 		
 		// apply acl, check auth for current page.
-		//$this->auth['acl'] = $this->apply_acl();
-		if(!$this->acl_test(implode('/', $this->action))) {
-		// if(!$this->acl_test($this->select['id'])) {
+		if(!$this->acl_test(implode('/', $this->action)))
 			$content['%content%'][] = "403 Access Denied %login%";
-		}
 		else
 		{
 			// get content from apps
+			$funcstart = microtime(true);
 			$content = $this->getcontent();
 			$this->function_timer['getcontent'] = microtime(true) - $funcstart;
-			$funcstart = microtime(true);
 		}
 		
 		if($this->settings['simple_cms'] == '_lfcms') #DEV
 			$content['%nav%'][] = $nav;
 		
 		// display in skin
+		$funcstart = microtime(true);
 		echo $this->render($content);
 		$this->function_timer['render'] = microtime(true) - $funcstart;
 	}
@@ -564,14 +538,24 @@ App load times:
 		return true;
 	}
 	
-	private function nav()
+	public function navSelect()
 	{
+		if($this->settings['simple_cms'] != '_lfcms') #DEV
+		{
+			$this->select['alias'] = '';
+			$this->select['template'] = $this->settings['default_skin'];
+			$this->select['title'] = $this->settings['simple_cms'];
+			$this->vars = $this->action;
+			$this->action = array('');
+			return;
+		}
+		
 		// need to utilize cache instead of query
-	
-	
+		
 		/* Determine requested nav item from lf_actions */
 		
-		// get all possible matches for current request, always grab the first one in case nothing is selected
+		// get all possible matches for current request, 
+		// always grab the first one in case nothing is selected
 		$matches = $this->db->fetchall("
 			SELECT * FROM lf_actions 
 			WHERE alias IN ('".implode("', '", $this->action)."') 
@@ -583,8 +567,11 @@ App load times:
 		$base_save = NULL;
 		foreach($matches as $row)
 		{
-			if($row['position'] == 1 && $row['parent'] == -1) // save item in first spot of base menu if it is an app, just in case nothing matches
-				$base_save = $row; // save row in case "domain.com/" is requested
+			// save item in first spot of base menu if it is an app, 
+			// just in case nothing matches
+			if($row['position'] == 1 && $row['parent'] == -1)
+				// save row in case "domain.com/" is requested
+				$base_save = $row;
 				
 			$test_select[$row['parent']][$row['position']] = $row;
 		}
@@ -598,27 +585,29 @@ App load times:
 				foreach($test_select[$parent] as $position => $nav)
 					if($nav['alias'] == $this->action[$i])
 					{
+						// we found the match, move on to next action item
 						$selected[] = $nav;
 						$parent = $nav['id'];
-						break; // we found the match, move on to next action item
+						break;
 					}
 		
 		if($selected != array())
 		{
-			// separate action into vars and action base, pull select nav from inner most child
+			// separate action into vars and action base, 
+			// pull select nav from inner most child
 			$this->vars = array_slice($this->action, count($selected));
 			$this->action = array_slice($this->action, 0, count($selected));
 			$this->select = end($selected);
 		}
 		
-		// If home page is an app and no select was made from getnav(), set current page as /
+		// If home page is an app and no select was made from getnav(), 
+		// set current page as /
 		if($this->select['alias'] == '404' && $base_save != NULL)
 		{		
 			$this->select = $base_save;
-			$this->vars = $this->action; //
+			$this->vars = $this->action; // the whole URL is now variables
 			$this->action = array(''); // And now littlefoot() thinks that we requested just /
 		}
-		
 		
 		if(!is_file(ROOT.'cache/nav.cache.html')) // in case the file doesn't exist
 		{
@@ -627,6 +616,7 @@ App load times:
 			$this->mvc('dashboard', NULL, array('updatenavcache'));
 			chdir($pwd);
 		}
+		
 		$nav_cache = file_get_contents(ROOT.'cache/nav.cache.html');
 		
 		// Update nav_cache to show active items
@@ -634,17 +624,37 @@ App load times:
 		foreach($this->action as $action)
 		{
 			if($action != '') $actionbuilder .= $action.'/';
-			$nav_cache = str_replace('<li><a href="'.$actionbuilder.'"', '<li class="active"><a href="'.$actionbuilder.'"', $nav_cache);
+			$nav_cache = str_replace(
+				'<li><a href="'.$actionbuilder.'"', 
+				'<li class="active"><a href="'.$actionbuilder.'"', 
+				$nav_cache);
 		}
 		
 		if($this->select['template'] == 'default')
 			$this->select['template'] = $this->settings['default_skin'];
 		
 		// set nav ul class if set
-		$class = isset($this->settings['nav_class']) ? $this->settings['nav_class'] : 'navigation';
+		$class = isset($this->settings['nav_class']) 
+			? $this->settings['nav_class'] 
+			: 'navigation';
 		
 		// Apply class to root <ul> if it is set
-		if($class != '') $nav_cache = preg_replace('/^<ul>/', '<ul class="'.$class.'">', $nav_cache);
+		if($class != '') 
+			$nav_cache = preg_replace(
+				'/^<ul>/', 
+				'<ul class="'.$class.'">', 
+				$nav_cache
+			);
+		
+		// if no items match the request, return 404
+		if($this->select['alias'] == '404')
+		{
+			header('HTTP/1.1 404 Not Found');
+			echo '<p>404 No menu items match your request</p>';
+			return 0;
+		}
+		
+		$this->function_timer['nav'] = microtime(true) - $funcstart;
 		
 		return $nav_cache;
 	}
@@ -653,7 +663,6 @@ App load times:
 	{
 		$funcstart = microtime(true);
 		$this->hook_run('pre lf getcontent');
-		
 		
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
 		{
@@ -685,8 +694,7 @@ App load times:
 		$vars = $this->vars;
 		foreach($apps as $_app)
 		{
-			if(!$this->acl_test(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) 
-				&& !$this->acl_test(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
+			if(!$this->acl_test(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) && !$this->acl_test(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
 			{
 				$content['%'.$_app['section'].'%'][] = "403 Access Denied %login%";
 				continue;
@@ -709,12 +717,13 @@ App load times:
 			// collect app output
 			ob_start();
 			chdir($path); // set current working dir to app base path
-			
 			$start = microtime(true); // timer for app
-			
 			include 'index.php'; // execute app
-			
-			$this->app_timer['Link Id: '.$_app['id'].', App: '.$_app['app'].', Position: '.$_app['section']] = microtime(true) - $start; //timer for app
+			$this->app_timer['
+				Link Id: '.$_app['id'].', 
+				App: '.$_app['app'].', 
+				Position: '.$_app['section']
+			] = microtime(true) - $start; //timer for app
 			
 			echo $output; // backward compatible
 			
