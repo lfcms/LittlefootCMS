@@ -585,7 +585,8 @@ App load times:
 				foreach($test_select[$parent] as $position => $nav)
 					if($nav['alias'] == $this->action[$i])
 					{
-						// we found the match, move on to next action item
+						// we found the match, 
+						// move on to next action item
 						$selected[] = $nav;
 						$parent = $nav['id'];
 						break;
@@ -606,7 +607,9 @@ App load times:
 		{		
 			$this->select = $base_save;
 			$this->vars = $this->action; // the whole URL is now variables
-			$this->action = array(''); // And now littlefoot() thinks that we requested just /
+			
+			// And now littlefoot() thinks that we requested just /
+			$this->action = array('');
 		}
 		
 		if(!is_file(ROOT.'cache/nav.cache.html')) // in case the file doesn't exist
@@ -725,8 +728,6 @@ App load times:
 				Position: '.$_app['section']
 			] = microtime(true) - $start; //timer for app
 			
-			echo $output; // backward compatible
-			
 			$replace = array(				
 				//'%baseurl%' => $this->base, // domain.com/subdir/(index.php/)?
 				'%appurl%' => $appurl, // %baseurl%action/
@@ -738,9 +739,13 @@ App load times:
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
 					ob_get_clean().
 				'</div>';
-				
+			
 			// replace %keywords% and save
-			$content['%'.$_app['section'].'%'][] = str_replace(array_keys($replace), array_values($replace), $output);
+			$content['%'.$_app['section'].'%'][] = str_replace(
+				array_keys($replace), 
+				array_values($replace), 
+				$output
+			);
 			
 			// reset for next go around
 			$this->appurl = '';
@@ -748,12 +753,7 @@ App load times:
 		
 		chdir(ROOT); // cd back to ROOT for the rest of the app
 		
-		// DEV DEV DEV DEV // plugins 2.0
-		/*foreach($this->lf->settings['plugins']['postcontent'] as $plugin => $devnull)
-			include ROOT.'plugins/'.$plugin.'/index.php';*/
-		// END DEV DEV DEV DEV
-		
-		$this->hook_run('pre lf getcontent');
+		$this->hook_run('post lf getcontent');
 		
 		return $content;
 	}
