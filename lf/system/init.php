@@ -15,13 +15,5 @@ require_once('system/bootstrap.php'); // include lf library
 session_name(md5(ROOT.$_SERVER['SERVER_NAME']));
 session_start();
 
-// this is handled by db.php
-// check to make sure configuration file is there
-// config.php contains database credentials
-if(!is_file('config.php')) 	
-	install::noconfig();
-else
-	include 'config.php'; // load $db config
-
-$lf = new LittleFoot($db); // initialize $lf with $db connection
+$lf = new LittleFoot(); // initialize $lf with $db connection
 $lf->cms(); // execute littlefoot as cms() and render() ouput

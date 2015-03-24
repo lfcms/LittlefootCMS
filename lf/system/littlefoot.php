@@ -122,7 +122,7 @@ class Littlefoot
 	 * $this->lf = &$this; // ensures universal availability of "$this->lf"
 	 * 
 	 */
-	public function __construct($db)
+	public function __construct($db = NULL)
 	{
 		$this->start = microtime(true);
 		$this->lf = &$this; // ensures universal availability of "$this->lf"
@@ -182,6 +182,18 @@ App load times:
 			echo '
 -->';
 		}
+	}	
+	
+	public function startTimer($key = 'DEFAULT')
+	{
+		$this->timer[$key] = microtime(true);
+		return $this;
+	}
+	
+	public function endTimer($key = 'DEFAULT')
+	{
+		$this->timer[$key] = microtime(true) - $this->timer[$key];
+		return $this;
 	}
 	
 	/**
@@ -222,62 +234,85 @@ App load times:
 	 */
 	public function cms()
 	{
-		$this->loadSettings();
+		$this->lf	// ->lf is optional, it is set recursively in __construct()
+			->loadSettings()	// Pull settings from lf_settings
+			->request()			// Parse REQUEST_URI into usable pieces
+			->authenticate()	// Determine who we are dealing with
+			->apply_acl()		// Pull ACL that affects this user
+			->loadAdmin()		// If /admin was requested, load it and stop here
+			->navSelect();		// Get data for SimpleCMS, or determine requested Nav ID
 		
-		// request
-		$funcstart = microtime(true);
-		$this->request();
-		$this->function_timer['request'] = microtime(true) - $funcstart;
+		// Apply ACL; check auth for current page; 401 on fail.
+		if(!$this->acl_test(implode('/', $this->action)))
+			$this->content['%content%'][] = "401 Unauthorized at "
+				.implode('/', $this->action)
+				."%login%";
+		// No problem with ACL on this page? Load it!
+		else
+			// Loop through apps and save their content to $this->content;
+			$this->getcontent(); 
 		
-		// auth
-		$funcstart = microtime(true);
-		$this->authenticate();
-		$this->function_timer['auth'] = microtime(true) - $funcstart;
+		// If simple CMS is not set, add %nav% to final output.
+		if($this->settings['simple_cms'] == '_lfcms')
+			// nav_cache comes from $this->request();
+			$this->content['%nav%'][] = $this->nav_cache;
 		
+		echo $this->render(); // display content in skin
+	}
+	/*
+	public function __call($name, $arguments)
+    {
+		// Check for routeAdmin, or routeMyApp
+		if(!preg_match('/^route('.addslashes(implode('|', $this->route)).')$/', $name, $match))
+			return false;
+		
+		$app = $match[1];
+		
+		if(!method_exists($this, $app))
+			return false;
+		
+		$this->route{$app}($arguments);
+		
+			 
+		return $this;
+    }
+	
+	public function addRoute($name)
+	{
+		$this->route[] = $name;
+	}*/
+	
+	public function loadAdmin()
+	{
 		// if requested, load admin/
 		if($this->admin)
 		{
-			chdir('system/admin');
+			chdir(LF.'system/admin');
 			include 'index.php';
 			exit;
 		}
 		
-		$this->auth['acl'] = $this->apply_acl();
-		
-		// generate nav bar and process request against available actions
-		$funcstart = microtime(true);
-		$nav = $this->navSelect();
-		$this->function_timer['nav'] = microtime(true) - $funcstart;
-		
-		// apply acl, check auth for current page.
-		if(!$this->acl_test(implode('/', $this->action)))
-			$content['%content%'][] = "403 Access Denied %login%";
-		else
-		{
-			// get content from apps
-			$funcstart = microtime(true);
-			$content = $this->getcontent();
-			$this->function_timer['getcontent'] = microtime(true) - $funcstart;
-		}
-		
-		if($this->settings['simple_cms'] == '_lfcms') #DEV
-			$content['%nav%'][] = $nav;
-		
-		// display in skin
-		$funcstart = microtime(true);
-		echo $this->render($content);
-		$this->function_timer['render'] = microtime(true) - $funcstart;
+		return $this;
 	}
 	
 	public function loadSettings()
 	{
-		foreach(orm::q('lf_settings')->get() as $setting)
-			$this->settings[$setting['var']] = $setting['val'];
-			
-		if(isset($this->settings['debug']) && $this->settings['debug'] == 'on') 
-			$this->debug = true;
+		$this->hook_run('pre settings');
 		
-		$this->hook_run('settings_loaded');
+		foreach(orm::q('lf_settings')->get() as $setting)
+		{
+			$var = $setting['var'];
+			$val = $setting['val'];
+			$this->settings[$var] = $val;
+		}
+		
+		return $this;
+	}
+	
+	public function getSettings()
+	{
+		if($this->settings == array())
+			$this->loadSettings();
 		
 		return $this->settings;
 	}
@@ -319,6 +354,8 @@ App load times:
 	 */
 	public function request()
 	{
+		$this->startTimer(__METHOD__);
+		
 		$this->hook_run('pre lf request');
 		
 		// Default values
@@ -421,16 +458,18 @@ App load times:
 		$this->admin = $admin == 'admin/' ? true : false; // for API
 		
 		$this->hook_run('post lf request');
+		$this->endTimer(__METHOD__);
+		
+		return $this;
 	}
 	
 	public function authenticate()
 	{
-
+		$this->startTimer(__METHOD__);
 		$this->hook_run('pre_auth'); 
 		
 		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
 		$auth = new auth($this, $this->db);
-		
 		
 		// change to auth class 
 		if($this->action[0] == '_auth' && isset($this->action[1]))
@@ -446,18 +485,9 @@ App load times:
 			// otherwise it will 302 (login/logout)
 		}
 		
-		$this->auth = $auth;
-		
-		
 		// need to convert this to using the $this->auth object rather than array
 		
 		$auth = $auth->auth;
-		
-		// for tinymce ajax file manager auth
-		if(isset($auth['access']) && $auth['access'] == 'admin')
-			$_SESSION['ajax_user'] = true;
-		else
-			$_SESSION['ajax_user'] = false;
 		
 		// If no user is currently set...
 		if(!isset($auth['user']))
@@ -469,11 +499,24 @@ App load times:
 			$auth['access'] = 'none';
 		}
 		
+		//$auth->auth = $auth;
+		
 		$this->auth = $auth;
+		
+		
+		
+		
+		//echo pre(print_r($this->auth, 1));
+		
+		
+		$this->endTimer(__METHOD__);
+		return $this;
 	}
 	
 	private function apply_acl()
 	{
+		$this->startTimer(__METHOD__);
+		
 		// inherit
 		$inherit = array();
 		$this->db->query('SELECT * FROM lf_acl_inherit');
@@ -515,11 +558,16 @@ App load times:
 			$baseacl[$row['action']] = $row['perm'];
 		
 		$this->baseacl = $baseacl;
-		return $acl;
+		$this->auth['acl'] = $acl;
+		
+		// should make this into magic __call per http://stackoverflow.com/a/3716750
+		$this->endTimer(__METHOD__); 
+		
+		return $this;
 	}
 	
 	public function acl_test($action)
-	{	// action = 'action/app|var'
+	{	// action = 'action/app|var1/var2'
 		$acl = $this->auth['acl'];
 		$baseacl = $this->baseacl;
 		//foreach($actions // recursive permission search
@@ -540,17 +588,24 @@ App load times:
 		return true;
 	}
 	
+	public function simpleSelect($app = NULL)
+	{
+		// If this is being called without an app listed, assume simpleCMS
+		if(is_null($app))
+			$app = $this->settings['simple_cms'];
+		
+		$this->select['template'] = $this->settings['default_skin'];
+		$this->select['title'] = $app;
+		$this->select['alias'] = '';
+		$this->vars = $this->action;
+		$this->action = array('');
+		return $this;
+	}
+	
 	public function navSelect()
 	{
-		if($this->settings['simple_cms'] != '_lfcms') #DEV
-		{
-			$this->select['alias'] = '';
-			$this->select['template'] = $this->settings['default_skin'];
-			$this->select['title'] = $this->settings['simple_cms'];
-			$this->vars = $this->action;
-			$this->action = array('');
-			return;
-		}
+		if($this->settings['simple_cms'] != '_lfcms')
+			$this->simpleSelect();
 		
 		// need to utilize cache instead of query
 		
@@ -661,7 +716,8 @@ App load times:
 		
 		$this->function_timer['nav'] = microtime(true) - $funcstart;
 		
-		return $nav_cache;
+		$this->nav_cache = $nav_cache;
+		return $this;
 	}
 	
 	private function getcontent()
@@ -669,15 +725,16 @@ App load times:
 		$funcstart = microtime(true);
 		$this->hook_run('pre lf getcontent');
 		
+		$content = $this->content;
+		
+		// Pull $apps list with section=>app
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
 		{
-			$apps = array(0 =>
-				array(
-					'id' => 0, 
-					'app' => $this->settings['simple_cms'],
-					'ini' => '',
-					'section' => 'content'
-				)
+			$apps[0] = array(
+				'id' => 0, 
+				'app' => $this->settings['simple_cms'],
+				'ini' => '',
+				'section' => 'content'
 			);
 		}
 		else
@@ -694,11 +751,15 @@ App load times:
 			$apps = $this->db->fetchall($sql);
 		}
 		
+		
+		
+		
 		// run them and save the output
 		$content = array();
 		$vars = $this->vars;
 		foreach($apps as $_app)
 		{
+			// Test ACL for this app
 			if(!$this->acl_test(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) && !$this->acl_test(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
 			{
 				$content['%'.$_app['section'].'%'][] = "403 Access Denied %login%";
@@ -709,14 +770,16 @@ App load times:
 			$path = ROOT.'apps/'.$_app['app'];
 			if(!is_file($path.'/index.php')) continue;
 			
-			$output = ''; // backward compatible
-			
+			// figure out appurl (/action1/action2/ referring to this app)
 			$appurl = $this->base.implode('/',$this->action);
-			if($this->action[0] != '') $appurl .= '/'; // account for home page
+			if($this->action[0] != '') 
+				$appurl .= '/'; // account for home page
 			$this->appurl = $appurl;
 			
+			// appbase (relbase for the app)
 			$appbase = $this->relbase.implode('/',$this->action);
-			if($this->action[0] != '') $appbase .= '/'; // account for home page
+			if($this->action[0] != '') 
+				$appbase .= '/'; // account for home page
 			$this->appbase = $appbase;
 			
 			// collect app output
@@ -730,13 +793,6 @@ App load times:
 				Position: '.$_app['section']
 			] = microtime(true) - $start; //timer for app
 			
-			$replace = array(				
-				//'%baseurl%' => $this->base, // domain.com/subdir/(index.php/)?
-				'%appurl%' => $appurl, // %baseurl%action/
-				//'%relbase%' => $this->relbase, // domain.com/subdir/
-				'%post%' => $this->base.'post/'.$_app['id'].'/' // %baseurl%post/link_id/
-			);
-			
 			$output = '
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
 					ob_get_clean().
@@ -744,8 +800,8 @@ App load times:
 			
 			// replace %keywords% and save
 			$content['%'.$_app['section'].'%'][] = str_replace(
-				array_keys($replace), 
-				array_values($replace), 
+				'%appurl%', 
+				$appurl, 
 				$output
 			);
 			
@@ -753,16 +809,20 @@ App load times:
 			$this->appurl = '';
 		}
 		
-		chdir(ROOT); // cd back to ROOT for the rest of the app
+		chdir(LF); // cd back to LF root for the rest of the execution
 		
 		$this->hook_run('post lf getcontent');
 		
-		return $content;
+		$this->content = $content;
+		
+		return $this;
 	}
 	
-	public function render($replace)
+	public function render()
 	{
 		$this->hook_run('pre lf render');
+		
+		$replace = $this->content;
 		
 		ob_start();
 		include ROOT.'system/template/login.php';

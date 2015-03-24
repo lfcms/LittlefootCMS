@@ -13,14 +13,16 @@ class dashboard extends app
 		$this->pwd = ROOT.'apps/';
 		
 		// if simple cms is enabled, load the select app's admin instead of the usual nav interface
-		if($this->request->settings['simple_cms'] != '_lfcms')
+		if($this->lf->settings['simple_cms'] != '_lfcms')
 		{
 			$cwd = getcwd();
-			chdir(ROOT.'apps/'.$this->request->settings['simple_cms']);
+			chdir(ROOT.'apps/'.$this->lf->settings['simple_cms']);
 			
 			echo '<div class="dashboard_manage">';
-			if(is_file('admin.php')) include 'admin.php';
-			else echo 'No Admin';
+			if(is_file('admin.php')) 
+				include 'admin.php';
+			else 
+				echo 'No Admin';
 			echo '</div>';
 			
 			chdir($cwd);

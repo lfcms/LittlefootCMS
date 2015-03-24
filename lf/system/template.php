@@ -1,40 +1,62 @@
 <?php
 
-/**
-*@license whatever littlefootcms is
-*@package littlefootcms
-*
-*/
 class Template
 {
 	//should have constants to define application root
 	protected $docRoot = LF;
 	private $ajaxMode = false;
 	
-	public function __construct($vars =null,$templateName = null){
-		//set templatename
-		$this->templateName=(is_null($templateName))?'':$templateName;
-
-		//first off we need the url
-
-
-		//get the view variables
-		if(!is_null($vars))
-			if(is_array($vars))
-				foreach($vars as $key => $var)
-					$this->$key = $var;
-			else
-				$this->vars = $vars;
-			
-		// ajax mode
+	public function __construct($lf = NULL){
+		
+		$this->lf = $lf;
+		
+		// ajax mode (should maybe go into LF class)
 		if( (!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
 		  && ( strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
-		  || (strpos($this->action,'ajax')=== 0)
+		  || (strpos($this->lf->action,'ajax')=== 0)
 		  ){
 	            $this->ajaxMode = true;
 	    }
-
+		
+		//set templatename
+		$this->skinName=(is_null($lf))?'':$lf->select['template'];
 	}
+	
+	public function getApps($id = NULL)
+	{
+		$this->lf->hook_run('pre template getApps');
+		
+		// if full cms string provided, return all linked apps
+		if($this->lf->simplecms == '_lfcms')
+			$this->links = orm::q('lf_links')->filterByinclude($id)->get();
+		
+		// otherwise, assign only that app
+		else
+			$this->links[0] = array(
+				'id' => 0, 
+				'app' => $this->lf->simple_cms,
+				'ini' => '',
+				'section' => 'content'
+			);
+		
+		$this->lf->hook_run('post template getApps');
+		
+		return $this;
+	}
+	
+	public function getContent()
+	{
+		$this->lf->hook_run('pre template getcontent');
+		
+		
+		
+		$this->lf->hook_run('post template getcontent');
+	}
+	
+	
+	
+	
+	
 	public function getUriAsArray(){
 		$uri = $_SERVER['REDIRECT_URL'];
 		//set the uriPath as string.
