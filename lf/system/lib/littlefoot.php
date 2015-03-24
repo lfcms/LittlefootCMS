@@ -888,7 +888,7 @@ Included, Required files:';
 	{
 		$this->head .=  
 			'<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />
-			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/icons.css" />';
+			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/3rdparty/icons.css" />';
 			
 		return $this;
 	}
