@@ -150,9 +150,9 @@ class app
 	 *
 	 * @param array $args URL Variables. Accessible at **$this->args**
 	 */
-	public function __construct($lf, $dbconn , $ini = '', $args = array())
+	public function __construct($lf, $ini = '', $args = array())
 	{
-		$this->db = $dbconn;
+		$this->db = db::init();
 		$this->request = $lf; // backward compatible
 		$this->lf = $lf->lf->lf->lf; // lol recursion
 		$this->auth = $lf->auth_obj;

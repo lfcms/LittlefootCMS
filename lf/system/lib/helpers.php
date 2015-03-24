@@ -339,4 +339,9 @@ function strdump($str)
 		echo '# '.$i.': "'.$str[$i].'" "'.ord($str[$i]).'<br />';
 }
 
-?>
+function pre($str)
+{
+	echo '<pre>';
+	var_dump($str);
+	echo '</pre>';
+}

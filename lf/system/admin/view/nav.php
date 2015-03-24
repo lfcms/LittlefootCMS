@@ -12,7 +12,12 @@
 		<ul class="efvlist rounded">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
-			<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>Dashboard</span></a></li>
+			<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>
+				<?=$this->settings['simple_cms']=='_lfcms'
+					?'Dashboard'
+					:ucfirst($this->settings['simple_cms']).' Admin';
+				?>
+			</span></a></li>
 			<li><a class="tables" href="<?=$this->base;?>skins/"><span>Skins</span></a></li>
 			<li><a class="tables" href="<?=$this->base;?>plugins/"><span>Plugins</span></a></li>
 			<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->

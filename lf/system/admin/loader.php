@@ -63,9 +63,8 @@ if(!$success) $match[0] = 'dashboard';
 $this->vars = array_slice($this->action, 1);
 
 
-
 //formauth
-require_once(ROOT.'system/lib/nocsrf.php');
+require_once(ROOT.'system/lib/3rdparty/nocsrf.php');
 if(count($_POST))
 {
 	try
@@ -105,9 +104,12 @@ $replace = str_replace('<li>', '<li class="active green light_a">', $links[0][$m
 $nav = str_replace($links[0][$match], $replace, $nav);
 
 
-ob_start();
 
-echo $this->hook_run('pre lf render');
+//echo $this->hook_run('pre lf render');
+
+echo 'skin/'.$admin_skin.'/index.php';
+
+ob_start();
 
 include('skin/'.$admin_skin.'/index.php');
 
@@ -118,18 +120,19 @@ $replace = array(
 	'%skinbase%' => $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/'
 );
 
-
 $out = str_replace(array_keys($replace), array_values($replace), ob_get_clean());
 
 /* csrf form auth */
-
+	
 $out = str_replace('</head>', $this->lf->head.'</head>', $out);
 
 // Generate CSRF token to use in form hidden field
 $token = NoCSRF::generate( 'csrf_token' );
 preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
 for($i = 0; $i < count($match[0]); $i++)
+{
 	$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
-
+	
+}
 
 echo $out;

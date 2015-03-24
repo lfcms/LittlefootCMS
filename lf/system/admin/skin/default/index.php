@@ -38,11 +38,11 @@
 
 	<body>
 		<!-- <header class="container">
-			<?php 
-							
-				if($_SESSION['upgrade']) 
-					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>'; 
-								
+			<?php
+
+				if($_SESSION['upgrade'])
+					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>';
+
 			?>
 		</header> -->
 		<div class="wrapper userbar dark_gray light">

@@ -114,7 +114,7 @@ class orm {
 		if($table == '')
 			$table = $this->table;
 			
-		return new orm($this->db, $table);
+		return new orm(db::init(), $table);
 	}
 	
 	// wildcard catchall for shortcut requests (filter, set, etc)
