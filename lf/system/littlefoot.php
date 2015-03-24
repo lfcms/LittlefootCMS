@@ -125,12 +125,13 @@ class Littlefoot
 	public function __construct($db = NULL)
 	{
 		$this->start = microtime(true);
+		$this->startTimer(__METHOD__);
 		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
 		$this->absbase = ROOT; // backward compatible // getcwd().'/';
 		
 		$this->load_plugins();
-		$this->hook_run('plugins_loaded');
+		$this->hook_run('post lf __construct');
 		
 		$this->version = file_get_contents(ROOT.'system/version');
 		$this->db = db::init(); //new Database($db);
@@ -144,7 +145,8 @@ class Littlefoot
 		$this->auth = $_SESSION['_auth'];
 		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
 		
-		$this->hook_run('lf __construct');
+		$this->hook_run('post lf __construct');
+		$this->endTimer(__METHOD__);
 	}
 	
 	public function __destruct()
@@ -153,7 +155,6 @@ class Littlefoot
 		unset($this->auth['acl']); // so it is not in session
 		$_SESSION['_auth'] = $this->auth;
 		
-		//if($this->debug)
 		if($this->settings['debug'] == 'on')
 			$this->debug = true;
 		
@@ -163,26 +164,29 @@ class Littlefoot
 			$exectime = round((microtime(true) - $this->start), 6)*(1000);
 			$memusage = round(memory_get_peak_usage()/1024/1024,2);
 			
-			echo ' <!-- lf Stat Info
+			echo ' <!-- LF Debug Info
 Version: '.$this->version.'
 PHP Execution Time: '.$exectime.'ms
 Peak Memory Usage: '.$memusage.' MB
-Num Queries: '.$this->db->getNumQueries().'
-Littlefoot function load times:
+SQL Queries: '.$this->db->getNumQueries().'
+
+Load Times:
 	';
-			foreach($this->function_timer as $function => $time)
+			foreach($this->timer as $function => $time)
 				echo ''.round($time, 6)*(1000).'ms - '.$function.'
 	';
+	
 			echo '
-App load times:
-	';
-			foreach($this->app_timer as $app => $time)
-				echo ''.round($time, 6)*(1000).'ms - '.$app.'
-	';
+Included, Required files:';
+	
+			foreach(get_included_files() as $included)
+				echo '
+	'.$included;
+	
 			echo '
 -->';
 		}
-	}	
+	}
 	
 	public function startTimer($key = 'DEFAULT')
 	{
@@ -233,11 +237,11 @@ App load times:
 	 * 
 	 */
 	public function cms()
-	{
+	{		
 		$this->lf	// ->lf is optional, it is set recursively in __construct()
 			->loadSettings()	// Pull settings from lf_settings
 			->request()			// Parse REQUEST_URI into usable pieces
-			->authenticate()	// Determine who we are dealing with
+			->authenticate()	// Determine who we are dealing with, route on /_auth/
 			->apply_acl()		// Pull ACL that affects this user
 			->loadAdmin()		// If /admin was requested, load it and stop here
 			->navSelect();		// Get data for SimpleCMS, or determine requested Nav ID
@@ -258,6 +262,8 @@ App load times:
 			$this->content['%nav%'][] = $this->nav_cache;
 		
 		echo $this->render(); // display content in skin
+		
+		return $this;
 	}
 	/*
 	public function __call($name, $arguments)
@@ -786,11 +792,13 @@ App load times:
 			ob_start();
 			chdir($path); // set current working dir to app base path
 			$start = microtime(true); // timer for app
+			
+			
+			$this->lf->startTimer('Pages App: '.$_app['ini']);
 			include 'index.php'; // execute app
-			$this->app_timer['
-				Link Id: '.$_app['id'].', 
-				App: '.$_app['app'].', 
-				Position: '.$_app['section']
+			$this->lf->endTimer('App: '.ucfirst($_app['app']).', Config: '.$_app['ini']);
+			
+			$this->timer['App: '.$_app['app'].', Link Id: '.$_app['id'].', Position: '.$_app['section']
 			] = microtime(true) - $start; //timer for app
 			
 			$output = '
@@ -824,23 +832,25 @@ App load times:
 		
 		$replace = $this->content;
 		
+		// Pull Login View
 		ob_start();
 		include ROOT.'system/template/login.php';
 		$login = ob_get_clean();
 		
-		// home.php
+		// Determine if home.php should be loaded (sounds like something for getcontent())
 		$file = 'index';
 		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
 			$file = 'home';
 		
-		// Get Template code
+		// Load skin data
 		ob_start();
-		if(is_file(ROOT.'skins/'.$this->select['template']."/$file.php"))
-			include(ROOT.'skins/'.$this->select['template']."/$file.php");
-		else if(is_file(ROOT.'skins/'.$this->select['template']."/$file.html"))
-			readfile(ROOT.'skins/'.$this->select['template']."/$file.html");
+		$skin = $this->select['template'];
+		if(is_file(ROOT.'skins/'.$skin."/$file.php"))
+			include(ROOT.'skins/'.$skin."/$file.php");
+		else if(is_file(ROOT.'skins/'.$skin."/$file.html"))
+			readfile(ROOT.'skins/'.$skin."/$file.html");
 		else
-			echo 'Template files missing. Log into admin and select a different template with the Skins tool.';
+			echo 'Template files for '.$skin.' missing. Log into admin and select a different template with the Skins tool.';
 			
 		$template = ob_get_clean();
 		
@@ -852,52 +862,35 @@ App load times:
 		// replace global variables
 		$global_replace = array(
 			'%login%' => $login,
-			'%title%' => $this->select['title']/*." | ".$_SERVER['HTTP_HOST']*/,
+			'%title%' => $this->select['title'],
 			'%skinbase%' => $this->relbase.'lf/skins/'.$this->select['template'],
 			'%baseurl%' => $this->base,
 			'%relbase%' => $this->relbase
 		);
-		$template = str_replace(array_keys($global_replace), array_values($global_replace), $template);
+		$template = str_replace(
+			array_keys($global_replace), 
+			array_values($global_replace), 
+			$template
+		);
 		
-		
-		if($this->settings['debug'] == 'on')
-		{
-			ob_start();
-			echo '<div style="clear: both; text-align: center; color: #333; background: #FFF; width:500px; margin: 20px auto; padding:10px;" >
-					<h2 style="color: #999;">Debug Information</h2>
-					<p>This debug information was printed from lf->render(). If you want the whole CMS speeds, check the bottom of the source code</p>
-					<p style="color: #333">Version: '.$this->version.'</p>
-					<p style="color: #333">Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms</p>
-					<p style="color: #333">Memory Usage: '.round(memory_get_peak_usage()/1024,2).' kb</p>
-					Littlefoot function load times:
-					<table style="margin: auto; color: #000;">
-			';
-			foreach($this->function_timer as $function => $time)
-				echo '<tr><td>'.$function.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '
-					</table>
-					App load times:
-					<table style="margin: auto; color: #000;">
-			';
-			foreach($this->app_timer as $app => $time)
-				echo '<tr><td>'.$app.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '</table></div>';
-			$debug = ob_get_clean();
-			
-			$template = str_replace('%debug%', $debug, $template);
-		}
+		$this->loadLfCSS();
 		
 		ob_start();
-		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
-		echo str_replace('<head>','<head>
-			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />
-			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/icons.css" />
-		', $template);
+		echo str_replace('<head>', '<head>'.$this->lf->head, $template);
 		
-		$this->hook_run('pre lf render');
+		$this->hook_run('post lf render');
 		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
+	}
+	
+	public function loadLfCSS()
+	{
+		$this->head .=  
+			'<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />
+			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/icons.css" />';
+			
+		return $this;
 	}
 	
 	/**
@@ -1080,6 +1073,10 @@ App load times:
 		if($result)
 			foreach($result as $plugin)
 				$this->plugins[$plugin['hook']][$plugin['plugin']] = $plugin['config'];
+		
+		$this->hook_run('plugins_loaded');
+		
+		return $this;
 	}
 	
 	/*
@@ -1100,6 +1097,11 @@ App load times:
 		foreach($this->plugins[$hook] as $plugin => $config)
 			include ROOT.'plugins/'.$plugin.'/index.php';
 	}
+	/*
+	public function __call($name, $arguments)
+	{
+		//preg_match('/^route(uid|)'
+	}*/
 	
 	// public, read-only access to private variables
 	public function api($var)
