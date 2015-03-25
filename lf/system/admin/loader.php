@@ -103,13 +103,9 @@ foreach($links[2] as $id => $request)
 $replace = str_replace('<li>', '<li class="active green light_a">', $links[0][$match]);
 $nav = str_replace($links[0][$match], $replace, $nav);
 
-
-
-//echo $this->hook_run('pre lf render');
-
-echo 'skin/'.$admin_skin.'/index.php';
-
 ob_start();
+
+$this->hook_run('pre lf render');
 
 include('skin/'.$admin_skin.'/index.php');
 
