@@ -119,7 +119,8 @@ class auth extends app
 			
 			$auth = $this->lf->auth;
 		}
-		else if(isset($auth['access']) && $auth['access'] == 'admin') // if admin, check for reCaptcha
+		// if admin, check for reCaptcha
+		else if(isset($auth['access']) && $auth['access'] == 'admin') 
 		{
 			/*if(isset($_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]))
 			{
@@ -140,10 +141,6 @@ class auth extends app
 		$this->lf->auth = $auth;
 		
 		if(isset($this->error)) $_SESSION['_lf_login_error'] = $this->error;
-		
-		/*print_r($auth);
-		echo '</pre>';
-		exit();*/
 		
 		redirect302();
 	}

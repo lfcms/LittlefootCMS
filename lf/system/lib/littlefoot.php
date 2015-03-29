@@ -116,6 +116,9 @@ class Littlefoot
 	/** @var string $domain The domain used to access this application */
 	public $domain = '';
 	
+	/** @var string $user user() object */
+	public $user = '';
+	
 	/**
 	 * Initialize Littlefoot Object
 	 * 
@@ -129,12 +132,12 @@ class Littlefoot
 		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
 		$this->absbase = ROOT; // backward compatible // getcwd().'/';
-		
-		$this->load_plugins();
-		$this->hook_run('post lf __construct');
-		
 		$this->version = file_get_contents(ROOT.'system/version');
-		$this->db = db::init(); //new Database($db);
+		
+		$this->load_plugins()
+			->hook_run('post lf __construct');
+		
+		$this->db = db::init();
 		$this->hook_run('lf db init');
 		
 		// check install
@@ -238,55 +241,18 @@ Included, Required files:';
 	 */
 	public function cms()
 	{		
-		$this->lf	// ->lf is optional, it is set recursively in __construct()
+		echo $this	// ->lf is optional, it is set recursively in __construct()
 			->loadSettings()	// Pull settings from lf_settings
 			->request()			// Parse REQUEST_URI into usable pieces
-			->authenticate()	// Determine who we are dealing with, route on /_auth/
-			->apply_acl()		// Pull ACL that affects this user
+			->route('auth', '_auth', false)	// Determine who we are dealing with, route on /_auth/
+			->applyAcl()		// Pull ACL that affects this user
 			->loadAdmin()		// If /admin was requested, load it and stop here
-			->navSelect();		// Get data for SimpleCMS, or determine requested Nav ID
-		
-		// Apply ACL; check auth for current page; 401 on fail.
-		if(!$this->acl_test(implode('/', $this->action)))
-			$this->content['%content%'][] = "401 Unauthorized at "
-				.implode('/', $this->action)
-				."%login%";
-		// No problem with ACL on this page? Load it!
-		else
-			// Loop through apps and save their content to $this->content;
-			$this->getcontent(); 
-		
-		// If simple CMS is not set, add %nav% to final output.
-		if($this->settings['simple_cms'] == '_lfcms')
-			// nav_cache comes from $this->request();
-			$this->content['%nav%'][] = $this->nav_cache;
-		
-		echo $this->render(); // display content in skin
+			->navSelect()		// Get data for SimpleCMS, or determine requested Nav ID
+			->getcontent() 		// Deal with SimpleCMS or execute linked apps
+			->render(); 		// Display content in skin, return HTML output result
 		
 		return $this;
 	}
-	/*
-	public function __call($name, $arguments)
-    {
-		// Check for routeAdmin, or routeMyApp
-		if(!preg_match('/^route('.addslashes(implode('|', $this->route)).')$/', $name, $match))
-			return false;
-		
-		$app = $match[1];
-		
-		if(!method_exists($this, $app))
-			return false;
-		
-		$this->route{$app}($arguments);
-		
-			 
-		return $this;
-    }
-	
-	public function addRoute($name)
-	{
-		$this->route[] = $name;
-	}*/
 	
 	public function loadAdmin()
 	{
@@ -323,9 +289,9 @@ Included, Required files:';
 		return $this->settings;
 	}
 	 
+	/*
 	private function cache() // not a thing yet
 	{
-		/*
 		
 		//CACHING - will not account for update to page...
 		if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
@@ -349,8 +315,8 @@ Included, Required files:';
 			file_put_contents(ROOT.'cache/'.$file, $output);
 		}
 		
-		*/
 	}
+	*/
 	
 	/**
 	 * Parses $_SERVER variables to environment for use within apps
@@ -404,17 +370,18 @@ Included, Required files:';
 		
 		$this->get = $_GET;
 		$this->post = $_POST;
+		$this->rawGet = $url[0];
+		$this->rawQuery = $url[1];
 		
 		// Detect subdirectory, use of index.php, request of admin, other URI variables and the GET request
-		$urlregex = '/(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?([^\?]*)(.*)/';
+		$urlregex = '/^(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?(.*)/';
 		preg_match($urlregex, $url[0], $request);
 		
 		// Simplify request matches
 		$subdir = $request[1];
-		$index = $request[2];
-		$admin = $request[3];
+		$index  = $request[2];
+		$admin  = $request[3];
 		$action = $request[4];
-		$rawget = $request[5];
 		
 		$fixrewrite = false; // add in 302 to fix rewrite duplicate content #FIX
 		if($this->settings['rewrite'] == 'on')
@@ -423,6 +390,7 @@ Included, Required files:';
 				$fixrewrite = true;
 			$index = '';
 		}
+		
 		if($this->settings['rewrite'] == 'off')
 		{
 			if($index == '') 
@@ -442,7 +410,17 @@ Included, Required files:';
 		
 		$this->domain = $_SERVER['HTTP_HOST'];
 		
-		// account for use of index.php/
+		// http://www.domain.com/littlefoot/index.php/
+		$this->wwwIndex 	= $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
+		
+		// http://www.domain.com/littlefoot/
+		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;			
+		
+		// http://www.domain.com/littlefoot/index.php/admin/
+		$this->wwwAdmin		= $this->wwwIndex.'admin/';							
+		
+		
+		// backward compatible
 		$this->base = $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		$this->baseurl = $this->base; // keep $Xurl usage
 		$this->relbase = $subdir; // /subdir/ for use with web relative file reference
@@ -461,7 +439,7 @@ Included, Required files:';
 				$this->action[] = '';
 		}
 		
-		$this->admin = $admin == 'admin/' ? true : false; // for API
+		$this->admin = $admin == 'admin/' ? true : false;
 		
 		$this->hook_run('post lf request');
 		$this->endTimer(__METHOD__);
@@ -469,57 +447,40 @@ Included, Required files:';
 		return $this;
 	}
 	
-	public function authenticate()
+	public function route($class, $alias = NULL, $return = true)
 	{
-		$this->startTimer(__METHOD__);
-		$this->hook_run('pre_auth'); 
+		$this->hook_run('pre '.$class); 
 		
-		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
-		$auth = new auth($this, $this->db);
+		if(is_null($alias))
+			$alias = $class;
+		
+		$app = new $class($this);
 		
 		// change to auth class 
-		if($this->action[0] == '_auth' && isset($this->action[1]))
+		if($this->action[0] == $alias && isset($this->action[1]))
 		{
-			$out = $auth->_router($this->action);
-			$out = str_replace('%appurl%', $this->base.'_auth/', $out);
-			$content['%content%'][] = $out;
+			$this->appurl = $this->wwwIndex.'_auth/';
 			
-			// display in skin
-			echo $this->render($content);
+			// should really use MVC on this
 			
-			exit(); // end auth session after render, 
-			// otherwise it will 302 (login/logout)
+			$out = $app->_router($this->action);
+			$out = str_replace('%appurl%', $this->appurl, $out);
+			$this->content['%content%'][] = $out;
+			
+			if(!$return)
+			{
+				// display in skin
+				echo $this->render();
+				exit();
+			}
 		}
 		
-		// need to convert this to using the $this->auth object rather than array
+		$this->hook_run('post '.$class); 
 		
-		$auth = $auth->auth;
-		
-		// If no user is currently set...
-		if(!isset($auth['user']))
-		{
-			// default to anonymous
-			$auth['user'] = 'anonymous';
-			$auth['display_name'] = 'Anonymous';
-			$auth['id'] = 0;
-			$auth['access'] = 'none';
-		}
-		
-		//$auth->auth = $auth;
-		
-		$this->auth = $auth;
-		
-		
-		
-		
-		//echo pre(print_r($this->auth, 1));
-		
-		
-		$this->endTimer(__METHOD__);
 		return $this;
 	}
 	
-	private function apply_acl()
+	private function applyAcl()
 	{
 		$this->startTimer(__METHOD__);
 		
@@ -572,7 +533,7 @@ Included, Required files:';
 		return $this;
 	}
 	
-	public function acl_test($action)
+	public function aclTest($action)
 	{	// action = 'action/app|var1/var2'
 		$acl = $this->auth['acl'];
 		$baseacl = $this->baseacl;
@@ -605,6 +566,7 @@ Included, Required files:';
 		$this->select['alias'] = '';
 		$this->vars = $this->action;
 		$this->action = array('');
+		
 		return $this;
 	}
 	
@@ -731,6 +693,14 @@ Included, Required files:';
 		$funcstart = microtime(true);
 		$this->hook_run('pre lf getcontent');
 		
+		if(!$this->aclTest(implode('/', $this->action)))
+		{
+			$this->content['%content%'][] = "401 Unauthorized at "
+				.implode('/', $this->action)
+				."%login%";
+			return $this;
+		}
+		
 		$content = $this->content;
 		
 		// Pull $apps list with section=>app
@@ -757,16 +727,13 @@ Included, Required files:';
 			$apps = $this->db->fetchall($sql);
 		}
 		
-		
-		
-		
 		// run them and save the output
 		$content = array();
 		$vars = $this->vars;
 		foreach($apps as $_app)
 		{
 			// Test ACL for this app
-			if(!$this->acl_test(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) && !$this->acl_test(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
+			if(!$this->aclTest(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) && !$this->aclTest(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
 			{
 				$content['%'.$_app['section'].'%'][] = "403 Access Denied %login%";
 				continue;
@@ -823,6 +790,11 @@ Included, Required files:';
 		
 		$this->content = $content;
 		
+		// If simple CMS is not set, add %nav% to final output.
+		if($this->settings['simple_cms'] == '_lfcms')
+			// nav_cache comes from $this->request();
+			$this->content['%nav%'][] = $this->nav_cache;
+			
 		return $this;
 	}
 	
