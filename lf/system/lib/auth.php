@@ -9,141 +9,35 @@ class auth extends app
 	
 	protected function init($args)
 	{
-		$auth = $this->lf->auth;
 		
-		// disabled for now #debug, should add a settings option to enable this
-		if(isset($auth['timeout']) && $auth['timeout'] < time() && false) 
+		$user = new User();
+		
+		// Handle timeout
+		if($user->timedOut() && false) //timeout disabled for now
 		{
-			//save user for quick re-login
-			$user = $auth['user'];
-			
-			//session_destroy();
-			$this->error = "You timed out. Please log back in.";
-			
-			// default to anonymous
-			$auth = array();
+			$user = new User(true);
+			$this->notice('You timed out. Please log back in.');
+			//redirect302($this->wwwIndex);
 		}
-		 
 		else
-		{
-			$auth['last_request'] = date('Y-m-d G:i:s');
-			
-			$auth['timeout'] = time() + 60*60*12; // timeout in 12 hours
-		}
+			$user->refreshTimeout();
 		
-		// If no user is currently set...
-		if(!isset($auth['user']))
-		{
-			// default to anonymous
-			$auth['user'] = 'anonymous';
-			$auth['display_name'] = 'Anonymous';
-			$auth['id'] = 0;
-			$auth['access'] = 'none';
-		}
+		// Apply pre authentication details to SESSION
+		//$user->toSession();
 		
-		$this->auth = $auth;
+		// backward compatible (should drop this ASAP)
+		$this->auth = $user->getDetails();
 	}
 	
 	public function login($args)
 	{
-		$auth = $this->auth;
+		// if user/pass matches, push to session
+		$user = new User();
+		$this->lf->auth = $user
+			->doLogin()
+			->getDetails();
 		
-		$loggedin = false;
-		
-		// Get user/pass from $_POST and hash pass
-		$username = $_POST['user'];
-		$password = sha1($_POST['pass']);
-
-		//Get user
-		$sql = sprintf("
-				SELECT id, pass, user, email, last_request, display_name, access, status
-				FROM lf_users WHERE user = '%s'
-				LIMIT 1
-			", 
-			$this->db->escape($username)
-		);
-		
-		//Execute Query
-		$result = $this->db->query($sql);
-		
-		/*echo '<pre>SQL: ';
-		print_r($sql);
-		echo '
-		numrows: ';
-		var_dump($this->db->numrows());*/
-		
-		//Check if user exists
-		if($this->db->numrows() == 0) // if random user tried, add to their guess count
-		{
-			//if(!isset($_SESSION['authguess'])) $_SESSION['authguess'] = 0;
-			//$_SESSION['authguess']++;
-			$this->error = "Incorrect Username or Password";
-		echo $this->error;
-		}
-		
-		
-		/*else if ($auth['loginfailcnt'] > 7)
-		{
-			$this->error = "Reset your account with the link we emailed you.";
-		}
-		*/
-		else
-		{
-			$auth = $this->db->fetch($result);
-			if($auth['pass'] != $password) // dont allow them to guess your username after 7 tries
-			{
-				/*$deny = '';
-				if($auth['loginfailcnt'] > 6)
-				{
-					mail($auth['email'], 'Your Account Locked at '.$_SERVER['HTTP_HOST'], 'Reset your account at : '.$this->base);
-					$deny = ", status = 'disabled'"; // change status
-				}
-				
-				$this->db->query('UPDATE lf_users SET loginfailcnt = loginfailcnt + 1 WHERE id = '.$auth['id']);
-				*/
-				$auth = $this->lf->auth;
-				$this->error = "Incorrect Username or Password";
-			}
-			/*else 
-			{ 
-				$this->db->query('UPDATE lf_users SET loginfailcnt = 0 WHERE id = '.$auth['id']);
-			}*/
-		}
-		
-		if(isset($auth['status']) && $auth['status'] != 'valid')
-		{
-			if($auth['status'] == 'banned') 
-				$this->error = "You are banned.";
-			else 
-				$this->error = "You need to validate your account first.";
-			
-			$auth = $this->lf->auth;
-		}
-		else if(isset($auth['access']) && $auth['access'] == 'admin') // if admin, check for reCaptcha
-		{
-			/*if(isset($_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]))
-			{
-				//require_once(ROOT.'system/lib/recaptchalib.php');
-				$privatekey = "6LffguESAAAAACsudOF71gJLJE_qmvl4ey37qx8l";
-				$resp = recaptcha_check_answer ($privatekey,$_SERVER["REMOTE_ADDR"],$_POST["recaptcha_challenge_field"],$_POST["recaptcha_response_field"]);
-				
-				if (!$resp->is_valid) {
-					$this->error = "Wrong reCaptcha";
-					$auth = $this->auth;
-				}
-			}*/
-			
-			// disabled, you can log in as admin anywhere
-			//if(!isset($_POST['adminlogin'])) { $auth['access'] = 'user'; }
-		}
-		
-		$this->lf->auth = $auth;
-		
-		if(isset($this->error)) $_SESSION['_lf_login_error'] = $this->error;
-		
-		/*print_r($auth);
-		echo '</pre>';
-		exit();*/
+		$_SESSION['_auth'] = $this->lf->auth;
 		
 		redirect302();
 	}
@@ -158,7 +52,6 @@ class auth extends app
 	//default
 	public function signup($vars)
 	{
-			
 		if($this->lf->api('getuid') != 0) // logged in
 		{
 			if(isset($_SESSION['dest_url']))
@@ -281,10 +174,10 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	
 	public function forgotform($vars)
 	{
-		if(is_file(ROOT.'system/template/forgot.local'))
-			include ROOT.'system/template/forgot.local';
+		if(is_file(LF.'system/template/forgot.local'))
+			include LF.'system/template/forgot.local';
 		else
-			include ROOT.'system/template/forgot.php';
+			include LF.'system/template/forgot.php';
 	}
 	
 	public function forgotresult($vars)
@@ -335,8 +228,6 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 			echo 'New password set. <a href="%baseurl%">Return to main site</a>';
 		} else echo 'Bad form data';
 	}
-	
-	
 }
 
 

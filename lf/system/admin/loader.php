@@ -23,9 +23,10 @@
 */
 
 $request = $this->action;
+$user = new User();
 
 // only admins can see this page
-if($this->auth['access'] != 'admin')
+if(!$user->hasAccess('admin'))
 	redirect302($this->base);
 
 // so baseurl never changes. make a new one for local admin reference.
