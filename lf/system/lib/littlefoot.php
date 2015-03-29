@@ -143,10 +143,8 @@ class Littlefoot
 		// check install
 		install::testinstall();
 		
-		// Recover session variables from last page load
-		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
-		$this->auth = $_SESSION['_auth'];
-		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
+		if(!isset($this->auth['acl'])) 
+			$this->auth['acl'] = array();
 		
 		$this->hook_run('post lf __construct');
 		$this->endTimer(__METHOD__);
@@ -155,8 +153,7 @@ class Littlefoot
 	public function __destruct()
 	{
 		// Save auth variables for next page load.
-		unset($this->auth['acl']); // so it is not in session
-		$_SESSION['_auth'] = $this->auth;
+		//unset($this->auth['acl']); // so it is not in session
 		
 		if($this->settings['debug'] == 'on')
 			$this->debug = true;
@@ -475,7 +472,7 @@ Included, Required files:';
 			}
 		}
 		
-		$this->hook_run('post '.$class); 
+		$this->hook_run('post '.$class);
 		
 		return $this;
 	}
@@ -1075,13 +1072,15 @@ Included, Required files:';
 		//preg_match('/^route(uid|)'
 	}*/
 	
-	// public, read-only access to private variables
+	// backward compatible
 	public function api($var)
 	{
-		if($var == 'getuid')	return $this->auth['id'];
-		if($var == 'me')		return $this->auth['display_name'];
+		$user = new User();
+		
+		if($var == 'getuid')	return $user->getid();
+		if($var == 'me')		return $user->getdisplay_name();
 		if($var == 'version')	return $this->version;
-		if($var == 'isadmin')	return $this->auth['access'] == 'admin';
+		if($var == 'isadmin')	return $user->hasAccess('admin');
 	}
 }
 

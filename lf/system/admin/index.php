@@ -3,10 +3,19 @@
 $admin_skin = 'default'; // this needs to be an option instead of hard coded
 			
 // maybe you are an admin, but I need you to login first
-if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
+//if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
+
+$user = new User();	
+
+if( ! $user->hasaccess('admin') ) 
+	/*&& strpos($this->auth['access'], 'app_') === false*/
 {
+	
 	//$publickey = '6LffguESAAAAAKaa8ZrGpyzUNi-zNlQbKlcq8piD'; // littlefootcms public key
 	$recaptcha = '';//recaptcha_get_html($publickey);
+	
+	//pre($_SESSION);
+	//exit();
 	
 	ob_start();
 	include('skin/'.$admin_skin.'/login.php'); 
@@ -19,16 +28,17 @@ if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') ===
 	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
 
 	echo $out;
-}
+} 
 
-if($this->auth['access'] == 'admin')
+
+if($user->hasaccess('admin'))
 {
 	include('loader.php');
 	$this->function_timer['admin'] = microtime(true) - $funcstart;
 	$this->app_timer['no apps, just admin'] = 0;
-}
-
-if(strpos($this->auth['access'], 'app_') !== false)
+} 
+/*
+else if(strpos($this->auth['access'], 'app_') !== false)
 {
 	$admin_skin = 'fresh';
 	$app = explode('_', $this->auth['access']);
@@ -47,7 +57,6 @@ if(strpos($this->auth['access'], 'app_') !== false)
 	$out = str_replace('class="content"', 'class="content" style="margin: 10px;"', $out);
 	
 	echo $out;
-}
-
+}*/
 
 exit; 
