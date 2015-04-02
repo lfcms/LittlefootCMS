@@ -23,6 +23,56 @@ class store extends app
 		include 'view/store.main.php';
 	}
 	
+	public function install($vars)
+	{
+		$type = $vars[1];
+		
+		//if($_FILES['skin']['type'] != 'application/zip') return;
+		if($_FILES[$type]['size'] > 55000000) return;
+				
+		$target =  LF.$type.'s';
+		
+		//if(is_dir($target)) return;
+		//if(!mkdir($target)) return;
+		
+		if(!move_uploaded_file($_FILES[$type]['tmp_name'], $target.'/install.zip')) 
+		{ 
+			echo "Sorry, there was a problem uploading your file."; 
+			return; 
+		}
+		else
+		{
+			//echo "The file ". $match[0]. " has been uploaded";
+			$zip = zip_open($target.'/install.zip');
+			if($zip)
+			{
+				while ($zip_entry = zip_read($zip)) { 
+				
+					if(preg_match('/^(.+)\/$/', zip_entry_name($zip_entry), $file))
+					{
+						if(!mkdir($target.'/'.$file[1]))
+						{
+							echo "fail";
+						}
+					}		
+					else if(zip_entry_open($zip, $zip_entry, "r"))
+					{
+						$buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+						
+						$fp = fopen($target.'/'.zip_entry_name($zip_entry), "w");
+						fwrite($fp,"$buf");
+						zip_entry_close($zip_entry);
+						fclose($fp);
+					}
+				}
+				zip_close($zip);
+				unlink($target.'/install.zip');
+			}
+		}
+		
+		redirect302();
+	}
+	
 	public function dlplugin()
 	{
 		if(!isset($this->lf->vars[1])) return 'Missing Arg 2';

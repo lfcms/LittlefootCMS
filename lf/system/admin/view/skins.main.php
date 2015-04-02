@@ -10,23 +10,6 @@
 			<div class="tile-content">
 				<div class="row">
 					<div class="col-12">
-						<h4 class="no_martop">Upload</h4>
-						<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/" method="post">
-							<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-							<input id="upload_skin_file" type="file" name="skin" class="marbot"/>
-							<?php echo $install; ?>
-							<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>-->
-						</form>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						<h4 class="no_martop">Download</h4>
-						<a href="%appurl%download/" class="blue button">Store</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
 						<h4 class="no_martop">Create</h4>
 						<form id="create_skin_form" action="%appurl%blankskin/" method="post">
 							<input id="create_skin_namebox" type="text" name="name" placeholder="Name your new skin" />
