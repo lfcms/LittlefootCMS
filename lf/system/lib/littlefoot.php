@@ -1,7 +1,11 @@
 <?php
 
 /**
+ * @package LittlefootCMS
+ * @organization eFlip.com, LLC
+ * 
  * Littlefoot framework environment
+ * 
  * 
  * ## Environment
  * 
@@ -63,7 +67,7 @@ class Littlefoot
 	public $action;
 	
 	/** @var array $vars After $lf->nav(), the URI is chopped up into the navigation elements followed by the app variables. */
-	public $vars;
+	public $vars = array();
 	
 	/** @var array $select Array of data for present request (template, nav_id, alias) */
 	public $select;
@@ -191,11 +195,13 @@ Included, Required files:';
 	public function startTimer($key = 'DEFAULT')
 	{
 		$this->timer[$key] = microtime(true);
+		$this->hook_run('pre '.$key);
 		return $this;
 	}
 	
 	public function endTimer($key = 'DEFAULT')
 	{
+		$this->hook_run('post '.$key);
 		$this->timer[$key] = microtime(true) - $this->timer[$key];
 		return $this;
 	}
@@ -241,7 +247,7 @@ Included, Required files:';
 		echo $this	// ->lf is optional, it is set recursively in __construct()
 			->loadSettings()	// Pull settings from lf_settings
 			->request()			// Parse REQUEST_URI into usable pieces
-			->route('auth', '_auth', false)	// Determine who we are dealing with, route on /_auth/
+			->route('auth', '_auth', false) // Route auth() class on /_auth/
 			->applyAcl()		// Pull ACL that affects this user
 			->loadAdmin()		// If /admin was requested, load it and stop here
 			->navSelect()		// Get data for SimpleCMS, or determine requested Nav ID
@@ -269,11 +275,7 @@ Included, Required files:';
 		$this->hook_run('pre settings');
 		
 		foreach(orm::q('lf_settings')->get() as $setting)
-		{
-			$var = $setting['var'];
-			$val = $setting['val'];
-			$this->settings[$var] = $val;
-		}
+			$this->settings[$setting['var']] = $setting['val'];
 		
 		return $this;
 	}
@@ -289,7 +291,6 @@ Included, Required files:';
 	/*
 	private function cache() // not a thing yet
 	{
-		
 		//CACHING - will not account for update to page...
 		if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
 		{
@@ -311,7 +312,6 @@ Included, Required files:';
 			$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
 			file_put_contents(ROOT.'cache/'.$file, $output);
 		}
-		
 	}
 	*/
 	
@@ -634,27 +634,34 @@ Included, Required files:';
 			$this->action = array('');
 		}
 		
-		if(!is_file(ROOT.'cache/nav.cache.html')) // in case the file doesn't exist
+		// in case the file doesn't exist
+		
+		if(!is_file(ROOT.'cache/nav.cache.html')) 
 		{
 			$pwd = getcwd();
 			chdir(ROOT.'system/admin/');
-			$this->mvc('dashboard', NULL, array('updatenavcache'));
+			$this->mvc('dashboard', NULL, array('updatenavcache')); // run the nav HTML generation script
 			chdir($pwd);
 		}
 		
-		$nav_cache = file_get_contents(ROOT.'cache/nav.cache.html');
+		$nav_cache = file_get_contents(ROOT.'cache/nav.cache.html'); // Pull cached navigation HTML output rather than generate it on the fly.
 		
 		// Update nav_cache to show active items
-		$actionbuilder = '%baseurl%';
+		
+		$actionbuilder = '%baseurl%'; // Start with reference to installation base
 		foreach($this->action as $action)
 		{
-			if($action != '') $actionbuilder .= $action.'/';
+			if($action != '')	// Account for empty alias
+				$actionbuilder .= $action.'/';	// Loop through the full/path. 
+												
+			// As the action request URI builds, replace each link matching that set to active.
 			$nav_cache = str_replace(
 				'<li><a href="'.$actionbuilder.'"', 
 				'<li class="active"><a href="'.$actionbuilder.'"', 
 				$nav_cache);
 		}
 		
+		// If template has not be changed from 'default', set as configured default_skin.
 		if($this->select['template'] == 'default')
 			$this->select['template'] = $this->settings['default_skin'];
 		
@@ -678,8 +685,6 @@ Included, Required files:';
 			echo '<p>404 No menu items match your request</p>';
 			return 0;
 		}
-		
-		$this->function_timer['nav'] = microtime(true) - $funcstart;
 		
 		$this->nav_cache = $nav_cache;
 		return $this;
@@ -992,7 +997,8 @@ Included, Required files:';
 	}
 	
 	// Backward compatible
-	public function apploader($load, $ini = '', $vars = NULL) { return $this->mvc($load, $ini, $vars); }
+	public function apploader($load, $ini = '', $vars = NULL) 
+		{ return $this->mvc($load, $ini, $vars); }
 	
 	// should turn this into an API system for direct-to-app calls via json request.
 	private function post($id)

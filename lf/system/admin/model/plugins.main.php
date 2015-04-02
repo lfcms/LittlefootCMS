@@ -10,8 +10,8 @@ foreach ($files as $file) {
 }
 
 if(isset($plugin_list))
-	$plugins = '<option value="">-- Select a plugin --</option><option>'.implode('</option><option>', $plugin_list).'</option>'; 
+	$pluginselect = '<option value="">-- Select a plugin --</option><option>'.implode('</option><option>', $plugin_list).'</option>'; 
 else
-	$plugins = '<option value="">-- No plugins available --</option>';
+	$pluginselect = '<option value="">-- No plugins available --</option>';
 	
 ?>

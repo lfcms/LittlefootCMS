@@ -13,7 +13,7 @@
 				</tr>
 				<tr>
 					<td><input type="text" name="hook" id="lf_hook" placeholder="hook_name" /></td>
-					<td><select name="plugin" id=""><?=$plugins;?></select></td>
+					<td><select name="plugin" id=""><?=$pluginselect;?></select></td>
 					<td><input type="text" name="config" placeholder="my-secret-id" /></td>
 					<td></td>
 					<td><button class="green">Hook It Up!</button></td>
@@ -32,7 +32,19 @@
 			</table>
 		</form>
 	</div>
-	<div class="col-3">
+	<div class="col-3 spaced">
+		<div class="tile rounded">
+			<div class="tile-header gray light">
+				<h3>Plugins</h3>
+			</div>
+			<div class="tile-content">
+				<ul class="vlist">
+					<li>
+					<?=implode('</li><li>', $plugin_list);?>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<div class="tile rounded">
 			<div class="tile-header gray light">
 				<h3>Hooks</h3>
