@@ -31,7 +31,6 @@ class store extends app
 		if($_FILES[$type]['size'] > 55000000) return;
 				
 		$target =  LF.$type.'s';
-		
 		//if(is_dir($target)) return;
 		//if(!mkdir($target)) return;
 		
@@ -93,7 +92,7 @@ class store extends app
 		return $this->downloader();
 	}
 	
-	public function dlapps()
+	public function dlapp()
 	{
 		if(!isset($this->lf->vars[1])) return 'Missing Arg 2';
 		
@@ -131,7 +130,8 @@ class store extends app
 			Unzip( LF.$type.'/', $item.'.zip' );
 			unlink($dest);
 			
-			$this->installsql($item);
+			if($type == 'apps')
+				$this->installsql($item);
 			
 		} else echo "$type not found: ".$item;
 		
