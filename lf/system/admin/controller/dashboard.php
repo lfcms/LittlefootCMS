@@ -413,28 +413,6 @@ class dashboard extends app
 		
 		redirect302();
 	}
-	
-	private function installsql($app)
-	{
-		$sql = ROOT.'apps/'.$app.'/install.sql';
-		if(is_file($sql))
-		{
-			$this->db->import($sql);
-			unlink($sql);
-		}
-	}
-	
-	public function upgradesql($app)
-	{
-		if($this->simple) return;
-		
-		$sql = ROOT.'apps/'.$app.'/upgrade.sql';
-		if(is_file($sql))
-		{
-			$this->db->import($sql);
-			unlink($sql);
-		}
-	}
 
 	public function update($vars) // nav/item update
 	{
