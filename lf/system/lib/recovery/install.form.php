@@ -11,8 +11,8 @@ if(version_compare(phpversion(), '5.4.0', '<')
 
 if(is_file('config.php'))
 {
-	include 'config.php';
-	$dbconn = new Database($db);
+	//include 'config.php';
+	$dbconn = db::init();
 
 	if($dbconn->error != '') $errors = $dbconn->error;
 	else
@@ -27,7 +27,6 @@ if(is_file('config.php'))
 $host = isset($_POST['host']) ? $_POST['host'] : 'localhost';
 $user = isset($_POST['user']) ? $_POST['user'] : '';
 $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
-	
 
 ?>
 <html class="lf">

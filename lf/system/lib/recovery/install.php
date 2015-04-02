@@ -81,8 +81,7 @@ class install
 
 		if(isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php'))
 		{
-			include 'config.php';
-			$dbconn = new Database($db);
+			$dbconn = db::init();
 
 			if($dbconn->error != '')
 					$errors = $dbconn->error;
