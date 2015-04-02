@@ -31,7 +31,6 @@ class store extends app
 		if($_FILES[$type]['size'] > 55000000) return;
 				
 		$target =  LF.$type.'s';
-		
 		//if(is_dir($target)) return;
 		//if(!mkdir($target)) return;
 		
