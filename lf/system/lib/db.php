@@ -112,7 +112,8 @@ class db
 	 */
 	function __destruct()
 	{
-		$this->mysqli->close();
+		if($this->mysqli)
+			$this->mysqli->close();
 	}
 	
 	/**
