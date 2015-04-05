@@ -71,12 +71,13 @@
 			<div class="row">
 				<div class="col-2">
 					<nav>
-						<?php echo $nav; ?>
+						<?php /*pre($this->content); */
+						echo implode($this->content['%nav%']); ?>
 					</nav>
 				</div>
 				<div class="col-10">
 					<div id="app-<?php echo $class; ?>">
-						<?php echo $app; ?>
+						<?php echo implode($this->content['%content%']); ?>
 					</div>
 				</div>
 			</div>

@@ -1,4 +1,4 @@
-<h2>Skins Manager</h2>
+<h2><a href="%appurl%">Skins</a></h2>
 
 <div class="row">
 	<!-- New Skin -->

@@ -13,11 +13,15 @@ else
 {
         include 'config.php';
         $conf = $db;
-        $db = new Database($conf);
+        $db = db::init();
 }
 
 // 1.13.5-r129
-$index = "<?php require 'lf/system/init.php';";
+$index = "<?php
+require_once('lf/system/bootstrap.php'); // include lf library
+$lf = new LittleFoot(); // initialize $lf with $db connection
+$lf->cms(); // execute littlefoot as cms() and render() output
+";
 file_put_contents(ROOT.'../index.php', $index);
 
 $acl = array();
@@ -57,8 +61,6 @@ if(!$simple) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, '
 // for handling signup within system/
 $signup = $db->fetch("SELECT * FROM lf_settings WHERE var = 'signup'");
 if(!$signup) $db->query("INSERT INTO lf_settings (id, var, val) VALUES ( NULL, 'signup', 'disabled')");
-
-
 
 // when plugins were introduced
 $db->query('CREATE TABLE IF NOT EXISTS lf_plugins (

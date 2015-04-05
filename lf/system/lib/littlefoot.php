@@ -205,6 +205,23 @@ Included, Required files:';
 		$this->timer[$key] = microtime(true) - $this->timer[$key];
 		return $this;
 	}
+
+	public function addCSRF($str)
+	{
+		/* csrf form auth */
+		$out = str_replace('</head>', $this->lf->head.'</head>', $str);
+
+		// Generate CSRF token to use in form hidden field
+		$token = NoCSRF::generate( 'csrf_token' );
+		preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
+		for($i = 0; $i < count($match[0]); $i++)
+		{
+			$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
+			
+		}
+
+		return $out;
+	}
 	
 	/**
 	 * Execute as CMS
@@ -243,7 +260,7 @@ Included, Required files:';
 	 * 
 	 */
 	public function cms()
-	{		
+	{
 		echo $this	// ->lf is optional, it is set recursively in __construct()
 			->loadSettings()	// Pull settings from lf_settings
 			->request()			// Parse REQUEST_URI into usable pieces
@@ -569,6 +586,7 @@ Included, Required files:';
 	
 	public function navSelect()
 	{
+		$this->startTimer(__METHOD__);
 		if($this->settings['simple_cms'] != '_lfcms')
 			$this->simpleSelect();
 		
@@ -687,11 +705,13 @@ Included, Required files:';
 		}
 		
 		$this->nav_cache = $nav_cache;
+		$this->endTimer(__METHOD__);
 		return $this;
 	}
 	
-	private function getcontent()
+	public function getcontent()
 	{
+		$this->startTimer(__METHOD__);
 		$funcstart = microtime(true);
 		$this->hook_run('pre lf getcontent');
 		
@@ -763,12 +783,14 @@ Included, Required files:';
 			$start = microtime(true); // timer for app
 			
 			
-			$this->lf->startTimer('Pages App: '.$_app['ini']);
-			include 'index.php'; // execute app
-			$this->lf->endTimer('App: '.ucfirst($_app['app']).', Config: '.$_app['ini']);
+			$apptimer = __METHOD__.' / Link Id: '.$_app['id']
+			.', App: '.$_app['app']
+			.', Position: '.$_app['section']
+			.', Config: '.$_app['ini'];
 			
-			$this->timer['App: '.$_app['app'].', Link Id: '.$_app['id'].', Position: '.$_app['section']
-			] = microtime(true) - $start; //timer for app
+			$this->lf->startTimer($apptimer);
+			include 'index.php'; // execute app
+			$this->lf->endTimer($apptimer);
 			
 			$output = '
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
@@ -797,40 +819,55 @@ Included, Required files:';
 			// nav_cache comes from $this->request();
 			$this->content['%nav%'][] = $this->nav_cache;
 			
+		$this->endTimer(__METHOD__);
+		
 		return $this;
 	}
 	
-	public function render()
+	public function render($dir = NULL)
 	{
+		$this->startTimer(__METHOD__);
 		$this->hook_run('pre lf render');
 		
-		$replace = $this->content;
+		if(is_null($dir))
+			chdir(LF.'skins');
+		else
+			chdir($dir);
 		
 		// Pull Login View
 		ob_start();
-		include ROOT.'system/template/login.php';
+		include LF.'system/template/login.php';
 		$login = ob_get_clean();
 		
-		// Determine if home.php should be loaded (sounds like something for getcontent())
+		// Determine if home.php should be loaded 
+		// (sounds like something for getcontent())
 		$file = 'index';
-		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
+		if($this->select['parent'] == -1 
+			&& $this->select['position'] == 1 
+			&& ( is_file($this->select['template'].'/home.php') 
+				|| is_file($this->select['template'].'/home.html')
+			)
+		)
 			$file = 'home';
 		
 		// Load skin data
 		ob_start();
 		$skin = $this->select['template'];
-		if(is_file(ROOT.'skins/'.$skin."/$file.php"))
-			include(ROOT.'skins/'.$skin."/$file.php");
-		else if(is_file(ROOT.'skins/'.$skin."/$file.html"))
-			readfile(ROOT.'skins/'.$skin."/$file.html");
+		
+		//pre($this->content);
+		
+		if(is_file($skin."/$file.php")) // allow php
+			include($skin."/$file.php");
+		else if(is_file($skin."/$file.html"))
+			readfile($skin."/$file.html");
 		else
-			echo 'Template files for '.$skin.' missing. Log into admin and select a different template with the Skins tool.';
+			echo 'Template files for '.$skin."/$file.php".' missing. Log into admin and select a different template with the Skins tool.';
 			
 		$template = ob_get_clean();
 		
 		// Replace all %markers% with $content
-		if(isset($replace))
-			foreach($replace as $key => $value)
+		if(isset($this->content))
+			foreach($this->content as $key => $value)
 				$template = str_replace($key, implode($value), $template);
 		
 		// replace global variables
@@ -850,9 +887,11 @@ Included, Required files:';
 		$this->loadLfCSS();
 		
 		ob_start();
-		echo str_replace('<head>', '<head>'.$this->lf->head, $template);
+		echo $template;
 		
 		$this->hook_run('post lf render');
+		
+		$this->endTimer(__METHOD__);
 		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
@@ -896,7 +935,7 @@ Included, Required files:';
 	 *
 	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
-	{
+	{		
 		ob_start();
 		if($vars === NULL) $vars = $this->vars;
 		if(!isset($vars[0])) $vars[0] = '';
@@ -961,9 +1000,15 @@ Included, Required files:';
 		return $return;
 	}
 	
-	//public function loadapp2($app, $ini = '', $vars = array()){
-		
-	//}
+	public function megamvc($default = NULL, $offset = 0)
+	{
+		// if you specify $default, route on that by default
+		if(!is_null($default) && $this->action[0] == '')
+			$this->action[0] = $default;
+			
+		$this->vars = array_slice($this->action, $offset+1);
+		return $this->mvc($this->action[$offset]);
+	}
 	
 	// mount, app/controller, $ini, $vars
 	public function loadapp($app, $admin, $ini ='', $vars = array(''), $custompath = NULL)
@@ -1070,7 +1115,14 @@ Included, Required files:';
 	{
 		if(!isset($this->plugins[$hook])) return false;
 		foreach($this->plugins[$hook] as $plugin => $config)
+		{
+			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
+			
+			$this->startTimer(__METHOD__.$hookDetails);
 			include ROOT.'plugins/'.$plugin.'/index.php';
+			$this->endTimer(__METHOD__.$hookDetails);
+		}
+			
 	}
 	/*
 	public function __call($name, $arguments)
