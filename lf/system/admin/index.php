@@ -1,5 +1,7 @@
 <?php
 
+defined('LF') or die('LF undefined');
+
 /**
  * Admin launchpoint
  *
@@ -74,21 +76,7 @@ else if($user->hasaccess('admin'))
 {
 	//formauth
 	require_once(ROOT.'system/lib/3rdparty/nocsrf.php');
-	if(count($_POST))
-	{
-		try
-		{
-			// Run CSRF check, on POST data, in exception mode, with a validity of 10 minutes, in one-time mode.
-			NoCSRF::check( 'csrf_token', $_POST, true, 60*60*10, false );
-			// form parsing, DB inserts, etc.
-			unset($_POST['csrf_token']);
-		}
-		catch ( Exception $e )
-		{
-			// CSRF attack detected
-			die('Session timed out');
-		}
-	}
+	$this->checkCSRF();
 
 	$this->base .= 'admin/'; // backward compatible
 
@@ -102,48 +90,7 @@ else if($user->hasaccess('admin'))
 			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
 	}
 
-	/* */
-
-	// Get a list of admin tools
-	foreach(scandir('controller') as $controller)
-	{
-		if($controller[0] == '.') continue;
-		$controllers[] = str_replace('.php', '', $controller);
-	}
-
-	// Check for valid request
-	$success = preg_match(
-		'/^('.implode('|',$controllers).')$/', 
-		$this->action[0], 
-		$match
-	);
-
-	// default to dashboard class
-	if(!$success) $match[0] = 'dashboard';
-
-	$this->vars = array_slice($this->action, 1);
-	
-	ob_start();
-	$class = $match[0];
-	$this->appurl = $this->base.$class.'/';
-	
-	echo $this->mvc($class);
-	
-	$replace = array(
-		'%appurl%' 	=> $this->lf->base.$class.'/'
-	);
-
-	$app = str_replace(
-		array_keys($replace), 
-		array_values($replace), 
-		ob_get_clean()
-	);
-	$this->content['%content%'][] = $app;
-	
-	
-	
-	
-	
+	$this->multiMVC('dashboard');
 	
 	ob_start();
 	include('view/nav.php');
@@ -168,8 +115,6 @@ else if($user->hasaccess('admin'))
 	);
 	$nav = str_replace($links[0][$match], $replace, $nav);
 	$this->content['%nav%'][] = $nav;
-	
-	
 	
 	$this->select['template'] = 'default';
 	$renderResult = $this->render(LF.'system/admin/skin');

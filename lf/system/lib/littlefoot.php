@@ -206,6 +206,27 @@ Included, Required files:';
 		return $this;
 	}
 
+	public function checkCSRF($timeout = 3600)
+	{
+		if(count($_POST))
+		{
+			try
+			{
+				// Run CSRF check, on POST data, in exception mode, with a validity of 10 minutes, in one-time mode.
+				NoCSRF::check( 'csrf_token', $_POST, true, $timeout, false );
+				// form parsing, DB inserts, etc.
+				unset($_POST['csrf_token']);
+			}
+			catch ( Exception $e )
+			{
+				// CSRF attack detected
+				die('Session timed out');
+			}
+		}
+		
+		return $this;
+	}
+	
 	public function addCSRF($str)
 	{
 		/* csrf form auth */
@@ -895,6 +916,48 @@ Included, Required files:';
 		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
+	}
+	
+	
+	
+	public function multiMVC($default = NULL, $section = 'content')
+	{
+		// Get a list of admin tools
+		foreach(scandir('controller') as $controller)
+		{
+			if($controller[0] == '.') continue;
+			$controllers[] = str_replace('.php', '', $controller);
+		}
+
+		// Check for valid request
+		$success = preg_match(
+			'/^('.implode('|',$controllers).')$/', 
+			$this->action[0], 
+			$match
+		);
+
+		// default to dashboard class
+		if(!$success and !is_null($default)) 
+			$match[0] = $default;
+
+		$class = $match[0];
+		
+		$this->vars = array_slice($this->action, 1);
+		$this->appurl = $this->base.$class.'/';
+		
+		$MVCresult = $this->mvc($class);
+		
+		$replace = array('%appurl%' => $this->lf->base.$class.'/');
+
+		$app = str_replace(
+			array_keys($replace), 
+			array_values($replace), 
+			$MVCresult
+		);
+		
+		$this->content['%'.$section.'%'][] = $app;
+		
+		return $this;
 	}
 	
 	public function loadLfCSS()
