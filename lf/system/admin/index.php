@@ -89,8 +89,6 @@ else if($user->hasaccess('admin'))
 		else
 			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
 	}
-
-	$this->multiMVC('dashboard');
 	
 	ob_start();
 	include('view/nav.php');
@@ -117,7 +115,9 @@ else if($user->hasaccess('admin'))
 	$this->content['%nav%'][] = $nav;
 	
 	$this->select['template'] = 'default';
-	$renderResult = $this->render(LF.'system/admin/skin');
+	$renderResult = $this
+		->multiMVC('dashboard')
+		->render(LF.'system/admin/skin');
 	
 	echo $this->addCSRF($renderResult);
 }
