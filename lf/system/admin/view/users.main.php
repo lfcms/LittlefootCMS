@@ -1,4 +1,4 @@
-<h2>Users (<?=$usercount;?>)</h2>
+<h2><i class="fa fa-users"></i> Users (<?=$usercount;?>)</h2>
 <div class="row">
 	<div class="col-4">
 		<a class="blue button" href="%appurl%newuser/">Create New User</a>

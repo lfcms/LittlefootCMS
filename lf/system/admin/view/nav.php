@@ -12,22 +12,27 @@
 		<ul class="efvlist rounded">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
-			<li><a class="dashboard" href="<?=$this->base;?>dashboard/"><span>
-				<?=$this->settings['simple_cms']=='_lfcms'
-					?'Dashboard'
-					:ucfirst($this->settings['simple_cms']).' Admin';
-				?>
-			</span></a></li>
-			<li><a class="tables" href="<?=$this->base;?>skins/"><span>Skins</span></a></li>
-			<li><a class="tables" href="<?=$this->base;?>plugins/"><span>Plugins</span></a></li>
-			<li><a class="editor" href="<?=$this->base;?>store/"><span>Store</span></a></li>
+			<li>
+				<a class="dashboard" href="<?=$this->base;?>dashboard/">
+					<i class="fa fa-tachometer"></i>
+					<span>
+						<?=$this->settings['simple_cms']=='_lfcms'
+							?' Dashboard'
+							:ucfirst($this->settings['simple_cms']).' Admin';
+						?>
+					</span>
+				</a>
+			</li>
+			<li><a class="tables" href="<?=$this->base;?>skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
+			<li><a class="tables" href="<?=$this->base;?>plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
 			<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->
-			<li><a class="users" href="<?=$this->base;?>users/"><span>Users</span></a></li>
-			<li><a class="editor" href="<?=$this->base;?>acl/"><span>ACL</span></a></li>
+			<li><a class="users" href="<?=$this->base;?>users/"><i class="fa fa-users"></i><span> Users</span></a></li>
+			<li><a class="editor" href="<?=$this->base;?>acl/"><i class="fa fa-shield"></i><span> ACL</span></a></li>
 			<!-- <li><a class="" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
-			<li><a class="" href="<?=$this->base;?>settings/"><span>Settings</span></a></li>
-			<li><a class="" target="_blank" href="http://littlefootcms.com/byname/Admin+Documentation"><span>Help</span></a></li>
-			<li><a class="" target="_blank" href="https://github.com/bioshazard/littlefootcms/issues/"><span>Report Bug</span></a></li>
+			<li><a class="" href="<?=$this->base;?>settings/"><i class="fa fa-cog"></i><span> Settings</span></a></li>
+			<li><a class="editor" href="<?=$this->base;?>store/"><i class="fa fa-shopping-cart"></i><span> Store</span></a></li>
+			<li><a class="" target="_blank" href="http://littlefootcms.com/byname/Admin+Documentation"><i class="fa fa-question"></i><span> Help</span></a></li>
+			<li><a class="" target="_blank" href="https://github.com/eflip/littlefootcms/issues/"><i class="fa fa-bug"></i><span> Report Bug</span></a></li>
 			<!--<li><a class="" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
 			
 			<?php $this->lf->hook_run('post lf admin nav'); ?>

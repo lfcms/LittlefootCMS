@@ -1,4 +1,4 @@
-<h2>Store</h2>
+<h2><i class="fa fa-shopping-cart"></i> Store</h2>
 
 <p>Click an app to install it. Update links will download the latest. And you can even upload your own .zip</p>
 				

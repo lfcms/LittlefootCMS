@@ -1,4 +1,4 @@
-<h2>Settings</h2>
+<h2><i class="fa fa-cog"></i> Settings</h2>
 <?=$this->notice();?>
 <div class="row">
 	<div class="col-7">
