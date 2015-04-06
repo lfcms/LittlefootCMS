@@ -53,7 +53,7 @@
 							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-paw"></i> lf admin</a>
 						</div>
 						<div class="col-7">
-							<a id="site_preview" href="%relbase%" target="blank_"><i class="fa fa-binoculars"></i> <?=$this->domain;?>%relbase%</a>
+							<a id="site_preview" href="%relbase%" target="blank_"><i class="fa fa-play"></i> <?=$this->domain;?>%relbase%</a>
 						</div>
 						<div class="col-3">
 							<span id="logout_button" class="pull-right">

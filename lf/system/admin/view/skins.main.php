@@ -13,7 +13,7 @@
 						<h4 class="no_martop">Create</h4>
 						<form id="create_skin_form" action="%appurl%blankskin/" method="post">
 							<input id="create_skin_namebox" type="text" name="name" placeholder="Name your new skin" />
-							<button class="green">Create Skin</button>
+							<button class="green">create skin</button>
 						</form> 
 					</div>
 				</div>

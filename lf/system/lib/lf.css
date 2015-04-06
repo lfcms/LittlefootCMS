@@ -796,7 +796,7 @@ html.lf, .lf body {
 	opacity: 1;
 }
 
-/*Custom - Utility */
+/*Utility */
 .lf .notice {
 	border-left: 2px solid #1195AA;
 }
@@ -814,6 +814,10 @@ html.lf, .lf body {
 }
 
 .lf .x:hover { color: #F62319 !important;}
+
+.lf .help {
+	font-size:0.3em;
+}
 
 
 /*Mobile*/

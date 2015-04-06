@@ -58,7 +58,7 @@
 					</div>
 					<div class="row">
 						<div class="col-12">
-							<input class="blue button" type="submit" value="Save Changes" />
+							<button class="blue button"><i class="fa fa-floppy-o"></i> save changes</button>
 						</div>
 					</div>		
 				</form>
