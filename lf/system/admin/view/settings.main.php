@@ -4,7 +4,7 @@
 	<div class="col-7">
 		<div class="tile rounded">
 			<div class="tile-header light_gray">
-				<h3>Options</h3>
+				<h3><i class="fa fa-cogs"></i> Options</h3>
 			</div>
 			<div class="tile-content">
 				<form action="%appurl%saveoptions" method="post">
@@ -69,16 +69,26 @@
 	<div class="col-5 spaced">
 		<div class="tile rounded">
 			<div class="tile-header light_gray">
-				<h3>Version</h3>
+				<h3><i class="fa fa-leaf"></i> Version</h3>
 			</div>
 			<div class="tile-content">
-			
-				<a class="blue button martop marbot" href="%appurl%lfup/">Upgrade Littlefoot</a>
+				<h4>
+					<a title="Littlefoot Home" href="http://littlefootcms.com/"><i class="fa fa-home"></i></a>
+					<a title="Download" href="https://github.com/eflip/LittlefootCMS/archive/master.zip"><i class="fa fa-download"></i></a>
+					<a title="Dev Docs" href="http://littlefootcms.com/files/docs/index.html"><i class="fa fa-book"></i></a>
+					<a title="Community" href="http://littlefootcms.com/forum/"><i class="fa fa-comments"></i></a>
+					<a title="GitHub" href="https://github.com/eflip/LittlefootCMS"><i class="fa fa-github"></i></a>
+					<a title="Facebook" href="https://www.facebook.com/littlefootcms"><i class="fa fa-facebook"></i></a>
+					<a title="Help" href="http://littlefootcms.com/byid/23"><i class="fa fa-question"></i></a>
+				</h4>
+				<a class="blue button martop marbot" href="%appurl%lfup/"><i class="fa fa-arrow-up"></i> Upgrade Littlefoot</a>
 				
-				<h4>Current version: <?=$this->request->api('version');?></h4>
+				<h4><i class="fa fa-clock-o"></i> Current version: <?=$this->request->api('version');?></h4>
 				
 				<?php if($newest != $this->request->api('version')): ?>
-					<p>Latest version available: <?=$newest;?></p>
+					<p>
+						Latest version available: <?=$newest;?>
+					</p>
 				<?php else: ?>
 					<p>You are up to date!</p>
 				<?php endif; ?>
@@ -87,13 +97,13 @@
 					<p><a href="%baseurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
 				<?php endif; ?>
 				
-				<h4>Restore Old Version</h4>
+				<h4><i class="fa fa-history"></i> Restore Old Version</h4>
 				<div class="old-version-info">
 				<?php if(count($backups)): foreach($backups as $backup => $version): ?>
 					<p>
 						<?=$version;?> - 
 						<a href="%baseurl%restore/<?=$backup;?>/">restore</a> -
-						<a href="%baseurl%rm/<?=$backup;?>/" class="delete_item">delete</a>
+						<a href="%baseurl%rm/<?=$backup;?>/" class="x">delete</a>
 					</p>
 				<?php endforeach; else: ?>
 					<p>No system restore points are available.</p>
@@ -103,7 +113,7 @@
 		</div>
 		<div class="tile rounded">
 			<div class="tile-header light_gray">
-				<h3>Reinstall</h3>
+				<h3><i class="fa fa-refresh"></i> Reinstall</h3>
 			</div>
 			<div class="tile-content">
 				<?php if(count($installs)): ?>

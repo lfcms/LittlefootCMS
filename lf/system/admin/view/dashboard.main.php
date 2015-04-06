@@ -33,7 +33,7 @@ $(document).ready(function() {
 		</div>
 	</div>
 	<div class="col-5">
-		<h3><i class="fa fa-cubes"></i> App Gallery</h3>
+		<h3><i class="fa fa-th"></i> App Gallery</h3>
 		<!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
 		<div id="appgallery-container">
 			<p>Click an app below to add it to the navigation.</p>

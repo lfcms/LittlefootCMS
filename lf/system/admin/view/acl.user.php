@@ -4,6 +4,9 @@
 <div class="row">
 	<form action="%appurl%add/user" method="post">
 		<div class="col-2">
+			<button type="submit" class="green"><i class="fa fa-plus"></i> add new</button>
+		</div>
+		<div class="col-2">
 			<select name="affects" id="">
 				<option value="">Select User/Group</option>
 				<optgroup label="Groups">
@@ -32,9 +35,6 @@
 		<div class="col-2">
 			<input type="radio" name="perm" value="1" checked />Allow
 			<input type="radio" name="perm" value="0" />Deny
-		</div>
-		<div class="col-2">
-			<button type="submit" class="green">Add New</button>
 		</div>
 	</form>
 </div>

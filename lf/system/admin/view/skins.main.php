@@ -46,7 +46,7 @@
 				<div class="tile rounded <?=$highlight;?>">
 					<!-- Skin Title -->
 					<div class="tile-header">
-						<h4><?=$skin;?> <i class="<?=$icon;?>"></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right">x</a></h4>
+						<h4><?=$skin;?> <i class="<?=$icon;?>"></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash"></i></a></h4>
 					</div>
 					
 					<div class="h250">
