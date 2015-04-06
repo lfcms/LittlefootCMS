@@ -227,10 +227,9 @@ Included, Required files:';
 		return $this;
 	}
 	
-	public function addCSRF($str)
+	public function addCSRF($out)
 	{
 		/* csrf form auth */
-		$out = str_replace('</head>', $this->lf->head.'</head>', $str);
 
 		// Generate CSRF token to use in form hidden field
 		$token = NoCSRF::generate( 'csrf_token' );
@@ -403,6 +402,8 @@ Included, Required files:';
 		if(substr($url[0], -1) != '/')
 			$url[0] .= '/'; //Force trailing slash
 		
+		if(!isset($url[1])) $url[1] = '';
+		
 		$this->get = $_GET;
 		$this->post = $_POST;
 		$this->rawGet = $url[0];
@@ -462,7 +463,7 @@ Included, Required files:';
 		$this->basenoget = $this->base.$admin.$action;
 		
 		if($fixrewrite) 
-			redirect302($this->base.$admin.$action.$rawget);
+			redirect302($this->base.$admin.$this->action.$this->rawGet);
 		
 		if(substr_count($action, '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
@@ -537,9 +538,11 @@ Included, Required files:';
 			return array_unique($groups);
 		}
 		
+		$user = new User();
+		
 		// get a list of groups from inheritance
-		$groups = get_acl_groups($inherit, $this->auth['access']);
-		$groups[] = $this->auth['access'];
+		$groups = get_acl_groups($inherit, $user->getAccess());
+		$groups[] = $user->getAccess();
 		$groupsql = "'".implode("', '", $groups)."'"; // and get them ready for SQL
 		
 		// Build user ACL from above group list and individual rules
@@ -744,8 +747,6 @@ Included, Required files:';
 			return $this;
 		}
 		
-		$content = $this->content;
-		
 		// Pull $apps list with section=>app
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
 		{
@@ -771,7 +772,11 @@ Included, Required files:';
 		}
 		
 		// run them and save the output
-		$content = array();
+		if(isset($this->content))
+			$content = $this->content;
+		else
+			$content = array();
+		
 		$vars = $this->vars;
 		foreach($apps as $_app)
 		{
@@ -855,6 +860,8 @@ Included, Required files:';
 		else
 			chdir($dir);
 		
+		$this->loadLfCSS();
+		
 		// Pull Login View
 		ob_start();
 		include LF.'system/template/login.php';
@@ -863,7 +870,8 @@ Included, Required files:';
 		// Determine if home.php should be loaded 
 		// (sounds like something for getcontent())
 		$file = 'index';
-		if($this->select['parent'] == -1 
+		if( isset($this->select['parent']) 
+			&& $this->select['parent'] == -1 
 			&& $this->select['position'] == 1 
 			&& ( is_file($this->select['template'].'/home.php') 
 				|| is_file($this->select['template'].'/home.html')
@@ -905,7 +913,7 @@ Included, Required files:';
 			$template
 		);
 		
-		$this->loadLfCSS();
+		$template = str_replace('<head>', '<head>'.$this->lf->head, $template);
 		
 		ob_start();
 		echo $template;
@@ -917,8 +925,6 @@ Included, Required files:';
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
 	}
-	
-	
 	
 	public function multiMVC($default = NULL, $section = 'content')
 	{
@@ -1204,5 +1210,3 @@ Included, Required files:';
 		if($var == 'isadmin')	return $user->hasAccess('admin');
 	}
 }
-
-?>

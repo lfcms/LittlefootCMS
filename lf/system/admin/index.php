@@ -90,6 +90,7 @@ else if($user->hasaccess('admin'))
 			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
 	}
 	
+	// Nav item
 	ob_start();
 	include('view/nav.php');
 	$nav = ob_get_clean();
@@ -104,15 +105,23 @@ else if($user->hasaccess('admin'))
 	);
 	$match = -1;
 	foreach($links[2] as $id => $request)
-		if($request == $class.'/') 
+		if($request == $this->lf->action[0].'/') 
 			$match = $id;
-	$replace = str_replace(
-		'<li>', 
-		'<li class="active green light_a">',
-		$links[0][$match]
-	);
-	$nav = str_replace($links[0][$match], $replace, $nav);
+	
+	if($match != -1)
+	{
+		$replace = str_replace(
+			'<li>',
+			'<li class="active green light_a">',
+			$links[0][$match]
+		);
+		
+		$nav = str_replace($links[0][$match], $replace, $nav);
+	}	
+	
 	$this->content['%nav%'][] = $nav;
+	
+	
 	
 	$this->select['template'] = 'default';
 	$renderResult = $this

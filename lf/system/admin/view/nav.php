@@ -42,8 +42,9 @@ $admin_apps = str_replace(
 	<div class="col-12">
 		<ul class="efvlist rounded">
 			<?php
+			
 			foreach($admin_apps as $shortcut): 
-				if(isset($this->vars[0]) && $shortcut == $this->vars[0]) 
+				if(isset($this->action[1]) && $shortcut == $this->action[1]) 
 					$highlight = ' class="active green light_a"';
 				else 
 					$highlight = '';

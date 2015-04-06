@@ -6,7 +6,7 @@ class apps extends app
 	{
 		$var = $args;
 		
-		if($this->simple) return;
+		if(isset($this->lf->simple) && $this->lf->simple != '_lfcms') return;
 		
 		// $var[0] = 'manage'
 		$app_name = $var[0];
