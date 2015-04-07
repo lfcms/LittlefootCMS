@@ -90,6 +90,9 @@ else if($user->hasaccess('admin'))
 			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
 	}
 	
+	if($this->lf->action[0] == '')
+		$this->lf->action[0] = 'dashboard';
+	
 	// Nav item
 	ob_start();
 	include('view/nav.php');
