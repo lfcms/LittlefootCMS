@@ -3,7 +3,7 @@
 	<div class="tile-header gray_fg">
 		<div class="row">
 			<div class="col-8">					
-				<?=$action['position'] ? $prefix.$action['position'] : '(hidden)';?>
+				<?=$action['position'] ? $prefix.$action['position'] : '<i title="hidden" class="fa fa-user-secret"></i>';?>
 		
 				<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
 					<?=$action['label'];?>
@@ -13,14 +13,14 @@
 				<span class="pull-right">
 					<?=$theapp;?> |
 					<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
-						<a href="%baseurl%dashboard/apps/<?=$theapp;?>/">admin</a>
+						<a href="%baseurl%dashboard/apps/<?=$theapp;?>/"><i class="fa fa-keyboard-o"></i></a>
 					<?php else: ?>
-						<strike>admin</strike>
+						<span><i class="fa fa-keyboard-o"></i></span>
 					<?php endif; ?>
 				</span>
 			</div>
 			<div class="col-1">
-				<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/">x</a>
+				<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash"></i></a>
 			</div>
 		</div>
 	</div>
