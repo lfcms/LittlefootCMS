@@ -12,17 +12,13 @@ $admin_apps = str_replace(
 		<ul class="efvlist rounded">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
-			<li>
-				<a  class="admin-nav" href="<?=$this->base;?>dashboard/">
-					<i class="fa fa-tachometer"></i>
-					<span>
-						<?=$this->settings['simple_cms']=='_lfcms'
-							?' Dashboard'
-							:ucfirst($this->settings['simple_cms']).' Admin';
-						?>
-					</span>
-				</a>
-			</li>
+			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
+			
+			<li><a class="controls" href="<?=$this->base;?>dashboard/"><i class="fa fa-tachometer"></i><span><?=
+				$this->settings['simple_cms']=='_lfcms'
+					?' Dashboard'
+					:ucfirst($this->settings['simple_cms']).' Admin';
+				?></span></a></li>
 			<li><a class="controls" href="<?=$this->base;?>skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
 			<li><a class="controls" href="<?=$this->base;?>plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
 			<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->
