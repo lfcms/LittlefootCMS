@@ -27,7 +27,7 @@
 			<li><a class="controls" href="<?=$this->base;?>plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
 			<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->
 			<li><a class="controls" href="<?=$this->base;?>users/"><i class="fa fa-users"></i><span> Users</span></a></li>
-			<li><a class="controls" href="<?=$this->base;?>acl/"><i class="fa fa-key"></i><span> ACL</span></a></li>
+			<li><a class="controls" href="<?=$this->base;?>acl/"><i class="fa fa-key"></i><span> Access</span></a></li>
 			<!-- <li><a class="" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
 			<li><a class="controls" href="<?=$this->base;?>settings/"><i class="fa fa-cog"></i><span> Settings</span></a></li>
 			<li><a class="controls" href="<?=$this->base;?>store/"><i class="fa fa-shopping-cart"></i><span> Store</span></a></li>

@@ -72,15 +72,6 @@
 				<h3><i class="fa fa-leaf"></i> Version</h3>
 			</div>
 			<div class="tile-content">
-				<h4>
-					<a title="Littlefoot Home" href="http://littlefootcms.com/"><i class="fa fa-home"></i></a>
-					<a title="Download" href="https://github.com/eflip/LittlefootCMS/archive/master.zip"><i class="fa fa-download"></i></a>
-					<a title="Dev Docs" href="http://littlefootcms.com/files/docs/index.html"><i class="fa fa-book"></i></a>
-					<a title="Community" href="http://littlefootcms.com/forum/"><i class="fa fa-comments"></i></a>
-					<a title="GitHub" href="https://github.com/eflip/LittlefootCMS"><i class="fa fa-github"></i></a>
-					<a title="Facebook" href="https://www.facebook.com/littlefootcms"><i class="fa fa-facebook"></i></a>
-					<a title="Help" href="http://littlefootcms.com/byid/23"><i class="fa fa-question"></i></a>
-				</h4>
 				<a class="blue button martop marbot" href="%appurl%lfup/"><i class="fa fa-arrow-up"></i> Upgrade Littlefoot</a>
 				
 				<h4><i class="fa fa-clock-o"></i> Current version: <?=$this->request->api('version');?></h4>
@@ -109,6 +100,16 @@
 					<p>No system restore points are available.</p>
 				<?php endif; ?>
 				</div>
+				<h4>
+					<i class="fa fa-link"></i> Links:
+					<a title="Littlefoot Home" href="http://littlefootcms.com/"><i class="fa fa-home"></i></a>
+					<a title="Download" href="https://github.com/eflip/LittlefootCMS/archive/master.zip"><i class="fa fa-download"></i></a>
+					<a title="Dev Docs" href="http://littlefootcms.com/files/docs/index.html"><i class="fa fa-book"></i></a>
+					<a title="Community" href="http://littlefootcms.com/forum/"><i class="fa fa-comments"></i></a>
+					<a title="GitHub" href="https://github.com/eflip/LittlefootCMS"><i class="fa fa-github"></i></a>
+					<a title="Facebook" href="https://www.facebook.com/littlefootcms"><i class="fa fa-facebook"></i></a>
+					<a title="Help" href="http://littlefootcms.com/byid/23"><i class="fa fa-question"></i></a>
+				</h4>
 			</div>
 		</div>
 		<div class="tile rounded">
