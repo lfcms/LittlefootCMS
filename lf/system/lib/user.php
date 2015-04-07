@@ -139,11 +139,13 @@ class User
 	
 	private function getMagic($var, $args)
 	{
+		$var = strtolower($var);
 		return $this->details[$var];
 	}
 	
 	private function setMagic($var, $args)
 	{
+		$var = strtolower($var);
 		$this->details[$var] = $args[0];
 		return $this;
 	}

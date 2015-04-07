@@ -60,7 +60,7 @@
 								<a class="x" href="%baseurl%_auth/logout">logout</a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
-								Hello <?=$this->auth['display_name'];?>.
+								Hello <?=$this->api('me');?>.
 							</span>
 						</div>
 					</div>
@@ -71,12 +71,13 @@
 			<div class="row">
 				<div class="col-2">
 					<nav>
-						<?php echo $nav; ?>
+						<?php /*pre($this->content); */
+						echo implode($this->content['%nav%']); ?>
 					</nav>
 				</div>
 				<div class="col-10">
 					<div id="app-<?php echo $class; ?>">
-						<?php echo $app; ?>
+						<?php echo implode($this->content['%content%']); ?>
 					</div>
 				</div>
 			</div>

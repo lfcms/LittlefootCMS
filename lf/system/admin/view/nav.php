@@ -1,10 +1,10 @@
 <?php
-	$admin_apps = str_replace(
-		array(ROOT.'apps/', '/admin.php'), '', 
-		glob(ROOT.'apps/*/admin.php')
-	);
+
+$admin_apps = str_replace(
+	array(ROOT.'apps/', '/admin.php'), '', 
+	glob(ROOT.'apps/*/admin.php')
+);
 	
-	// $this->settings
 ?>
 <h4 class="no_martop"><i class="fa fa-desktop"></i> Control</h4>
 <div class="row">
@@ -46,18 +46,21 @@
 <div class="row">
 	<div class="col-12">
 		<ul class="efvlist rounded">
-			<?php foreach($admin_apps as $shortcut): 
-				if(isset($this->vars[1]) && $shortcut == $this->vars[1]) $highlight = ' class="active"';
-				else $highlight = '';
+			<?php
+			
+			foreach($admin_apps as $shortcut): 
+				if(isset($this->action[1]) && $shortcut == $this->action[1]) 
+					$highlight = ' class="active green light_a"';
+				else 
+					$highlight = '';
+				
 			?>
-				<li <?=$highlight;?>>
-					<a class="elements" href="<?=$this->base;?>apps/<?php echo $shortcut; ?>/">
+				<li<?=$highlight;?>><a class="elements" href="<?=$this->base;?>apps/<?php echo $shortcut; ?>/">
 						<span><?php echo ucfirst($shortcut); ?></span>
-					</a>
-				</li>
+				</a></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>
 </div>
 
-<?php endif; ?>
+<?php endif; 

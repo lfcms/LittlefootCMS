@@ -205,6 +205,43 @@ Included, Required files:';
 		$this->timer[$key] = microtime(true) - $this->timer[$key];
 		return $this;
 	}
+
+	public function checkCSRF($timeout = 3600)
+	{
+		if(count($_POST))
+		{
+			try
+			{
+				// Run CSRF check, on POST data, in exception mode, with a validity of 10 minutes, in one-time mode.
+				NoCSRF::check( 'csrf_token', $_POST, true, $timeout, false );
+				// form parsing, DB inserts, etc.
+				unset($_POST['csrf_token']);
+			}
+			catch ( Exception $e )
+			{
+				// CSRF attack detected
+				die('Session timed out');
+			}
+		}
+		
+		return $this;
+	}
+	
+	public function addCSRF($out)
+	{
+		/* csrf form auth */
+
+		// Generate CSRF token to use in form hidden field
+		$token = NoCSRF::generate( 'csrf_token' );
+		preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
+		for($i = 0; $i < count($match[0]); $i++)
+		{
+			$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
+			
+		}
+
+		return $out;
+	}
 	
 	/**
 	 * Execute as CMS
@@ -243,7 +280,7 @@ Included, Required files:';
 	 * 
 	 */
 	public function cms()
-	{		
+	{
 		echo $this	// ->lf is optional, it is set recursively in __construct()
 			->loadSettings()	// Pull settings from lf_settings
 			->request()			// Parse REQUEST_URI into usable pieces
@@ -365,6 +402,8 @@ Included, Required files:';
 		if(substr($url[0], -1) != '/')
 			$url[0] .= '/'; //Force trailing slash
 		
+		if(!isset($url[1])) $url[1] = '';
+		
 		$this->get = $_GET;
 		$this->post = $_POST;
 		$this->rawGet = $url[0];
@@ -424,7 +463,7 @@ Included, Required files:';
 		$this->basenoget = $this->base.$admin.$action;
 		
 		if($fixrewrite) 
-			redirect302($this->base.$admin.$action.$rawget);
+			redirect302($this->base.$admin.$this->action.$this->rawGet);
 		
 		if(substr_count($action, '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
@@ -499,9 +538,11 @@ Included, Required files:';
 			return array_unique($groups);
 		}
 		
+		$user = new User();
+		
 		// get a list of groups from inheritance
-		$groups = get_acl_groups($inherit, $this->auth['access']);
-		$groups[] = $this->auth['access'];
+		$groups = get_acl_groups($inherit, $user->getAccess());
+		$groups[] = $user->getAccess();
 		$groupsql = "'".implode("', '", $groups)."'"; // and get them ready for SQL
 		
 		// Build user ACL from above group list and individual rules
@@ -569,6 +610,7 @@ Included, Required files:';
 	
 	public function navSelect()
 	{
+		$this->startTimer(__METHOD__);
 		if($this->settings['simple_cms'] != '_lfcms')
 			$this->simpleSelect();
 		
@@ -687,11 +729,13 @@ Included, Required files:';
 		}
 		
 		$this->nav_cache = $nav_cache;
+		$this->endTimer(__METHOD__);
 		return $this;
 	}
 	
-	private function getcontent()
+	public function getcontent()
 	{
+		$this->startTimer(__METHOD__);
 		$funcstart = microtime(true);
 		$this->hook_run('pre lf getcontent');
 		
@@ -702,8 +746,6 @@ Included, Required files:';
 				."%login%";
 			return $this;
 		}
-		
-		$content = $this->content;
 		
 		// Pull $apps list with section=>app
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
@@ -730,7 +772,11 @@ Included, Required files:';
 		}
 		
 		// run them and save the output
-		$content = array();
+		if(isset($this->content))
+			$content = $this->content;
+		else
+			$content = array();
+		
 		$vars = $this->vars;
 		foreach($apps as $_app)
 		{
@@ -763,12 +809,14 @@ Included, Required files:';
 			$start = microtime(true); // timer for app
 			
 			
-			$this->lf->startTimer('Pages App: '.$_app['ini']);
-			include 'index.php'; // execute app
-			$this->lf->endTimer('App: '.ucfirst($_app['app']).', Config: '.$_app['ini']);
+			$apptimer = __METHOD__.' / Link Id: '.$_app['id']
+			.', App: '.$_app['app']
+			.', Position: '.$_app['section']
+			.', Config: '.$_app['ini'];
 			
-			$this->timer['App: '.$_app['app'].', Link Id: '.$_app['id'].', Position: '.$_app['section']
-			] = microtime(true) - $start; //timer for app
+			$this->lf->startTimer($apptimer);
+			include 'index.php'; // execute app
+			$this->lf->endTimer($apptimer);
 			
 			$output = '
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
@@ -797,40 +845,58 @@ Included, Required files:';
 			// nav_cache comes from $this->request();
 			$this->content['%nav%'][] = $this->nav_cache;
 			
+		$this->endTimer(__METHOD__);
+		
 		return $this;
 	}
 	
-	public function render()
+	public function render($dir = NULL)
 	{
+		$this->startTimer(__METHOD__);
 		$this->hook_run('pre lf render');
 		
-		$replace = $this->content;
+		if(is_null($dir))
+			chdir(LF.'skins');
+		else
+			chdir($dir);
+		
+		$this->loadLfCSS();
 		
 		// Pull Login View
 		ob_start();
-		include ROOT.'system/template/login.php';
+		include LF.'system/template/login.php';
 		$login = ob_get_clean();
 		
-		// Determine if home.php should be loaded (sounds like something for getcontent())
+		// Determine if home.php should be loaded 
+		// (sounds like something for getcontent())
 		$file = 'index';
-		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
+		if( isset($this->select['parent']) 
+			&& $this->select['parent'] == -1 
+			&& $this->select['position'] == 1 
+			&& ( is_file($this->select['template'].'/home.php') 
+				|| is_file($this->select['template'].'/home.html')
+			)
+		)
 			$file = 'home';
 		
 		// Load skin data
 		ob_start();
 		$skin = $this->select['template'];
-		if(is_file(ROOT.'skins/'.$skin."/$file.php"))
-			include(ROOT.'skins/'.$skin."/$file.php");
-		else if(is_file(ROOT.'skins/'.$skin."/$file.html"))
-			readfile(ROOT.'skins/'.$skin."/$file.html");
+		
+		//pre($this->content);
+		
+		if(is_file($skin."/$file.php")) // allow php
+			include($skin."/$file.php");
+		else if(is_file($skin."/$file.html"))
+			readfile($skin."/$file.html");
 		else
-			echo 'Template files for '.$skin.' missing. Log into admin and select a different template with the Skins tool.';
+			echo 'Template files for '.$skin."/$file.php".' missing. Log into admin and select a different template with the Skins tool.';
 			
 		$template = ob_get_clean();
 		
 		// Replace all %markers% with $content
-		if(isset($replace))
-			foreach($replace as $key => $value)
+		if(isset($this->content))
+			foreach($this->content as $key => $value)
 				$template = str_replace($key, implode($value), $template);
 		
 		// replace global variables
@@ -847,15 +913,57 @@ Included, Required files:';
 			$template
 		);
 		
-		$this->loadLfCSS();
+		$template = str_replace('<head>', '<head>'.$this->lf->head, $template);
 		
 		ob_start();
-		echo str_replace('<head>', '<head>'.$this->lf->head, $template);
+		echo $template;
 		
 		$this->hook_run('post lf render');
 		
+		$this->endTimer(__METHOD__);
+		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
+	}
+	
+	public function multiMVC($default = NULL, $section = 'content')
+	{
+		// Get a list of admin tools
+		foreach(scandir('controller') as $controller)
+		{
+			if($controller[0] == '.') continue;
+			$controllers[] = str_replace('.php', '', $controller);
+		}
+
+		// Check for valid request
+		$success = preg_match(
+			'/^('.implode('|',$controllers).')$/', 
+			$this->action[0], 
+			$match
+		);
+
+		// default to dashboard class
+		if(!$success and !is_null($default)) 
+			$match[0] = $default;
+
+		$class = $match[0];
+		
+		$this->vars = array_slice($this->action, 1);
+		$this->appurl = $this->base.$class.'/';
+		
+		$MVCresult = $this->mvc($class);
+		
+		$replace = array('%appurl%' => $this->lf->base.$class.'/');
+
+		$app = str_replace(
+			array_keys($replace), 
+			array_values($replace), 
+			$MVCresult
+		);
+		
+		$this->content['%'.$section.'%'][] = $app;
+		
+		return $this;
 	}
 	
 	public function loadLfCSS()
@@ -896,7 +1004,7 @@ Included, Required files:';
 	 *
 	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
-	{
+	{		
 		ob_start();
 		if($vars === NULL) $vars = $this->vars;
 		if(!isset($vars[0])) $vars[0] = '';
@@ -961,9 +1069,15 @@ Included, Required files:';
 		return $return;
 	}
 	
-	//public function loadapp2($app, $ini = '', $vars = array()){
-		
-	//}
+	public function megamvc($default = NULL, $offset = 0)
+	{
+		// if you specify $default, route on that by default
+		if(!is_null($default) && $this->action[0] == '')
+			$this->action[0] = $default;
+			
+		$this->vars = array_slice($this->action, $offset+1);
+		return $this->mvc($this->action[$offset]);
+	}
 	
 	// mount, app/controller, $ini, $vars
 	public function loadapp($app, $admin, $ini ='', $vars = array(''), $custompath = NULL)
@@ -1070,7 +1184,14 @@ Included, Required files:';
 	{
 		if(!isset($this->plugins[$hook])) return false;
 		foreach($this->plugins[$hook] as $plugin => $config)
+		{
+			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
+			
+			$this->startTimer(__METHOD__.$hookDetails);
 			include ROOT.'plugins/'.$plugin.'/index.php';
+			$this->endTimer(__METHOD__.$hookDetails);
+		}
+			
 	}
 	/*
 	public function __call($name, $arguments)
@@ -1089,5 +1210,3 @@ Included, Required files:';
 		if($var == 'isadmin')	return $user->hasAccess('admin');
 	}
 }
-
-?>

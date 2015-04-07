@@ -22,7 +22,7 @@ if(isset($actions[$parent])):
 		}
 		
 		$this->subalias .= '
-			<option '.$selected.' value="'.$action['id'].'">
+			<option value="'.$action['id'].'">
 				'.$prefix.$action['position'].' '.$action['label'].'
 			</option>
 		';
