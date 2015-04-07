@@ -109,11 +109,8 @@ class orm {
 	 * 
 	 * @return orm object
 	 */
-	public function q($table = '') 
+	public static function q($table) 
 	{
-		if($table == '')
-			$table = $this->table;
-			
 		return new orm(db::init(), $table);
 	}
 	

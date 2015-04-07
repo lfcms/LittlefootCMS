@@ -60,7 +60,7 @@
 								<a class="x" href="%baseurl%_auth/logout">logout</a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
-								Hello <?=$this->auth['display_name'];?>.
+								Hello <?=$this->api('me');?>.
 							</span>
 						</div>
 					</div>

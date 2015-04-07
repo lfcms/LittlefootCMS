@@ -49,7 +49,7 @@
 					<div class="row">
 						<div class="col-6">
 							<label for="setting[force_url]">Force URL (empty to not force URL):</label>
-							<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=$force_url;?>" />
+							<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=isset($force_url)?$force_url:'';?>" />
 						</div>
 						<div class="col-6">
 							<label for="setting[nav_class]">Navigation CSS class:</label>
