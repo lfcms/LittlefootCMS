@@ -850,6 +850,12 @@ Included, Required files:';
 		return $this;
 	}
 	
+	public function oopbreak($var = "OOPBREAK")
+	{
+		pre($var,'var_dump');
+		exit();
+	}
+	
 	public function render($dir = NULL)
 	{
 		$this->startTimer(__METHOD__);

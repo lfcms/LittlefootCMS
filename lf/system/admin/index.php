@@ -32,6 +32,7 @@ defined('LF') or die('LF undefined');
  * print final rendered output
  *
  */
+ 
 
 $request = $this->action;// backward compatible
  
@@ -44,32 +45,26 @@ $this->adminBase = $this->base.'admin/';
 $this->adminurl = $this->adminBase; // backward compatible
 
 // Generate new User() and test access
-$user = new User();	
+$user = new User();
 
-// only admins can see this page
-if(!$user->hasAccess('admin'))
-	redirect302($this->base);
 
 // should make separate 'group' defintions
 if( ! $user->hasaccess('admin') ) 
 	/*&& strpos($this->auth['access'], 'app_') === false*/
 {
-	
+
 	//$publickey = '6LffguESAAAAAKaa8ZrGpyzUNi-zNlQbKlcq8piD'; // littlefootcms public key
 	$recaptcha = '';//recaptcha_get_html($publickey);
 	
-	//pre($_SESSION);
-	//exit();
-	
+	ob_start();
 	include('skin/'.$admin_skin.'/login.php');
-	
 	$out = ob_get_clean();
 
 	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
 	$out = str_replace('%baseurl%', $this->base.'admin/', $out);
 	$out = str_replace('%relbase%', $this->relbase, $out);
 	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
-
+	
 	echo $out;
 } 
 else if($user->hasaccess('admin'))
@@ -123,8 +118,6 @@ else if($user->hasaccess('admin'))
 	}	
 	
 	$this->content['%nav%'][] = $nav;
-	
-	
 	
 	$this->select['template'] = 'default';
 	$renderResult = $this

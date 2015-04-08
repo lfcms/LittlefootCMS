@@ -18,7 +18,17 @@ class User
 	public function __construct($session = true)
 	{
 		if($session)
+			$this->fromSession();
+	}
+	
+	public function fromSession()
+	{
+		if( isset($_SESSION['user']) 
+			&& isset($_SESSION['user']['details'])
+		)
 			$this->setDetails($_SESSION['user']['details']);
+		
+		return $this;
 	}
 	
 	public function getDetails()
@@ -44,7 +54,6 @@ class User
 	
 	public function refreshTimeout()
 	{
-		//$_SESSION['user']['login'] = true;
 		$_SESSION['user']['start'] = time();
 		$_SESSION['user']['expires'] = time() + 60*60*2; // + 2 hours
 		

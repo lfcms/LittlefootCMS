@@ -2,6 +2,9 @@
 
 /**
  * @ignore
+ * 
+ * deals with session set, get, refreshTimeout
+ * 
  */
 class auth extends app
 {
@@ -9,7 +12,6 @@ class auth extends app
 	
 	protected function init($args)
 	{
-		
 		$user = new User();
 		
 		// Handle timeout
