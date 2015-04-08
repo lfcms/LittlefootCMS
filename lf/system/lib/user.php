@@ -122,10 +122,12 @@ class User
 	
 	public function getTimeout()
 	{
-		return array(
-			'start' => $_SESSION['user']['start'],
-			'expires' => $_SESSION['user']['expires']
-		);
+		return isset($_SESSION['user']) 
+				&& isset($_SESSION['user']['start'], $_SESSION['user']['expires'])
+			? array(
+				'start' => $_SESSION['user']['start'],
+				'expires' => $_SESSION['user']['expires']) 
+			: false;
 	}
 	
 	public function toSession()

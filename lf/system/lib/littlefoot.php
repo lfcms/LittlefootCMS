@@ -463,7 +463,7 @@ Included, Required files:';
 		$this->basenoget = $this->base.$admin.$action;
 		
 		if($fixrewrite) 
-			redirect302($this->base.$admin.$this->action.$this->rawGet);
+			redirect302($this->base.$admin.$this->action);
 		
 		if(substr_count($action, '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
