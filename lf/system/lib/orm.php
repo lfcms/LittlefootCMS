@@ -109,12 +109,9 @@ class orm {
 	 * 
 	 * @return orm object
 	 */
-	public function q($table = '') 
+	public static function q($table) 
 	{
-		if($table == '')
-			$table = $this->table;
-			
-		return new orm($this->db, $table);
+		return new orm(db::init(), $table);
 	}
 	
 	// wildcard catchall for shortcut requests (filter, set, etc)

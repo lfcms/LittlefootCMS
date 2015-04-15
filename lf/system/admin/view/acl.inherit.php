@@ -2,6 +2,9 @@
 <div class="row">
 	<form action="%appurl%add/inherit" method="post">
 		<div class="col-2">
+			<button type="submit" class="green"><i class="fa fa-plus"></i> add new</button>
+		</div>
+		<div class="col-2">
 			<select name="group" id="">
 				<option value="">Select User/Group</option>
 				<optgroup label="Groups">
@@ -32,9 +35,6 @@
 				</optgroup>
 				-->
 			</select>
-		</div>
-		<div class="col-2">
-			<button type="submit" class="green">Add New</button>
 		</div>
 	</form>
 </div>

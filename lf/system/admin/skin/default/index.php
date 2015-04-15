@@ -9,6 +9,7 @@
 		<meta name="keywords" content="cms, content management system, website, web development, web design, littlefoot, littlefoot cms" />
 		<!-- Le styles -->
 		<link href="%relbase%lf/system/lib/lf.css" rel="stylesheet">
+		<link href="%relbase%lf/system/lib/3rdparty/icons.css" rel="stylesheet">
 		<link href="%skinbase%css/custom.css" rel="stylesheet">
 		<!-- <link href="%skinbase%css/styles.css" rel="stylesheet"> -->
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
@@ -37,11 +38,11 @@
 
 	<body>
 		<!-- <header class="container">
-			<?php 
-							
-				if($_SESSION['upgrade']) 
-					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>'; 
-								
+			<?php
+
+				if($_SESSION['upgrade'])
+					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>';
+
 			?>
 		</header> -->
 		<div class="wrapper userbar dark_gray light">
@@ -49,17 +50,17 @@
 				<div class="row no_martop no_marbot">
 					<div class="userbar">
 						<div class="col-2">
-							<a id="admin_title" href="<?=$this->base;?>">lf admin</a>
+							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-paw"></i> lf admin</a>
 						</div>
 						<div class="col-7">
-							<a id="site_preview" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
+							<a id="site_preview" href="%relbase%" target="blank_"><i class="fa fa-play"></i> <?=$this->domain;?>%relbase%</a>
 						</div>
 						<div class="col-3">
 							<span id="logout_button" class="pull-right">
 								<a class="x" href="%baseurl%_auth/logout">logout</a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
-								Hello <?=$this->auth['display_name'];?>.
+								Hello <?=$this->api('me');?>.
 							</span>
 						</div>
 					</div>
@@ -70,12 +71,13 @@
 			<div class="row">
 				<div class="col-2">
 					<nav>
-						<?php echo $nav; ?>
+						<?php /*pre($this->content); */
+						echo implode($this->content['%nav%']); ?>
 					</nav>
 				</div>
 				<div class="col-10">
 					<div id="app-<?php echo $class; ?>">
-						<?php echo $app; ?>
+						<?php echo implode($this->content['%content%']); ?>
 					</div>
 				</div>
 			</div>

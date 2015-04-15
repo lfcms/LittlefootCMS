@@ -1,4 +1,4 @@
-<h2>Skins Manager</h2>
+<h2><i class="fa fa-paint-brush"></i> Skins Manager</h2>
 
 <div class="row">
 	<!-- New Skin -->
@@ -10,27 +10,10 @@
 			<div class="tile-content">
 				<div class="row">
 					<div class="col-12">
-						<h4 class="no_martop">Upload</h4>
-						<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/" method="post">
-							<input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
-							<input id="upload_skin_file" type="file" name="skin" class="marbot"/>
-							<?php echo $install; ?>
-							<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>-->
-						</form>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						<h4 class="no_martop">Download</h4>
-						<a href="%appurl%download/" class="blue button">Store</a>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
 						<h4 class="no_martop">Create</h4>
 						<form id="create_skin_form" action="%appurl%blankskin/" method="post">
 							<input id="create_skin_namebox" type="text" name="name" placeholder="Name your new skin" />
-							<button class="green">Create Skin</button>
+							<button class="green">create skin</button>
 						</form> 
 					</div>
 				</div>
@@ -44,9 +27,12 @@
 		<?php foreach($skins as $skin):
 					
 			$highlight = '';
-			if($skin == $request->settings['default_skin'])
+			$icon = '';
+			
+			if($skin == $request->settings['default_skin']){
 				$highlight = 'selected';
-				
+				$icon = 'fa fa-check';
+			}
 			if(is_file(ROOT.'skins/'.$skin.'/screenshot.png'))
 				$screenshot = '%relbase%lf/skins/'.$skin.'/screenshot.png';
 			else
@@ -60,7 +46,7 @@
 				<div class="tile rounded <?=$highlight;?>">
 					<!-- Skin Title -->
 					<div class="tile-header">
-						<h4><?=$skin;?> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right">x</a></h4>
+						<h4><?=$skin;?> <i class="<?=$icon;?>"></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash"></i></a></h4>
 					</div>
 					
 					<div class="h250">
@@ -74,14 +60,14 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-6">
-								<a href="%appurl%setdefault/<?=$skin;?>" class="button green">default</a>
+							<div class="col-5">
+								<a href="%appurl%setdefault/<?=$skin;?>" class="button green"><i class="fa fa-power-off"></i> default</a>
+							</div>
+							<div class="col-4">
+								<a href="%appurl%edit/<?=$skin;?>/" class="button blue"><i class="fa fa-pencil-square-o"></i> edit</a>
 							</div>
 							<div class="col-3">
-								<a href="%appurl%edit/<?=$skin;?>/" class="button blue">edit</a>
-							</div>
-							<div class="col-3">
-								<a href="%appurl%zip/<?=$skin;?>/" class="button">zip</a>
+								<a href="%appurl%zip/<?=$skin;?>/" class="button"><i class="fa fa-file-archive-o"></i> zip</a>
 							</div>
 						</div>
 					</div>
@@ -91,12 +77,3 @@
 		</div>
 	</div>
 </div>
-	
-
-
-
-
-
-
-
-

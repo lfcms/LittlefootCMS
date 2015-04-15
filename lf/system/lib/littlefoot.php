@@ -1,7 +1,11 @@
 <?php
 
 /**
+ * @package LittlefootCMS
+ * @organization eFlip.com, LLC
+ * 
  * Littlefoot framework environment
+ * 
  * 
  * ## Environment
  * 
@@ -63,7 +67,7 @@ class Littlefoot
 	public $action;
 	
 	/** @var array $vars After $lf->nav(), the URI is chopped up into the navigation elements followed by the app variables. */
-	public $vars;
+	public $vars = array();
 	
 	/** @var array $select Array of data for present request (template, nav_id, alias) */
 	public $select;
@@ -116,62 +120,127 @@ class Littlefoot
 	/** @var string $domain The domain used to access this application */
 	public $domain = '';
 	
+	/** @var string $user user() object */
+	public $user = '';
+	
 	/**
 	 * Initialize Littlefoot Object
 	 * 
 	 * $this->lf = &$this; // ensures universal availability of "$this->lf"
 	 * 
 	 */
-	public function __construct($db)
+	public function __construct($db = NULL)
 	{
 		$this->start = microtime(true);
+		$this->startTimer(__METHOD__);
 		$this->lf = &$this; // ensures universal availability of "$this->lf"
 		
+		$this->absbase = ROOT; // backward compatible // getcwd().'/';
 		$this->version = file_get_contents(ROOT.'system/version');
-		$this->db = new Database($db);
+		
+		$this->load_plugins()
+			->hook_run('post lf __construct');
+		
+		$this->db = db::init();
+		$this->hook_run('lf db init');
 		
 		// check install
 		install::testinstall();
 		
-		// Recover session variables from last page load
-		if(!isset($_SESSION['_auth'])) $_SESSION['_auth'] = '';
-		$this->auth = $_SESSION['_auth'];
-		if(!isset($this->auth['acl'])) $this->auth['acl'] = array();
+		if(!isset($this->auth['acl'])) 
+			$this->auth['acl'] = array();
+		
+		$this->hook_run('post lf __construct');
+		$this->endTimer(__METHOD__);
 	}
 	
 	public function __destruct()
 	{
 		// Save auth variables for next page load.
-		unset($this->auth['acl']); // so it is not in session
-		$_SESSION['_auth'] = $this->auth;
+		//unset($this->auth['acl']); // so it is not in session
 		
-		//var_dump($this->settings['debug']);
-		//exit();
-		
-		//if($this->debug)
+		if($this->settings['debug'] == 'on')
+			$this->debug = true;
 		
 		// actual speed
-		if($this->settings['debug'] == 'on')
+		if($this->debug)
 		{
-			echo ' <!-- lf Stat Info
+			$exectime = round((microtime(true) - $this->start), 6)*(1000);
+			$memusage = round(memory_get_peak_usage()/1024/1024,2);
+			
+			echo ' <!-- LF Debug Info
 Version: '.$this->version.'
-PHP Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms
-Peak Memory Usage: '.round(memory_get_peak_usage()/1024/1024,2).' MB
-Num Queries: '.$this->db->getNumQueries().'
-Littlefoot function load times:
+PHP Execution Time: '.$exectime.'ms
+Peak Memory Usage: '.$memusage.' MB
+SQL Queries: '.$this->db->getNumQueries().'
+
+Load Times:
 	';
-			foreach($this->function_timer as $function => $time)
+			foreach($this->timer as $function => $time)
 				echo ''.round($time, 6)*(1000).'ms - '.$function.'
 	';
+	
 			echo '
-App load times:
-	';
-			foreach($this->app_timer as $app => $time)
-				echo ''.round($time, 6)*(1000).'ms - '.$app.'
-	';
+Included, Required files:';
+	
+			foreach(get_included_files() as $included)
+				echo '
+	'.$included;
+	
 			echo '
 -->';
 		}
+	}
+	
+	public function startTimer($key = 'DEFAULT')
+	{
+		$this->timer[$key] = microtime(true);
+		$this->hook_run('pre '.$key);
+		return $this;
+	}
+	
+	public function endTimer($key = 'DEFAULT')
+	{
+		$this->hook_run('post '.$key);
+		$this->timer[$key] = microtime(true) - $this->timer[$key];
+		return $this;
+	}
+
+	public function checkCSRF($timeout = 3600)
+	{
+		if(count($_POST))
+		{
+			try
+			{
+				// Run CSRF check, on POST data, in exception mode, with a validity of 10 minutes, in one-time mode.
+				NoCSRF::check( 'csrf_token', $_POST, true, $timeout, false );
+				// form parsing, DB inserts, etc.
+				unset($_POST['csrf_token']);
+			}
+			catch ( Exception $e )
+			{
+				// CSRF attack detected
+				die('Session timed out');
+			}
+		}
+		
+		return $this;
+	}
+	
+	public function addCSRF($out)
+	{
+		/* csrf form auth */
+
+		// Generate CSRF token to use in form hidden field
+		$token = NoCSRF::generate( 'csrf_token' );
+		preg_match_all('/<form[^>]*action="([^"]+)"[^>]*>/', $out, $match);
+		for($i = 0; $i < count($match[0]); $i++)
+		{
+			$out = str_replace($match[0][$i], $match[0][$i].' <input type="hidden" name="csrf_token" value="'.$token.'" />', $out);
+			
+		}
+
+		return $out;
 	}
 	
 	/**
@@ -207,46 +276,102 @@ App load times:
 	 *
 	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
 	 * 
-	 * 
-	 * 
 	 * @param string $debug Is debug set to true
 	 * 
 	 */
-	public function cms($debug = false)
+	public function cms()
 	{
-		// Apply settings 
-		$this->db->query('SELECT * FROM lf_settings');
-		while($row = $this->db->fetch())
-			$this->settings[$row['var']] = $row['val'];
+		echo $this	// ->lf is optional, it is set recursively in __construct()
+			->loadSettings()	// Pull settings from lf_settings
+			->request()			// Parse REQUEST_URI into usable pieces
+			->route('auth', '_auth', false) // Route auth() class on /_auth/
+			->applyAcl()		// Pull ACL that affects this user
+			->loadAdmin()		// If /admin was requested, load it and stop here
+			->navSelect()		// Get data for SimpleCMS, or determine requested Nav ID
+			->getcontent() 		// Deal with SimpleCMS or execute linked apps
+			->render(); 		// Display content in skin, return HTML output result
 		
-		
-		
-		/* OOOOOLD plugin stuff
-		
-		// JSON => array
-		if(isset($this->lf->settings['plugins']))
-			$this->lf->settings['plugins'] = json_decode($this->lf->settings['plugins'], 1);*/
-		
-		/* load plugins old
-		foreach(scandir('plugins') as $file)
+		return $this;
+	}
+	
+	public function loadAdmin()
+	{
+		// if requested, load admin/
+		if($this->admin)
 		{
-			if(substr($file, -4) != '.php') continue;
-			include 'plugins/'.$file;
-		}*/
+			chdir(LF.'system/admin');
+			include 'index.php';
+			exit;
+		}
 		
-		//plug-ins v2
-		//if(is_dir('plugins/plugins_loaded_FALSE'))
-		//	foreach(preg_grep('/^([^.])/', scandir('plugins/plugins_loaded')) as $plugin)
-		//		include 'plugins/plugins_loaded/'.$plugin;
+		return $this;
+	}
+	
+	public function loadSettings()
+	{
+		$this->hook_run('pre settings');
 		
+		foreach(orm::q('lf_settings')->get() as $setting)
+			$this->settings[$setting['var']] = $setting['val'];
 		
-		$this->load_plugins();
+		return $this;
+	}
+	
+	public function getSettings()
+	{
+		if($this->settings == array())
+			$this->loadSettings();
 		
+		return $this->settings;
+	}
+	 
+	/*
+	private function cache() // not a thing yet
+	{
+		//CACHING - will not account for update to page...
+		if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
+		{
+			$auth = $this->auth;
+			unset($auth['last_request'], $auth['timeout']);
+			$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
+			if(is_file(ROOT.'cache/'.$file))
+			{
+				readfile(ROOT.'cache/'.$file);
+				exit();
+			}
+		}
 		
-		$this->hook_run('plugins_loaded');
-			
+		//CACHING - will not account for update to page...
+		if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
+		{
+			$auth = $this->auth;
+			unset($auth['last_request'], $auth['timeout']);
+			$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
+			file_put_contents(ROOT.'cache/'.$file, $output);
+		}
+	}
+	*/
+	
+	/**
+	 * Parses $_SERVER variables to environment for use within apps
+	 * and $this->lf->cms\(\)
+	 *
+	 * @return bool True if admin/ requested. False if not.
+	 */
+	public function request()
+	{
+		$this->startTimer(__METHOD__);
+		
+		$this->hook_run('pre lf request');
+		
+		// Default values
+		$this->select['template'] = $this->settings['default_skin'];
+		$this->select['title'] = 'LFCMS';
+		$this->select['alias'] = '404';
+		
 		// redirect to URL specified in 'force_url' setting
-		if(isset($this->settings['force_url']) && $this->settings['force_url'] != '')
+		if(isset($this->settings['force_url']) 
+		  && $this->settings['force_url'] != '' )
 		{
 			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
 			$request = $_SERVER['HTTP_HOST'].$relbase;
@@ -263,180 +388,6 @@ App load times:
 			}
 		}
 		
-		$this->select['template'] = $this->settings['default_skin'];
-		$this->select['title'] = 'LFCMS';
-		
-		$this->hook_run('settings_loaded');
-		
-		$this->absbase = ROOT; // backward compatible // getcwd().'/';
-		$this->select['alias'] = '404';
-		
-		if(is_dir(ROOT.'lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'lib');
-		if(is_dir(ROOT.'system/lib')) ini_set('include_path', ini_get('include_path').':'.ROOT.'system/lib');
-		
-		if($debug || (isset($this->settings['debug']) && $this->settings['debug'] == 'on')) $this->debug = true;
-		
-		// request
-		$funcstart = microtime(true);
-		/*$this->admin = */$this->request();
-		$this->function_timer['request'] = microtime(true) - $funcstart;
-		$funcstart = microtime(true);
-		
-		// auth
-		$this->authenticate();
-		$this->function_timer['auth'] = microtime(true) - $funcstart;
-		$funcstart = microtime(true);
-		
-		/*
-		// to post to a specific app without loading the rest of the CMS (should be to link in db, not app folder, this does not seem secure at the moment)
-		if( isset($this->action[0]) && $this->action[0] == 'post' && 
-			preg_match('/[0-9]+/', $this->action[1], $match) && count($_POST) )
-		{
-			$link = $match[0];
-			$this->vars = array_slice($this->action, 2);
-			//include('system/post.php');
-			$this->post($match[0]);
-			return 0;
-		}*/
-		
-		// if requested, load admin/
-		if($this->admin)
-		{
-			chdir('system/admin');
-			
-			//ob_start();
-			include 'index.php';
-			//return ob_get_clean();
-			/*$admin_skin = 'leap'; // this needs to be an option instead of hard coded
-			
-			// maybe you are an admin, but I need you to login first
-			if($this->auth['access'] != 'admin' && strpos($this->auth['access'], 'app_') === false)
-			{
-				//$publickey = '6LffguESAAAAAKaa8ZrGpyzUNi-zNlQbKlcq8piD'; // littlefootcms public key
-				$recaptcha = '';//recaptcha_get_html($publickey);
-				
-				ob_start();
-				include('skin/'.$admin_skin.'/login.php'); 
-				echo str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-				exit; 
-			}
-			
-			if($this->auth['access'] == 'admin')
-			{
-				include('loader.php');
-				$this->function_timer['admin'] = microtime(true) - $funcstart;
-				$this->app_timer['no apps, just admin'] = 0;
-				return 0;
-			}
-			
-			if(strpos($this->auth['access'], 'app_') !== false)
-			{
-				$admin_skin = 'fresh';
-				$app = explode('_', $this->auth['access']);
-				$app_name = $app[1];
-				$app = $this->loadapp($app_name, true, '', $this->action);
-				
-				$app = str_replace('%appurl%', $this->base.'admin/', $app);
-				
-				ob_start();
-				include('skin/'.$admin_skin.'/index.php');
-				$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', ob_get_clean());
-				$out = str_replace('%baseurl%', $this->base.'admin/', $out);
-				$out = str_replace('%relbase%', $this->relbase, $out);
-				$out = str_replace('Littlefoot CMS', ucfirst($app_name).' Admin', $out);
-				$out = str_replace(array('<nav>', '</nav>'), '', $out);
-				$out = str_replace('class="content"', 'class="content" style="margin: 10px;"', $out);
-				
-				echo $out;
-				return 0;
-			}*/	
-		}
-								
-		$this->auth['acl'] = $this->apply_acl();
-		/*
-								//CACHING - will not account for update to page...
-								if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
-								{
-									$auth = $this->auth;
-									unset($auth['last_request'], $auth['timeout']);
-									$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
-									if(is_file(ROOT.'cache/'.$file))
-									{
-										readfile(ROOT.'cache/'.$file);
-										exit();
-									}
-								}*/
-		
-		if($this->settings['simple_cms'] != '_lfcms') #DEV
-		{
-			$this->select['title'] = 'SimpleCMS';
-			$this->select['template'] = $this->settings['default_skin'];
-			
-			$this->vars = $this->action;
-			$this->action = array('');
-		}
-		else
-		{
-			// generate nav bar and process request against available actions
-			$nav = $this->nav();
-			$this->function_timer['nav'] = microtime(true) - $funcstart;
-			$funcstart = microtime(true);
-			
-			// if no items match the request, return 404
-			if($this->select['alias'] == '404')
-			{
-				header('HTTP/1.1 404 Not Found');
-				echo '<p>404 No menu items match your request</p>';
-				return 0;
-			}
-		}
-		
-		$this->appurl = $this->base.implode('/', $this->action).'/';
-		
-		// apply acl, check auth for current page.
-		//$this->auth['acl'] = $this->apply_acl();
-		if(!$this->acl_test(implode('/', $this->action))) {
-		// if(!$this->acl_test($this->select['id'])) {
-			$content['%content%'][] = "403 Access Denied %login%";
-		}
-		else
-		{
-			// get content from apps
-			$content = $this->getcontent();
-			$this->function_timer['getcontent'] = microtime(true) - $funcstart;
-			$funcstart = microtime(true);
-		}
-		
-		if($this->settings['simple_cms'] == '_lfcms') #DEV
-		{
-			$content['%nav%'][] = $nav;
-		}
-		
-		// display in skin
-		$output = $this->render($content);
-		$this->function_timer['render'] = microtime(true) - $funcstart;
-		/*
-								//CACHING - will not account for update to page...
-								if(isset($this->settings['cache']) && $this->settings['cache'] = 'on')
-								{
-									$auth = $this->auth;
-									unset($auth['last_request'], $auth['timeout']);
-									$file = md5(json_encode($this->base.implode('/', $this->action).implode('/', $this->vars)).json_encode($auth).json_encode($this->baseacl)).'output.html';
-									file_put_contents(ROOT.'cache/'.$file, $output);
-								}*/
-								
-		echo $output;
-	}
-	
-	/**
-	 * Parses $_SERVER variables to environment for use within apps
-	 * and $this->lf->cms\(\)
-	 *
-	 * @return bool True if admin/ requested. False if not.
-	 */
-	public function request()
-	{
-		$this->hook_run('pre lf request');
 		// detect file being used as base (for API)
 		$filename = 'index.php';
 		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
@@ -448,119 +399,127 @@ App load times:
 		
 		// Break up request URI and extract GET request
 		$url = explode('?', $_SERVER['REQUEST_URI'], 2);
-		if(substr($url[0], -1) != '/') $url[0] .= '/'; //Force trailing slash
+		if(substr($url[0], -1) != '/')
+			$url[0] .= '/'; //Force trailing slash
+		
+		if(!isset($url[1])) $url[1] = '';
 		
 		$this->get = $_GET;
 		$this->post = $_POST;
+		$this->rawGet = $url[0];
+		$this->rawQuery = $url[1];
 		
 		// Detect subdirectory, use of index.php, request of admin, other URI variables and the GET request
-		preg_match('/(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?([^\?]*)(.*)/', $url[0], $request);
-		//$regex = '/('.str_replace('/', '\/', $subdir).')(.+.php\/)?/';
-		//preg_match($regex, $url[0], $request);
+		$urlregex = '/^(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?(.*)/';
+		preg_match($urlregex, $url[0], $request);
+		
+		// Simplify request matches
+		$subdir = $request[1];
+		$index  = $request[2];
+		$admin  = $request[3];
+		$action = $request[4];
 		
 		$fixrewrite = false; // add in 302 to fix rewrite duplicate content #FIX
-		if($this->settings['rewrite'] == 'on') 
+		if($this->settings['rewrite'] == 'on')
 		{
-			if($request[2] == 'index.php/') $fixrewrite = true;
-			$request[2] = '';
-		}
-		if($this->settings['rewrite'] == 'off')
-		{
-			if($request[2] == '') $fixrewrite = true;
-			$request[2] = $filename.'/';
+			if($index == 'index.php/') 
+				$fixrewrite = true;
+			$index = '';
 		}
 		
-		$this->domain = $_SERVER['HTTP_HOST'];
+		if($this->settings['rewrite'] == 'off')
+		{
+			if($index == '') 
+				$fixrewrite = true;
+			$index = $filename.'/';
+		}
 		
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
-		else $port = '';
+		else 
+			$port = '';
 		
 		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
-		{
 			$protocol = 'https://';
-		} else
+		else
 			$protocol = 'http://';
 		
+		$this->domain = $_SERVER['HTTP_HOST'];
 		
-		$this->base = $protocol.$_SERVER['HTTP_HOST'].$request[1].$request[2]; // account for use of index.php/
+		// http://www.domain.com/littlefoot/index.php/
+		$this->wwwIndex 	= $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		
+		// http://www.domain.com/littlefoot/
+		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;			
+		
+		// http://www.domain.com/littlefoot/index.php/admin/
+		$this->wwwAdmin		= $this->wwwIndex.'admin/';							
+		
+		
+		// backward compatible
+		$this->base = $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		$this->baseurl = $this->base; // keep $Xurl usage
+		$this->relbase = $subdir; // /subdir/ for use with web relative file reference
+		$this->basenoget = $this->base.$admin.$action;
 		
-		$this->relbase = $request[1]; // /subdir/ for use with web relative file reference
+		if($fixrewrite) 
+			redirect302($this->base.$admin.$this->action);
 		
-		$this->basenoget = $this->base.$request[3].$request[4];
-		
-		if($fixrewrite) redirect302($this->base.$request[3].$request[4].$request[5]);
-		
-		if(substr_count($request[4], '/') > 60) die('That is a ridiculous number of slashes in your URI.');
+		if(substr_count($action, '/') > 60) die('That is a ridiculous number of slashes in your URI.');
 		else
 		{
-			$this->action = explode('/', $request[4], -1);
+			$this->action = explode('/', $action, -1);
 			
 			// Ensure action variable isn't empty
 			if(count($this->action) < 1)
 				$this->action[] = '';
 		}
 		
-		$this->admin = $request[3] == 'admin/' ? true : false; // for API
+		$this->admin = $admin == 'admin/' ? true : false;
 		
 		$this->hook_run('post lf request');
+		$this->endTimer(__METHOD__);
 		
-		// Whether or not this is an admin/ request
-		return $request[3] == 'admin/' ? true : false;
+		return $this;
 	}
 	
-	public function authenticate()
+	public function route($class, $alias = NULL, $return = true)
 	{
-		$this->hook_run('pre_auth'); 
+		$this->hook_run('pre '.$class); 
 		
-		// eventually, I want to use this object as the $this->auth variable (like ->db) instead of an array. ie, $this->lf->auth->getuid();
-		$auth = new auth($this, $this->db);
+		if(is_null($alias))
+			$alias = $class;
 		
+		$app = new $class($this);
 		
 		// change to auth class 
-		if($this->action[0] == '_auth' && isset($this->action[1]))
+		if($this->action[0] == $alias && isset($this->action[1]))
 		{
-			$out = $auth->_router($this->action);
-			$out = str_replace('%appurl%', $this->base.'_auth/', $out);
-			$content['%content%'][] = $out;
+			$this->appurl = $this->wwwIndex.'_auth/';
 			
-			// display in skin
-			echo $this->render($content);
+			// should really use MVC on this
 			
-			exit(); // end auth session after render, 
-			// otherwise it will 302 (login/logout)
+			$out = $app->_router($this->action);
+			$out = str_replace('%appurl%', $this->appurl, $out);
+			$this->content['%content%'][] = $out;
+			
+			if(!$return)
+			{
+				// display in skin
+				echo $this->render();
+				exit();
+			}
 		}
 		
-		$this->auth = $auth;
+		$this->hook_run('post '.$class);
 		
-		
-		// need to convert this to using the $this->auth object rather than array
-		
-		$auth = $auth->auth;
-		
-		// for tinymce ajax file manager auth
-		if(isset($auth['access']) && $auth['access'] == 'admin')
-			$_SESSION['ajax_user'] = true;
-		else
-			$_SESSION['ajax_user'] = false;
-		
-		// If no user is currently set...
-		if(!isset($auth['user']))
-		{
-			// default to anonymous
-			$auth['user'] = 'anonymous';
-			$auth['display_name'] = 'Anonymous';
-			$auth['id'] = 0;
-			$auth['access'] = 'none';
-		}
-		
-		$this->auth = $auth;
+		return $this;
 	}
 	
-	private function apply_acl()
+	private function applyAcl()
 	{
+		$this->startTimer(__METHOD__);
+		
 		// inherit
 		$inherit = array();
 		$this->db->query('SELECT * FROM lf_acl_inherit');
@@ -579,9 +538,11 @@ App load times:
 			return array_unique($groups);
 		}
 		
+		$user = new User();
+		
 		// get a list of groups from inheritance
-		$groups = get_acl_groups($inherit, $this->auth['access']);
-		$groups[] = $this->auth['access'];
+		$groups = get_acl_groups($inherit, $user->getAccess());
+		$groups[] = $user->getAccess();
 		$groupsql = "'".implode("', '", $groups)."'"; // and get them ready for SQL
 		
 		// Build user ACL from above group list and individual rules
@@ -602,11 +563,16 @@ App load times:
 			$baseacl[$row['action']] = $row['perm'];
 		
 		$this->baseacl = $baseacl;
-		return $acl;
+		$this->auth['acl'] = $acl;
+		
+		// should make this into magic __call per http://stackoverflow.com/a/3716750
+		$this->endTimer(__METHOD__); 
+		
+		return $this;
 	}
 	
-	public function acl_test($action)
-	{	// action = 'action/app|var'
+	public function aclTest($action)
+	{	// action = 'action/app|var1/var2'
 		$acl = $this->auth['acl'];
 		$baseacl = $this->baseacl;
 		//foreach($actions // recursive permission search
@@ -627,14 +593,33 @@ App load times:
 		return true;
 	}
 	
-	private function nav()
+	public function simpleSelect($app = NULL)
 	{
+		// If this is being called without an app listed, assume simpleCMS
+		if(is_null($app))
+			$app = $this->settings['simple_cms'];
+		
+		$this->select['template'] = $this->settings['default_skin'];
+		$this->select['title'] = $app;
+		$this->select['alias'] = '';
+		$this->vars = $this->action;
+		$this->action = array('');
+		
+		return $this;
+	}
+	
+	public function navSelect()
+	{
+		$this->startTimer(__METHOD__);
+		if($this->settings['simple_cms'] != '_lfcms')
+			$this->simpleSelect();
+		
 		// need to utilize cache instead of query
-	
-	
+		
 		/* Determine requested nav item from lf_actions */
 		
-		// get all possible matches for current request, always grab the first one in case nothing is selected
+		// get all possible matches for current request, 
+		// always grab the first one in case nothing is selected
 		$matches = $this->db->fetchall("
 			SELECT * FROM lf_actions 
 			WHERE alias IN ('".implode("', '", $this->action)."') 
@@ -646,8 +631,11 @@ App load times:
 		$base_save = NULL;
 		foreach($matches as $row)
 		{
-			if($row['position'] == 1 && $row['parent'] == -1) // save item in first spot of base menu if it is an app, just in case nothing matches
-				$base_save = $row; // save row in case "domain.com/" is requested
+			// save item in first spot of base menu if it is an app, 
+			// just in case nothing matches
+			if($row['position'] == 1 && $row['parent'] == -1)
+				// save row in case "domain.com/" is requested
+				$base_save = $row;
 				
 			$test_select[$row['parent']][$row['position']] = $row;
 		}
@@ -661,72 +649,112 @@ App load times:
 				foreach($test_select[$parent] as $position => $nav)
 					if($nav['alias'] == $this->action[$i])
 					{
+						// we found the match, 
+						// move on to next action item
 						$selected[] = $nav;
 						$parent = $nav['id'];
-						break; // we found the match, move on to next action item
+						break;
 					}
 		
 		if($selected != array())
 		{
-			// separate action into vars and action base, pull select nav from inner most child
+			// separate action into vars and action base, 
+			// pull select nav from inner most child
 			$this->vars = array_slice($this->action, count($selected));
 			$this->action = array_slice($this->action, 0, count($selected));
 			$this->select = end($selected);
 		}
 		
-		// If home page is an app and no select was made from getnav(), set current page as /
+		// If home page is an app and no select was made from getnav(), 
+		// set current page as /
 		if($this->select['alias'] == '404' && $base_save != NULL)
 		{		
 			$this->select = $base_save;
-			$this->vars = $this->action; //
-			$this->action = array(''); // And now littlefoot() thinks that we requested just /
+			$this->vars = $this->action; // the whole URL is now variables
+			
+			// And now littlefoot() thinks that we requested just /
+			$this->action = array('');
 		}
 		
+		// in case the file doesn't exist
 		
-		if(!is_file(ROOT.'cache/nav.cache.html')) // in case the file doesn't exist
+		if(!is_file(ROOT.'cache/nav.cache.html')) 
 		{
 			$pwd = getcwd();
 			chdir(ROOT.'system/admin/');
-			$this->mvc('dashboard', NULL, array('updatenavcache'));
+			$this->mvc('dashboard', NULL, array('updatenavcache')); // run the nav HTML generation script
 			chdir($pwd);
 		}
-		$nav_cache = file_get_contents(ROOT.'cache/nav.cache.html');
+		
+		$nav_cache = file_get_contents(ROOT.'cache/nav.cache.html'); // Pull cached navigation HTML output rather than generate it on the fly.
 		
 		// Update nav_cache to show active items
-		$actionbuilder = '%baseurl%';
+		
+		$actionbuilder = '%baseurl%'; // Start with reference to installation base
 		foreach($this->action as $action)
 		{
-			if($action != '') $actionbuilder .= $action.'/';
-			$nav_cache = str_replace('<li><a href="'.$actionbuilder.'"', '<li class="active"><a href="'.$actionbuilder.'"', $nav_cache);
+			if($action != '')	// Account for empty alias
+				$actionbuilder .= $action.'/';	// Loop through the full/path. 
+												
+			// As the action request URI builds, replace each link matching that set to active.
+			$nav_cache = str_replace(
+				'<li><a href="'.$actionbuilder.'"', 
+				'<li class="active"><a href="'.$actionbuilder.'"', 
+				$nav_cache);
 		}
 		
+		// If template has not be changed from 'default', set as configured default_skin.
 		if($this->select['template'] == 'default')
 			$this->select['template'] = $this->settings['default_skin'];
 		
 		// set nav ul class if set
-		$class = isset($this->settings['nav_class']) ? $this->settings['nav_class'] : 'navigation';
+		$class = isset($this->settings['nav_class']) 
+			? $this->settings['nav_class'] 
+			: 'navigation';
 		
 		// Apply class to root <ul> if it is set
-		if($class != '') $nav_cache = preg_replace('/^<ul>/', '<ul class="'.$class.'">', $nav_cache);
+		if($class != '') 
+			$nav_cache = preg_replace(
+				'/^<ul>/', 
+				'<ul class="'.$class.'">', 
+				$nav_cache
+			);
 		
-		return $nav_cache;
+		// if no items match the request, return 404
+		if($this->select['alias'] == '404')
+		{
+			header('HTTP/1.1 404 Not Found');
+			echo '<p>404 No menu items match your request</p>';
+			return 0;
+		}
+		
+		$this->nav_cache = $nav_cache;
+		$this->endTimer(__METHOD__);
+		return $this;
 	}
 	
-	private function getcontent()
+	public function getcontent()
 	{
+		$this->startTimer(__METHOD__);
 		$funcstart = microtime(true);
 		$this->hook_run('pre lf getcontent');
 		
+		if(!$this->aclTest(implode('/', $this->action)))
+		{
+			$this->content['%content%'][] = "401 Unauthorized at "
+				.implode('/', $this->action)
+				."%login%";
+			return $this;
+		}
 		
+		// Pull $apps list with section=>app
 		if($this->settings['simple_cms'] != '_lfcms') #DEV
 		{
-			$apps = array(0 =>
-				array(
-					'id' => 0, 
-					'app' => $this->settings['simple_cms'],
-					'ini' => '',
-					'section' => 'content'
-				)
+			$apps[0] = array(
+				'id' => 0, 
+				'app' => $this->settings['simple_cms'],
+				'ini' => '',
+				'section' => 'content'
 			);
 		}
 		else
@@ -744,12 +772,16 @@ App load times:
 		}
 		
 		// run them and save the output
-		$content = array();
+		if(isset($this->content))
+			$content = $this->content;
+		else
+			$content = array();
+		
 		$vars = $this->vars;
 		foreach($apps as $_app)
 		{
-			if(!$this->acl_test(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) 
-				&& !$this->acl_test(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
+			// Test ACL for this app
+			if(!$this->aclTest(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) && !$this->aclTest(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
 			{
 				$content['%'.$_app['section'].'%'][] = "403 Access Denied %login%";
 				continue;
@@ -759,135 +791,194 @@ App load times:
 			$path = ROOT.'apps/'.$_app['app'];
 			if(!is_file($path.'/index.php')) continue;
 			
-			$output = ''; // backward compatible
-			
+			// figure out appurl (/action1/action2/ referring to this app)
 			$appurl = $this->base.implode('/',$this->action);
-			if($this->action[0] != '') $appurl .= '/'; // account for home page
+			if($this->action[0] != '') 
+				$appurl .= '/'; // account for home page
 			$this->appurl = $appurl;
 			
+			// appbase (relbase for the app)
 			$appbase = $this->relbase.implode('/',$this->action);
-			if($this->action[0] != '') $appbase .= '/'; // account for home page
+			if($this->action[0] != '') 
+				$appbase .= '/'; // account for home page
 			$this->appbase = $appbase;
 			
 			// collect app output
 			ob_start();
 			chdir($path); // set current working dir to app base path
-			
 			$start = microtime(true); // timer for app
 			
+			
+			$apptimer = __METHOD__.' / Link Id: '.$_app['id']
+			.', App: '.$_app['app']
+			.', Position: '.$_app['section']
+			.', Config: '.$_app['ini'];
+			
+			$this->lf->startTimer($apptimer);
 			include 'index.php'; // execute app
-			
-			$this->app_timer['Link Id: '.$_app['id'].', App: '.$_app['app'].', Position: '.$_app['section']] = microtime(true) - $start; //timer for app
-			
-			echo $output; // backward compatible
-			
-			$replace = array(				
-				//'%baseurl%' => $this->base, // domain.com/subdir/(index.php/)?
-				'%appurl%' => $appurl, // %baseurl%action/
-				//'%relbase%' => $this->relbase, // domain.com/subdir/
-				'%post%' => $this->base.'post/'.$_app['id'].'/' // %baseurl%post/link_id/
-			);
+			$this->lf->endTimer($apptimer);
 			
 			$output = '
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
 					ob_get_clean().
 				'</div>';
-				
+			
 			// replace %keywords% and save
-			$content['%'.$_app['section'].'%'][] = str_replace(array_keys($replace), array_values($replace), $output);
+			$content['%'.$_app['section'].'%'][] = str_replace(
+				'%appurl%', 
+				$appurl, 
+				$output
+			);
 			
 			// reset for next go around
 			$this->appurl = '';
 		}
 		
-		chdir(ROOT); // cd back to ROOT for the rest of the app
+		chdir(LF); // cd back to LF root for the rest of the execution
 		
-		// DEV DEV DEV DEV // plugins 2.0
-		/*foreach($this->lf->settings['plugins']['postcontent'] as $plugin => $devnull)
-			include ROOT.'plugins/'.$plugin.'/index.php';*/
-		// END DEV DEV DEV DEV
+		$this->hook_run('post lf getcontent');
 		
-		$this->hook_run('pre lf getcontent');
+		$this->content = $content;
 		
-		return $content;
+		// If simple CMS is not set, add %nav% to final output.
+		if($this->settings['simple_cms'] == '_lfcms')
+			// nav_cache comes from $this->request();
+			$this->content['%nav%'][] = $this->nav_cache;
+			
+		$this->endTimer(__METHOD__);
+		
+		return $this;
 	}
 	
-	public function render($replace)
+	public function oopbreak($var = "OOPBREAK")
 	{
+		pre($var,'var_dump');
+		exit();
+	}
+	
+	public function render($dir = NULL)
+	{
+		$this->startTimer(__METHOD__);
 		$this->hook_run('pre lf render');
 		
+		if(is_null($dir))
+			chdir(LF.'skins');
+		else
+			chdir($dir);
+		
+		$this->loadLfCSS();
+		
+		// Pull Login View
 		ob_start();
-		include ROOT.'system/template/login.php';
+		include LF.'system/template/login.php';
 		$login = ob_get_clean();
 		
-		// home.php
+		// Determine if home.php should be loaded 
+		// (sounds like something for getcontent())
 		$file = 'index';
-		if($this->select['parent'] == -1 && $this->select['position'] == 1 && ( is_file(ROOT.'skins/'.$this->select['template'].'/home.php') || is_file(ROOT.'skins/'.$this->select['template'].'/home.html')))
+		if( isset($this->select['parent']) 
+			&& $this->select['parent'] == -1 
+			&& $this->select['position'] == 1 
+			&& ( is_file($this->select['template'].'/home.php') 
+				|| is_file($this->select['template'].'/home.html')
+			)
+		)
 			$file = 'home';
 		
-		// Get Template code
+		// Load skin data
 		ob_start();
-		if(is_file(ROOT.'skins/'.$this->select['template']."/$file.php"))
-			include(ROOT.'skins/'.$this->select['template']."/$file.php");
-		else if(is_file(ROOT.'skins/'.$this->select['template']."/$file.html"))
-			readfile(ROOT.'skins/'.$this->select['template']."/$file.html");
+		$skin = $this->select['template'];
+		
+		//pre($this->content);
+		
+		if(is_file($skin."/$file.php")) // allow php
+			include($skin."/$file.php");
+		else if(is_file($skin."/$file.html"))
+			readfile($skin."/$file.html");
 		else
-			echo 'Template files missing. Log into admin and select a different template with the Skins tool.';
+			echo 'Template files for '.$skin."/$file.php".' missing. Log into admin and select a different template with the Skins tool.';
 			
 		$template = ob_get_clean();
 		
 		// Replace all %markers% with $content
-		if(isset($replace))
-			foreach($replace as $key => $value)
+		if(isset($this->content))
+			foreach($this->content as $key => $value)
 				$template = str_replace($key, implode($value), $template);
 		
 		// replace global variables
 		$global_replace = array(
 			'%login%' => $login,
-			'%title%' => $this->select['title']/*." | ".$_SERVER['HTTP_HOST']*/,
+			'%title%' => $this->select['title'],
 			'%skinbase%' => $this->relbase.'lf/skins/'.$this->select['template'],
 			'%baseurl%' => $this->base,
 			'%relbase%' => $this->relbase
 		);
-		$template = str_replace(array_keys($global_replace), array_values($global_replace), $template);
+		$template = str_replace(
+			array_keys($global_replace), 
+			array_values($global_replace), 
+			$template
+		);
 		
-		
-		if($this->settings['debug'] == 'on')
-		{
-			ob_start();
-			echo '<div style="clear: both; text-align: center; color: #333; background: #FFF; width:500px; margin: 20px auto; padding:10px;" >
-					<h2 style="color: #999;">Debug Information</h2>
-					<p>This debug information was printed from lf->render(). If you want the whole CMS speeds, check the bottom of the source code</p>
-					<p style="color: #333">Version: '.$this->version.'</p>
-					<p style="color: #333">Execution Time: '.round((microtime(true) - $this->start), 6)*(1000).'ms</p>
-					<p style="color: #333">Memory Usage: '.round(memory_get_peak_usage()/1024,2).' kb</p>
-					Littlefoot function load times:
-					<table style="margin: auto; color: #000;">
-			';
-			foreach($this->function_timer as $function => $time)
-				echo '<tr><td>'.$function.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '
-					</table>
-					App load times:
-					<table style="margin: auto; color: #000;">
-			';
-			foreach($this->app_timer as $app => $time)
-				echo '<tr><td>'.$app.'</td><td>'.round($time, 6)*(1000).'ms</td></tr>';
-			echo '</table></div>';
-			$debug = ob_get_clean();
-			
-			$template = str_replace('%debug%', $debug, $template);
-		}
+		$template = str_replace('<head>', '<head>'.$this->lf->head, $template);
 		
 		ob_start();
-		$template = str_replace('</head>', $this->lf->head.'</head>', $template);
-		echo str_replace('<head>', '<head>
-		<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />', $template);
+		echo $template;
 		
-		$this->hook_run('pre lf render');
+		$this->hook_run('post lf render');
+		
+		$this->endTimer(__METHOD__);
 		
 		// Clean up unused %replace%
 		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
+	}
+	
+	public function multiMVC($default = NULL, $section = 'content')
+	{
+		// Get a list of admin tools
+		foreach(scandir('controller') as $controller)
+		{
+			if($controller[0] == '.') continue;
+			$controllers[] = str_replace('.php', '', $controller);
+		}
+
+		// Check for valid request
+		$success = preg_match(
+			'/^('.implode('|',$controllers).')$/', 
+			$this->action[0], 
+			$match
+		);
+
+		// default to dashboard class
+		if(!$success and !is_null($default)) 
+			$match[0] = $default;
+
+		$class = $match[0];
+		
+		$this->vars = array_slice($this->action, 1);
+		$this->appurl = $this->base.$class.'/';
+		
+		$MVCresult = $this->mvc($class);
+		
+		$replace = array('%appurl%' => $this->lf->base.$class.'/');
+
+		$app = str_replace(
+			array_keys($replace), 
+			array_values($replace), 
+			$MVCresult
+		);
+		
+		$this->content['%'.$section.'%'][] = $app;
+		
+		return $this;
+	}
+	
+	public function loadLfCSS()
+	{
+		$this->head .=  
+			'<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" />
+			<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/3rdparty/icons.css" />';
+			
+		return $this;
 	}
 	
 	/**
@@ -919,7 +1010,7 @@ App load times:
 	 *
 	 */
 	public function mvc($controller, $ini = '', $vars = NULL)
-	{
+	{		
 		ob_start();
 		if($vars === NULL) $vars = $this->vars;
 		if(!isset($vars[0])) $vars[0] = '';
@@ -930,7 +1021,7 @@ App load times:
 		if(!class_exists($controller)) // include specified controller class
 			include 'controller/' . $controller . '.php';
 		
-		$class = new $controller($this->lf, $this->db, $ini, $vars); // init class specified by $controller
+		$class = new $controller($this->lf, $ini, $vars); // init class specified by $controller
 		if(is_callable(array($class, $vars[0])))
 			$func = $vars[0];
 		else
@@ -984,9 +1075,15 @@ App load times:
 		return $return;
 	}
 	
-	//public function loadapp2($app, $ini = '', $vars = array()){
-		
-	//}
+	public function megamvc($default = NULL, $offset = 0)
+	{
+		// if you specify $default, route on that by default
+		if(!is_null($default) && $this->action[0] == '')
+			$this->action[0] = $default;
+			
+		$this->vars = array_slice($this->action, $offset+1);
+		return $this->mvc($this->action[$offset]);
+	}
 	
 	// mount, app/controller, $ini, $vars
 	public function loadapp($app, $admin, $ini ='', $vars = array(''), $custompath = NULL)
@@ -1020,7 +1117,8 @@ App load times:
 	}
 	
 	// Backward compatible
-	public function apploader($load, $ini = '', $vars = NULL) { return $this->mvc($load, $ini, $vars); }
+	public function apploader($load, $ini = '', $vars = NULL) 
+		{ return $this->mvc($load, $ini, $vars); }
 	
 	// should turn this into an API system for direct-to-app calls via json request.
 	private function post($id)
@@ -1070,6 +1168,10 @@ App load times:
 		if($result)
 			foreach($result as $plugin)
 				$this->plugins[$plugin['hook']][$plugin['plugin']] = $plugin['config'];
+		
+		$this->hook_run('plugins_loaded');
+		
+		return $this;
 	}
 	
 	/*
@@ -1088,17 +1190,29 @@ App load times:
 	{
 		if(!isset($this->plugins[$hook])) return false;
 		foreach($this->plugins[$hook] as $plugin => $config)
+		{
+			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
+			
+			$this->startTimer(__METHOD__.$hookDetails);
 			include ROOT.'plugins/'.$plugin.'/index.php';
+			$this->endTimer(__METHOD__.$hookDetails);
+		}
+			
 	}
+	/*
+	public function __call($name, $arguments)
+	{
+		//preg_match('/^route(uid|)'
+	}*/
 	
-	// public, read-only access to private variables
+	// backward compatible
 	public function api($var)
 	{
-		if($var == 'getuid')	return $this->auth['id'];
-		if($var == 'me')		return $this->auth['display_name'];
+		$user = new User();
+		
+		if($var == 'getuid')	return $user->getid();
+		if($var == 'me')		return $user->getdisplay_name();
 		if($var == 'version')	return $this->version;
-		if($var == 'isadmin')	return $this->auth['access'] == 'admin';
+		if($var == 'isadmin')	return $user->hasAccess('admin');
 	}
 }
-
-?>

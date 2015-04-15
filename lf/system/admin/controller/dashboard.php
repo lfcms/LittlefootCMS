@@ -13,14 +13,16 @@ class dashboard extends app
 		$this->pwd = ROOT.'apps/';
 		
 		// if simple cms is enabled, load the select app's admin instead of the usual nav interface
-		if($this->request->settings['simple_cms'] != '_lfcms')
+		if($this->lf->settings['simple_cms'] != '_lfcms')
 		{
 			$cwd = getcwd();
-			chdir(ROOT.'apps/'.$this->request->settings['simple_cms']);
+			chdir(ROOT.'apps/'.$this->lf->settings['simple_cms']);
 			
 			echo '<div class="dashboard_manage">';
-			if(is_file('admin.php')) include 'admin.php';
-			else echo 'No Admin';
+			if(is_file('admin.php')) 
+				include 'admin.php';
+			else 
+				echo 'No Admin';
 			echo '</div>';
 			
 			chdir($cwd);
@@ -96,7 +98,7 @@ class dashboard extends app
 		
 		$id = $this->create($vars);
 		
-		redirect302($this->request->appurl.'main/'.$id);
+		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function create($vars) // nav/item create
@@ -411,28 +413,6 @@ class dashboard extends app
 		
 		redirect302();
 	}
-	
-	private function installsql($app)
-	{
-		$sql = ROOT.'apps/'.$app.'/install.sql';
-		if(is_file($sql))
-		{
-			$this->db->import($sql);
-			unlink($sql);
-		}
-	}
-	
-	public function upgradesql($app)
-	{
-		if($this->simple) return;
-		
-		$sql = ROOT.'apps/'.$app.'/upgrade.sql';
-		if(is_file($sql))
-		{
-			$this->db->import($sql);
-			unlink($sql);
-		}
-	}
 
 	public function update($vars) // nav/item update
 	{
@@ -558,7 +538,7 @@ class dashboard extends app
 			$this->db->query($sql);
 		}
 		$this->updatenavcache();
-		redirect302();
+		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function updatenavcache()

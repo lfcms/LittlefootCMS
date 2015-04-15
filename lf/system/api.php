@@ -1,4 +1,6 @@
-<?php
+<?php 
+
+// this should be replaced with only calling bootstrap.php
 
 define('ROOT', __DIR__.'/../'); // default to lf install dir
 define('APP', getcwd().'/'); // app root based on pwd
@@ -7,14 +9,7 @@ chdir(ROOT);
 
 if(!isset($db)) include 'config.php';
 
-// Littlefoot
-include 'system/functions.php'; // base functions
-include 'system/db.class.php'; // database wrapper
-include 'system/app.class.php';
-include 'system/lib/orm.php';
-include 'system/lib/recovery/install.php';
-include 'system/littlefoot.php';		
-include 'system/lib/auth.php';
+include ROOT.'lf/system/bootstrap.php';
 
 $lf = new Littlefoot($db);
 $lf->request();
@@ -34,6 +29,7 @@ function quickload($lf)
 	return $myapp->_router($lf->action);
 }
 
+// move this to lf router
 function autoloader($lf, $defaultPath = 'main')
 {
 	ob_start();

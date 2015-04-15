@@ -3,6 +3,9 @@
 <div class="row">
 	<form action="%appurl%add/global" method="post">
 		<div class="col-2">
+			<button class="green" type="submit"><i class="fa fa-plus"></i> add new</button>
+		</div>
+		<div class="col-2">
 			<select name="action" id="">
 				<option value="">Select Nav</option>
 				<?php foreach($actions[1] as $action): ?>
@@ -16,9 +19,6 @@
 		<div class="col-2">
 			<input type="radio" name="perm" value="1" checked />Allow
 			<input type="radio" name="perm" value="0" />Deny
-		</div>
-		<div class="col-2">
-			<button class="green" type="submit">Add New</button>
 		</div>
 	</form>
 </div>

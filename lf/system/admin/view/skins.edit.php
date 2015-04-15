@@ -9,35 +9,47 @@
 	}
 </style>
 
+<h2>
+	<a href="%appurl%">Skins</a> > 
+	<a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a>
+</h2>
+
 <form action="%appurl%update/<?=$vars[1];?>/" method="post" id="skinform">
+	<div class="row">
+		<!-- New Skin -->
+		<div class="col-3 pull-right">
+			<div id="skin_nav">
+				<h3>Edit</h3>
+				<ul class="fvlist">
+					<?php if(!is_file($skin.'/home.php')): ?>
 
-	<div id="skin_nav">
-		<h3><a href="%appurl%">Skins</a> / <a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a></h3>
+					<li><a href="%appurl%makehome/<?=$matches[0];?>">(create home.php)</a></li>
 
-		<?php if(!is_file($skin.'/home.php')): ?>
+					<?php endif;
 
-		<a href="%appurl%makehome/<?=$matches[0];?>">(create home.php)</a>
+					foreach($files as $id => $url):
 
-		<?php endif;
+						$li = '';
+						$a = '';
+						if($id == $vars[2]) $li = ' class="green"'; 
+						if($id == $vars[2]) $a = ' class="light"'; 
 
-		foreach($files as $id => $url):
+					?>
+						
+					<li<?=$li;?>><a<?=$a;?> title="<?=$url;?>" href="%appurl%edit/<?=$matches[0];?>/<?=$id;?>/"><?=$url;?></a></li>
 
-			$select = '';
-			if($id == $vars[2]) $select = ' class="selected"'; 
-
-		?>
-			
-		<a title="<?=$url;?>" <?=$select;?> href="%appurl%edit/<?=$matches[0];?>/<?=$id;?>/"><?=$url;?></a>
-
-		<?php endforeach; ?>
-		
-
-		<input type="submit" value="Update" />
+					<?php endforeach; ?>
+					
+				</ul>
+				<input type="submit" class="martop blue" value="Save" />
+			</div>
+		</div>
+		<!-- New Skin -->
+		<div class="col-9">
+			<div id="editor" class="dark_b"><?=htmlentities($data);?></div>
+			<input type="submit" class="martop blue" value="Save" />
+		</div>
 	</div>
-	
-	<div id="editor"><?=htmlentities($data);?></div>
-	
-	<input type="submit" value="Update" />
 </form>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>

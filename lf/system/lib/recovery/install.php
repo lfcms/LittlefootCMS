@@ -12,7 +12,7 @@ if(!extension_loaded('mysqli'))
  */
 class install
 {
-	public function noconfig()
+	public static function noconfig()
 	{
 		if(count($_POST))
 			install::installpost();
@@ -23,7 +23,7 @@ class install
 		exit();
 	}
 
-	public function testinstall()
+	public static function testinstall()
 	{
 		if(orm::q('lf_settings')->first() == NULL)
 		{
@@ -36,14 +36,14 @@ class install
 		}
 	}
 	
-	private function nodb()
+	private static function nodb()
 	{
 		if($this->db->error != '') $errors = $this->db->error;
 		$msg = 'Unable to query database.';
 		include ROOT.'system/lib/recovery/install.form.php';
 	}
 	
-	private function installpost()
+	private static function installpost()
 	{
 		// validate input
 		if($_POST['host'] == '') $errors[] = "Missing 'Hostname' information";
@@ -81,8 +81,7 @@ class install
 
 		if(isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php'))
 		{
-			include 'config.php';
-			$dbconn = new Database($db);
+			$dbconn = db::init();
 
 			if($dbconn->error != '')
 					$errors = $dbconn->error;

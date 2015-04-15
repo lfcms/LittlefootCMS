@@ -24,13 +24,13 @@
  * In a littlefoot app a database object is accessible at `$this->db`
  * 
  */
-class Database
+class db
 {
 	/** @var string[] $error Multiple errors can occur. They are stored in this array. */
 	public $error = '';
 	
 	/** @var MySQLi $mysql MySQLi connection object */
-	private $mysqli;
+	protected $mysqli;
 	
 	/** @var Result Most recent MySQL result */
 	private $db_result;
@@ -39,15 +39,28 @@ class Database
 	private $query_count;
 	
 	/** @var string[] $conf Database configuration is saved for auto dump/import */
-	private $conf;
+	protected $conf;
+	
+	
+	// ty Phil Cross @ http://stackoverflow.com/a/16914104
+	private static $instance;
+	private $connection;
 	
 	/**
 	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
-	 * 
-	 * @param string[] $database_config 
 	 */
-	function __construct( $database_config )
-	{
+	private function __construct()
+    {		
+		// check to make sure configuration file is there
+		// config.php contains database credentials
+		if(!is_file(ROOT.'config.php')) 	
+			install::noconfig();
+		else
+			include ROOT.'config.php'; // load $db config
+
+		$database_config = $db;
+		$this->conf = $db;
+        
 		$this->mysqli = new mysqli( 
 			$database_config['host'], 
 			$database_config['user'],
@@ -61,15 +74,46 @@ class Database
 		
 		$this->query_count = 0;
 		$this->tblprefix = $database_config['prefix'];
-		$this->conf = $database_config;
+    }
+	
+	public static function init()
+	{
+		if(is_null(self::$instance))
+			self::$instance = new db();
+		
+		return self::$instance;
 	}
+	
+	// wildcard catchall for shortcut requests (filter, set, etc)
+	public function __call($method, $args) {
+		
+		// look for valid request
+		if(!preg_match('/^(filterBy|set)(.*)/', $method, $method_parse))
+		{
+			// if it doesn't match any of my stuff, try it on the mysqli connection object
+			if(method_exists($this->mysqli, $method))
+			{
+				 return call_user_func_array(array($this->mysqli, $method), $args);
+			} else {
+				 trigger_error('Unknown Method ' . $method . '()', E_USER_WARNING);
+				 return false;
+			}
+		}
+		
+		// parse out method and column reference
+		$m = $method_parse[1];
+		$column = $method_parse[2];
+		
+		return $this->$m($column, $args);
+    }
 	
 	/**
 	 * Close MySQLI connection object
 	 */
 	function __destruct()
 	{
-		$this->mysqli->close();
+		if($this->mysqli)
+			$this->mysqli->close();
 	}
 	
 	/**

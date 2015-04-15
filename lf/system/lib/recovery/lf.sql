@@ -173,7 +173,7 @@ CREATE TABLE `lf_settings` (
 
 LOCK TABLES `lf_settings` WRITE;
 /*!40000 ALTER TABLE `lf_settings` DISABLE KEYS */;
-INSERT INTO `lf_settings` VALUES (1,'default_skin','fresh'),(5,'rewrite','off'),(6,'nav_class',''),(7,'force_url',''),(9,'debug','off'),(10,'signup','off'),(11,'simple_cms','_lfcms');
+INSERT INTO `lf_settings` VALUES (1,'default_skin','XV'),(5,'rewrite','off'),(6,'nav_class',''),(7,'force_url',''),(9,'debug','off'),(10,'signup','off'),(11,'simple_cms','_lfcms');
 /*!40000 ALTER TABLE `lf_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 

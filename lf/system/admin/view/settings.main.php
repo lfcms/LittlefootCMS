@@ -1,19 +1,20 @@
-<h2>Settings</h2>
+<h2><i class="fa fa-cog"></i> Settings</h2>
+<?=$this->notice();?>
 <div class="row">
 	<div class="col-7">
 		<div class="tile rounded">
 			<div class="tile-header light_gray">
-				<h3>Options</h3>
+				<h3><i class="fa fa-cogs"></i> Options</h3>
 			</div>
 			<div class="tile-content">
-				<form action="?" method="post">
+				<form action="%appurl%saveoptions" method="post">
 					<div class="row">
 						<div class="col-3">
 							<label for="rewrite">URL Rewrite:</label>
 							<?php foreach($rewrite['options'] as $option):
 								$checked = $rewrite['value']==$option?'checked':'';
 							?>
-							<input id="rewrite" type="radio" <?=$checked;?> name="rewrite" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<input id="rewrite" type="radio" <?=$checked;?> name="setting[rewrite]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 						</div>
 						<div class="col-3">
@@ -21,7 +22,7 @@
 							<?php foreach($debug['options'] as $option):
 								$checked = $debug['value']==$option?'checked':'';
 							?>
-							<input id="debug" type="radio" <?=$checked;?> name="debug" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<input id="debug" type="radio" <?=$checked;?> name="setting[debug]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 						</div>
 						<div class="col-3">
@@ -29,7 +30,7 @@
 							<?php foreach($signup['options'] as $option):
 								$checked = $signup['value']==$option?'checked':'';
 							?>
-							<input id="signup" type="radio" <?=$checked;?> name="signup" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<input id="signup" type="radio" <?=$checked;?> name="setting[signup]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 						</div>
 						<div class="col-3">
@@ -48,7 +49,7 @@
 					<div class="row">
 						<div class="col-6">
 							<label for="setting[force_url]">Force URL (empty to not force URL):</label>
-							<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=$force_url;?>" />
+							<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=isset($force_url)?$force_url:'';?>" />
 						</div>
 						<div class="col-6">
 							<label for="setting[nav_class]">Navigation CSS class:</label>
@@ -57,7 +58,7 @@
 					</div>
 					<div class="row">
 						<div class="col-12">
-							<input class="blue button" type="submit" value="Save Changes" />
+							<button class="blue button"><i class="fa fa-floppy-o"></i> save changes</button>
 						</div>
 					</div>		
 				</form>
@@ -68,16 +69,17 @@
 	<div class="col-5 spaced">
 		<div class="tile rounded">
 			<div class="tile-header light_gray">
-				<h3>Version</h3>
+				<h3><i class="fa fa-leaf"></i> Version</h3>
 			</div>
 			<div class="tile-content">
-			
-				<a class="blue button martop marbot" href="%baseurl%lfup/">Upgrade Littlefoot</a>
+				<a class="blue button martop marbot" href="%appurl%lfup/"><i class="fa fa-arrow-up"></i> Upgrade Littlefoot</a>
 				
-				<h4>Current version: <?=$this->request->api('version');?></h4>
+				<h4><i class="fa fa-clock-o"></i> Current version: <?=$this->request->api('version');?></h4>
 				
 				<?php if($newest != $this->request->api('version')): ?>
-					<p>Latest version available: <?=$newest;?></p>
+					<p>
+						Latest version available: <?=$newest;?>
+					</p>
 				<?php else: ?>
 					<p>You are up to date!</p>
 				<?php endif; ?>
@@ -86,23 +88,33 @@
 					<p><a href="%baseurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
 				<?php endif; ?>
 				
-				<h4>Restore Old Version</h4>
+				<h4><i class="fa fa-history"></i> Restore Old Version</h4>
 				<div class="old-version-info">
 				<?php if(count($backups)): foreach($backups as $backup => $version): ?>
 					<p>
 						<?=$version;?> - 
 						<a href="%baseurl%restore/<?=$backup;?>/">restore</a> -
-						<a href="%baseurl%rm/<?=$backup;?>/" class="delete_item">delete</a>
+						<a href="%baseurl%rm/<?=$backup;?>/" class="x">delete</a>
 					</p>
 				<?php endforeach; else: ?>
 					<p>No system restore points are available.</p>
 				<?php endif; ?>
 				</div>
+				<h4>
+					<i class="fa fa-link"></i> Links:
+					<a title="Littlefoot Home" href="http://littlefootcms.com/"><i class="fa fa-home"></i></a>
+					<a title="Download" href="https://github.com/eflip/LittlefootCMS/archive/master.zip"><i class="fa fa-download"></i></a>
+					<a title="Dev Docs" href="http://littlefootcms.com/files/docs/index.html"><i class="fa fa-book"></i></a>
+					<a title="Community" href="http://littlefootcms.com/forum/"><i class="fa fa-comments"></i></a>
+					<a title="GitHub" href="https://github.com/eflip/LittlefootCMS"><i class="fa fa-github"></i></a>
+					<a title="Facebook" href="https://www.facebook.com/littlefootcms"><i class="fa fa-facebook"></i></a>
+					<a title="Help" href="http://littlefootcms.com/byid/23"><i class="fa fa-question"></i></a>
+				</h4>
 			</div>
 		</div>
 		<div class="tile rounded">
 			<div class="tile-header light_gray">
-				<h3>Reinstall</h3>
+				<h3><i class="fa fa-refresh"></i> Reinstall</h3>
 			</div>
 			<div class="tile-content">
 				<?php if(count($installs)): ?>
