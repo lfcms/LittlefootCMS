@@ -1,32 +1,53 @@
 <?php
 
 class User
-{	
-	public $login;
-	public $start;
-	public $timeout;
+{
+	public $start; // creation time
+	private $timeout;
 	public $error = array();
 	
-	// user details
-	public $details = array(
+	protected $details = array(
 		'id' => 0,
 		'access' => 'none',
-		'user' => 'anonymous',
+		'user' => '',
 		'display_name' => 'Anonymous'
 	);
 	
-	public function __construct($session = true)
-	{
-		if($session)
-			$this->fromSession();
-	}
+	public function __construct($details = null)
+    {
+		$this->start = time();
+	
+        if(is_array($details)){
+            $this->setDetails($details);
+        }
+		else if(is_int($details))
+		{
+			$this->setDetails(
+				orm::qUsers('lf')
+					->cols('id, access, user, display_name')
+					->byId($details)
+					->first()
+			);
+		}
+		else if(is_string($details))
+		{
+			$this->setDetails(
+				orm::qUsers('lf')
+					->cols('id, access, user, display_name')
+					->byDisplay_name($details)
+					->first()
+			);
+		}
+		
+		// else Anonymous by default
+    }
 	
 	public function fromSession()
 	{
-		if( isset($_SESSION['user']) 
-			&& isset($_SESSION['user']['details'])
-		)
-			$this->setDetails($_SESSION['user']['details']);
+		if( isset($_SESSION['login']) )
+			$this->setDetails($_SESSION['login']->getDetails());
+		else
+			$this->error[] = 'Not SESSION login found';
 		
 		return $this;
 	}
@@ -52,14 +73,6 @@ class User
 		return $this;
 	}
 	
-	public function refreshTimeout()
-	{
-		$_SESSION['user']['start'] = time();
-		$_SESSION['user']['expires'] = time() + 60*60*2; // + 2 hours
-		
-		return $this;
-	}
-	
 	public function doLogin()
 	{
 		if(!count($_POST))
@@ -69,10 +82,10 @@ class User
 		$username = $_POST['user'];
 		$password = sha1($_POST['pass']);
 
-		$login = User::q()
+		$login = orm::qUsers('lf')
 			->cols('id, user, email, display_name, access')
-			->filterByuser($_POST['user'])
-			->filterBypass(sha1($_POST['pass']))
+			->byUser($_POST['user'])
+			->byPass(sha1($_POST['pass']))
 			->first();
 		
 		unset($_POST);
@@ -95,7 +108,7 @@ class User
 		}
 		
 		// if admin, check for reCaptcha
-		else if(isset($login['access']) && $login['access'] == 'admin') 
+		if(isset($login['access']) && $login['access'] == 'admin') 
 		{
 			// If I ever want to do anything during admin request
 			// like recaptcha...
@@ -104,39 +117,48 @@ class User
 		if($this->error != array()) 
 			$_SESSION['_lf_login_error'] = implode(', ', $this->error);
 		
-		$this->setDetails($login)->toSession();
-		
-		return $this;
+		return $this
+			->setDetails($login)
+			->toSession();
 	}
 	
 	public function isValidLogin()
 	{
-		return $_SESSION['user']['id'] > 0;
+		return $this->getId() > 0;
 	}
 	
-	public function timedOut()
+	public function isTimedOut()
 	{
-		$timeout = $this->getTimeout();
-		return $timeout['expires'] < time();
+		return $this->logoutTime < time();
 	}
 	
 	public function getTimeout()
 	{
-		return isset($_SESSION['user']) 
-				&& isset($_SESSION['user']['start'], $_SESSION['user']['expires'])
-			? array(
-				'start' => $_SESSION['user']['start'],
-				'expires' => $_SESSION['user']['expires']) 
-			: false;
+		return $this->timeout;
+	}
+	
+	public function refreshTimeout()
+	{
+		$this->timeout = time() + 60*60*2; // + 2 hours
+		return $this;
 	}
 	
 	public function toSession()
 	{
-		$_SESSION['user']['details'] = $this->details;
+        $_SESSION['login'] = $this->refreshTimeout();
 		
-		return $this->refreshTimeout();
+        return $this;
 	}
 	
+	// not feelin this. may drop it
+	public function q()
+	{
+		return orm::q('lf_users');
+	}
+	
+	/**
+	 * Magic
+	 */
 	public function __call($name, $args)
 	{
 		if(!preg_match('/^(get|set)(.+)$/', $name, $match))
@@ -159,10 +181,5 @@ class User
 		$var = strtolower($var);
 		$this->details[$var] = $args[0];
 		return $this;
-	}
-	
-	public function q()
-	{
-		return orm::q('lf_users');
 	}
 }

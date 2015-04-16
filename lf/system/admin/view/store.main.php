@@ -1,40 +1,51 @@
 <h2><i class="fa fa-shopping-cart"></i> Store</h2>
 
 <p>Click an app to install it. Update links will download the latest.</p>
-				
+
+<?=$this->notice();?>
+
 <div class="row">
 	<div class="col-4">
 		<h3>Apps</h3>
+		<form action="%appurl%installfromurl/app" method="post">
+			<input type="text" name="url" placeholder="Install .zip from URL" />
+			<input type="submit" value="Download" class="blue marbot" />
+		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_app_form" enctype="multipart/form-data" action="%appurl%install/app/" method="post">
 			 <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
 			<input id="upload_skin_file" type="file" name="app" class="marbot"/>
 			<?php /*echo $install;*/ ?>
 			<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
-		</form>
-		<h4>Download</h4>-->
+		</form>-->
+		<h4>Download</h4>
 		<ul class="efvlist">
 		<?php foreach($apps as $app => $ignore): ?> 	
 			<li>
 			<?php if(!isset($app_files[$app])): ?>
 				<a href="%appurl%dlapp/<?=$app;?>/"><?=$app;?></a>
 			<?php else: ?>
-				<?=$app;?> [<a href="%appurl%dlapp/<?=$app;?>/update/">Update</a>]
-			</li>
+				<?=$app;?> 
+				[<a href="%appurl%dlapp/<?=$app;?>/update/">Update</a>]
 			<?php endif; ?>
+			</li>
 		 <?php endforeach; ?>
 		</ul>
 	</div>
 	<div class="col-4">
 		<h3>Skins</h3>
+		<form action="%appurl%installfromurl/skin" method="post">
+			<input type="text" name="url" placeholder="Install .zip from URL" />
+			<input type="submit" value="Download" class="blue marbot" />
+		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/skin/" method="post">
 			 <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
 			<input id="upload_skin_file" type="file" name="skin" class="marbot"/>
 			<?php /*echo $install;*/ ?>
 			<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
-		</form>
-		<h4>Download</h4>-->
+		</form>-->
+		<h4>Download</h4>
 		<ul class="fvlist">
 		<?php foreach($skins as $skin => $ignore): ?> 	
 			<li>
@@ -49,14 +60,18 @@
 	</div>
 	<div class="col-4">
 		<h3>Plugins</h3>
+		<form action="%appurl%installfromurl/plugin" method="post">
+			<input type="text" name="url" placeholder="Install .zip from URL" />
+			<input type="submit" value="Download" class="blue marbot" />
+		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_plugin_form" enctype="multipart/form-data" action="%appurl%install/plugin/" method="post">
 			 <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
 			<input id="upload_skin_file" type="file" name="plugin" class="marbot"/>
 			<?php /*echo $install;*/ ?>
 			<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
-		</form>
-		<h4>Download</h4>-->
+		</form>-->
+		<h4>Download</h4>
 		<ul class="fvlist">
 		<?php foreach($plugins as $plugin => $ignore): ?> 	
 			<li>

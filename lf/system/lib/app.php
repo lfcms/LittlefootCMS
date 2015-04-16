@@ -166,7 +166,7 @@ class app
 	/**
 	 * Default main() function. Should be replaced in all classes extended from app.
 	 */
-	public function main($args)
+	public function main($args = array()) // = array() is for backward compatibility
 	{
 		echo '::default main function::';
 	}

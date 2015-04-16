@@ -23,6 +23,28 @@ class store extends app
 		include 'view/store.main.php';
 	}
 	
+	public function installfromurl()
+	{
+		/*
+		
+		pre($_POST);
+		exit();
+		
+		$type = $this->lf->vars[1];
+		
+		switch($type)
+		{
+			//case 'app':
+			//	$this->
+		}
+		
+		*/
+		
+		$this->notice('Feature not yet implemented');
+		
+		redirect302($this->lf->appurl);
+	}
+	
 	public function install($vars)
 	{
 		$type = $vars[1];
