@@ -31,46 +31,71 @@ $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
 ?>
 <html class="lf">
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 		<style type="text/css">
-			<?php readfile(ROOT.'system/lib/lf.css');?>
+			<?php /*readfile(ROOT.'system/lib/lf.css');*/ ?>
+			
 		</style>
+		<link rel="stylesheet" href="/lf/system/lib/lf.css" />
 	</head>
 	<body>
-		<form action="?" class="wide_container" method="post">
-			<?php 
-				if(isset($msg))
-					echo '<div class="warning martop">'.$msg.'</div>';
-					
-				if(isset($errors))
-					foreach($errors as $error)
-						echo '<div class="martop">'.$error.'</div>';
-			?>
-			<h1>Install Littlefoot</h1>
-			<h2>Database Access</h2>
-			<ul class="vlist">
-				<li>Host: <input type="text" value="<?=$host;?>" name="host" value="localhost" /></li>
-				<li>User: <input type="text" value="<?=$user;?>"name="user" placeholder="Database Username" /></li>
-				<li>Pass: <input type="password" name="pass" placeholder="User's Password" /></li>
-				<li>Database Name: <input type="text" value="<?=$dbname;?>" name="dbname" placeholder="Name of database" /></li>
-				<?php if(is_file('config.php')): ?>
-				<li><label for="">Overwrite Config File:</label> <input class="check" type="checkbox" name="overwrite" checked="checked" /></li>
-				<?php endif; ?>
+		<h1 class="banner dark_gray light">Install Littlefoot</h1>
+		<div class="wide_container">
+			<form action="?" method="post">
+				<div class="row">
+					<div class="col-6">
+						<h2>Database Access</h2>
+						<ul class="vlist">
+							<li>Host: <input type="text" value="<?=$host;?>" name="host" value="localhost" /></li>
+							<li>Database Name: <input type="text" value="<?=$dbname;?>" name="dbname" placeholder="eg. cpusername_littlefootdb" /></li>
+							<li>Database User: <input type="text" value="<?=$user;?>"name="user" placeholder="eg. cpusername_dbuser" /></li>
+							<li>Password: <input type="password" name="pass" placeholder="Database User's Password" /></li>
+							<?php if(is_file('config.php')): ?>
+							<li><label for="">Overwrite Config File:</label> <input class="check" type="checkbox" name="overwrite" checked="checked" /></li>
+							<?php endif; ?>
 
-				<?php if(is_file('config.php')): ?>
-				<li><label for="">Re-install Base Data:</label> <input class="check" type="checkbox" name="data" /></li>
-				<?php else: ?>
-				<li><label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (uncheck this if you are just remaking a lost config):</label></li>
-				<?php endif; ?>
-			</ul>
-			<h2>Default Credentials</h2>
-			<ul class="vlist">
-				<li>Username: <strong>admin</strong></li>
-				<li>Password: <strong>pass</li>
-			</ul>
-			<button class="green">Install</button>
-			<a class="blue button marbot" target="_blank" href="http://littlefootcms.com/">View User Guide</a>
-		</form>
+							<?php if(is_file('config.php')): ?>
+							<li><label for="">Re-install Base Data:</label> <input class="check" type="checkbox" name="data" /></li>
+							<?php else: ?>
+							<li><label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (uncheck this if you are just remaking a lost config)</label></li>
+							<?php endif; ?>
+						</ul>
+						<div class="row">
+							<div class="col-6">
+								<button class="green">Install</button>
+							</div>
+							<div class="col-6">
+								<a class="blue button marbot" target="_blank" href="http://littlefootcms.com/">View User Guide</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-6">
+						<?php 
+							if(isset($msg))
+								echo '<div class="warning marbot rounded">'.$msg.'</div>';
+								
+							if(isset($errors))
+								foreach($errors as $error)
+									echo '<div class="marbot rounded">'.$error.'</div>';
+						?>
+						<div class="tile rounded">
+							<div class="tile-header light_gray">
+								<h3>Information</h3>
+							</div>
+							<div class="tile-content">
+								<h4>Login Credentials</h4>
+								<ul class="vlist">
+									<li>Username: <strong>admin</strong></li>
+									<li>Password: <strong>pass</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
 	</body>
 </html>
 

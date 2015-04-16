@@ -99,7 +99,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .banner {
-	padding: 20px 0;
+	padding: 20px 15px;
 }
 
 .lf .container {
@@ -821,6 +821,14 @@ html.lf, .lf body {
 
 
 /*Mobile*/
+
+/*
+	Put this in your <head> to make it work
+
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+*/
+
 @media (min-width : 0px) 
 and (max-width : 850px) {
 	
