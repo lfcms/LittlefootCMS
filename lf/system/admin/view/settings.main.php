@@ -105,10 +105,9 @@
 					<a title="Littlefoot Home" href="http://littlefootcms.com/"><i class="fa fa-home"></i></a>
 					<a title="Download" href="https://github.com/eflip/LittlefootCMS/archive/master.zip"><i class="fa fa-download"></i></a>
 					<a title="Dev Docs" href="http://littlefootcms.com/files/docs/index.html"><i class="fa fa-book"></i></a>
-					<a title="Community" href="http://littlefootcms.com/forum/"><i class="fa fa-comments"></i></a>
 					<a title="GitHub" href="https://github.com/eflip/LittlefootCMS"><i class="fa fa-github"></i></a>
 					<a title="Facebook" href="https://www.facebook.com/littlefootcms"><i class="fa fa-facebook"></i></a>
-					<a title="Help" href="http://littlefootcms.com/byid/23"><i class="fa fa-question"></i></a>
+					<a title="Community" href="http://reddit.com/r/littlefoot"><i class="fa fa-reddit"></i></a>
 				</h4>
 			</div>
 		</div>
