@@ -138,8 +138,7 @@ class Littlefoot
 		$this->absbase = ROOT; // backward compatible // getcwd().'/';
 		$this->version = file_get_contents(ROOT.'system/version');
 		
-		$this->load_plugins()
-			->hook_run('post lf __construct');
+		$this->load_plugins();
 		
 		$this->db = db::init();
 		$this->hook_run('lf db init');
@@ -1197,7 +1196,6 @@ Included, Required files:';
 			include ROOT.'plugins/'.$plugin.'/index.php';
 			$this->endTimer(__METHOD__.$hookDetails);
 		}
-			
 	}
 	/*
 	public function __call($name, $arguments)
@@ -1209,6 +1207,7 @@ Included, Required files:';
 	public function api($var)
 	{
 		$user = new User();
+		$user->fromSession();
 		
 		if($var == 'getuid')	return $user->getid();
 		if($var == 'me')		return $user->getdisplay_name();

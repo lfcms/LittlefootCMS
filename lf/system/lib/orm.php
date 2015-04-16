@@ -61,6 +61,9 @@ class orm {
 	
 	/** @var string $limit Limit clause. Usage: "1" or "1, 3" */
 	public $limit = '';
+	
+	/** @var orm $result on find(), save array() result */
+	public $result = NULL;
 
 	/**
 	 * Initialize the orm class. Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
@@ -91,7 +94,7 @@ class orm {
 		$counter = 1;
 		foreach($this->get() as $row)
 		{
-			echo 'Row #'.$counter.'<br />';
+			echo '<br />Row #'.$counter.'<br />';
 			foreach($row as $col => $val)
 			{
 				echo $col.': '.$val.'<br />';
@@ -115,18 +118,60 @@ class orm {
 	}
 	
 	// wildcard catchall for shortcut requests (filter, set, etc)
+	public static function __callStatic($method, $args) {
+		
+		// look for valid request
+		if(!preg_match('/^(q|query)(.+)/', $method, $method_parse))
+			return null;
+		
+		// parse out method and column reference
+		$method = 'query';
+		$magic = $method_parse[2];
+		
+		return orm::$method($magic, $args);
+    }
+	
+	/**
+	 * Accessible like qPages('lf') or queryUsers('lf')
+	 * 
+	 * 
+	 * 
+	 */
+	private function query($table, $args)
+	{
+		$table = strtolower($table);
+		
+		$prefix = '';
+		if($args != array() && $args[0] != '')
+			$prefix = $args[0].'_';
+		
+		return new orm(db::init(), $prefix.$table);
+	}
+	
+	// wildcard catchall for shortcut requests (filter, set, etc)
 	public function __call($method, $args) {
 		
 		// look for valid request
-		if(!preg_match('/^(filterBy|set)(.*)/', $method, $method_parse))
+		if(!preg_match('/^(by|filterBy|set|find)(.*)/', $method, $method_parse))
 			return null;
 		
 		// parse out method and column reference
 		$m = $method_parse[1];
-		$column = $method_parse[2];
+		if($m == 'by') // 'by' is an alias to filterBy()
+			$m = 'filterBy';
 		
-		return $this->$m($column, $args);
+		return $this->$m($method_parse[2], $args);
     }
+	
+	private function find($columns, $args)
+	{
+		if(preg_match_all('/[A-Z][a-z]*/', $columns, $match))
+			$this->cols(implode(', ', $match[0]));
+		
+		$this->result = $this->get();
+		
+		return $this;
+	}
 	
 	// shortcut to allow column in called function title
 	// usage: orm::q('lf_users')->filterByid('>', 20);
@@ -154,6 +199,9 @@ class orm {
 	
 	public function get()
 	{
+		if(!is_null($this->result))
+			return $this->result;
+		
 		$crud = $this->crud;
 		return $this->$crud();
 	}

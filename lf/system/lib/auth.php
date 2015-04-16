@@ -3,29 +3,30 @@
 /**
  * @ignore
  * 
+ * Controller
+ * 
  * deals with session set, get, refreshTimeout
  * 
  */
 class auth extends app
 {
-	public $auth;
+	public $auth; // backward compatible
 	
 	protected function init($args)
 	{
 		$user = new User();
+		$user->fromSession();
 		
 		// Handle timeout
 		if($user->timedOut() && false) //timeout disabled for now
 		{
-			$user = new User(true);
+			$user = new User();
+			$user->toSession();
 			$this->notice('You timed out. Please log back in.');
-			//redirect302($this->wwwIndex);
+			redirect302();
 		}
 		else
-			$user->refreshTimeout();
-		
-		// Apply pre authentication details to SESSION
-		//$user->toSession();
+			$user->refreshTimeout()->toSession();
 		
 		// backward compatible (should drop this ASAP)
 		$this->auth = $user->getDetails();
@@ -35,10 +36,10 @@ class auth extends app
 	{
 		// if user/pass matches, push to session
 		$user = new User();
-		$this->lf->auth = $user
-			->doLogin()
-			->getDetails();
+		$user->doLogin();
 		
+		// backward compatible
+		$this->lf->auth = $user->getDetails();
 		$_SESSION['_auth'] = $this->lf->auth;
 		
 		redirect302();
@@ -66,6 +67,7 @@ class auth extends app
 				redirect302($this->lf->base);
 		}
 		
+		// Aaron G made me do this
 		if(is_file(ROOT.'system/template/signup.local'))
 			include ROOT.'system/template/signup.local';
 		else
@@ -74,13 +76,7 @@ class auth extends app
 	
 	
 	public function create($vars)
-	{/*
-		// DEV DEV DEV DEV // plugins 2.0
-		if(isset($this->lf->settings['plugins']['pre-auth-create']))
-			foreach($this->lf->settings['plugins']['pre-auth-create'] as $plugin => $devnull)
-				include ROOT.'plugins/'.$plugin.'/index.php';
-		// END DEV DEV DEV DEV
-		*/
+	{
 		$sql = "
 			SELECT email, user 
 			FROM lf_users 
@@ -176,6 +172,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	
 	public function forgotform($vars)
 	{
+		// Aaron G made me do this too
 		if(is_file(LF.'system/template/forgot.local'))
 			include LF.'system/template/forgot.local';
 		else

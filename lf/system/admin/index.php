@@ -32,7 +32,6 @@ defined('LF') or die('LF undefined');
  * print final rendered output
  *
  */
- 
 
 $request = $this->action;// backward compatible
  
@@ -46,7 +45,7 @@ $this->adminurl = $this->adminBase; // backward compatible
 
 // Generate new User() and test access
 $user = new User();
-
+$user->fromSession();
 
 // should make separate 'group' defintions
 if( ! $user->hasaccess('admin') ) 
