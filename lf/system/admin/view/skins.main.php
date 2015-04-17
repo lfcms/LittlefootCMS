@@ -49,7 +49,7 @@
 						<h4><?=$skin;?> <i class="<?=$icon;?>"></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash"></i></a></h4>
 					</div>
 					
-					<div class="h250">
+					<div class="h250 fit">
 						<a href="<?=$screenshot;?>"><img class="fit" src="<?=$screenshot;?>"  /></a>
 					</div>
 					
