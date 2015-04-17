@@ -58,7 +58,7 @@
 					</div>
 					<div class="row">
 						<div class="col-12">
-							<button class="blue button"><i class="fa fa-floppy-o"></i> save changes</button>
+							<button class="blue button"><i class="fa fa-floppy-o"></i> Save Changes</button>
 						</div>
 					</div>		
 				</form>
