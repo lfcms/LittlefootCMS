@@ -136,6 +136,7 @@ class orm {
 		return new orm($table);
 	}
 	
+	// deprecated
 	// wildcard catchall for shortcut requests (filter, set, etc)
 	public static function __callStatic($method, $args) {
 		
@@ -154,14 +155,14 @@ class orm {
 	public function __call($method, $args) {
 		
 		// look for valid request
-		if(!preg_match('/^(getBy|by|filterBy|set|find|q|query)(.+)/', $method, $method_parse))
+		if(!preg_match('/^(getBy|getAllBy|by|filterBy|set|find|q|query)(.+)/', $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
 		// parse out method and column reference
 		$m = $method_parse[1];
 		if($m == 'by') // 'by' is an alias to filterBy()
 			$m = 'filterBy';
-		if($m == 'find') // 'by' is an alias to filterBy()
+		if($m == 'find')
 			$m = 'findMagic';
 		if($m == 'q') // 'q' is an alias to query()
 			$m = 'query';
@@ -174,12 +175,19 @@ class orm {
 			return $this->get();
 		}
 		
+		if($m == 'getAllBy') // 'by' is an alias to filterBy()
+		{
+			$m = 'filterBy';
+			$this->$m($method_parse[2], $args);
+			return $this->getAll();
+		}
+		
 		return $this->$m($method_parse[2], $args);
     }
 	
 	private function throwException($msg = '')
 	{
-		$this->error = $msg;
+		$this->error[] = $msg;
 		return $this;
 	}
 	

@@ -17,7 +17,7 @@ class acl extends app
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
+		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
 		
 		$users = array(0 => 'Anonymous');
 		$groups = array();
@@ -29,7 +29,7 @@ class acl extends app
 		
 		$groups = array_unique($groups);
 		
-		$acls = orm::q('lf_acl_user')->get();
+		$acls = orm::q('lf_acl_user')->getAll();
 		
 		include 'view/acl.user.php';
 	}
@@ -44,7 +44,7 @@ class acl extends app
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
+		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
 		
 		$users = array();
 		$groups = array();
@@ -56,7 +56,7 @@ class acl extends app
 		
 		$groups = array_unique($groups);
 		
-		$acls = orm::q('lf_acl_inherit')->get();
+		$acls = orm::q('lf_acl_inherit')->getAll();
 	
 		include 'view/acl.inherit.php';
 	}
@@ -71,7 +71,7 @@ class acl extends app
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->get();
+		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
 		
 		$users = array(0 => 'Anonymous');
 		$groups = array();
@@ -83,7 +83,7 @@ class acl extends app
 		
 		$groups = array_unique($groups);
 		
-		$acls = orm::q('lf_acl_global ')->get();
+		$acls = orm::q('lf_acl_global ')->getAll();
 	
 		include 'view/acl.global.php';
 	}

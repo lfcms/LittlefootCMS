@@ -7,7 +7,7 @@ class users extends app
 {	
 	public function main($args)
 	{
-		$users = orm::q('lf_users')->order()->get();
+		$users = orm::q('lf_users')->order()->getAll();
 		$usercount = count($users); 
 		include 'view/users.main.php';
 	}

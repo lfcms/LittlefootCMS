@@ -10,7 +10,7 @@ class plugins extends app
 		//$this->db->query("UPDATE lf_settings SET val = '' WHERE var = 'plugins'");
 		//$registered_hooks = $this->lf->settings['plugins'];
 		
-		$registered_hooks = orm::q('lf_plugins')->get();
+		$registered_hooks = orm::q('lf_plugins')->getAll();
 		
 		include 'model/plugins.main.php';
 		include 'view/plugins.main.php';
