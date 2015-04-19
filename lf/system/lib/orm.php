@@ -42,10 +42,10 @@ class orm {
 	private $db;
 	
 	/** @var string $table Stores the table specified at orm::q('my_table') */
-	private $table = '';
+	protected $table = '';
 	
 	/** @var string $crud Chosen CRUD operation (select, insert, update, delete) */
-	public $crud = 'select';
+	private $crud = 'select';
 	
 	/** @var array $data Array of data ($col => $val). Used in CRUD operations. */
 	public $data = array();
@@ -65,14 +65,22 @@ class orm {
 	/** @var orm $result on find(), save array() result */
 	public $result = NULL;
 
+	/** @var int $row counter for incremental ->get() */
+	public $row = 0;
+	
 	/**
 	 * Initialize the orm class. Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
 	 *
 	 * @param Database $db Database wrapper
 	 */
-	public function __construct($db, $table = '')
+	public function __construct($table = '', $db = NULL)
 	{
-		$this->table = $table;
+		if(is_null($db))
+			$db = db::init();
+		
+		if($table != '')
+			$this->table = $table;
+		
 		$this->db = $db;
 	}
 	
@@ -80,6 +88,17 @@ class orm {
 	{
 		if($this->debug)
 			echo $this->sql;
+	}
+	
+	public function __get($name)
+	{
+		if(!is_null($this->result))
+			return $this->currentRow()[$name];
+		
+		if(array_key_exists($name, $this->data))
+			return $this->data[$name];
+		
+		return null;
 	}
 	
 	public function debug()
@@ -92,20 +111,20 @@ class orm {
 	{
 		ob_start();
 		$counter = 1;
-		foreach($this->get() as $row)
+		foreach($this->getAll() as $row)
 		{
 			echo '<br />Row #'.$counter.'<br />';
 			foreach($row as $col => $val)
-			{
 				echo $col.': '.$val.'<br />';
-			}
+				
 			$counter++;
 		}
 		 
 		return ob_get_clean();
 	}
 	
-	/**
+	// dont really use this any more
+	/** 
 	 * Called statically (ie "orm::q()")
 	 *
 	 * @param string $table Specifies the table to run queries on
@@ -114,7 +133,7 @@ class orm {
 	 */
 	public static function q($table) 
 	{
-		return new orm(db::init(), $table);
+		return new orm($table);
 	}
 	
 	// wildcard catchall for shortcut requests (filter, set, etc)
@@ -131,6 +150,39 @@ class orm {
 		return orm::$method($magic, $args);
     }
 	
+	// wildcard catchall for shortcut requests (filter, set, etc)
+	public function __call($method, $args) {
+		
+		// look for valid request
+		if(!preg_match('/^(getBy|by|filterBy|set|find|q|query)(.+)/', $method, $method_parse))
+			return $this->throwException('Invalid method called');
+		
+		// parse out method and column reference
+		$m = $method_parse[1];
+		if($m == 'by') // 'by' is an alias to filterBy()
+			$m = 'filterBy';
+		if($m == 'find') // 'by' is an alias to filterBy()
+			$m = 'findMagic';
+		if($m == 'q') // 'q' is an alias to query()
+			$m = 'query';
+		
+		
+		if($m == 'getBy') // 'by' is an alias to filterBy()
+		{
+			$m = 'filterBy';
+			$this->$m($method_parse[2], $args);
+			return $this->get();
+		}
+		
+		return $this->$m($method_parse[2], $args);
+    }
+	
+	private function throwException($msg = '')
+	{
+		$this->error = $msg;
+		return $this;
+	}
+	
 	/**
 	 * Accessible like qPages('lf') or queryUsers('lf')
 	 * 
@@ -145,32 +197,31 @@ class orm {
 		if($args != array() && $args[0] != '')
 			$prefix = $args[0].'_';
 		
-		return new orm(db::init(), $prefix.$table);
+		$this->table = $prefix.$table;
+		
+		return $this;
 	}
 	
-	// wildcard catchall for shortcut requests (filter, set, etc)
-	public function __call($method, $args) {
+	// i kinda want to call this function load()
+	public function find($args = null)
+	{
+		if(isset($args[0]))
+			$this->limit($args[0]);
 		
-		// look for valid request
-		if(!preg_match('/^(by|filterBy|set|find)(.*)/', $method, $method_parse))
-			return null;
-		
-		// parse out method and column reference
-		$m = $method_parse[1];
-		if($m == 'by') // 'by' is an alias to filterBy()
-			$m = 'filterBy';
-		
-		return $this->$m($method_parse[2], $args);
-    }
+		$crud = $this->crud;
+		$this->result = $this->$crud();
+		return $this;
+	}
 	
-	private function find($columns, $args)
+	private function findMagic($columns, $args)
 	{
 		if(preg_match_all('/[A-Z][a-z]*/', $columns, $match))
 			$this->cols(implode(', ', $match[0]));
+
+		if(isset($args[0]))
+			$this->limit($args[0]);
 		
-		$this->result = $this->get();
-		
-		return $this;
+		return $this->find();
 	}
 	
 	// shortcut to allow column in called function title
@@ -196,17 +247,6 @@ class orm {
 		
 		return $this;
 	}
-	
-	public function get()
-	{
-		if(!is_null($this->result))
-			return $this->result;
-		
-		$crud = $this->crud;
-		return $this->$crud();
-	}
-	
-	
 	
 	public function cols($cols)
 	{
@@ -285,12 +325,7 @@ class orm {
 	// compile SQL and return result of query
 	public function first()
 	{
-		$this->limit(1);
-		$crud = $this->crud;
-		$result = $this->$crud();
-		if(isset($result[0]))
-			$result = $result[0];
-		return $result;
+		return $this->find(1)->get(0);
 	}
 	
 	// CRUD functions.
@@ -373,11 +408,43 @@ class orm {
 		return $this->db->query($sql);
 	}
 	
-	
 	// Higher Level CRUD
-	public function getall()
+	
+	public function get($row = null)
 	{
-		return $this->cols('id, title')->order()->get();
+		if(!is_null($this->result))
+		{
+			if(!is_null($row))
+				return $this->result[$row];
+		
+			return $this->nextRow();
+		}
+		else $this->find();
+		
+		return $this->nextRow();
+	}
+	
+	private function currentRow()
+	{
+		if($this->row >= count($this->result))
+			return false;
+			
+		return $this->result[$this->row];
+	}
+	
+	private function nextRow()
+	{
+		$result = $this->currentRow();
+		$this->row++;
+		return $result;
+	}
+	
+	public function getAll()
+	{
+		if(!is_null($this->result))
+			return $this->result;
+		
+		return $this->find()->result;
 	}
 	
 	public function get1byid($id)
