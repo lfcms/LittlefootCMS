@@ -130,7 +130,7 @@ class Littlefoot
 	 * 
 	 */
 	public function __construct($db = NULL)
-	{
+	{		
 		$this->start = microtime(true);
 		$this->startTimer(__METHOD__);
 		$this->lf = &$this; // ensures universal availability of "$this->lf"
@@ -138,13 +138,13 @@ class Littlefoot
 		$this->absbase = ROOT; // backward compatible // getcwd().'/';
 		$this->version = file_get_contents(ROOT.'system/version');
 		
-		$this->load_plugins();
-		
 		$this->db = db::init();
+		$this->load_plugins();
 		$this->hook_run('lf db init');
 		
 		// check install
-		install::testinstall();
+		//install::testinstall();
+		(new install)->test();
 		
 		if(!isset($this->auth['acl'])) 
 			$this->auth['acl'] = array();
@@ -189,6 +189,57 @@ Included, Required files:';
 			echo '
 -->';
 		}
+	}
+	
+	/**
+	 * Execute as CMS
+	 * 
+	 * Run littlefoot as CMS with request routed to app based on lf_actions and lf_links tables
+	 * 
+	 * ## Flow
+	 *
+	 * 1. pull lf_settings
+	 *
+	 * 1. pull plugins
+	 * 
+	 * 1. default $this->lf->select values (template, title, alias=404)
+	 * 
+	 * 1. redirect force URL //move this to request()
+	 * 
+	 * 1. $this->request() // should move to __construct()
+	 * 
+	 * 1. $this->authenticate() // should use auth() class in cms()
+	 *
+	 * 1. admin?
+	 *
+	 * 1. apply acl // should be called from auth() class
+	 *
+	 * 1. simplecms?or:nav(is404?)
+	 *
+	 * 1. testACL?403 // should be called from auth() class (or in a separate ACL object)
+	 *
+	 * 1. getcontent() //contains simplecms?mvc
+	 *
+	 * 1. simplecms?%nav%
+	 *
+	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
+	 * 
+	 * @param string $debug Is debug set to true
+	 * 
+	 */
+	public function cms()
+	{
+		echo $this->lf	// ->lf is optional
+			->loadSettings()	// Pull settings from lf_settings
+			->request()			// Parse REQUEST_URI into usable pieces
+			->route('auth', '_auth', false) // Route auth() class on /_auth/
+			->applyAcl()		// Pull ACL that affects this user
+			->loadAdmin()		// If /admin was requested, load it and stop here
+			->navSelect()		// Get data for SimpleCMS, or determine requested Nav ID
+			->getcontent() 		// Deal with SimpleCMS or execute linked apps
+			->render(); 		// Display content in skin, return HTML output result
+			
+		return $this;
 	}
 	
 	public function startTimer($key = 'DEFAULT')
@@ -242,57 +293,6 @@ Included, Required files:';
 		return $out;
 	}
 	
-	/**
-	 * Execute as CMS
-	 * 
-	 * Run littlefoot as CMS with request routed to app based on lf_actions and lf_links tables
-	 * 
-	 * ## Flow
-	 *
-	 * 1. pull lf_settings
-	 *
-	 * 1. pull plugins
-	 * 
-	 * 1. default $this->lf->select values (template, title, alias=404)
-	 * 
-	 * 1. redirect force URL //move this to request()
-	 * 
-	 * 1. $this->request() // should move to __construct()
-	 * 
-	 * 1. $this->authenticate() // should use auth() class in cms()
-	 *
-	 * 1. admin?
-	 *
-	 * 1. apply acl // should be called from auth() class
-	 *
-	 * 1. simplecms?or:nav(is404?)
-	 *
-	 * 1. testACL?403 // should be called from auth() class (or in a separate ACL object)
-	 *
-	 * 1. getcontent() //contains simplecms?mvc
-	 *
-	 * 1. simplecms?%nav%
-	 *
-	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
-	 * 
-	 * @param string $debug Is debug set to true
-	 * 
-	 */
-	public function cms()
-	{
-		echo $this	// ->lf is optional, it is set recursively in __construct()
-			->loadSettings()	// Pull settings from lf_settings
-			->request()			// Parse REQUEST_URI into usable pieces
-			->route('auth', '_auth', false) // Route auth() class on /_auth/
-			->applyAcl()		// Pull ACL that affects this user
-			->loadAdmin()		// If /admin was requested, load it and stop here
-			->navSelect()		// Get data for SimpleCMS, or determine requested Nav ID
-			->getcontent() 		// Deal with SimpleCMS or execute linked apps
-			->render(); 		// Display content in skin, return HTML output result
-		
-		return $this;
-	}
-	
 	public function loadAdmin()
 	{
 		// if requested, load admin/
@@ -310,7 +310,7 @@ Included, Required files:';
 	{
 		$this->hook_run('pre settings');
 		
-		foreach(orm::q('lf_settings')->get() as $setting)
+		foreach((new orm)->qSettings('lf')->getAll() as $setting)
 			$this->settings[$setting['var']] = $setting['val'];
 		
 		return $this;
@@ -1163,10 +1163,11 @@ Included, Required files:';
 	 */
 	public function load_plugins()
 	{
-		$result = orm::q('lf_plugins')->get();
+		$result = (new orm)->qPlugins('lf')->getAll();
+		
 		if($result)
 			foreach($result as $plugin)
-				$this->plugins[$plugin['hook']][$plugin['plugin']] = $plugin['config'];
+				$this->plugins[ $plugin['hook'] ][ $plugin['plugin'] ] = $plugin['config'];
 		
 		$this->hook_run('plugins_loaded');
 		

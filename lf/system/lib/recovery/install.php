@@ -12,25 +12,31 @@ if(!extension_loaded('mysqli'))
  */
 class install
 {
+	
+	public function __construct()
+	{
+		
+	}
+	
 	public static function noconfig()
 	{
 		if(count($_POST))
-			install::installpost();
+			$this->post();
 			
 		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
-		include ROOT.'system/lib/recovery/install.form.php';
+		include LF.'system/lib/recovery/install.form.php';
 		
 		exit();
 	}
 
-	public static function testinstall()
+	public static function test()
 	{
-		if(orm::q('lf_settings')->first() == NULL)
+		if((new orm)->qSettings('lf')->first() == NULL)
 		{
 			if(count($_POST))
-				install::installpost();
+				$this->post();
 			else
-				install::nodb();
+				$this->nodb();
 			
 			exit();
 		}
@@ -43,7 +49,7 @@ class install
 		include ROOT.'system/lib/recovery/install.form.php';
 	}
 	
-	private static function installpost()
+	private static function post()
 	{
 		// validate input
 		if($_POST['host'] == '') $errors[] = "Missing 'Hostname' information";

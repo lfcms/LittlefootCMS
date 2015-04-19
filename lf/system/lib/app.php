@@ -165,11 +165,11 @@ class app
 	
 	/**
 	 * Default main() function. Should be replaced in all classes extended from app.
-	 */
-	public function main($args = array()) // = array() is for backward compatibility
+	 
+	public function main() // = array() is for backward compatibility
 	{
 		echo '::default main function::';
-	}
+	}*/
 	
 	/**
 	 * Used for loading partial views given an argument

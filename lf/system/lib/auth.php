@@ -14,8 +14,7 @@ class auth extends app
 	
 	protected function init($args)
 	{
-		$user = new User();
-		$user->fromSession();
+		$user = (new User())->fromSession();
 		
 		// Handle timeout
 		if($user->timedOut() && false) //timeout disabled for now
