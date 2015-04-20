@@ -50,13 +50,13 @@ class db
 	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
 	 */
 	private function __construct()
-    {		
+    {
 		// check to make sure configuration file is there
 		// config.php contains database credentials
-		if(!is_file(ROOT.'config.php')) 	
-			install::noconfig();
+		if(!is_file(LF.'config.php')) 	
+			(new install)->noconfig();
 		else
-			include ROOT.'config.php'; // load $db config
+			include LF.'config.php'; // load $db config
 
 		$database_config = $db;
 		$this->conf = $db;
@@ -289,12 +289,12 @@ class db
 	 * Dumps database or table to file.
 	 * 
 	 * @param string $table empty by default. If specified, only that table will be dumped from the database
-	 * @param string $folder Defaults to ROOT.'lf/backup/'.
+	 * @param string $folder Defaults to LF.'lf/backup/'.
 	 */
 	function dump($table = '', $folder = NULL)
 	{
 		if($folder !== NULL)
-			$folder = ROOT.'lf/backup/';
+			$folder = LF.'lf/backup/';
 			
 		shell_exec('/usr/bin/mysqldump -u"'.$this->conf['user'].'" -p"'.$this->conf['pass'].'" '.$this->conf['name'].' '.$table.' > '.$folder.$this->conf['name'].'.sql');
 	}
