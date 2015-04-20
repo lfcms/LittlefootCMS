@@ -319,15 +319,15 @@ class orm {
 		$this->crud = 'insert';
 		return $this;
 	}
-		
+	
 	// save or update entry
 	public function save()
 	{
 		if($this->crud != 'insert')
 			$this->crud = 'update';
 			
-		$crud = $this->crud;
-		return $this->$crud();
+		$crudFunction = $this->crud;
+		return $this->$crudFunction();
 	}
 	
 	// compile SQL and return result of query

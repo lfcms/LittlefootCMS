@@ -130,7 +130,7 @@ class Littlefoot
 	 * 
 	 */
 	public function __construct($db = NULL)
-	{		
+	{
 		$this->start = microtime(true);
 		$this->startTimer(__METHOD__);
 		$this->lf = &$this; // ensures universal availability of "$this->lf"

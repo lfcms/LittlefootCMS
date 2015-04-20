@@ -6,9 +6,12 @@ class User
 	private $timeout;
 	public $error = array();
 	
+	protected $password = null;
+	
 	protected $details = array(
 		'id' => 0,
 		'access' => 'none',
+		'status' => 'pending',
 		'user' => '',
 		'display_name' => 'Anonymous'
 	);
@@ -41,6 +44,12 @@ class User
 		
 		// else Anonymous by default
     }
+	
+	public function setPass($pass)
+	{
+		$this->details['pass'] = sha1($pass);
+		return $this;
+	}
 	
 	public function fromSession()
 	{
@@ -148,6 +157,24 @@ class User
         $_SESSION['login'] = $this->refreshTimeout();
 		
         return $this;
+	}
+	
+	public function save()
+	{
+		$id = $this->details['id'];	
+		unset($this->details['id']);
+		
+		if($id == 0)
+			$this->details['id'] = (new orm)->qUsers('lf')->insertArray($this->details);
+		else
+		{
+			(new orm)->qUsers('lf')->updateByid($id, $this->details);
+			$this->details['id'] = $id;
+		}
+		
+		unset($this->details['pass']);
+		
+		return $this;
 	}
 	
 	// not feelin this. may drop it

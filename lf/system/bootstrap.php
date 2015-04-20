@@ -33,8 +33,9 @@ if(is_dir(LF.'lib'))
 if(is_dir(LF.'system/lib')) 
 	ini_set('include_path', ini_get('include_path').':'.LF.'system/lib');
 
-// tried putting this in $lf->authenticate
-// couldn't login when I did that... will fix later
+
 // Session name needs to be alphanumeric, just MD5 it to keep it unique and to not show the docroot
 session_name(md5(ROOT.$_SERVER['SERVER_NAME']));
 session_start();
+// tried putting this in $lf->authenticate
+// couldn't login when I did that... will fix later
