@@ -187,7 +187,7 @@ class orm {
 	
 	private function throwException($msg = '')
 	{
-		$this->error[] = $msg;
+		//$this->error[] = $msg;
 		return $this;
 	}
 	
@@ -423,7 +423,10 @@ class orm {
 		if(!is_null($this->result))
 		{
 			if(!is_null($row))
-				return $this->result[$row];
+				if(isset($this->result[$row]))
+					return $this->result[$row];
+				else
+					return false;
 		
 			return $this->nextRow();
 		}

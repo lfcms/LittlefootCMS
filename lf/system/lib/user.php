@@ -23,7 +23,7 @@ class User
 		else if(is_int($details))
 		{
 			$this->setDetails(
-				orm::qUsers('lf')
+				(new orm)->qUsers('lf')
 					->cols('id, access, user, display_name')
 					->byId($details)
 					->first()
@@ -32,7 +32,7 @@ class User
 		else if(is_string($details))
 		{
 			$this->setDetails(
-				orm::qUsers('lf')
+				(new orm)->qUsers('lf')
 					->cols('id, access, user, display_name')
 					->byDisplay_name($details)
 					->first()
@@ -82,7 +82,7 @@ class User
 		$username = $_POST['user'];
 		$password = sha1($_POST['pass']);
 
-		$login = orm::qUsers('lf')
+		$login = (new orm)->qUsers('lf')
 			->cols('id, user, email, display_name, access')
 			->byUser($_POST['user'])
 			->byPass(sha1($_POST['pass']))
@@ -153,7 +153,7 @@ class User
 	// not feelin this. may drop it
 	public function q()
 	{
-		return orm::q('lf_users');
+		return (new orm)->q('lf_users');
 	}
 	
 	/**
