@@ -25,7 +25,7 @@ if(is_file('config.php'))
 }
 
 $host = isset($_POST['host']) ? $_POST['host'] : 'localhost';
-$user = isset($_POST['user']) ? $_POST['user'] : get_current_user().'_lf';
+$user = isset($_POST['user']) ? $_POST['user'] : get_current_user();
 $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : get_current_user().'_lf';
 
 ?>
@@ -82,7 +82,7 @@ $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : get_current_user().'_lf';
 							</div>
 							<div class="col-6">
 								<label for="apass">Password</label>
-								<input type="text" name="apass" id="apass" placeholder="Sup3rSecr3tP@$$word" />
+								<input type="password" name="apass" id="apass" placeholder="Sup3rSecr3tP@$$word" />
 							</div>
 						</div>
 						<div class="row">
@@ -109,7 +109,7 @@ $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : get_current_user().'_lf';
 							</div>
 							<div class="tile-content">
 								<h4>Installation</h4>
-								
+								<p>Enter your database credentials and admin password, then click Install.</p>
 							</div>
 						</div>
 					</div>

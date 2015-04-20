@@ -55,7 +55,7 @@ class install
 		if($_POST['user'] == '') $errors[] = "Missing 'Username' information";
 		if($_POST['pass'] == '') $errors[] = "Missing 'Password' information";
 		if($_POST['dbname'] == '') $errors[] = "Missing 'Database Name' information";
-		if($_POST['aname'] == '') $errors[] = "Missing 'Admin Username' information";
+		if($_POST['auser'] == '') $errors[] = "Missing 'Admin Username' information";
 		if($_POST['apass'] == '') $errors[] = "Missing 'Admin Password' information";
 
 		if(isset($warnings) && !isset($_POST['warning_check']))
@@ -109,15 +109,7 @@ class install
 					->setPass($aPass)
 					->setStatus('valid')
 					->save()
-					->toSession(); // and auto login as that user				
-				
-				/*if($dbconn->fetch("select * from lf_settings limit 1"))
-						echo 'Data imported. You can <a href="?install=delete">remove the install folder</a>, then login as admin with: <br />
-						u: admin<br />
-						p: pass<br />
-						Make sure you change the password so its more secure';
-				else
-						echo 'Data import error';*/
+					->toSession(); // and auto login as that user
 			}
 		}
 		
