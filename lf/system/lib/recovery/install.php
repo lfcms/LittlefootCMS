@@ -12,13 +12,12 @@ if(!extension_loaded('mysqli'))
  */
 class install
 {
-	
 	public function __construct()
 	{
 		
 	}
 	
-	public static function noconfig()
+	public function noconfig()
 	{
 		if(count($_POST))
 			$this->post();
@@ -29,7 +28,7 @@ class install
 		exit();
 	}
 
-	public static function test()
+	public function test()
 	{
 		if((new orm)->qSettings('lf')->first() == NULL)
 		{
@@ -42,20 +41,22 @@ class install
 		}
 	}
 	
-	private static function nodb()
+	private function nodb()
 	{
 		if($this->db->error != '') $errors = $this->db->error;
 		$msg = 'Unable to query database.';
 		include ROOT.'system/lib/recovery/install.form.php';
 	}
 	
-	private static function post()
+	private function post()
 	{
 		// validate input
 		if($_POST['host'] == '') $errors[] = "Missing 'Hostname' information";
 		if($_POST['user'] == '') $errors[] = "Missing 'Username' information";
 		if($_POST['pass'] == '') $errors[] = "Missing 'Password' information";
 		if($_POST['dbname'] == '') $errors[] = "Missing 'Database Name' information";
+		if($_POST['aname'] == '') $errors[] = "Missing 'Admin Username' information";
+		if($_POST['apass'] == '') $errors[] = "Missing 'Admin Password' information";
 
 		if(isset($warnings) && !isset($_POST['warning_check']))
 		{
@@ -64,7 +65,7 @@ class install
 
 		if(isset($errors))
 		{
-			include ROOT.'system/lib/recovery/install.form.php';
+			include LF.'system/lib/recovery/install.form.php';
 			exit();
 		}
 
@@ -75,9 +76,11 @@ class install
 			'mysql_passwd' => $_POST['pass'],
 			'mysql_database' => $_POST['dbname'],
 		);
+		
 		foreach($replace as $from => $to)
 		{
-			if($to == '') $err = true;
+			if($to == '') 
+				$err = true;
 
 			$conf = str_replace($from, $to, $conf);
 		}
@@ -93,15 +96,28 @@ class install
 					$errors = $dbconn->error;
 			else
 			{
-					echo $dbconn->import(ROOT.'system/lib/recovery/lf.sql', false);
-
-					/*if($dbconn->fetch("select * from lf_settings limit 1"))
-							echo 'Data imported. You can <a href="?install=delete">remove the install folder</a>, then login as admin with: <br />
-							u: admin<br />
-							p: pass<br />
-							Make sure you change the password so its more secure';
-					else
-							echo 'Data import error';*/
+				// run import script
+				echo $dbconn->import(ROOT.'system/lib/recovery/lf.sql', false);
+				
+				// Add admin user
+				$aUser = $_POST['auser'];
+				$aPass = $_POST['apass'];
+				(new User)
+					->setAccess('admin')
+					->setUser($aUser)
+					->setDisplay_name(ucfirst($aUser))
+					->setPass($aPass)
+					->setStatus('valid')
+					->save()
+					->toSession(); // and auto login as that user				
+				
+				/*if($dbconn->fetch("select * from lf_settings limit 1"))
+						echo 'Data imported. You can <a href="?install=delete">remove the install folder</a>, then login as admin with: <br />
+						u: admin<br />
+						p: pass<br />
+						Make sure you change the password so its more secure';
+				else
+						echo 'Data import error';*/
 			}
 		}
 		

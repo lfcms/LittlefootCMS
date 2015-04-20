@@ -25,8 +25,8 @@ if(is_file('config.php'))
 }
 
 $host = isset($_POST['host']) ? $_POST['host'] : 'localhost';
-$user = isset($_POST['user']) ? $_POST['user'] : '';
-$dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
+$user = isset($_POST['user']) ? $_POST['user'] : get_current_user().'_lf';
+$dbname = isset($_POST['dbname']) ? $_POST['dbname'] : get_current_user().'_lf';
 
 ?>
 <html class="lf">
@@ -35,10 +35,8 @@ $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 		<style type="text/css">
-			<?php /*readfile(ROOT.'system/lib/lf.css');*/ ?>
-			
+			<?php readfile(ROOT.'system/lib/lf.css'); ?>
 		</style>
-		<link rel="stylesheet" href="/lf/system/lib/lf.css" />
 	</head>
 	<body>
 		<h1 class="banner dark_gray light">Install Littlefoot</h1>
@@ -47,24 +45,49 @@ $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
 				<div class="row">
 					<div class="col-6">
 						<h2>Database Access</h2>
-						<ul class="vlist">
-							<li>Host: <input type="text" value="<?=$host;?>" name="host" value="localhost" /></li>
-							<li>Database Name: <input type="text" value="<?=$dbname;?>" name="dbname" placeholder="eg. cpusername_littlefootdb" /></li>
-							<li>Database User: <input type="text" value="<?=$user;?>"name="user" placeholder="eg. cpusername_dbuser" /></li>
-							<li>Password: <input type="password" name="pass" placeholder="Database User's Password" /></li>
-							<?php if(is_file('config.php')): ?>
-							<li><label for="">Overwrite Config File:</label> <input class="check" type="checkbox" name="overwrite" checked="checked" /></li>
-							<?php endif; ?>
-
-							<?php if(is_file('config.php')): ?>
-							<li><label for="">Re-install Base Data:</label> <input class="check" type="checkbox" name="data" /></li>
-							<?php else: ?>
-							<li><label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (uncheck this if you are just remaking a lost config)</label></li>
-							<?php endif; ?>
-						</ul>
 						<div class="row">
 							<div class="col-6">
-								<button class="green">Install</button>
+								Host: <input type="text" value="<?=$host;?>" name="host" value="localhost" />
+							</div>
+							<div class="col-6">
+								Database Name: <input type="text" value="<?=$dbname;?>" name="dbname" placeholder="eg. cpusername_littlefootdb" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6">
+								Database User: <input type="text" value="<?=$user;?>"name="user" placeholder="eg. cpusername_dbuser" />
+							</div>
+							<div class="col-6">
+								Password: <input type="password" name="pass" placeholder="Database User's Password" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<?php if(is_file('config.php')): ?>
+								<label for="">Overwrite Config File:</label> <input class="check" type="checkbox" name="overwrite" checked="checked" />
+							</div>
+							<div class="col-12">
+								<label for="">Re-install Base Data:</label> <input class="check" type="checkbox" name="data" />
+								<?php else: ?>
+								<label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (uncheck this if you are just remaking a lost config)</label>
+								<?php endif; ?>
+							</div>
+						</div>
+						
+						<h4>Admin User Credentials</h4>
+						<div class="row">
+							<div class="col-6">
+								<label for="auser">Username</label>
+								<input type="text" name="auser" id="auser" value="admin" />
+							</div>
+							<div class="col-6">
+								<label for="apass">Password</label>
+								<input type="text" name="apass" id="apass" placeholder="Sup3rSecr3tP@$$word" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6">
+								<button class="green" style="">Install</button>
 							</div>
 							<div class="col-6">
 								<a class="blue button marbot" target="_blank" href="http://littlefootcms.com/">View User Guide</a>
@@ -85,11 +108,8 @@ $dbname = isset($_POST['dbname']) ? $_POST['dbname'] : '';
 								<h3>Information</h3>
 							</div>
 							<div class="tile-content">
-								<h4>Login Credentials</h4>
-								<ul class="vlist">
-									<li>Username: <strong>admin</strong></li>
-									<li>Password: <strong>pass</li>
-								</ul>
+								<h4>Installation</h4>
+								
 							</div>
 						</div>
 					</div>
