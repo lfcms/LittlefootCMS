@@ -1,20 +1,6 @@
 <?php
 
-/*
-
-check for issues, provide options to resolve issues
-
-provide option to finish upgrade, delete file
-
-*/
-
-if(isset($this)) { $db = $this->db; }
-else
-{
-        include 'config.php';
-        $conf = $db;
-        $db = db::init();
-}
+$db = db::init();
 
 // 1.13.5-r129
 $index = "<?php
@@ -22,6 +8,9 @@ require_once('lf/system/bootstrap.php'); // include lf library
 $lf = new LittleFoot(); // initialize $lf with $db connection
 $lf->cms(); // execute littlefoot as cms() and render() output
 ";
+
+$upgrades[] = $index;
+
 file_put_contents(ROOT.'../index.php', $index);
 
 $acl = array();
@@ -75,3 +64,15 @@ $db->query('CREATE TABLE IF NOT EXISTS lf_plugins (
 // really need to add something here to make this interactive in case of a problem
 
 
+
+?>
+
+<h2><i class="fa fa-cog"></i> <a href="%appurl%">Settings</a></h2>
+<div class="tile rounded">
+	<div class="light_gray tile-header">
+		<h3><i class="fa fa-cogs"></i> Upgrade</h3>
+	</div>
+	<div class="tile-content">
+		<p>Upgrade complete. <a href="%appurl%">Go Back</a></p>
+	</div>
+</div>
