@@ -3,14 +3,12 @@
 $db = db::init();
 
 // 1.13.5-r129
-$index = "<?php
+$index = <<<'EOF'
+<?php
 require_once('lf/system/bootstrap.php'); // include lf library
 $lf = new LittleFoot(); // initialize $lf with $db connection
 $lf->cms(); // execute littlefoot as cms() and render() output
-";
-
-$upgrades[] = $index;
-
+EOF;
 file_put_contents(ROOT.'../index.php', $index);
 
 $acl = array();
