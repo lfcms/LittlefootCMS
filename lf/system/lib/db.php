@@ -133,10 +133,14 @@ class db
 	 */
 	function query($q, $big = false)
 	{
+		
 		if($big)	$this->db_result = $this->mysqli->query($q, MYSQLI_USE_RESULT);
 		else		$this->db_result = $this->mysqli->query($q);
 		
 		$this->query_count++;
+		
+		if($this->mysqli->error)
+			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
 		
 		return $this->db_result;
 	}
@@ -162,6 +166,9 @@ class db
 		// return false if no rows
 		if($this->db_result->num_rows === 0) return false;
 		
+		if($this->mysqli->error)
+			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
+		
 		return $this->db_result->fetch_assoc();
 	}
 	
@@ -182,9 +189,11 @@ class db
 		if($result === false) return false;
 		
 		$ret = array();
-		while($row = $this->db_result->fetch_assoc()) { 
+		while($row = $this->db_result->fetch_assoc())
 			$ret[] = $row;
-		}
+		
+		if($this->mysqli->error)
+			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
 		
 		$this->query_count++;
 		
