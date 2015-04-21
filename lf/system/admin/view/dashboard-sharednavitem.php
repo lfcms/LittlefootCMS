@@ -12,8 +12,8 @@
 			<div class="col-3">
 				<span class="pull-right">
 					<?=$theapp;?> |
-					<?php if( is_file(ROOT.'apps/'.$theapp.'/admin.php')): ?>
-						<a href="%baseurl%dashboard/apps/<?=$theapp;?>/"><i class="fa fa-keyboard-o"></i></a>
+					<?php if( is_file(LF.'apps/'.$theapp.'/admin.php')): ?>
+						<a href="%baseurl%apps/<?=$theapp;?>/"><i class="fa fa-keyboard-o"></i></a>
 					<?php else: ?>
 						<span><i class="fa fa-keyboard-o"></i></span>
 					<?php endif; ?>
