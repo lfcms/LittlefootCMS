@@ -21,7 +21,7 @@ class install
 	{
 		if(count($_POST))
 			$this->post();
-			
+		
 		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
 		include LF.'system/lib/recovery/install.form.php';
 		
@@ -41,9 +41,9 @@ class install
 		}
 	}
 	
+	// we tried to db, but couldn't... so nodb
 	private function nodb()
 	{
-		if($this->db->error != '') $errors = $this->db->error;
 		$msg = 'Unable to query database.';
 		include ROOT.'system/lib/recovery/install.form.php';
 	}

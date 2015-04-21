@@ -14,6 +14,8 @@ if(is_file('config.php'))
 	//include 'config.php';
 	$dbconn = db::init();
 
+	pre($dbconn->mysqli->error);
+	
 	if($dbconn->error != '') $errors = $dbconn->error;
 	else
 	{

@@ -190,33 +190,14 @@ CREATE TABLE `lf_users` (
   `pass` varchar(40) NOT NULL,
   `email` varchar(256) NOT NULL,
   `display_name` varchar(50) NOT NULL,
-  `salt` varchar(10) NOT NULL,
+  `salt` varchar(256) NOT NULL,
   `last_request` varchar(20) NOT NULL,
   `status` varchar(128) NOT NULL,
   `access` varchar(64) NOT NULL,
   `hash` varchar(64) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `lf_users`
---
-
-LOCK TABLES `lf_users` WRITE;
-/*!40000 ALTER TABLE `lf_users` DISABLE KEYS */;
-INSERT INTO `lf_users` VALUES (1,'admin','9d4e1e23bd5b727046a9e3b4b7db57bd8d6ee684','me@mydomain.com','Admin','','2012-08-10 17:41:15','valid','admin','');
-/*!40000 ALTER TABLE `lf_users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2012-11-25 17:27:45
 CREATE TABLE IF NOT EXISTS lf_plugins (
