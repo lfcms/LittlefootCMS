@@ -40,7 +40,7 @@
 			<div class="tile-content">
 				<ul class="vlist">
 					<li>
-					<?=implode('</li><li>', $plugin_list);?>
+					<?=isset($plugin_list)?implode('</li><li>', $plugin_list):'No plugins found';?>
 					</li>
 				</ul>
 			</div>
