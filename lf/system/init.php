@@ -1,0 +1,1 @@
+<?php include dirname(__FILE__).'/bootstrap.php'; // init.php is deprecated, but this is an easy solution for backward compatibility to OOOLLLDDD installations.
