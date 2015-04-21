@@ -104,6 +104,11 @@ class settings extends app
 		redirect302();
 	}
 	
+	public function applyUpgrade()
+	{
+		include LF.'system/lib/recovery/upgrade.php';
+	}
+	
 	public function lfup($var)
 	{
 		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
@@ -138,12 +143,12 @@ class settings extends app
 				/*echo 'Littlefoot update installed. <a href="'.$_SERVER['HTTP'].'">Click here to return to the previous page.</a>';
 				exit();*/
 				
-				if(is_file(ROOT.'system/upgrade.php')) {
+				/*if(is_file(ROOT.'system/upgrade.php')) {
 					// load the upgrade script if present
 					include ROOT.'system/upgrade.php'; 
 					unlink(ROOT.'system/upgrade.php'); 
 					//exit(); 
-				}
+				}*/
 				
 				$this->notice('Upgraded Littlefoot successfully.');
 			}

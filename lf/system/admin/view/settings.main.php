@@ -85,7 +85,9 @@
 				<?php endif; ?>
 
 				<?php if($this->request->api('version') == '1-DEV'): ?> 
-					<p><a href="%baseurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
+					<p><a href="%appurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
+				<?php else: ?> 
+					<p><a href="%appurl%applyUpgrade">Run lf/system/lib/recovery/upgrade.php</a></p>
 				<?php endif; ?>
 				
 				<h4><i class="fa fa-history"></i> Restore Old Version</h4>
