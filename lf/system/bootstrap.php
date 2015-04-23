@@ -1,10 +1,17 @@
 <?php
 
-/**  
+/**
  *@author Joe S <joe@bioshazard.com>
  *@license LICENSE.txt
  *@package LittlefootCMS
  */
+ 
+// doesn't support below PHP 5.3
+if(version_compare(phpversion(), '5.4')  == -1)
+{
+	echo 'You are using PHP '.phpversion().'. You need at least PHP 5.4 to run LittlefootCMS. Contact your hosting provider to resolve this.';
+	exit;
+}
 
 define('ENV', 'PRODUCTION');
 
@@ -34,8 +41,9 @@ if(is_dir(LF.'system/lib'))
 	ini_set('include_path', ini_get('include_path').':'.LF.'system/lib');
 
 
-// Session name needs to be alphanumeric, just MD5 it to keep it unique and to not show the docroot
-session_name(md5(ROOT.$_SERVER['SERVER_NAME']));
+// Session name needs to be alphanumeric, 
+// just MD5 it to keep it unique and to not show the docroot
+session_name(md5(LF.$_SERVER['SERVER_NAME']));
 session_start();
 // tried putting this in $lf->authenticate
 // couldn't login when I did that... will fix later

@@ -131,64 +131,38 @@ class Littlefoot
 	 */
 	public function __construct($db = NULL)
 	{
-		$this->start = microtime(true);
-		$this->startTimer(__METHOD__);
-		$this->lf = &$this; // ensures universal availability of "$this->lf"
+		$this->start = microtime(true); // timing the WHOLE operation
 		
-		$this->absbase = ROOT; // backward compatible // getcwd().'/';
-		$this->version = file_get_contents(ROOT.'system/version');
+		$this->startTimer(__METHOD__); 	// timing __construct() method
+		$this->lf = &$this; 			// ensures universal availability of "$this->lf"
+		$this->db = db::init(); 		// set up local db object
+		(new install)->test(); 			// test that we can connect and have data
 		
-		$this->db = db::init();
-		$this->load_plugins();
-		$this->hook_run('lf db init');
-		
-		// check install
-		//install::testinstall();
-		(new install)->test();
-		
-		if(!isset($this->auth['acl'])) 
-			$this->auth['acl'] = array();
-		
-		$this->hook_run('post lf __construct');
-		$this->endTimer(__METHOD__);
+		$this->loadVersion() 			// read version from file
+			->load_plugins() 			// load plugins from database
+			->hook_run('post lf __construct') // same thing, different hook
+			->endTimer(__METHOD__); 	// finish timing __construct() method
 	}
 	
 	public function __destruct()
 	{
-		// Save auth variables for next page load.
-		//unset($this->auth['acl']); // so it is not in session
-		
-		if($this->settings['debug'] == 'on')
-			$this->debug = true;
-		
-		// actual speed
-		if($this->debug)
-		{
-			$exectime = round((microtime(true) - $this->start), 6)*(1000);
-			$memusage = round(memory_get_peak_usage()/1024/1024,2);
-			
-			echo ' <!-- LF Debug Info
-Version: '.$this->version.'
-PHP Execution Time: '.$exectime.'ms
-Peak Memory Usage: '.$memusage.' MB
-SQL Queries: '.$this->db->getNumQueries().'
-
-Load Times:
-	';
-			foreach($this->timer as $function => $time)
-				echo ''.round($time, 6)*(1000).'ms - '.$function.'
-	';
+		if($this->debug) 
+			$this->printDebug();
+	}
 	
-			echo '
-Included, Required files:';
+	// print HTML comment at the bottom of the source
+	// display cool stats and list of required files
+	public function printDebug()
+	{
+		$exectime = round((microtime(true) - $this->start), 6)*(1000);
+		$memusage = round(memory_get_peak_usage()/1024/1024,2);
+		include LF.'system/template/debug.php';
+	}
 	
-			foreach(get_included_files() as $included)
-				echo '
-	'.$included;
-	
-			echo '
--->';
-		}
+	public function loadVersion()
+	{
+		$this->version = file_get_contents(LF.'system/version');
+		return $this;
 	}
 	
 	/**
@@ -1040,7 +1014,7 @@ Included, Required files:';
 		foreach($vars as $var) // add vars until they are all there
 		{
 			$varstr[] = $var;
-			echo $this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
+			$this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
 		}
 		
 		echo $class->$func($vars);
@@ -1188,7 +1162,9 @@ Included, Required files:';
 	// Run hooks to execute plugins attached to them
 	public function hook_run($hook)
 	{
-		if(!isset($this->plugins[$hook])) return false;
+		if(!isset($this->plugins[$hook])) 
+			return $this;
+		
 		foreach($this->plugins[$hook] as $plugin => $config)
 		{
 			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
@@ -1197,6 +1173,8 @@ Included, Required files:';
 			include ROOT.'plugins/'.$plugin.'/index.php';
 			$this->endTimer(__METHOD__.$hookDetails);
 		}
+		
+		return $this;
 	}
 	/*
 	public function __call($name, $arguments)
