@@ -37,14 +37,6 @@
 	</head>
 
 	<body>
-		<!-- <header class="container">
-			<?php
-
-				if($_SESSION['upgrade'])
-					echo '<a href="%baseurl%settings/lfup/">new littlefoot version available! </a>';
-
-			?>
-		</header> -->
 		<div class="wrapper userbar dark_gray light">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
@@ -53,7 +45,9 @@
 							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-paw"></i> lf admin</a>
 						</div>
 						<div class="col-7">
-							<a id="site_preview" href="%relbase%" target="blank_"><i class="fa fa-eye"></i> <?=$this->domain;?>%relbase%</a>
+							<a id="site_preview" href="%relbase%" target="blank_">
+								<i class="fa fa-eye"></i> <?=$this->domain;?>%relbase%
+							</a>
 						</div>
 						<div class="col-3">
 							<span id="logout_button" class="pull-right">
@@ -62,6 +56,11 @@
 							<span id="admin_greeting" class="pull-right">
 								Hello <?=$this->api('me');?>.
 							</span>
+						<?php if($_SESSION['upgrade']): ?>
+							<span id="upgrade" class="pull-left">
+								<a class="blue button" href="%baseurl%settings/">Upgrade Now!</a>
+							</span>
+						<?php endif; ?>
 						</div>
 					</div>
 				</div>

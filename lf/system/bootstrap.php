@@ -9,7 +9,7 @@
 // doesn't support below PHP 5.3
 if(version_compare(phpversion(), '5.4')  == -1)
 {
-	echo 'You are using PHP '.phpversion().'. You need at least PHP 5.4 to run LittlefootCMS. Contact your hosting provider to resolve this.';
+	echo 'You are using PHP '.phpversion().' which is <a href="http://php.net/eol.php">End of Life</a>. You need at least PHP 5.4 to run LittlefootCMS. Contact your hosting provider to resolve this.';
 	exit;
 }
 

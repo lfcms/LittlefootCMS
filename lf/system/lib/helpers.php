@@ -124,28 +124,27 @@ function get_include($path)
 /**
  * download a file from $url to $path
  *
- * ty xaav from [http://stackoverflow.com/questions/3938534/download-file-to-server-from-url]
+ * ty Silver Moon http://www.binarytides.com/download-a-file-using-curl-in-php/
  */
-function downloadFile ($url, $path) {
-
-	$newfname = $path;
-	$file = fopen ($url, "rb");
-	if ($file) {
-		$newf = fopen ($newfname, "wb");
-
-		if ($newf)
-		while(!feof($file)) {
-			fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
-		}
-	}
-
-	if ($file) {
-		fclose($file);
-	}
-
-	if ($newf) {
-		fclose($newf);
-	}
+function downloadFile ($url, $newfilepath, $timeout = 30) {
+	set_time_limit($timeout);
+ 
+	//File to save the contents to
+	$fp = fopen ($newfilepath, 'w+');
+	 
+	//Here is the file we are downloading, replace spaces with %20
+	$ch = curl_init(str_replace(" ","%20",$url));
+	 
+	curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+	 
+	//give curl the file pointer so that it can write to it
+	curl_setopt($ch, CURLOPT_FILE, $fp);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	 
+	$data = curl_exec($ch);//get curl response
+	 
+	//done
+	curl_close($ch);
 }
 
 /**
@@ -347,4 +346,20 @@ function pre($str, $func = NULL)
 	else
 		$func($str);
 	echo '</pre>';
+}
+
+// ty lord_viper http://stackoverflow.com/a/8543512
+function curl_get_contents($url) {
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);       
+
+    $data = curl_exec($ch);
+    curl_close($ch);
+
+    return $data;
 }
