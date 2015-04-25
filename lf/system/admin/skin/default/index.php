@@ -75,7 +75,7 @@
 					</nav>
 				</div>
 				<div class="col-10">
-					<div id="app-<?php echo $class; ?>">
+					<div id="controller-<?php echo $this->lf->action[0]; ?>">
 						<?php echo implode($this->content['%content%']); ?>
 					</div>
 				</div>
