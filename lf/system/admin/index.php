@@ -77,7 +77,7 @@ else if($user->hasaccess('admin'))
 	// get latest version
 	if(!isset($_SESSION['upgrade']))
 	{
-		$newversion = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+		$newversion = curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
 		if($this->lf->version != $newversion && $this->lf->version != '1-DEV')
 			$_SESSION['upgrade'] = $newversion;
 		else
@@ -114,7 +114,7 @@ else if($user->hasaccess('admin'))
 		);
 		
 		$nav = str_replace($links[0][$match], $replace, $nav);
-	}	
+	}
 	
 	$this->content['%nav%'][] = $nav;
 	

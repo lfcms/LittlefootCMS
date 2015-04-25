@@ -1,14 +1,16 @@
 <div id="auth_lf">
 <?php
 
-if($this->api('me') != 'Anonymous')
+$user = (new User)->fromSession();
+
+if($user->getId() != 0)
 {
         $link = '';
-        if($this->auth['access'] == 'admin')
+        if($user->hasAccess('admin'))
                 $link .= ' <a href="'.$this->base.'admin/">admin</a>';
         $link .= '<a href="'.$this->base.'_auth/logout">logout</a>';
 
-        ?><div class="auth_welcome">Hello, <?=$this->api('me');?>. <?=$link;?></div>
+        ?><div class="auth_welcome">Hello, <?=$user->getDisplay_name();?>. <?=$link;?></div>
 
 <?php } else {
 

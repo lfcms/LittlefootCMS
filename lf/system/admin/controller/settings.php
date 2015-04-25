@@ -9,7 +9,7 @@ class settings extends app
 	{
 		/* UPGRADE */
 		
-		$newest = file_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+		$newest = curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
 		
 		$rewrite['options'] = array('on', 'off');
 		$rewrite['value'] = 'on';
@@ -28,11 +28,11 @@ class settings extends app
 			$signup['value'] = 'off';
 		
 		/* SIMPLECMS */
-		$apps = scandir(ROOT.'apps'); // get app list
+		$apps = scandir(LF.'apps'); // get app list
 		unset($apps[1], $apps[0]);
 		foreach($apps as $app)
 		{
-			if(is_file(ROOT.'apps/'.$app.'/index.php'))
+			if(is_file(LF.'apps/'.$app.'/index.php'))
 				$simplecms['options'][] = $app;
 		}
 		$simplecms['value'] = $this->lf->settings['simple_cms'];
@@ -47,21 +47,21 @@ class settings extends app
 			
 		// Backup list
 		$backups = array();
-		if(is_dir(ROOT.'backup')) { // this really needs to get moved to a model
-			$result = scandir(ROOT.'backup/');
+		if(is_dir(LF.'backup')) { // this really needs to get moved to a model
+			$result = scandir(LF.'backup/');
 			
 			foreach($result as $backup) {
 				if($backup == '.' || $backup == '..') continue;
 				
-				if(is_file(ROOT.'backup/'.$backup.'/version'))
-					$backups[$backup] = file_get_contents(ROOT.'backup/'.$backup.'/version');
+				if(is_file(LF.'backup/'.$backup.'/version'))
+					$backups[$backup] = curl_get_contents(LF.'backup/'.$backup.'/version');
 				else
 					continue;
 			}
 		}
 		
 		// Reinstall
-		$result = glob(ROOT.'apps/*/install.sql');
+		$result = glob(LF.'apps/*/install.sql');
 		$installs = array();
 		foreach($result as $install)
 		{
@@ -99,7 +99,7 @@ class settings extends app
 	public function upgradedev($args)
 	{
 		if($this->request->api('version') == '1-DEV')
-			include ROOT.'system/upgrade.dev.php';
+			include LF.'system/upgrade.dev.php';
 			
 		redirect302();
 	}
@@ -111,7 +111,7 @@ class settings extends app
 	
 	public function lfup($var)
 	{
-		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', ROOT.'system.zip');
+		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', LF.'system.zip');
 		unset($_SESSION['upgrade']);
 		//upgrade();
 		
@@ -119,14 +119,14 @@ class settings extends app
 		$time = time();
 		if(!is_dir('backup')) mkdir('backup');
 		
-		if(!is_file(ROOT.'system.zip'))
+		if(!is_file(LF.'system.zip'))
 		{
-			$this->notice(ROOT.'system.zip does not exist');
+			$this->notice(LF.'system.zip does not exist');
 		}
-		else if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) 
+		else if(!rename(LF.'system', LF.'backup/system-'.$time)) 
 		{
 			// if unable to rename...
-			$this->notice('Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time);
+			$this->notice('Unable to move '.LF.'system to '.LF.'backup/system-'.$time);
 		} 
 		else
 		{
@@ -135,18 +135,18 @@ class settings extends app
 			$dir = ROOT;
 			Unzip($dir,$file);
 			
-			if(!is_dir(ROOT.'system'))
+			if(!is_dir(LF.'system'))
 				$this->notice('Failed to unzip system.zip');
 			else
 			{
-				unlink(ROOT.'system.zip');
+				unlink(LF.'system.zip');
 				/*echo 'Littlefoot update installed. <a href="'.$_SERVER['HTTP'].'">Click here to return to the previous page.</a>';
 				exit();*/
 				
-				/*if(is_file(ROOT.'system/upgrade.php')) {
+				/*if(is_file(LF.'system/upgrade.php')) {
 					// load the upgrade script if present
-					include ROOT.'system/upgrade.php'; 
-					unlink(ROOT.'system/upgrade.php'); 
+					include LF.'system/upgrade.php'; 
+					unlink(LF.'system/upgrade.php'); 
 					//exit(); 
 				}*/
 				
@@ -161,8 +161,8 @@ class settings extends app
 	{
 		if(!isset($vars[1])) redirect302();
 		
-		if(is_dir(ROOT.'backup/'.$vars[1]))
-			rrmdir(ROOT.'backup/'.$vars[1]);
+		if(is_dir(LF.'backup/'.$vars[1]))
+			rrmdir(LF.'backup/'.$vars[1]);
 		redirect302();
 	}
 	
@@ -173,7 +173,7 @@ class settings extends app
 		if(!preg_match('/^[a-zA-Z0-9_\.]+$/', $args[1], $match))
 			return 'bad app specified';
 		
-		chdir(ROOT.'apps/'.$match[0]);
+		chdir(LF.'apps/'.$match[0]);
 		
 		$this->db->import('install.sql');
 		
@@ -185,13 +185,13 @@ class settings extends app
 		if(!isset($vars[1])) redirect302();
 		
 		$time = time(); 
-		if(!is_dir(ROOT.'backup'))
-			mkdir(ROOT.'backup');
-		if(!rename(ROOT.'system', ROOT.'backup/system-'.$time)) // if unable to rename...
-			echo 'Unable to move '.ROOT.'system to '.ROOT.'backup/system-'.$time; 
+		if(!is_dir(LF.'backup'))
+			mkdir(LF.'backup');
+		if(!rename(LF.'system', LF.'backup/system-'.$time)) // if unable to rename...
+			echo 'Unable to move '.LF.'system to '.LF.'backup/system-'.$time; 
 		else
 		{
-			rename(ROOT.'backup/'.$vars[1], ROOT.'system');
+			rename(LF.'backup/'.$vars[1], LF.'system');
 			
 			/*echo 'Littlefoot system/ restored. <a href="'.$_SERVER['HTTP_REFERER'].'">Return to Littlefoot CMS</a>';
 			exit();*/
