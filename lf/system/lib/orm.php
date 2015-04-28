@@ -47,6 +47,9 @@ class orm {
 	/** @var string $crud Chosen CRUD operation (select, insert, update, delete) */
 	private $crud = 'select';
 	
+	/** @var string $distinctCol Add DISTINCT limitation to SQL query */
+	private $distinctCol = false;
+	
 	/** @var array $data Array of data ($col => $val). Used in CRUD operations. */
 	public $data = array();
 	
@@ -67,6 +70,9 @@ class orm {
 
 	/** @var int $row counter for incremental ->get() */
 	public $row = 0;
+	
+	/** $var string $pkIndex default column to update on. */
+	public $pkIndex = 'id';
 	
 	/**
 	 * Initialize the orm class. Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
@@ -151,11 +157,17 @@ class orm {
 		return orm::$method($magic, $args);
     }
 	
+	public function distinct($column)
+	{
+		$this->distinctCol = $column;
+		return $this;
+	}
+	
 	// wildcard catchall for shortcut requests (filter, set, etc)
 	public function __call($method, $args) {
 		
 		// look for valid request
-		if(!preg_match('/^(getBy|getAllBy|by|filterBy|set|find|q|query)(.+)/', $method, $method_parse))
+		if(!preg_match('/^(getBy|getAllBy|by|filterBy|set|findBy|find|q|query)(.+)/', $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
 		// parse out method and column reference
@@ -167,6 +179,13 @@ class orm {
 		if($m == 'q') // 'q' is an alias to query()
 			$m = 'query';
 		
+		
+		if($m == 'findBy') // 'by' is an alias to filterBy()
+		{
+			$m = 'filterBy';
+			$this->$m($method_parse[2], $args);
+			return $this->find();
+		}
 		
 		if($m == 'getBy') // 'by' is an alias to filterBy()
 		{
@@ -210,14 +229,50 @@ class orm {
 		return $this;
 	}
 	
+	public function setPk($column)
+	{
+		$this->pkIndex = $column;
+		return $this;
+	}
+	
 	// i kinda want to call this function load()
 	public function find($args = null)
 	{
 		if(isset($args[0]))
 			$this->limit($args[0]);
 		
+		// temp variable for method call
 		$crud = $this->crud;
+		
+		// run the query
 		$this->result = $this->$crud();
+		$this->row = 0;
+		
+		// update crud in case of save after find()
+		$this->crud = "update";
+		
+		return $this;
+	}
+	
+	/**
+	 * push current result row into data value
+	 * 
+	 * ideal to run after query to ->save()
+	 * 
+	 */
+	public function qFromResult()
+	{
+		$result = $this->currentRow();
+		
+		foreach($result as $col => $val)
+		{
+			$setcol = "set$col";
+			$this->$setcol($val);
+		}
+		
+		$this->conditions = array($this->pkIndex.' = '.$this->data[$this->pkIndex]);
+		unset($this->data[$this->pkIndex]);
+		
 		return $this;
 	}
 	
@@ -296,6 +351,21 @@ class orm {
 		return $this;
 	}
 	
+	public function setArray($set)
+	{
+		foreach($set as $col => $val)
+			$this->set($col, array($val));
+		
+		return $this;
+	}
+	
+	// set given column as NOW()
+	public function setAsNow($column)
+	{
+		$this->data[$column] = 'NOW()';
+		return $this;
+	}
+	
 	// shortcut to allow column in called function title
 	private function set($column, $args)
 	{
@@ -325,7 +395,7 @@ class orm {
 	{
 		if($this->crud != 'insert')
 			$this->crud = 'update';
-			
+		
 		$crudFunction = $this->crud;
 		return $this->$crudFunction();
 	}
@@ -381,7 +451,9 @@ class orm {
 	{
 		$sql = 'SELECT ';
 		
-		if($this->data == array()) 
+		if($this->distinctCol)
+			$sql .= 'DISTINCT '.$this->distinctCol.' ';
+		else if($this->data == array()) 
 			$sql .= '*';
 		else
 			$sql .= $this->data;
