@@ -1,34 +1,30 @@
 <?php
 
 /**
- * Abstracted object relation mapping for database manipulation.
- *
- * # Example Usage
- *
+ * Littlefoot ORM: SQLQuery
+ * 
  * ~~~
- * // SELECT * FROM mydb.my_table WHERE id = 34
- * // returns an array
- * orm::q('my_table')->filterByid(34)->get();
- *
- * // SELECT * FROM mydb.my_table WHERE cost > 25
- * // returns an array
- * orm::q('my_table')->filterBycost('>', 25)->get();
- *
- * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
- * // returns result of $this->db->query($sql);
- * orm::q('my_table')->settitle('new title')->filterByid(34)->save();
- *
- * // UPDATE mydb.my_table SET title = 'new title' WHERE id = 34
- * // returns result of $this->db->query($sql);
- * orm::q('my_table')->updateById(34, $_POST);
- *
- * // INSERT INTO mydb.my_table (id, title, body) VALUES (NULL, 'my title', 'my body')
- * $_POST = array('title' => 'my title', 'body' => 'my body');
- * orm::q('my_table')->insertArray($_POST);
- *
- * // DELETE FROM mydb.my_table WHERE id = 12
- * orm::q('my_table')->filterByid(12)->delete();
+ * $blogThreads = (new BlogThreads)
+ * 	->byId(12)
+ * 	->find();
+ * 	
+ * 	
+ * class mynewclass extends BlogComments { }	
+ * 
+ * blogComments = (new mynewclass)->find();
+ * 
+ * pre($blogComments);
  * ~~~
+ * 
+ * 
+ * 
+ * Potential Names
+ * 
+ * SQLQuery
+ * qquery
+ * qq
+ * SQLQS
+ * 
  */
 class orm {
 
@@ -52,6 +48,9 @@ class orm {
 	
 	/** @var array $data Array of data ($col => $val). Used in CRUD operations. */
 	public $data = array();
+	
+	/** @var array $joins Array of join operations. */
+	public $joins = array();
 	
 	/** @var array $conditions Array of conditions ('var > val', 'var2 = val2'). Used in where clause. */
 	public $conditions = array();
@@ -117,6 +116,7 @@ class orm {
 	{
 		ob_start();
 		$counter = 1;
+		
 		foreach($this->getAll() as $row)
 		{
 			echo '<br />Row #'.$counter.'<br />';
@@ -167,7 +167,7 @@ class orm {
 	public function __call($method, $args) {
 		
 		// look for valid request
-		if(!preg_match('/^(getBy|getAllBy|by|filterBy|set|findBy|find|q|query)(.+)/', $method, $method_parse))
+		if(!preg_match('/^(getBy|getAllBy|by|filterBy|set|findBy|find|q|query|joinOn)(.+)/', $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
 		// parse out method and column reference
@@ -287,7 +287,37 @@ class orm {
 		return $this->find();
 	}
 	
-	// shortcut to allow column in called function title
+	public function withFk($foriegn_key)
+	{
+		return $this->table.'.'.$foriegn_key;
+	}
+	
+	private function joinOn($foreignKey, $args)
+	{
+		/*if(preg_match('/^'.$table.'On(.+)/', $table, $match))
+		{
+			$column = $match[1];
+		}
+		else
+		{
+			//if(is_object($table)
+				//$on = $table->fk['']
+			
+			$this->joins[] = 'LEFT JOIN '.$table.' ON '.$table.'.id = '.$this->table.'.id';
+		}*/
+		
+		// break up on first '.'
+		$parts = explode('.', $args[0], 2);
+		
+		$table = $parts[0];
+		$column = $parts[1];
+		
+		$this->joins[] = 'LEFT JOIN '.$table.' ON '.$table.'.'.$column.' = '.$this->table.'.'.$foreignKey;
+		
+		
+		return $this;
+	}
+	
 	// usage: orm::q('lf_users')->filterByid('>', 20);
 	private function filterBy($column, $args)
 	{
@@ -303,7 +333,10 @@ class orm {
 			$condition = '=';
 		}
 		
-		if(!is_numeric($value))
+		if(is_object($value))
+			$this->joins[] = $value;
+		
+		else if(!is_numeric($value))
 			$value = "'".$this->db->escape($value)."'";
 		
 		$this->conditions[] = $column.' '.$condition.' '.$value;
@@ -383,10 +416,31 @@ class orm {
 		return $this;
 	}
 	
-	// get into insert statement
+	/**
+	 * Set object CRUD action as 'INSERT into insert statement
+	 */
 	public function add()
 	{
 		$this->crud = 'insert';
+		return $this;
+	}
+	
+	public function saveAll()
+	{
+		if(is_null($this->result))
+			return $this->error('No result to save');
+
+		// save your place if you are navigating about
+		$before = $this->row;
+		
+		foreach($this->result as $id => $row)
+		{
+			$this->row = $id;
+			$this->save();
+		}
+			
+		$this->row = $before; // remember `$before = $this->row;`?
+		
 		return $this;
 	}
 	
@@ -398,6 +452,11 @@ class orm {
 		
 		$crudFunction = $this->crud;
 		return $this->$crudFunction();
+	} 	
+	
+	public function debugSQL()
+	{
+		return $this->sql;
 	}
 	
 	// compile SQL and return result of query
@@ -421,6 +480,35 @@ class orm {
 		
 		if(!$result) return null;
 		else return $this->db->last();
+	}
+	private function select() // read
+	{
+		$sql['crud'] = 'SELECT';
+		
+		if($this->distinctCol)
+			$sql['distinct'] = 'DISTINCT '.$this->distinctCol;
+		else if($this->data == array()) 
+			$sql['columns'] = '*';
+		else
+			$sql['columns'] = $this->data;
+		
+		$sql['from'] = 'FROM '.$this->table;
+
+		if($this->joins != array())
+			$sql['joins'] = implode($this->joins);
+		
+		
+		if($this->where != '')
+			$sql[] = 'WHERE '.$this->where;
+		else if(count($this->conditions))
+			$sql[] = 'WHERE '.implode(' AND ', $this->conditions);
+		
+		$sql['order'] = $this->order;
+		$sql['limit'] = $this->limit;
+		
+		$this->sql = $sql;
+		
+		return $this->db->fetchall(implode(' ', $sql));
 	}
 	private function update()
 	{
@@ -446,31 +534,6 @@ class orm {
 		$this->sql = $sql;
 		
 		return $this->db->query($sql);
-	}
-	private function select() // read
-	{
-		$sql = 'SELECT ';
-		
-		if($this->distinctCol)
-			$sql .= 'DISTINCT '.$this->distinctCol.' ';
-		else if($this->data == array()) 
-			$sql .= '*';
-		else
-			$sql .= $this->data;
-			
-		$sql .= ' FROM '.$this->table;
-		
-		if($this->where != '')
-			$sql .= ' WHERE '.$this->where;
-		else if(count($this->conditions))
-			$sql .= ' WHERE '.implode(' AND ', $this->conditions);
-		
-		$sql .= $this->order;
-		$sql .= $this->limit;
-		
-		$this->sql = $sql;
-		
-		return $this->db->fetchall($sql);
 	}
 	public function delete()
 	{
@@ -586,4 +649,25 @@ class orm {
 		}
 		$page->save();
 	}
+}
+
+/**
+ * 
+ *
+ */
+function __autoload($class_name) {
+	
+	if(!preg_match_all('/[A-Z][^A-Z]+/', $class_name, $matches)) 
+		return;
+	
+	$guts['table'] = 'public $table = "'.strtolower(implode('_',$matches[0])).'";';
+	
+	//$guts['method'] = 'public function test() { echo "Hey there"; }';
+	
+	// ty chelmertz http://stackoverflow.com/a/13504972
+	eval(sprintf('
+	class %s extends orm {
+		'.implode($guts).'
+	}', $class_name));
+	
 }
