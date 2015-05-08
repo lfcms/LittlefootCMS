@@ -3,6 +3,8 @@
 /**
  * Littlefoot ORM: SQLQuery
  * 
+ * unless you define it otherwise, new <classname> will be hijacked 
+ * 
  * ~~~
  * $blogThreads = (new BlogThreads)
  * 	->byId(12)
@@ -167,7 +169,7 @@ class orm {
 	public function __call($method, $args) {
 		
 		// look for valid request
-		if(!preg_match('/^(getBy|getAllBy|by|filterBy|set|findBy|find|q|query|joinOn)(.+)/', $method, $method_parse))
+		if(!preg_match('/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|q|query|(?:l|f|r|i)?joinOn)(.+)/', $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
 		// parse out method and column reference
@@ -179,27 +181,33 @@ class orm {
 		if($m == 'q') // 'q' is an alias to query()
 			$m = 'query';
 		
+		if(preg_match('/^(l|f|r|i)joinOn$/', $m, $match))
+		{
+			$args[] = $match[1];
+			return $this->joinOn($method_parse[2], $args);
+		}
 		
 		if($m == 'findBy') // 'by' is an alias to filterBy()
 		{
-			$m = 'filterBy';
-			$this->$m($method_parse[2], $args);
-			return $this->find();
+			return $this
+				->filterBy($method_parse[2], $args)
+				->find();
 		}
+		
+		if($m == 'deleteBy') // 'by' is an alias to filterBy()
+			return $this
+				->filterBy($method_parse[2], $args)
+				->delete();
 		
 		if($m == 'getBy') // 'by' is an alias to filterBy()
-		{
-			$m = 'filterBy';
-			$this->$m($method_parse[2], $args);
-			return $this->get();
-		}
+			return $this
+				->filterBy($method_parse[2], $args)
+				->get();
 		
 		if($m == 'getAllBy') // 'by' is an alias to filterBy()
-		{
-			$m = 'filterBy';
-			$this->$m($method_parse[2], $args);
-			return $this->getAll();
-		}
+			return $this
+				->filterBy($method_parse[2], $args)
+				->getAll();
 		
 		return $this->$m($method_parse[2], $args);
     }
@@ -287,13 +295,46 @@ class orm {
 		return $this->find();
 	}
 	
+	
+	/**
+	 * 
+	 * Return a string <table>.<column> to define the key on which to join
+	 * 
+	 * ## Example
+	 * 
+	 * ~~~
+	 * echo (new BlogComments)->withFk('parent_id');
+	 * ~~~
+	 * 
+	 * Would print the string 'blog_comments.parent_id';
+	 * 
+	 * 
+	 */
 	public function withFk($foriegn_key)
 	{
 		return $this->table.'.'.$foriegn_key;
 	}
 	
+	/**
+	 * ## Example
+	 * 
+	 * 
+	 * ~~~
+	 * $blogPost = (new BlogThreads)
+	 * ->joinOnId( (new BlogComments)->withFk('parent_id') )
+	 * ->findById(12);
+	 * ~~~
+	 * 
+	 * 
+	 * @param string $foreignKey The local column to use with a join
+	 * 
+	 * @param string $args `$args[0]` is the table.column string (ideally generated with `$this->withFk`).
+	 * 
+	 */
 	private function joinOn($foreignKey, $args)
 	{
+		// TODO: Add functionality to handle objects passed as $args[0]
+		
 		/*if(preg_match('/^'.$table.'On(.+)/', $table, $match))
 		{
 			$column = $match[1];
@@ -312,8 +353,20 @@ class orm {
 		$table = $parts[0];
 		$column = $parts[1];
 		
-		$this->joins[] = 'LEFT JOIN '.$table.' ON '.$table.'.'.$column.' = '.$this->table.'.'.$foreignKey;
+		// TOD: Break this up so 'LEFT' is variable (ie INNER, FULL, etc)
 		
+		
+		
+		$join = 'JOIN';
+		if(isset($args[1]))
+		{
+			if($args[1] == 'r') $join = 'RIGHT JOIN';
+			if($args[1] == 'i') $join = 'INNER JOIN';
+			if($args[1] == 'l') $join = 'LEFT JOIN';
+			if($args[1] == 'f') $join = 'FULL JOIN';
+		}
+		
+		$this->joins[] = $join.' '.$table.' ON '.$table.'.'.$column.' = '.$this->table.'.'.$foreignKey;
 		
 		return $this;
 	}
@@ -652,8 +705,19 @@ class orm {
 }
 
 /**
+ * If the class is not already defined, you can instantiate a new class through autoload. 
  * 
- *
+ * `$users = new LfUsers();` would auto generate the follow class definition:
+ * 
+ * ```
+ * class LfUsers extends orm
+ * {
+ * 		private $table = 'lf_users';
+ * }
+ * ```
+ * 
+ * Try it: `var_dump(new LfUsers);`
+ * 
  */
 function __autoload($class_name) {
 	
