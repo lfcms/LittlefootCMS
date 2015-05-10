@@ -37,11 +37,8 @@ class auth extends app
 		$user = new User();
 		$user->doLogin();
 		
-		// backward compatible
-		$this->lf->auth = $user->getDetails();
-		$_SESSION['_auth'] = $this->lf->auth;
-		
-		redirect302();
+		// IT REDIRECTS HERE
+		//redirect302();
 	}
 	
 	public function logout($args)

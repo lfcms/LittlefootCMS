@@ -12,7 +12,7 @@ if(version_compare(phpversion(), '5.4.0', '<')
 if(is_file('config.php'))
 {
 	//include 'config.php';
-	$dbconn = db::init();
+	$dbconn = (new orm)->initDb();
 
 	pre($dbconn->mysqli->error);
 	
