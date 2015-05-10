@@ -8,15 +8,15 @@ class store extends app
 	{
 		//$this->lf->vars[];
 		
-		$apps = file_get_contents($this->repobase.'/apps/apps.txt');
+		$apps = curl_get_contents($this->repobase.'/apps/apps.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
 		$app_files = array_flip(scandir(LF.'apps'));
 		
-		$skins = file_get_contents($this->repobase.'/skins/skins.txt');
+		$skins = curl_get_contents($this->repobase.'/skins/skins.txt');
 		$skins = array_flip(explode("\n",$skins,-1));
 		$skin_files = array_flip(scandir(LF.'skins'));
 		
-		$plugins = file_get_contents($this->repobase.'/plugins/plugins.txt');
+		$plugins = curl_get_contents($this->repobase.'/plugins/plugins.txt');
 		$plugins = array_flip(explode("\n",$plugins,-1));
 		$plugin_files = array_flip(scandir(LF.'plugins'));
 		
@@ -130,7 +130,7 @@ class store extends app
 		$type = $this->type;
 		
 		//echo $this->repobase."/${type}/${type}.txt";
-		$list = file_get_contents($this->repobase."/$type/$type.txt");
+		$list = curl_get_contents($this->repobase."/$type/$type.txt");
 		$list = array_flip(explode("\n",$list,-1));
 		
 		//pre($list);
