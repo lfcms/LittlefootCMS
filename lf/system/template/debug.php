@@ -8,6 +8,7 @@ Load Times:
 
 <?php foreach($this->timer as $function => $time): ?>
 	<?=round($time, 6)*(1000);?>ms - <?=$function;?>
+	
 <?php endforeach; ?>
 
 Included, Required files:

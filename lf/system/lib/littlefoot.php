@@ -287,6 +287,10 @@ class Littlefoot
 		foreach((new orm)->qSettings('lf')->getAll() as $setting)
 			$this->settings[$setting['var']] = $setting['val'];
 		
+		
+		if(isset($this->settings['debug']))
+			$this->debug = $this->settings['debug'];
+		
 		return $this;
 	}
 	

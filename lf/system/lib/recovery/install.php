@@ -113,6 +113,11 @@ class install
 			}
 		}
 		
-		redirect302('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'/admin');
+		$url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'];
+		
+		if($url[strlen($url) - 1] != '/')
+			$url .= '/'; // ensure trailing slash
+		
+		redirect302($url.'admin');
 	}
 }
