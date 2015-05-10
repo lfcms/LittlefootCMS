@@ -169,7 +169,8 @@ class orm {
 	public function __call($method, $args) {
 		
 		// look for valid request
-		if(!preg_match('/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|q|query|(?:l|f|r|i)?joinOn)(.+)/', $method, $method_parse))
+		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|q|query|(?:l|f|r|i)?joinOn)(.+)/';
+		if(!preg_match($methodRegex, $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
 		// parse out method and column reference
@@ -188,11 +189,9 @@ class orm {
 		}
 		
 		if($m == 'findBy') // 'by' is an alias to filterBy()
-		{
 			return $this
 				->filterBy($method_parse[2], $args)
 				->find();
-		}
 		
 		if($m == 'deleteBy') // 'by' is an alias to filterBy()
 			return $this
@@ -729,9 +728,9 @@ function __autoload($class_name) {
 	//$guts['method'] = 'public function test() { echo "Hey there"; }';
 	
 	// ty chelmertz http://stackoverflow.com/a/13504972
-	eval(sprintf('
-	class %s extends orm {
-		'.implode($guts).'
-	}', $class_name));
+	eval(sprintf(
+		'class %s extends orm { '.implode(' ', $guts).' }',
+		$class_name
+	));
 	
 }

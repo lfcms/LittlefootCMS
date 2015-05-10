@@ -168,7 +168,7 @@ class dashboard extends app
 		$this->updatenavcache();
 		
 		/* -=-=-=-=- Add Link to Nav -=-=-=-=- */
-		$pwd = $this->request->absbase.'/apps';
+		$pwd = LF.'/apps';
 		foreach(scandir($pwd) as $file)
 		{
 			if($file == '.' || $file == '..') 
