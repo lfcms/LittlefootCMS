@@ -24,7 +24,7 @@ $(document).ready(function() {
 <div class="row no_martop">
 	<div class="col-7">
 		<h3 title="Setting the position to 0 will hide a navigation item.">
-			<i class="fa fa-bars"></i> Navigation
+			<i class="fa fa-compass"></i> Navigation
 		</h3>
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row">
@@ -36,7 +36,7 @@ $(document).ready(function() {
 	</div>
 	<div class="col-5">
 		<h3 title="Click an app below to add it to the navigation.">
-			<i class="fa fa-th"></i> App Gallery
+			<i class="fa fa-cubes"></i> App Gallery
 		</h3>
 		<!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
 		<div id="appgallery-container">

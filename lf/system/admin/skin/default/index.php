@@ -42,7 +42,7 @@
 				<div class="row no_martop no_marbot">
 					<div class="userbar">
 						<div class="col-2">
-							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-paw"></i> lf admin</a>
+							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-bars"></i> lf admin</a>
 						</div>
 						<div class="col-7">
 							<a id="site_preview" href="%relbase%" target="blank_">
