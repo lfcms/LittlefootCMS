@@ -51,7 +51,7 @@
 						</div>
 						<div class="col-3">
 							<span id="logout_button" class="pull-right">
-								<a class="x" href="%baseurl%_auth/logout">logout</a>
+								<a class="x" href="%baseurl%_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
 								Hello <?=$this->api('me');?>.
