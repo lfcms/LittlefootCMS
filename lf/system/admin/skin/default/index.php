@@ -42,7 +42,7 @@
 				<div class="row no_martop no_marbot">
 					<div class="userbar">
 						<div class="col-2">
-							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-paw"></i> lf admin</a>
+							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-bars"></i> lf admin</a>
 						</div>
 						<div class="col-7">
 							<a id="site_preview" href="%relbase%" target="blank_">
@@ -51,7 +51,7 @@
 						</div>
 						<div class="col-3">
 							<span id="logout_button" class="pull-right">
-								<a class="x" href="%baseurl%_auth/logout">logout</a>
+								<a class="x" href="%baseurl%_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
 								Hello <?=$this->api('me');?>.
