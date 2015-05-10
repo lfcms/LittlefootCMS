@@ -1,5 +1,7 @@
 <!-- LF Debug Info
+
 Version: <?=$this->version;?>
+
 PHP Execution Time: <?=$exectime;?>ms
 Peak Memory Usage: <?=$memusage;?> MB
 SQL Queries: <?=$this->db->getNumQueries();?>
