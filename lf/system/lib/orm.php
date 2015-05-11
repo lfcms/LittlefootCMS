@@ -244,6 +244,7 @@ class orm {
 	public function fetchAll($query = NULL)
 	{
 		// TODO: should move this duplicate operation to the query function
+		$result = NULL;
 		if(is_null($query))
 			$result = $this->mysqli_result;
 		else if(is_object($query))
@@ -253,8 +254,9 @@ class orm {
 		
 		// supposedly ::fetch_all() works here, but I couldn't figure it out
 		$rows = array();
-		while($row = $result->fetch_assoc())
-			$rows[] = $row;
+		if($result)
+			while($row = $result->fetch_assoc())
+				$rows[] = $row;
 		
 		return $rows;
 	}
