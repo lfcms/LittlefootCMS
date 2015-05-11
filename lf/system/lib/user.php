@@ -90,8 +90,9 @@ class User
 		// Get user/pass from $_POST and hash pass
 		$username = $_POST['user'];
 		$password = sha1($_POST['pass']);
-
-		$login = (new orm)->qUsers('lf')
+		
+		//$login = (new orm)->qUsers('lf')
+		$login = (new LfUsers)
 			->cols('id, user, email, display_name, access')
 			->byUser($_POST['user'])
 			->byPass(sha1($_POST['pass']))

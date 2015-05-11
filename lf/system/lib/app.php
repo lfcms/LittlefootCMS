@@ -152,7 +152,7 @@ class app
 	 */
 	public function __construct($lf, $ini = '', $args = array())
 	{
-		$this->db = db::init();
+		$this->db = (new orm)->initDb(); // backward compatible (new orm) can be called on the fly from anywhere now
 		$this->request = $lf; // backward compatible
 		$this->lf = $lf->lf->lf->lf; // lol recursion
 		$this->auth = $lf->auth_obj;

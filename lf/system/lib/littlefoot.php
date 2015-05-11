@@ -135,7 +135,7 @@ class Littlefoot
 		
 		$this->startTimer(__METHOD__); 	// timing __construct() method
 		$this->lf = &$this; 			// ensures universal availability of "$this->lf"
-		$this->db = db::init(); 		// set up local db object
+		$this->db = (new orm)->initDb(); // set up local db object
 		(new install)->test(); 			// test that we can connect and have data
 		
 		$this->loadVersion() 			// read version from file

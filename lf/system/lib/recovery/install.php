@@ -30,7 +30,7 @@ class install
 
 	public function test()
 	{
-		if((new orm)->qSettings('lf')->first() == NULL)
+		if( (new LfPages)->first() == NULL )
 		{
 			if(count($_POST))
 				$this->post();

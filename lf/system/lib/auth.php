@@ -14,7 +14,7 @@ class auth extends app
 	
 	protected function init($args)
 	{
-		$user = (new User())->fromSession();
+		$user = (new User)->fromSession();
 		
 		// Handle timeout
 		if($user->timedOut() && false) //timeout disabled for now
@@ -34,13 +34,9 @@ class auth extends app
 	public function login($args)
 	{
 		// if user/pass matches, push to session
-		$user = new User();
-		$user->doLogin();
+		(new User)->doLogin();
 		
-		// backward compatible
-		$this->lf->auth = $user->getDetails();
-		$_SESSION['_auth'] = $this->lf->auth;
-		
+		// Redirect back to what you were looking at. If login refreshes, that happens here.
 		redirect302();
 	}
 	
@@ -67,10 +63,10 @@ class auth extends app
 		}
 		
 		// Aaron G made me do this
-		if(is_file(ROOT.'system/template/signup.local'))
-			include ROOT.'system/template/signup.local';
+		if(is_file(LF.'system/template/signup.local'))
+			include LF.'system/template/signup.local';
 		else
-			include ROOT.'system/template/signup.php';
+			include LF.'system/template/signup.php';
 	}
 	
 	

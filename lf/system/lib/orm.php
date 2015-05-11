@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * zormg 
+ * 
  * Littlefoot ORM: SQLQuery
  * 
  * unless you define it otherwise, new <classname> will be hijacked 
@@ -40,7 +42,7 @@ class orm {
 	private $db;
 	
 	/** @var string $table Stores the table specified at orm::q('my_table') */
-	protected $table = '';
+	protected $table = NULL;
 	
 	/** @var string $crud Chosen CRUD operation (select, insert, update, delete) */
 	private $crud = 'select';
@@ -71,6 +73,11 @@ class orm {
 
 	/** @var int $row counter for incremental ->get() */
 	public $row = 0;
+
+	/** @var int $row counter for incremental ->get() */
+	public $error = array();
+	
+	private $mysqli_result = NULL;
 	
 	/** $var string $pkIndex default column to update on. */
 	public $pkIndex = 'id';
@@ -82,19 +89,201 @@ class orm {
 	 */
 	public function __construct($table = '', $db = NULL)
 	{
-		if(is_null($db))
-			$db = db::init();
+		//if(is_null($db))
+			$this->initDb();
 		
 		if($table != '')
 			$this->table = $table;
-		
-		$this->db = $db;
 	}
 	
+	/**
+	 * Close MySQLI connection object
+	 */
 	public function __destruct()
 	{
 		if($this->debug)
 			echo $this->sql;
+	
+		if($this->mysqli)
+			$this->mysqli->close();
+	}
+	
+	/**
+	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
+	 */
+	public function initDb()
+	{
+		/*if(isset($_SESSION['db']))
+		{
+			$this->mysqli = $_SESSION['db'];
+			return $_SESSION['db'];
+		}*/
+		
+		// check to make sure configuration file is there
+		// config.php contains database credentials
+		if(!is_file(LF.'config.php')) 	
+			(new install)->noconfig();
+		else
+			include LF.'config.php'; // load $db config
+
+		$database_config = $db;
+		$this->conf = $db;
+        
+		$this->mysqli = new mysqli( 
+			$database_config['host'], 
+			$database_config['user'],
+			$database_config['pass'] 
+		);
+		
+		if($this->mysqli->connect_errno)
+			$this->error[] = "Connection failed (".$this->mysqli->connect_errno."): " .$this->mysqli->connect_error;
+		else if(!$this->mysqli->select_db( $database_config['name']))
+			$this->error[] = $this->mysqli->error;
+		
+		$this->query_count = 0; // i think mysqli takes care of thsi
+		
+		$this->tblprefix = $database_config['prefix'];
+		
+		$_SESSION['db'] = $this->mysqli;
+		
+		return $this;
+    }
+	
+	/**
+	 * Free last database result
+	 */
+	function free()
+	{
+		$this->mysqli_result->free();
+	}
+	
+	/**
+	 * Returns the last query result good for debugging
+	 */
+	function getLastResult()
+	{
+		return $this->mysqli_result;
+	}
+	
+	
+	/**
+	 * Queries the information schema for a table called $table in this database
+	 * 
+	 * @param string $table Check to see if $table exists.
+	 */
+	function is_table($table)
+	{
+		$result = $this->fetch("
+			select count(TABLE_NAME) as is_table
+			from information_schema.TABLES 
+			WHERE TABLE_SCHEMA = '".$this->conf['name']."' 
+				AND TABLE_NAME = '".$this->escape($table)."'
+		");
+		return $result['is_table'] ? 1 : 0;
+	}
+	
+	
+	/**
+	 * { return $this->mysqli->affected_rows; }
+	 */
+	function affected()
+	{
+		return $this->mysqli->affected_rows;
+	}
+	
+	/**
+	 * SQL commands are preg_match()'d out of $file and run in a loop with errors suppressed
+	 * 
+	 * @param string $file Path to .sql backup file to be imported into the configured database.
+	 */
+	function import($file)
+	{
+		// Get SQL Dump file
+		$dump = file_get_contents($file);
+		
+		// Extract queries from file
+		preg_match_all("/(?:^|\n)([A-Z][^;]+);/", $dump, $match);
+		
+		ob_start();
+		// Run queries
+		foreach($match[1] as $sql)
+			$this->query($sql);
+		return ob_get_clean();
+	}
+	
+	/**
+	 * Dumps database or table to file.
+	 * 
+	 * @param string $table empty by default. If specified, only that table will be dumped from the database
+	 * @param string $folder Defaults to LF.'lf/backup/'.
+	 */
+	function dump($table = '', $folder = NULL)
+	{
+		if($folder !== NULL)
+			$folder = LF.'lf/backup/';
+			
+		shell_exec('/usr/bin/mysqldump -u"'.$this->conf['user'].'" -p"'.$this->conf['pass'].'" '.$this->conf['name'].' '.$table.' > '.$folder.$this->conf['name'].'.sql');
+	}
+	
+	/**
+	 * Absorbed db class functions
+	 */
+	
+	public function fetch($query = NULL)
+	{
+		if(is_null($query))
+			$result = $this->mysqli_result;
+		else if(is_object($query))
+			$result = $query;
+		else
+			$result = $this->query($query);
+		
+		return $result->fetch_assoc();
+	}
+	
+	public function fetchAll($query = NULL)
+	{
+		// TODO: should move this duplicate operation to the query function
+		if(is_null($query))
+			$result = $this->mysqli_result;
+		else if(is_object($query))
+			$result = $query;
+		else
+			$result = $this->query($query);
+		
+		// supposedly ::fetch_all() works here, but I couldn't figure it out
+		$rows = array();
+		while($row = $result->fetch_assoc())
+			$rows[] = $row;
+		
+		return $rows;
+	}
+	
+	/**
+	 * $str is usually user-supplied supplied data. Don't forget to sanatize input!
+	 * 
+	 * @param string $string String to be escaped for database input.
+	 */
+	function escape($str)
+	{
+		return $this->mysqli->escape_string($str);
+	}
+	
+	/**
+	 * Run query, return result, increment SQL counter
+	 * 
+	 * @param string $q MySQL Query
+	 * 
+	 * @param bool $big If the request is big
+	 */
+	function query($q, $big = false)
+	{
+		$this->mysqli_result = $this->mysqli->query($q);
+		$this->query_count++;
+		if($this->mysqli->error)
+			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
+		
+		return $this->mysqli_result;
 	}
 	
 	public function __get($name)
@@ -122,6 +311,8 @@ class orm {
 		foreach($this->getAll() as $row)
 		{
 			echo '<br />Row #'.$counter.'<br />';
+			if(!$row) echo 'No row!';
+			else
 			foreach($row as $col => $val)
 				echo $col.': '.$val.'<br />';
 				
@@ -169,18 +360,11 @@ class orm {
 	public function __call($method, $args) {
 		
 		// look for valid request
-		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|q|query|(?:l|f|r|i)?joinOn)(.+)/';
+		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)([A-Z].+)/';
 		if(!preg_match($methodRegex, $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
-		// parse out method and column reference
 		$m = $method_parse[1];
-		if($m == 'by') // 'by' is an alias to filterBy()
-			$m = 'filterBy';
-		if($m == 'find')
-			$m = 'findMagic';
-		if($m == 'q') // 'q' is an alias to query()
-			$m = 'query';
 		
 		if(preg_match('/^(l|f|r|i)joinOn$/', $m, $match))
 		{
@@ -208,6 +392,14 @@ class orm {
 				->filterBy($method_parse[2], $args)
 				->getAll();
 		
+		// parse out method and column reference
+		if($m == 'by') // 'by' is an alias to filterBy()
+			$m = 'filterBy';
+		if($m == 'find')
+			$m = 'findMagic';
+		if($m == 'query' || $m == 'q') // 'q' is an alias to query()
+			$m = 'queryMagic';
+		
 		return $this->$m($method_parse[2], $args);
     }
 	
@@ -223,7 +415,7 @@ class orm {
 	 * 
 	 * 
 	 */
-	private function query($table, $args)
+	private function queryMagic($table, $args)
 	{
 		$table = strtolower($table);
 		
@@ -385,11 +577,11 @@ class orm {
 			$condition = '=';
 		}
 		
-		if(is_object($value))
-			$this->joins[] = $value;
+		/*if(is_object($value))
+			$this->joins[] = $value;*/
 		
-		else if(!is_numeric($value))
-			$value = "'".$this->db->escape($value)."'";
+		if(!is_numeric($value))
+			$value = "'".$this->escape($value)."'";
 		
 		$this->conditions[] = $column.' '.$condition.' '.$value;
 		
@@ -461,7 +653,7 @@ class orm {
 			$condition = '=';
 		
 		if(!is_numeric($value))
-			$value = "'".$this->db->escape($value)."'";
+			$value = "'".$this->escape($value)."'";
 		
 		$this->data[$column] = $value;
 		
@@ -528,10 +720,10 @@ class orm {
 		$sql = 'INSERT INTO '.$this->table.' ('.$cols.') VALUES ('.$values.')';
 		
 		$this->sql = $sql;
-		$result = $this->db->query($sql);
+		$result = $this->query($sql);
 		
 		if(!$result) return null;
-		else return $this->db->last();
+		else return $this->last();
 	}
 	private function select() // read
 	{
@@ -560,15 +752,20 @@ class orm {
 		
 		$this->sql = $sql;
 		
-		return $this->db->fetchall(implode(' ', $sql));
+		return $this->fetchall(implode(' ', $sql));
 	}
+	
 	private function update()
 	{
 		$sql = 'UPDATE '.$this->table.' SET ';
 		
 		if(count($this->data))
 		{
+			if(is_string($this->data))
+				$this->data = explode(', ', $this->data); // when logging in to admin, $this->data is a comma separated list of user columns
+			
 			$set = array();
+			
 			foreach($this->data as $col => $val)
 			{
 				$set[] = "$col = $val";
@@ -585,7 +782,7 @@ class orm {
 		
 		$this->sql = $sql;
 		
-		return $this->db->query($sql);
+		return $this->query($sql);
 	}
 	public function delete()
 	{
@@ -600,7 +797,7 @@ class orm {
 		
 		$this->sql = $sql;
 		
-		return $this->db->query($sql);
+		return $this->query($sql);
 	}
 	
 	// Higher Level CRUD
@@ -702,6 +899,9 @@ class orm {
 		$page->save();
 	}
 }
+
+//backward compatible
+class db extends orm {}
 
 /**
  * If the class is not already defined, you can instantiate a new class through autoload. 
