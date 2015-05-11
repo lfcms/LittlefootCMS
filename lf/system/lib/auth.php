@@ -37,8 +37,8 @@ class auth extends app
 		$user = new User();
 		$user->doLogin();
 		
-		// IT REDIRECTS HERE
-		//redirect302();
+		// Redirect back to what you were looking at. If login refreshes, that happens here.
+		redirect302();
 	}
 	
 	public function logout($args)

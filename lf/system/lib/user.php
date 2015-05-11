@@ -98,8 +98,6 @@ class User
 			->byPass(sha1($_POST['pass']))
 			->first();
 		
-		pre( (new LfUsers)->byUser('bios') , 'var_dump');
-		
 		unset($_POST);
 		
 		// return with error if post fails

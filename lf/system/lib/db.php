@@ -24,7 +24,7 @@
  * In a littlefoot app a database object is accessible at `$this->db`
  * 
  */
-class db
+class dbX
 {
 	/** @var string[] $error Multiple errors can occur. They are stored in this array. */
 	public $error = '';

@@ -75,6 +75,8 @@ class orm {
 	/** @var int $row counter for incremental ->get() */
 	public $error = array();
 	
+	private $mysqli_result = NULL;
+	
 	/** $var string $pkIndex default column to update on. */
 	public $pkIndex = 'id';
 	
@@ -154,29 +156,40 @@ class orm {
 	}
 	
 	
-	
-	
 	/**
 	 * Absorbed db class functions
 	 */
 	
-	public function fetch($query)
+	public function fetch($query = NULL)
 	{
-		$result = $this->mysqli->query($query);
-		$this->query_count++;
+		if(!is_null($query))
+			$result = $this->query($query);
+		else
+			$result = $this->mysqli_result;
+		
 		return $result->fetch_assoc();
 	}
 	
 	public function fetchAll($query)
 	{
-		$result = $this->mysqli->query($query);
-		$this->query_count++;
+		$result = $this->query($query);
 		
-		// supposedly ::fetch_all() works here, but I couldn't figure it tou
+		// supposedly ::fetch_all() works here, but I couldn't figure it out
+		$rows = array();
 		while($row = $result->fetch_assoc())
 			$rows[] = $row;
 		
 		return $rows;
+	}
+	
+	/**
+	 * $str is usually user-supplied supplied data. Don't forget to sanatize input!
+	 * 
+	 * @param string $string String to be escaped for database input.
+	 */
+	function escape($str)
+	{
+		return $this->mysqli->escape_string($str);
 	}
 	
 	/**
@@ -188,11 +201,12 @@ class orm {
 	 */
 	function query($q, $big = false)
 	{
-		$this->db_result = $this->mysqli->query($q);
+		$this->mysqli_result = $this->mysqli->query($q);
 		$this->query_count++;
 		if($this->mysqli->error)
 			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
-		return $this->db_result;
+		
+		return $this->mysqli_result;
 	}
 
 
@@ -498,10 +512,10 @@ class orm {
 			$condition = '=';
 		}
 		
-		if(is_object($value))
-			$this->joins[] = $value;
+		/*if(is_object($value))
+			$this->joins[] = $value;*/
 		
-		else if(!is_numeric($value))
+		if(!is_numeric($value))
 			$value = "'".$this->escape($value)."'";
 		
 		$this->conditions[] = $column.' '.$condition.' '.$value;
