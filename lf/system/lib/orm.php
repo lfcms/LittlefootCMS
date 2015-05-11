@@ -152,7 +152,7 @@ class orm {
 	 */
 	function free()
 	{
-		$this->dbresult->free();
+		$this->mysqli_result->free();
 	}
 	
 	
@@ -208,18 +208,6 @@ class orm {
 		
 		return $this->mysqli_result;
 	}
-
-
-	
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
 	
 	public function __get($name)
 	{
