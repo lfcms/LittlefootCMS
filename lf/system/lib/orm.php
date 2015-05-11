@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * zormg 
+ * 
  * Littlefoot ORM: SQLQuery
  * 
  * unless you define it otherwise, new <classname> will be hijacked 
@@ -155,6 +157,73 @@ class orm {
 		$this->mysqli_result->free();
 	}
 	
+	/**
+	 * Returns the last query result good for debugging
+	 */
+	function getLastResult()
+	{
+		return $this->mysqli_result;
+	}
+	
+	
+	/**
+	 * Queries the information schema for a table called $table in this database
+	 * 
+	 * @param string $table Check to see if $table exists.
+	 */
+	function is_table($table)
+	{
+		$result = $this->fetch("
+			select count(TABLE_NAME) as is_table
+			from information_schema.TABLES 
+			WHERE TABLE_SCHEMA = '".$this->conf['name']."' 
+				AND TABLE_NAME = '".$this->escape($table)."'
+		");
+		return $result['is_table'] ? 1 : 0;
+	}
+	
+	
+	/**
+	 * { return $this->mysqli->affected_rows; }
+	 */
+	function affected()
+	{
+		return $this->mysqli->affected_rows;
+	}
+	
+	/**
+	 * SQL commands are preg_match()'d out of $file and run in a loop with errors suppressed
+	 * 
+	 * @param string $file Path to .sql backup file to be imported into the configured database.
+	 */
+	function import($file)
+	{
+		// Get SQL Dump file
+		$dump = file_get_contents($file);
+		
+		// Extract queries from file
+		preg_match_all("/(?:^|\n)([A-Z][^;]+);/", $dump, $match);
+		
+		ob_start();
+		// Run queries
+		foreach($match[1] as $sql)
+			$this->query($sql);
+		return ob_get_clean();
+	}
+	
+	/**
+	 * Dumps database or table to file.
+	 * 
+	 * @param string $table empty by default. If specified, only that table will be dumped from the database
+	 * @param string $folder Defaults to LF.'lf/backup/'.
+	 */
+	function dump($table = '', $folder = NULL)
+	{
+		if($folder !== NULL)
+			$folder = LF.'lf/backup/';
+			
+		shell_exec('/usr/bin/mysqldump -u"'.$this->conf['user'].'" -p"'.$this->conf['pass'].'" '.$this->conf['name'].' '.$table.' > '.$folder.$this->conf['name'].'.sql');
+	}
 	
 	/**
 	 * Absorbed db class functions
@@ -162,17 +231,25 @@ class orm {
 	
 	public function fetch($query = NULL)
 	{
-		if(!is_null($query))
-			$result = $this->query($query);
-		else
+		if(is_null($query))
 			$result = $this->mysqli_result;
+		else if(is_object($query))
+			$result = $query;
+		else
+			$result = $this->query($query);
 		
 		return $result->fetch_assoc();
 	}
 	
-	public function fetchAll($query)
+	public function fetchAll($query = NULL)
 	{
-		$result = $this->query($query);
+		// TODO: should move this duplicate operation to the query function
+		if(is_null($query))
+			$result = $this->mysqli_result;
+		else if(is_object($query))
+			$result = $query;
+		else
+			$result = $this->query($query);
 		
 		// supposedly ::fetch_all() works here, but I couldn't figure it out
 		$rows = array();
@@ -822,6 +899,9 @@ class orm {
 		$page->save();
 	}
 }
+
+//backward compatible
+class db extends orm {}
 
 /**
  * If the class is not already defined, you can instantiate a new class through autoload. 
