@@ -352,6 +352,7 @@ class orm {
 		return orm::$method($magic, $args);
     }
 	
+	
 	public function distinct($column)
 	{
 		$this->distinctCol = $column;
@@ -362,7 +363,7 @@ class orm {
 	public function __call($method, $args) {
 		
 		// look for valid request
-		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)([A-Z].+)/';
+		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)(.+)/';
 		if(!preg_match($methodRegex, $method, $method_parse))
 			return $this->throwException('Invalid method called');
 		
