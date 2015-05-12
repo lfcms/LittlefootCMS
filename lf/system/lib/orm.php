@@ -104,8 +104,8 @@ class orm {
 		if($this->debug)
 			echo $this->sql;
 	
-		if($this->mysqli)
-			$this->mysqli->close();
+		/*if($this->mysqli)
+			$this->mysqli->close();*/
 	}
 	
 	/**
@@ -113,10 +113,13 @@ class orm {
 	 */
 	public function initDb()
 	{
+		// leave mysqli object in session, but close it once the script finishes
 		/*if(isset($_SESSION['db']))
 		{
+			pre($_SESSION['db'], 'var_dump');
+			
 			$this->mysqli = $_SESSION['db'];
-			return $_SESSION['db'];
+			return $this;
 		}*/
 		
 		// check to make sure configuration file is there
