@@ -89,8 +89,7 @@ class orm {
 	 */
 	public function __construct($table = '', $db = NULL)
 	{
-		//if(is_null($db))
-			$this->initDb();
+		$this->initDb();
 		
 		if($table != '')
 			$this->table = $table;
@@ -103,9 +102,6 @@ class orm {
 	{
 		if($this->debug)
 			echo $this->sql;
-	
-		if($this->mysqli)
-			$this->mysqli->close();
 	}
 	
 	/**
@@ -113,11 +109,12 @@ class orm {
 	 */
 	public function initDb()
 	{
-		/*if(isset($_SESSION['db']))
+		// leave mysqli object in session, but close it once the script finishes via ___LastSay
+		if(isset($_SESSION['db']))
 		{
 			$this->mysqli = $_SESSION['db'];
-			return $_SESSION['db'];
-		}*/
+			return $this;
+		}
 		
 		// check to make sure configuration file is there
 		// config.php contains database credentials
@@ -905,6 +902,21 @@ class orm {
 
 //backward compatible
 class db extends orm {}
+
+// My nasty solution to ensuring $_SESSION['db'] is cleared
+// while allowing the orm class to use it without 
+class ___LastSay 
+{ 
+	public function __destruct()
+	{ 
+		if(isset($_SESSION['db']))
+		{
+			$_SESSION['db']->close();
+			unset($_SESSION['db']);
+		}
+	}
+}
+$varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
 
 /**
  * If the class is not already defined, you can instantiate a new class through autoload. 
