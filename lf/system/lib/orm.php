@@ -77,13 +77,19 @@ class orm {
 	/** @var int $row counter for incremental ->get() */
 	public $error = array();
 	
+	/** @var mysqli_result $mysqli_result the last mysqli_result. Need to move this to `$_SESSION['mysqli_result'] = array();` */
 	private $mysqli_result = NULL;
 	
 	/** $var string $pkIndex default column to update on. */
 	public $pkIndex = 'id';
 	
 	/**
-	 * Initialize the orm class. Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
+	 * Initialize `$this->mysqli_result` with `initDb()`. Pulls from $_SESSION if a previous connection already exists.
+	 *
+	 *
+	 *
+	 * Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
+	 *
 	 *
 	 * @param Database $db Database wrapper
 	 */
@@ -900,9 +906,6 @@ class orm {
 	}
 }
 
-//backward compatible
-class db extends orm {}
-
 // My nasty solution to ensuring $_SESSION['db'] is cleared
 // while allowing the orm class to use it without 
 class ___LastSay 
@@ -949,3 +952,6 @@ function __autoload($class_name) {
 	));
 	
 }
+
+//backward compatible
+class db extends orm {}
