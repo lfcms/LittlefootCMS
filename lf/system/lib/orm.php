@@ -112,7 +112,7 @@ class orm implements IteratorAggregate {
 	
 	// ty Craig Buckler http://www.sitepoint.com/php-simple-object-iterators/
 	public function getIterator() {
-		return new ArrayIterator( $this->currentRow() );
+		return new ArrayIterator( $this->result );
 	}
 	
 	/**
