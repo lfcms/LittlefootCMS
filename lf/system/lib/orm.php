@@ -30,7 +30,7 @@
  * SQLQS
  * 
  */
-class orm {
+class orm implements IteratorAggregate {
 
 	/** @var bool $debug Prints resulting $sql after execution. */
 	public $debug = false;
@@ -108,6 +108,11 @@ class orm {
 	{
 		if($this->debug)
 			echo $this->sql;
+	}
+	
+	// ty Craig Buckler http://www.sitepoint.com/php-simple-object-iterators/
+	public function getIterator() {
+		return new ArrayIterator( $this->currentRow() );
 	}
 	
 	/**
