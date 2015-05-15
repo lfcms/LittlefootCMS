@@ -28,9 +28,10 @@
  * qquery
  * qq
  * SQLQS
- * 
+ *  
  */
-class orm implements IteratorAggregate {
+class orm implements IteratorAggregate 
+{
 
 	/** @var bool $debug Prints resulting $sql after execution. */
 	public $debug = false;
@@ -110,9 +111,13 @@ class orm implements IteratorAggregate {
 			echo $this->sql;
 	}
 	
-	// ty Craig Buckler http://www.sitepoint.com/php-simple-object-iterators/
+	
 	public function getIterator() {
-		return new ArrayIterator( $this->result );
+		//return new ArrayIterator( $this->result );
+		foreach($this->result as $row)
+			$return[] = (new orm($this->table))->setArray($row);
+		
+		return new ArrayIterator( $return );
 	}
 	
 	/**
