@@ -114,7 +114,7 @@ class orm implements IteratorAggregate
 	
 	public function getIterator() {
 		//return new ArrayIterator( $this->result );
-		foreach($this->result as $row)
+		foreach($this->getAll() as $row)
 			$return[] = (new orm($this->table))->setArray($row);
 		
 		return new ArrayIterator( $return );
@@ -372,10 +372,19 @@ class orm implements IteratorAggregate
 		return $this;
 	}
 	
+	/**
+	 * ## Regex
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 	// wildcard catchall for shortcut requests (filter, set, etc)
-	public function __call($method, $args) {
-		
-		// look for valid request
+	public function __call($method, $args) 
+	{
 		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)(.+)/';
 		if(!preg_match($methodRegex, $method, $method_parse))
 			return $this->throwException('Invalid method called');
@@ -426,10 +435,11 @@ class orm implements IteratorAggregate
 	}
 	
 	/**
+	 * # BROKEN
+	 * 
+	 * I broke this somehow and rather than fix it, I rely on the __autoload method (ie, new LfActions).
+	 * 
 	 * Accessible like qPages('lf') or queryUsers('lf')
-	 * 
-	 * 
-	 * 
 	 */
 	private function queryMagic($table, $args)
 	{
