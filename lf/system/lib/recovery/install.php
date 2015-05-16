@@ -88,16 +88,18 @@ class install
 		if(!is_file('config.php') || (isset($_POST['overwrite']) && $_POST['overwrite'] == 'on'))
 			file_put_contents('config.php', $conf);
 
-		if(isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php'))
-		{
-			$dbconn = db::init();
+		if( isset($_POST['data']) 
+			&& $_POST['data'] == 'on' 
+			&& is_file('config.php')
+		){
+			$orm = new orm();
 
-			if($dbconn->error != '')
-					$errors = $dbconn->error;
+			if($orm->error != array())
+				$errors = $orm->error;
 			else
 			{
 				// run import script
-				echo $dbconn->import(ROOT.'system/lib/recovery/lf.sql', false);
+				echo $orm->import(ROOT.'system/lib/recovery/lf.sql', false);
 				
 				// Add admin user
 				$aUser = $_POST['auser'];
