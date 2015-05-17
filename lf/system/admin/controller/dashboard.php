@@ -63,15 +63,7 @@ class dashboard extends app
 		
 		if(!isset($vars[1])) return 'invalid arguement';
 		
-		// get template vars
-		include('model/templateselect.php');
-		
 		$pwd = LF.'/apps/';
-			
-		$args = '<input type="text" name="ini" />';
-		
-		if(is_file($pwd.$vars[1].'/args.php'))
-			include $pwd.$vars[1].'/args.php';
 		
 		// address conflicting alias names.
 		$result = $this->db->fetchall("
@@ -85,6 +77,7 @@ class dashboard extends app
 			ORDER by alias ASC
 		");
 		
+		// add _# to ensure unique alias
 		$alias = $vars[1];
 		if($result[0]['alias'] == $vars[1])
 			$alias .= '_'.(count($result));
@@ -169,26 +162,17 @@ class dashboard extends app
 		
 		// ^ link was valid, move on to running the sql
 		
-		$id = 'NULL';
-		$app = $_POST['isapp'] == 'on' ? '1' : '0';
 		$insert = array(
 			"parent"	=> $this->db->escape($_POST['parent']),
 			"position"	=> $pos,
 			"alias"		=> $this->db->escape($_POST['alias']),
 			"title"		=> $this->db->escape($_POST['title']),
 			"label"		=> $this->db->escape($_POST['label']),
-			"app"		=> $app,
+			"app"		=> $_POST['isapp'] == 'on' ? '1' : '0',
 			"template"	=> $this->db->escape($_POST['template'])
 		);
 		
-		$sql = "
-			INSERT INTO 
-				lf_actions	( `id`, `".implode('`, `',array_keys($insert))."`)
-				VALUES	( ".$id.", '".implode("', '",array_values($insert))."')
-		";
-		
-		$this->db->query($sql);
-		$id = $this->db->last();
+		$id = (new LfActions)->insertArray($insert);
 		
 		//$recurse = $_POST['recursive'] == 'on' ? 1 : 0;
 		$insert = array(
@@ -199,15 +183,7 @@ class dashboard extends app
 			"recursive"	=> 0
 		);
 		
-		$sql = "
-			INSERT INTO 
-				lf_links	( `id`, `".implode('`, `',array_keys($insert))."`)
-				VALUES	( NULL, '".implode("', '",array_values($insert))."')
-		";
-		
-		echo $sql;
-		
-		$this->db->query($sql);
+		(new LfLinks)->insertArray($insert);
 		
 		if($vars[0] == 'create')
 			// redirect them after this completes
@@ -259,12 +235,6 @@ class dashboard extends app
 	{
 		if($this->simple) return;
 		
-		pre($vars);
-		
-		echo (new LfActions)->cols('position, parent')->byId($vars[1]);
-		
-		exit();
-		
 		// get current position/parent
 		$current = $this->db->fetch('SELECT position, parent FROM lf_actions WHERE id = '.intval($vars[1]));
 		
@@ -277,7 +247,9 @@ class dashboard extends app
 			if($current['position'] > 0)
 				$this->db->query('UPDATE lf_actions SET position = position - 1 WHERE parent = '.$current['parent'].' AND position > '.$current['position']);
 			
-			while(true) // find all orphaned nav items and remove them, loop until all are cleared
+			// find all orphaned nav items and remove them, 
+			// loop until all are cleared
+			while(true) 
 			{
 				$result = $this->db->query('
 					SELECT a.id	FROM `lf_actions` a 
@@ -289,7 +261,7 @@ class dashboard extends app
 					break;
 				
 				$orphans = array();
-				while($row = $this->db->fetch()
+				while($row = $this->db->fetch())
 					$orphans[] = $row['id'];
 					
 				$this->db->query('DELETE FROM lf_actions WHERE id IN ('.implode(',', $orphans).')');
