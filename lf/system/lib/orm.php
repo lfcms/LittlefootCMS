@@ -938,6 +938,16 @@ class orm implements IteratorAggregate
 	{
 		return $this->mysqli_result;
 	}
+	
+	/**
+	 * Prints number of rows in the MySQL result
+	 * 
+	 * @param bool $make_conversion_easier Don't think this does anything.
+	 */
+	function numrows($make_conversion_easier = true)
+	{
+		return $this->mysqli_result->num_rows;
+	}
 }
 
 // My nasty solution to ensuring $_SESSION['db'] is cleared

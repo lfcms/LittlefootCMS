@@ -285,10 +285,11 @@ class dashboard extends app
 					WHERE b.id IS NULL AND a.parent != -1
 				');
 				
-				if($this->db->numrows($result) == 0) break;
+				if($this->db->numrows() == 0) 
+					break;
 				
 				$orphans = array();
-				while($row = $this->db->fetch($result))
+				while($row = $this->db->fetch()
 					$orphans[] = $row['id'];
 					
 				$this->db->query('DELETE FROM lf_actions WHERE id IN ('.implode(',', $orphans).')');
