@@ -66,13 +66,14 @@ class dashboard extends app
 		// get template vars
 		include('model/templateselect.php');
 		
-		$pwd = $this->request->absbase.'/apps/';
+		$pwd = LF.'/apps/';
 			
 		$args = '<input type="text" name="ini" />';
 		
 		if(is_file($pwd.$vars[1].'/args.php'))
 			include $pwd.$vars[1].'/args.php';
 		
+		// address conflicting alias names.
 		$result = $this->db->fetchall("
 			SELECT *
 			FROM lf_actions
@@ -137,23 +138,6 @@ class dashboard extends app
 		echo '</pre>';*/
 		
 		
-		$id = 'NULL';
-		$app = $_POST['isapp'] == 'on' ? '1' : '0';
-		$insert = array(
-			"parent"	=> $this->db->escape($_POST['parent']),
-			"position"	=> $pos,
-			"alias"		=> $this->db->escape($_POST['alias']),
-			"title"		=> $this->db->escape($_POST['title']),
-			"label"		=> $this->db->escape($_POST['label']),
-			"app"		=> $app,
-			"template"	=> $this->db->escape($_POST['template'])
-		);
-		
-		$sql = "
-			INSERT INTO 
-				lf_actions	( `id`, `".implode('`, `',array_keys($insert))."`)
-				VALUES	( ".$id.", '".implode("', '",array_values($insert))."')
-		";
 		
 		//echo $sql;
 		
@@ -183,7 +167,26 @@ class dashboard extends app
 		else
 			exit();
 		
-		// link was valid, move on to running the sql
+		// ^ link was valid, move on to running the sql
+		
+		$id = 'NULL';
+		$app = $_POST['isapp'] == 'on' ? '1' : '0';
+		$insert = array(
+			"parent"	=> $this->db->escape($_POST['parent']),
+			"position"	=> $pos,
+			"alias"		=> $this->db->escape($_POST['alias']),
+			"title"		=> $this->db->escape($_POST['title']),
+			"label"		=> $this->db->escape($_POST['label']),
+			"app"		=> $app,
+			"template"	=> $this->db->escape($_POST['template'])
+		);
+		
+		$sql = "
+			INSERT INTO 
+				lf_actions	( `id`, `".implode('`, `',array_keys($insert))."`)
+				VALUES	( ".$id.", '".implode("', '",array_values($insert))."')
+		";
+		
 		$this->db->query($sql);
 		$id = $this->db->last();
 		
@@ -201,6 +204,8 @@ class dashboard extends app
 				lf_links	( `id`, `".implode('`, `',array_keys($insert))."`)
 				VALUES	( NULL, '".implode("', '",array_values($insert))."')
 		";
+		
+		echo $sql;
 		
 		$this->db->query($sql);
 		
@@ -253,6 +258,12 @@ class dashboard extends app
 	public function rm($vars)
 	{
 		if($this->simple) return;
+		
+		pre($vars);
+		
+		echo (new LfActions)->cols('position, parent')->byId($vars[1]);
+		
+		exit();
 		
 		// get current position/parent
 		$current = $this->db->fetch('SELECT position, parent FROM lf_actions WHERE id = '.intval($vars[1]));

@@ -1197,4 +1197,13 @@ class Littlefoot
 		if($var == 'version')	return $this->version;
 		if($var == 'isadmin')	return $user->hasAccess('admin');
 	}
+	
+	public function adminTokenReplace($out)
+	{
+		$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
+		$out = str_replace('%baseurl%', $this->base.'admin/', $out);
+		$out = str_replace('%relbase%', $this->relbase, $out);
+		$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
+		return $out;
+	}
 }

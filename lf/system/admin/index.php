@@ -59,10 +59,7 @@ if( ! $user->hasaccess('admin') )
 	include('skin/'.$admin_skin.'/login.php');
 	$out = ob_get_clean();
 
-	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
-	$out = str_replace('%baseurl%', $this->base.'admin/', $out);
-	$out = str_replace('%relbase%', $this->relbase, $out);
-	$out = str_replace('%skinbase%', $this->relbase.'lf/system/admin/skin/'.$admin_skin.'/', $out);
+	$out = $this->lf->adminTokenReplace($out);
 	
 	echo $out;
 } 
