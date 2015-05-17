@@ -102,7 +102,14 @@ function revert()
  */
 function redirect302($url = '')
 {		
-	if($url == '') $url = $_SERVER['HTTP_REFERER'];
+	if($url == '')
+		if(isset($_SERVER['HTTP_REFERER']))
+			$url = $_SERVER['HTTP_REFERER'];
+		else
+		{
+			echo 'Redirect called without referer.';
+			exit();
+		}
 	
 	header('HTTP/1.1 302 Moved Temporarily');
 	header('Location: '.$url);

@@ -7,8 +7,7 @@ foreach($result as $action)
 	$actions[$action['parent']][] = $action;
 
 // Also pull lf_actions items that are hidden from nav
-$hidden = (new orm)
-	->qActions('lf')
+$hidden = (new LfActions)
 	->filterByPosition(0)
 	->order('label')
 	->getAll();
@@ -19,7 +18,7 @@ if(isset($vars[1]))
 	$this->edit = $vars[1];
 
 // Pull lf_links, reorganize as $nav_id => $linkdata[]
-$result = orm::q('lf_links')->getAll();
+$result = (new LfLinks)->getAll();
 foreach($result as $link)
 	$this->links[$link['include']][] = $link;
 	

@@ -81,6 +81,9 @@ class orm implements IteratorAggregate
 	/** @var mysqli_result $mysqli_result the last mysqli_result. Need to move this to `$_SESSION['mysqli_result'] = array();` */
 	private $mysqli_result = NULL;
 	
+	/** @var mysqli_result $mysqli_result the last mysqli_result. Need to move this to `$_SESSION['mysqli_result'] = array();` */
+	public $mysqli = NULL;
+	
 	/** $var string $pkIndex default column to update on. */
 	public $pkIndex = 'id';
 	
@@ -735,6 +738,11 @@ class orm implements IteratorAggregate
 		return $this->find(1)->get(0);
 	}
 	
+	public function last()
+	{
+		return $this->mysqli->insert_id;
+	}
+	
 	// CRUD functions.
 	private function insert() //create
 	{
@@ -751,6 +759,7 @@ class orm implements IteratorAggregate
 		if(!$result) return null;
 		else return $this->last();
 	}
+	
 	private function select() // read
 	{
 		$sql['crud'] = 'SELECT';
@@ -923,6 +932,21 @@ class orm implements IteratorAggregate
 			
 		}
 		$page->save();
+	}
+	
+	public function rawResult()
+	{
+		return $this->mysqli_result;
+	}
+	
+	/**
+	 * Prints number of rows in the MySQL result
+	 * 
+	 * @param bool $make_conversion_easier Don't think this does anything.
+	 */
+	function numrows($make_conversion_easier = true)
+	{
+		return $this->mysqli_result->num_rows;
 	}
 }
 
