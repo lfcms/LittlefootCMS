@@ -114,7 +114,19 @@ class orm implements IteratorAggregate
 			echo $this->sql;
 	}
 	
-	
+	/**
+	 * So you can loop through an object collection
+	 * 
+	 * ~~~
+	 * $pages = (new LfPages)->find();
+	 * $count=0;
+	 * foreach($pages as $page)
+	 * {
+	 * 	$page->settitle('New '.$count++)->debug()->save();
+	 * }
+	 * ~~~
+	 * 
+	 */
 	public function getIterator() {
 		//return new ArrayIterator( $this->result );
 		foreach($this->getAll() as $row)
@@ -308,6 +320,8 @@ class orm implements IteratorAggregate
 	{
 		if(!is_null($this->result))
 			return $this->currentRow()[$name];
+		
+		//pre($this->data, 'var_dump');
 		
 		if(array_key_exists($name, $this->data))
 			return $this->data[$name];
@@ -620,15 +634,16 @@ class orm implements IteratorAggregate
 	public function cols($cols)
 	{
 		if(is_array($cols))
-			$cols = implode(', ', $cols);
+			$this->columns = $cols;
+		else
+			$this->columns = explode(',', str_replace(' ', '', $cols));
 		
-		$this->data = $cols;
 		return $this;
 	}
 
 	public function count()
 	{
-		$this->data = 'count(*) as count';
+		$this->columns = 'count(*) as count';
 		
 		$crud = $this->crud;
 		$result = $this->$crud();
@@ -756,8 +771,10 @@ class orm implements IteratorAggregate
 		$this->sql = $sql;
 		$result = $this->query($sql);
 		
-		if(!$result) return null;
-		else return $this->last();
+		if(!$result) 
+			return null;
+		else 
+			return $this->last();
 	}
 	
 	private function select() // read
@@ -766,16 +783,15 @@ class orm implements IteratorAggregate
 		
 		if($this->distinctCol)
 			$sql['distinct'] = 'DISTINCT '.$this->distinctCol;
-		else if($this->data == array()) 
+		else if($this->columns == array()) 
 			$sql['columns'] = '*';
 		else
-			$sql['columns'] = $this->data;
+			$sql['columns'] = implode(', ', $this->columns);
 		
 		$sql['from'] = 'FROM '.$this->table;
 
 		if($this->joins != array())
-			$sql['joins'] = implode($this->joins);
-		
+			$sql['joins'] = implode(' ', $this->joins);
 		
 		if($this->where != '')
 			$sql[] = 'WHERE '.$this->where;
@@ -812,6 +828,11 @@ class orm implements IteratorAggregate
 			$sql .= ' WHERE '.$this->where;
 		else if(count($this->conditions))
 			$sql .= ' WHERE '.implode(' AND ', $this->conditions);
+		else if(isset($this->data['id']))
+		{
+			$sql .= ' WHERE id = '.$this->data['id']; // still shows in the SET assignments, but is not a problem so ill fix it later...
+			unset($this->data['id']);
+		}
 			
 		$sql .= $this->limit;
 		

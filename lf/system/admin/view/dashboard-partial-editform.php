@@ -60,7 +60,7 @@ if(is_file(ROOT.'apps/'.$save['app'].'/args.php'))
 		<?php if(isset($section_list)) { ?>
 			<select name="section">
 				<?php foreach($section_list as $section): ?>
-				<option value="<?=$section;?>"<?php if($section == $save['section']) echo  'selected=""'; ?>><?=$section;?></option>
+				<option value="<?=$section;?>"<?php if(isset($save['section']) && $section == $save['section']) echo  'selected=""'; ?>><?=$section;?></option>
 				<?php endforeach; ?>
 			</select>
 		<?php } else { ?>
