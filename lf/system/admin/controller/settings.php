@@ -146,7 +146,6 @@ class settings extends app
 	{
 		if($this->request->api('version') == '1-DEV')
 			include LF.'system/upgrade.dev.php';
-			
 		redirect302();
 	}
 	
@@ -158,13 +157,12 @@ class settings extends app
 	public function lfup($var)
 	{
 		if(isset($this->lf->settings['release']) && $this->lf->settings['release'] == 'DEV')
-			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/littlefoot-dev.zip', LF.'system.zip');
+			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system-dev.zip', LF.'system.zip');
 		else
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', LF.'system.zip');
 		
 		unset($_SESSION['upgrade']);
 		//upgrade();
-		
 		
 		$time = time();
 		if(!is_dir('backup')) mkdir('backup');
