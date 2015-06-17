@@ -1,0 +1,25 @@
+{
+    "name": "eflip/littlefoot",
+    "type": "project",
+    "description": "Littlefoot CMS, ORM, Framework, etc",
+    "keywords": ["cms","orm","css","php"],
+    "homepage": "http://littlefootcms.com",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Joseph Still",
+            "email": "joe@bioshazard.com",
+            "homepage": "http://bioshazard.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Michael Wight",
+            "email": "mwight90@gmail.com",
+            "homepage": "http://wightdev.com",
+            "role": "Designer/Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
