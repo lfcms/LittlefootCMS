@@ -22,6 +22,11 @@ class settings extends app
 		if(!isset($this->lf->settings['debug']) || $this->lf->settings['debug'] == 'off') 
 			$debug['value'] = 'off';
 			
+		$setting['options'] = array('on', 'off');
+		$setting['value'] = 'on';
+		if(!isset($this->lf->settings['bots']) || $this->lf->settings['bots'] == 'off') 
+			$setting['value'] = 'off';
+			
 		$signup['options'] = array('on', 'off');
 		$signup['value'] = 'on';
 		if(!isset($this->lf->settings['signup']) || $this->lf->settings['signup'] == 'off') 
@@ -75,6 +80,37 @@ class settings extends app
 	
 	public function saveoptions($args)
 	{
+		$oldSettings = $this->lf->settings;
+		$newSettings = $_POST['setting'];
+		
+		foreach($oldSettings as $var => $val)
+		{
+			if(isset($newSettings[$var]))
+			{
+				(new LfSettings)
+					->byVar($var)
+					->setVal($newSettings[$var])
+					->debug()
+					->save();
+					
+				unset($newSettings[$var]);
+			}
+		}
+		
+		foreach($newSettings as $var => $val)
+		{
+			(new LfSettings)
+				->add()
+				->setVar($var)
+				->setVal($val)
+				->debug()
+				->save();
+		}
+			
+		$this->notice('Options saved');
+		redirect302();
+		
+		/* gotta find a way to do this in ORM 
 		if(count($_POST))
 		{
 			if(isset($_POST['setting']))
@@ -92,8 +128,7 @@ class settings extends app
 				
 				$this->notice('Options saved');
 			}
-			redirect302();
-		}
+		}*/
 	}
 	
 	public function upgradedev($args)

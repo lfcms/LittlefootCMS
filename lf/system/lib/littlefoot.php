@@ -896,6 +896,10 @@ class Littlefoot
 			$template
 		);
 		
+		// Search engine blocker
+		if(isset($this->lf->settings['bots']) && $this->lf->settings['bots'] == 'on')
+			$this->lf->head .= '<meta name="robots" content="noindex, nofollow">';
+		
 		$template = str_replace('<head>', '<head>'.$this->lf->head, $template);
 		
 		ob_start();

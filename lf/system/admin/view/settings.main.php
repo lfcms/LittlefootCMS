@@ -48,7 +48,24 @@
 					</div>
 					<div class="row">
 						<div class="col-6">
-							<label for="setting[force_url]">Force URL (empty to not force URL):</label>
+							<label for="setting[bots]">Block Search Engines:</label>
+							
+							<?php foreach($signup['options'] as $option):
+								$checked = $setting['value']==$option?'checked':'';
+							?>
+							<input id="signup" type="radio" <?=$checked;?> name="setting[bots]" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<?php endforeach; ?>
+							
+						</div>
+						<div class="col-6">
+							<label for="setting[title]">Site Title:</label>
+							
+							<input id="setting[title]" type="text" name="setting[title]" size="50" value="<?=isset($force_url)?$force_url:'';?>" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<label for="setting[force_url]" title="empty to not force URL">Force URL:</label>
 							<input id="setting[force_url]" type="text" name="setting[force_url]" size="50" value="<?=isset($force_url)?$force_url:'';?>" />
 						</div>
 						<div class="col-6">
