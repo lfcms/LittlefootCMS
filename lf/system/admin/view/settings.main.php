@@ -47,13 +47,23 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-6">
+						<div class="col-3">
 							<label for="setting[bots]">Block Search Engines:</label>
 							
-							<?php foreach($signup['options'] as $option):
-								$checked = $setting['value']==$option?'checked':'';
+							<?php foreach($bots['options'] as $option):
+								$checked = $bots['value']==$option?'checked':'';
 							?>
 							<input id="signup" type="radio" <?=$checked;?> name="setting[bots]" value="<?=$option;?>" /> <?=ucfirst($option);?>
+							<?php endforeach; ?>
+							
+						</div>
+						<div class="col-3">
+							<label for="setting[release]">LF Release:</label>
+							
+							<?php foreach($release['options'] as $option):
+								$checked = $release['value']==$option?'checked':'';
+							?>
+							<input id="signup" type="radio" <?=$checked;?> name="setting[release]" value="<?=$option;?>" /> <?=ucfirst($option);?>
 							<?php endforeach; ?>
 							
 						</div>

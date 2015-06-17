@@ -8,8 +8,8 @@ class settings extends app
 	public function main($var)
 	{
 		/* UPGRADE */
-		
-		$newest = curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+		$master = curl_get_contents('http://littlefootcms.com/files/build-release/master');
+		$dev = curl_get_contents('http://littlefootcms.com/files/build-release/dev');
 		
 		$rewrite['options'] = array('on', 'off');
 		$rewrite['value'] = 'on';
@@ -22,10 +22,17 @@ class settings extends app
 		if(!isset($this->lf->settings['debug']) || $this->lf->settings['debug'] == 'off') 
 			$debug['value'] = 'off';
 			
-		$setting['options'] = array('on', 'off');
-		$setting['value'] = 'on';
+		$bots['options'] = array('on', 'off');
+		$bots['value'] = 'on';
 		if(!isset($this->lf->settings['bots']) || $this->lf->settings['bots'] == 'off') 
-			$setting['value'] = 'off';
+			$bots['value'] = 'off';
+			
+		$release['options'] = array('DEV', 'STABLE');
+		$release['value'] = 'DEV';
+		if(!isset($this->lf->settings['release']) || $this->lf->settings['release'] == 'STABLE') 
+			$release['value'] = 'STABLE';
+		
+		$newest = $release['value']=='DEV'?$dev:$master;
 			
 		$signup['options'] = array('on', 'off');
 		$signup['value'] = 'on';
@@ -150,7 +157,11 @@ class settings extends app
 	
 	public function lfup($var)
 	{
-		downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', LF.'system.zip');
+		if(isset($this->lf->settings['release']) && $this->lf->settings['release'] == 'DEV')
+			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/littlefoot-dev.zip', LF.'system.zip');
+		else
+			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', LF.'system.zip');
+		
 		unset($_SESSION['upgrade']);
 		//upgrade();
 		
