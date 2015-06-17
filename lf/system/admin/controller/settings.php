@@ -16,7 +16,6 @@ class settings extends app
 		if(!isset($this->lf->settings['rewrite']) || $this->lf->settings['rewrite'] == 'off') 
 			$rewrite['value'] = 'off';
 		
-		
 		$debug['options'] = array('on', 'off');
 		$debug['value'] = 'on';
 		if(!isset($this->lf->settings['debug']) || $this->lf->settings['debug'] == 'off') 
