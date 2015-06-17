@@ -60,7 +60,7 @@
 						<div class="col-6">
 							<label for="setting[title]">Site Title:</label>
 							
-							<input id="setting[title]" type="text" name="setting[title]" size="50" value="<?=isset($force_url)?$force_url:'';?>" />
+							<input id="setting[title]" type="text" name="setting[title]" size="50" value="<?=isset($title)?$title:'';?>" />
 						</div>
 					</div>
 					<div class="row">

@@ -45,6 +45,10 @@ class settings extends app
 		$url = '';
 		if(isset($this->lf->settings['force_url']))
 			$url = $this->lf->settings['force_url'];
+		
+		$title = '';
+		if(isset($this->lf->settings['title']))
+			$title = $this->lf->settings['title'];
 			
 		$nav_class = '';
 		if(isset($this->lf->settings['nav_class']))

@@ -882,6 +882,10 @@ class Littlefoot
 			foreach($this->content as $key => $value)
 				$template = str_replace($key, implode($value), $template);
 		
+		// | title replacement
+		if(isset($this->lf->settings['title']) && $this->lf->settings['title'] != '')
+			$this->select['title'] .= ' | '.$this->lf->settings['title'];
+		
 		// replace global variables
 		$global_replace = array(
 			'%login%' => $login,
