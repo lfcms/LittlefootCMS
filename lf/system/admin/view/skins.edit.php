@@ -94,12 +94,9 @@ $(document).ready(function(){
 			
 			// account for debug...
 			var result = /^(.*)(<|$)/.exec(data)
-			
-			//console.log(result);
-			if (1 in result) { data = result[1]; }
-			else { alert('Session Timed Out! Save your work!!'); }
-
 			data = result[1];
+			
+			if (data == "Session timed out") { alert ('Session timeout!'); }
 			
 			
 			$("#skinform input[name=csrf_token]").val(data);
