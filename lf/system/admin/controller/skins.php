@@ -30,6 +30,46 @@ class skins extends app
 		include 'view/skins.main.php';
 	}
 	
+	public function edit($vars)
+	{
+		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
+		$skin = $this->pwd.$matches[0];
+		
+		if(!is_dir($skin)) return 'Skin not found!';
+		
+	
+		$template = file_get_contents($skin.'/index.php'); 
+		//$data = str_replace('%baseurl%', '%template%', $data);
+		
+		
+		preg_match_all('/"%skinbase%\/([^".]+\.(css|js))"/', $template, $match);
+		$files = $match[1];
+		$files[-1] = 'index.php';
+		
+		if(is_file($skin.'/home.php'))
+			$files[-2] = 'home.php';
+		
+		if(!isset($vars[2])) $vars[2] = -1;
+		$vars[2] = intval($vars[2]);
+		$file = $skin.'/'.$files[$vars[2]];
+		$ext = 'html';
+		if($vars[2] != -1 && $vars[2] != -2) $ext = $match[2][$vars[2]];
+		
+		$data = '';
+		if(is_file($file))
+			$data = file_get_contents($file);
+		
+		$linecount = substr_count( $data, "\n" ) + 1 + 10;
+		
+		$vars[1] .= '/'.$vars[2];
+		
+		$data = preg_replace('/%([a-z]+)%/', '%{${1}}%', $data);
+		
+		ksort($files);
+		
+		include 'view/skins.edit.php';
+	}
+	
 	public function download($var)
 	{
 		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
@@ -152,46 +192,6 @@ class skins extends app
 		header('HTTP/1.1 302 Moved Temporarily');
 		header('Location: '. $_SERVER['HTTP_REFERER']);
 		exit();
-	}
-	
-	public function edit($vars)
-	{
-		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
-		$skin = $this->pwd.$matches[0];
-		
-		if(!is_dir($skin)) return 'Skin not found!';
-		
-	
-		$template = file_get_contents($skin.'/index.php'); 
-		//$data = str_replace('%baseurl%', '%template%', $data);
-		
-		
-		preg_match_all('/"%skinbase%\/([^".]+\.(css|js))"/', $template, $match);
-		$files = $match[1];
-		$files[-1] = 'index.php';
-		
-		if(is_file($skin.'/home.php'))
-			$files[-2] = 'home.php';
-		
-		if(!isset($vars[2])) $vars[2] = -1;
-		$vars[2] = intval($vars[2]);
-		$file = $skin.'/'.$files[$vars[2]];
-		$ext = 'html';
-		if($vars[2] != -1 && $vars[2] != -2) $ext = $match[2][$vars[2]];
-		
-		$data = '';
-		if(is_file($file))
-			$data = file_get_contents($file);
-		
-		$linecount = substr_count( $data, "\n" ) + 1 + 10;
-		
-		$vars[1] .= '/'.$vars[2];
-		
-		$data = preg_replace('/%([a-z]+)%/', '%{${1}}%', $data);
-		
-		ksort($files);
-		
-		include 'view/skins.edit.php';
 	}
 	
 	public function makehome($args)

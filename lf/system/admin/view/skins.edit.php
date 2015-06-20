@@ -52,7 +52,6 @@
 	</div>
 </form>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
 $(document).ready(function(){
@@ -86,10 +85,23 @@ $(document).ready(function(){
 		//   var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
 		$.ajax({
 		  type: "POST",
-		  url: $("#skinform").attr("action"),
+		  url: $("#skinform").attr("action") + '?json',
 		  data: $("#skinform").serialize(),
 		  success: function(data) {
+			  console.log(data);
 			$("#hidden_ajax").remove(); // unset ajax
+			
+			
+			// account for debug...
+			var result = /^(.*)(<|$)/.exec(data)
+			
+			//console.log(result);
+			if (1 in result) { data = result[1]; }
+			else { alert('Session Timed Out! Save your work!!'); }
+
+			data = result[1];
+			
+			
 			$("#skinform input[name=csrf_token]").val(data);
 			
 			//display message back to user here
@@ -100,7 +112,6 @@ $(document).ready(function(){
 			$(".ajax_message")
 				.hide()
 				.slideToggle('slow')
-				.delay(2000)
 				.slideToggle('slow');
 			
 			
