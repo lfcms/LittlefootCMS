@@ -2,12 +2,15 @@
 <div class="tile rounded<?=$this->edit==$action['id']?' active':'';?>">
 	<div class="tile-header gray_fg">
 		<div class="row">
-			<div class="col-8">					
+			<div class="col-4">					
 				<?=$action['position'] ? $prefix.$action['position'] : '<i title="hidden" class="fa fa-user-secret"></i>';?>
 		
 				<a href="%appurl%main/<?=$action['id'];?>/#nav_<?=$action['id'];?>">
 					<?=$action['label'];?>
 				</a>
+			</div>
+			<div class="col-4">					
+				<a href="%appurl%wysiwyg/<?=$action['id'];?>">WYSIWYG</a>
 			</div>
 			<div class="col-3">
 				<span class="pull-right">
