@@ -621,9 +621,19 @@ class orm implements IteratorAggregate
 		}
 		
 		/*if(is_object($value))
-			$this->joins[] = $value;*/
+			foreach($value as $iter)
+				$this->joins[] = $iter;*/
 		
-		if(!is_numeric($value))
+		if(is_array($value))
+		{
+			$condition = 'IN';
+			
+			if(!is_numeric($value[0]))
+				$value = '("'.implode('", "', $value).'")';
+			else
+				$value = '('.implode(', ', $value).')';
+		}
+		else if(!is_numeric($value))
 			$value = "'".$this->escape($value)."'";
 		
 		$this->conditions[] = $column.' '.$condition.' '.$value;
