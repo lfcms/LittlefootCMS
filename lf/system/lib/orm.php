@@ -143,8 +143,13 @@ class orm implements IteratorAggregate
 		// leave mysqli object in session, but close it once the script finishes via ___LastSay
 		if(isset($_SESSION['db']))
 		{
-			$this->mysqli = $_SESSION['db'];
-			return $this;
+			// for when we bork the db session
+			//$var instanceof mysqli_result;
+			if(is_a($_SESSION['db'], 'mysqli_result'))
+			{
+				$this->mysqli = $_SESSION['db'];
+				return $this;
+			}
 		}
 		
 		// check to make sure configuration file is there
@@ -621,9 +626,19 @@ class orm implements IteratorAggregate
 		}
 		
 		/*if(is_object($value))
-			$this->joins[] = $value;*/
+			foreach($value as $iter)
+				$this->joins[] = $iter;*/
 		
-		if(!is_numeric($value))
+		if(is_array($value))
+		{
+			$condition = 'IN';
+			
+			if(!is_numeric($value[0]))
+				$value = '("'.implode('", "', $value).'")';
+			else
+				$value = '('.implode(', ', $value).')';
+		}
+		else if(!is_numeric($value))
 			$value = "'".$this->escape($value)."'";
 		
 		$this->conditions[] = $column.' '.$condition.' '.$value;
