@@ -7,9 +7,10 @@
 <div class="row">
 	<div class="col-4">
 		<h3>Apps</h3>
-		<form action="%appurl%installfromurl/app" method="post">
+		<form action="%appurl%zipfromurl/" method="post">
 			<input type="text" name="url" placeholder="Install .zip from URL" />
-			<input type="submit" value="Download" class="blue marbot" />
+			<input type="text" name="app" placeholder="App Name" />
+			<input type="submit" name="download[app]" value="Download" class="blue marbot" />
 		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_app_form" enctype="multipart/form-data" action="%appurl%install/app/" method="post">
@@ -34,9 +35,10 @@
 	</div>
 	<div class="col-4">
 		<h3>Skins</h3>
-		<form action="%appurl%installfromurl/skin" method="post">
+		<form action="%appurl%zipfromurl/" method="post">
 			<input type="text" name="url" placeholder="Install .zip from URL" />
-			<input type="submit" value="Download" class="blue marbot" />
+			<input type="text" name="app" placeholder="App Name" />
+			<input type="submit" name="download[skin]" value="Download" class="blue marbot" />
 		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/skin/" method="post">
@@ -60,9 +62,10 @@
 	</div>
 	<div class="col-4">
 		<h3>Plugins</h3>
-		<form action="%appurl%installfromurl/plugin" method="post">
+		<form action="%appurl%zipfromurl/" method="post">
 			<input type="text" name="url" placeholder="Install .zip from URL" />
-			<input type="submit" value="Download" class="blue marbot" />
+			<input type="text" name="app" placeholder="App Name" />
+			<input type="submit" name="download[plugin]" value="Download" class="blue marbot" />
 		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_plugin_form" enctype="multipart/form-data" action="%appurl%install/plugin/" method="post">
