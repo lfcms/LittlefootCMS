@@ -9,9 +9,9 @@
 		<? endif; ?>
 	</div>
 	<div class="col-4">
-		LDAP:
+		LDAP <?=extension_loaded('ldap')?'':'(PHP LDAP Module not installed)';?>:
 		<form action="%appurl%saveldap" method="post">
-			<input value="<?=isset($this->lf->settings['ldap'])?$this->lf->settings['ldap']:'';?>" type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
+			<input <?=isset($this->lf->settings['ldap'])?'value="'.$this->lf->settings['ldap'].'"':'';?>  <?=extension_loaded('ldap')?'':'disabled';?> type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
 		</form>
 	</div>
 </div>
