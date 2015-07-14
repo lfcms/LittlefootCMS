@@ -9,6 +9,10 @@
 		<? endif; ?>
 	</div>
 	<div class="col-4">
+		LDAP:
+		<form action="%appurl%saveldap" method="post">
+			<input value="<?=isset($this->lf->settings['ldap'])?$this->lf->settings['ldap']:'';?>" type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
+		</form>
 	</div>
 </div>
 <table class="table rounded">

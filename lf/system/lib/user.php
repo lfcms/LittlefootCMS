@@ -82,24 +82,80 @@ class User
 		return $this;
 	}
 	
-	public function doLogin()
+	## NEW
+	public function doLogin($ldap = NULL)
 	{
 		if(!count($_POST))
 			return false;
 		
 		// Get user/pass from $_POST and hash pass
 		$username = $_POST['user'];
-		$password = sha1($_POST['pass']);
+		$password = $_POST['pass'];
 		
-		//$login = (new orm)->qUsers('lf')
-		$login = (new LfUsers)
-			->cols('id, user, email, display_name, access')
-			->byUser($_POST['user'])
-			->byPass(sha1($_POST['pass']))
-			->first();
 		
+		# If LDAP is configured
+		if(!is_null($ldap))
+		{
+			$this->debug[] = 'ldap configured';
+			## See if we can authenticate against the configured LDAP
+			$ldapResults = $this->ldapLogin($ldap, $username, $password);
+				
+			## If login succeeds,
+			if($ldapResults)
+			{
+				$this->debug[] = 'ldap login success';
+				
+				### See if the user we just authenticated as is valid
+				$login = (new LfUsers)
+					->cols('id, user, email, display_name, access')
+					->byUser($username)
+					->first();
+				
+				### If the LDAP login is valid, but we dont have a local user
+				if(!$login)
+				{
+					$this->debug[] = 'ldap valid, adding user';
+					$ldapResults = $ldapResults[0];
+					(new LfUsers)->add()
+						->setUser($ldapResults['cn'][0])
+						->setEmail($ldapResults['cn'][0])
+						->setStatus('valid')
+						->setAccess('user')
+						->setDisplay_name($ldapResults['displayname'][0])
+						->save();
+					
+					$login = (new LfUsers)
+						->cols('id, user, email, display_name, access')
+						->byUser($ldapResults['cn'][0])
+						->first();
+				}
+			}
+			else
+			{
+				$this->debug[] = 'not in ldap';
+				$this->debug[] = $username.' '.$password;
+				### Attempt login normally
+				$login = (new LfUsers)
+					->cols('id, user, email, display_name, access')
+					->byUser($username)
+					->byPass(sha1($password))
+					->first();
+			}
+		}
+		else
+		{
+			$this->debug[] = 'no ldap configured';
+			
+			// Traditional Database lookup
+			$login = (new LfUsers)
+				->cols('id, user, email, display_name, access')
+				->byUser($username)
+				->byPass(sha1($password))
+				->first();
+		}
+		
+				
 		unset($_POST);
-		
 		// return with error if post fails
 		if(!$login)
 		{
@@ -126,10 +182,65 @@ class User
 		
 		if($this->error != array()) 
 			$_SESSION['_lf_login_error'] = implode(', ', $this->error);
+		else
+			$this
+				->setDetails($login)
+				->toSession();
+				
+		/*pre($_SESSION);
+		pre($this->debug);
+		pre($login);
+		exit;*/
+	}
+	
+	## NEW
+	public function ldapLogin($server, $user, $pass)
+	{
+		$server = json_decode(str_replace("'", '"', $server), true);
 		
-		return $this
-			->setDetails($login)
-			->toSession();
+		$host = $server['host'];
+		$port = $server['port'];
+		$basedn = $server['basedn'];
+
+		## Connect to the LDAP server.
+		$ds=ldap_connect($host, $port);
+		if(!$ds)
+		{
+			echo "Unable to connect to LDAP server";
+			return false;
+		}
+
+		## Make it work, because otherwise it won't.
+		ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+
+		### Bind anonymously
+		$r=ldap_bind($ds);     // this is an "anonymous" bind, typically
+							   // read-only access
+
+		// Search email entry
+		$sr=ldap_search($ds, $basedn, 'cn='.$user);
+
+		if( ldap_count_entries($ds, $sr) == 0 )
+		{
+			//echo "No entry found for ".$user.'.';
+			return false;
+		}
+
+		//echo '<img src="data:image/jpeg;base64,'.base64_encode($info['jpegphoto'][0]).'" /><br />';
+
+		$info = ldap_get_entries($ds, $sr);
+		$dn = $info[0]['dn']; // get dn of first
+
+		## Bind with credentials for found DN
+		$r = ldap_bind($ds, $dn, $_POST['pass']);
+
+		ldap_close($ds);
+		
+		if($r)
+			return $info;
+
+		return $r;
 	}
 	
 	public function isValidLogin()
