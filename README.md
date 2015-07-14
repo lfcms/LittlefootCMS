@@ -2,7 +2,7 @@
 
 The Big CMS with a little footprint.
 
-Visit http://littlefootcms.com for documentation.
+Visit http://littlefootcms.com/manual for documentation.
 
 ## Issues
 
