@@ -34,7 +34,11 @@ class auth extends app
 	public function login($args)
 	{
 		// if user/pass matches, push to session
-		(new User)->doLogin();
+		if( !isset($this->lf->settings['ldap']) 
+		|| $this->lf->settings['ldap'] == '') 
+			$this->lf->settings['ldap'] = NULL;
+			
+		(new User)->doLogin($this->lf->settings['ldap']);
 		
 		// Redirect back to what you were looking at. If login refreshes, that happens here.
 		redirect302();
@@ -252,5 +256,3 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
  * ~~~
  * 
  */
-
-?>

@@ -44,7 +44,7 @@ class store extends app
 		
 		redirect302($this->lf->appurl);
 	}
-	
+	/* .zip upload - disabled for now
 	public function install($vars)
 	{
 		$type = $vars[1];
@@ -92,7 +92,7 @@ class store extends app
 		}
 		
 		redirect302();
-	}
+	}*/
 	
 	public function dlplugin()
 	{
@@ -128,6 +128,46 @@ class store extends app
 	{
 		$item = $this->item;
 		$type = $this->type;
+		
+		//echo $this->repobase."/${type}/${type}.txt";
+		$list = curl_get_contents($this->repobase."/$type/$type.txt");
+		$list = array_flip(explode("\n",$list,-1));
+		
+		//pre($list);
+		
+		if(isset($list[$item]))
+		{
+			$files = array_flip(scandir(ROOT.$type));
+			
+			if(isset($files[$vars[1]]))
+				return 'App already downloaded: '.$item;
+			
+			$file = $this->repobase."/${type}/${item}.zip";
+			$dest = LF.$type.'/'.$item.'.zip';
+			//echo $file.'<br />';
+			//echo $dest.'<br />';
+			
+			// download and unzip into apps/
+			downloadFile($file, $dest);
+			Unzip( LF.$type.'/', $item.'.zip' );
+			unlink($dest);
+			
+			if($type == 'apps')
+				$this->installsql($item);
+			
+		} else echo "$type not found: ".$item;
+		
+		redirect302();
+	}
+	
+	public function zipfromurl()
+	{
+		if($_POST['app'] == '')
+			redirect302();
+		
+		$url = $_POST['url'];
+		$item = $_POST['app'];
+		$type = key($_POST['download']);
 		
 		//echo $this->repobase."/${type}/${type}.txt";
 		$list = curl_get_contents($this->repobase."/$type/$type.txt");
