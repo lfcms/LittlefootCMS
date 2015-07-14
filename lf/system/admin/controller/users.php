@@ -18,6 +18,34 @@ class users extends app
 		include 'view/users.edit.php'; 
 	}
 	
+	## NEW
+	public function saveldap($args)
+	{
+			// move this to upgrade
+		(new orm)->query('ALTER TABLE lf_settings MODIFY val VARCHAR(128)');
+		
+		if(!isset($this->lf->settings['ldap']))
+		{
+			$ldap = (new LfSettings)->add()
+				->setVar('ldap')
+				->setVal($_POST['ldap'])
+				->save();
+				
+			$this->lf->settings['ldap'] = $ldap->val;
+		}
+		else
+		{
+			(new LfSettings)
+				->byVar('ldap')
+				->setVal($_POST['ldap'])
+				->save();
+		}
+		
+		$this->notice('LDAP Set');
+		
+		redirect302();
+	}
+	
 	public function update($args)
 	{
 		// If a password was provided, apply it.
