@@ -300,6 +300,17 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .h700 { height:700px; }
 .lf .h750 { height:750px; }
 
+.lf .f9, .lf .fxxsmall { font-size: 9px; }
+.lf .f10, .lf .fxsmall { font-size: 10px }
+.lf .f12, .lf .fsmall { font-size: 12px }
+.lf .f14, .lf .fmedium { font-size: 14px }
+.lf .f16, .lf .flarge { font-size: 16px }
+.lf .f20, .lf .fxlarge { font-size: 20px }
+.lf .f24, .lf .fxxlarge { font-size: 24px }
+.lf .f36, .lf .fhuge { font-size: 36px }
+.lf .f48, .lf .fxhuge { font-size: 48px }
+.lf .f64, .lf .fxxhuge { font-size: 64px }
+
 /* Custom - Colors */
 .lf .white { background-color: #fff !important; }
 .lf .light, .lf .white_fg, .lf .light_a a  { color: #fff !important; }
