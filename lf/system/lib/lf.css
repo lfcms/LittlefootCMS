@@ -74,6 +74,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	white-space: pre;
 }
 
+.lf pre code,
 .lf .code_box {
 	display: block;
 	padding: 5px;
