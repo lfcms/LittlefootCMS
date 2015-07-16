@@ -1,12 +1,10 @@
-<h2><i class="fa fa-shopping-cart"></i> Store</h2>
-
-<p>Click an app to install it. Update links will download the latest.</p>
+<h2 title="Store: Click an app to install it. Update links will download the latest."><i class="fa fa-shopping-cart"></i> Store</h2>
 
 <?=$this->notice();?>
 
 <div class="row">
 	<div class="col-4">
-		<h3>Apps</h3>
+		<h3 class="no_martop">Apps</h3>
 		<form action="%appurl%zipfromurl/" method="post">
 			<input type="text" name="url" placeholder="Install .zip from URL" />
 			<input type="text" name="app" placeholder="App Name" />
@@ -19,7 +17,7 @@
 			<?php /*echo $install;*/ ?>
 			<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>-->
-		<h4>Download</h4>
+		<h4>Available Apps</h4>
 		<ul class="efvlist">
 		<?php foreach($apps as $app => $ignore): ?> 	
 			<li>
@@ -34,7 +32,7 @@
 		</ul>
 	</div>
 	<div class="col-4">
-		<h3>Skins</h3>
+		<h3 class="no_martop">Skins</h3>
 		<form action="%appurl%zipfromurl/" method="post">
 			<input type="text" name="url" placeholder="Install .zip from URL" />
 			<input type="text" name="app" placeholder="App Name" />
@@ -47,7 +45,7 @@
 			<?php /*echo $install;*/ ?>
 			<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>-->
-		<h4>Download</h4>
+		<h4>Available Skins</h4>
 		<ul class="fvlist">
 		<?php foreach($skins as $skin => $ignore): ?> 	
 			<li>
@@ -61,7 +59,7 @@
 		</ul>
 	</div>
 	<div class="col-4">
-		<h3>Plugins</h3>
+		<h3 class="no_martop">Plugins</h3>
 		<form action="%appurl%zipfromurl/" method="post">
 			<input type="text" name="url" placeholder="Install .zip from URL" />
 			<input type="text" name="app" placeholder="App Name" />
@@ -74,7 +72,7 @@
 			<?php /*echo $install;*/ ?>
 			<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>-->
-		<h4>Download</h4>
+		<h4>Available Plugins</h4>
 		<ul class="fvlist">
 		<?php foreach($plugins as $plugin => $ignore): ?> 	
 			<li>
