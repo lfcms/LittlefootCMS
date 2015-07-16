@@ -248,11 +248,11 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	border-radius: 5px;
 }
 
-.lf .rounded li:first-child {
+.lf .rounded > li:first-child {
     border-radius: 5px 5px 0px 0px;
 }
 
-.lf .rounded li:last-child {
+.lf .rounded > li:last-child {
     border-radius: 0px 0px 5px 5px;   
 }
 
