@@ -273,6 +273,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	display: none;
 }
 
+.lf .h50,
+.lf .h75,
 .lf .h100,
 .lf .h150,
 .lf .h200,
@@ -290,6 +292,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	/*overflow: hidden;*/
 }
 
+.lf .h50 { height:50px; }
+.lf .h75 { height:75px; }
 .lf .h100 { height:100px; }
 .lf .h150 { height:150px; }
 .lf .h200 { height:200px; }
@@ -595,6 +599,10 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf img.fit {
 	width: 100%;
+}
+
+.lf img.fit-font {
+	width: 1em;
 }
 
 .lf img.small {

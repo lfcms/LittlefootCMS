@@ -31,7 +31,7 @@ if(count($_GET))
 			<div class="row">
 				<div class="col-4"></div>
 				<div class="col-4 ">
-					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/"><img src="%relbase%lf/system/template/images/lf-banner.png"/></a></h1>
+					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/"><img src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/></a></h1>
 					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
 					<form id="login" action="<?=$this->base;?>_auth/login" method="post">
 						<ul class="vlist">
