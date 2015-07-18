@@ -602,7 +602,14 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf img.fit-font {
-	width: 1em;
+	display: block;
+	width: 1.5rem;
+}
+
+.lf img.icon {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .lf img.small {
@@ -889,8 +896,8 @@ and (max-width : 850px) {
 	/*Mobile - Userbar*/
 	.lf .userbar #admin_title,
 	.lf .userbar #site_preview {
-		text-align: center;
-		font-size: 2rem;
+		/*text-align: center;
+		font-size: 2rem;*/
 	}
 	
 	/*Mobile - Basics */
