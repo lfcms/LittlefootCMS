@@ -269,6 +269,10 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	overflow: hidden;
 }
 
+.lf .hidden {
+	display: none;
+}
+
 .lf .h100,
 .lf .h150,
 .lf .h200,
