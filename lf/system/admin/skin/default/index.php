@@ -37,16 +37,14 @@
 	</head>
 
 	<body>
-		<div class="wrapper userbar dark_gray light">
+		<div class="wrapper userbar h50 dark_gray light">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
 					<div class="userbar">
-						<div class="col-2">
-							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-bars"></i> lf admin</a>
-						</div>
-						<div class="col-7">
+						<div class="col-9">
 							<a id="site_preview" href="%relbase%" target="blank_">
-								<i class="fa fa-eye"></i> <?=$this->domain;?>%relbase%
+								<!-- <i class="fa fa-eye"></i> -->
+								<img class="fit-font" src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/> <?=$this->domain;?>%relbase%
 							</a>
 						</div>
 						<div class="col-3">
