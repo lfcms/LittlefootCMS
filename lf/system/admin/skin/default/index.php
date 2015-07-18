@@ -41,24 +41,20 @@
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
 					<div class="userbar">
-						<div class="col-9">
-							<a id="site_preview" href="%relbase%" target="blank_">
-								<!-- <i class="fa fa-eye"></i> -->
-								<img class="fit-font" src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/> <?=$this->domain;?>%relbase%
-							</a>
-						</div>
-						<div class="col-3">
+						<div class="col-12">
+							<img class="fit-font icon pull-left martop" src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/> 
+							<a id="site_preview" class="pull-left" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
+						<?php if($_SESSION['upgrade']): ?>
+							<span id="upgrade" class="pull-left">
+								<a class="blue button" href="%baseurl%settings/">Upgrade Now!</a>
+							</span>
+						<?php endif; ?>
 							<span id="logout_button" class="pull-right">
 								<a class="x" href="%baseurl%_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
 								Hello <?=$this->api('me');?>.
 							</span>
-						<?php if($_SESSION['upgrade']): ?>
-							<span id="upgrade" class="pull-left">
-								<a class="blue button" href="%baseurl%settings/">Upgrade Now!</a>
-							</span>
-						<?php endif; ?>
 						</div>
 					</div>
 				</div>
