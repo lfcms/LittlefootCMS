@@ -26,7 +26,7 @@ if(count($_GET))
 		<link rel="stylesheet" href="%skinbase%css/custom.css" type="text/css" />
 	</head>
 
-	<body class="gray">
+	<body class="blue">
 		<div class="lf_login wrapper">	
 			<div class="row">
 				<div class="col-4"></div>
@@ -37,8 +37,8 @@ if(count($_GET))
 						<ul class="vlist">
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
 							<li><input type="password" id="password" name="pass" placeholder="Password" /></li>
-							<li><button class="green button" href="" >Sign in</button></li>
-							<li><a class="button gray" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
+							<li><button class="light_blue button" href="" >Sign in</button></li>
+							<li><a class="blue button" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
 						</ul>
 						<!-- <p>
 							<?php echo $recaptcha; ?>
