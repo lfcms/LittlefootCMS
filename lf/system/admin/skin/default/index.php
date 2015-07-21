@@ -40,8 +40,8 @@
 		<div class="wrapper userbar h50 dark_gray light">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
-					<div class="userbar">
-						<div class="col-12">
+					<div class="col-12">
+						<div class="userbar">
 							<img class="fit-font icon pull-left martop" src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/> 
 							<a id="site_preview" class="pull-left" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
 						<?php if($_SESSION['upgrade']): ?>
