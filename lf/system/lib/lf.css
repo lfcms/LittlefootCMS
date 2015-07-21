@@ -931,6 +931,7 @@ and (max-width : 850px) {
 	}
 	
 	/*Mobile - Layout */
+	
 	.lf .col-1,
 	.lf .col-2,
 	.lf .col-3,
@@ -967,6 +968,10 @@ and (max-width : 850px) {
 		margin-bottom: 0;
 	}
 	
+	.lf .row > *:last-child {
+		margin-bottom: 0;
+	}
+	
 	.lf .tile {
 		margin-bottom: 1.414rem;
 	}
@@ -982,10 +987,11 @@ and (max-width : 850px) {
 		padding: 20px 15px;
 	}
 	
-	.lf button,
 	.lf .button,
-	.lf input[type=submit] {
-		margin-top: 1.414rem;
+	.lf button,
+	.lf input,
+	.lf select {
+		margin: 1.414rem 0;
 	}
 	
 	.lf *:first-child > button,

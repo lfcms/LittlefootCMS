@@ -17,7 +17,7 @@ if($user->getId() != 0)
 ?>
 	<div class="auth_login">
 		<form id="auth_login_form" action="%baseurl%_auth/login" method="post">
-				<ul>
+				<ul class="vlist">
 					<input type="hidden" name="dest" value="<?php $_SERVER['REQUEST_URI']; ?>" />
 					<li class="auth_user"><input type="text" name="user" placeholder="username" /></li>
 					<li class="auth_pass"><input type="password" name="pass" placeholder="password" /></li>
