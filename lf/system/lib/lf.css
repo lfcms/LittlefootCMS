@@ -74,6 +74,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	white-space: pre;
 }
 
+.lf pre code,
 .lf .code_box {
 	display: block;
 	padding: 5px;
@@ -248,11 +249,11 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	border-radius: 5px;
 }
 
-.lf .rounded li:first-child {
+.lf .rounded > li:first-child {
     border-radius: 5px 5px 0px 0px;
 }
 
-.lf .rounded li:last-child {
+.lf .rounded > li:last-child {
     border-radius: 0px 0px 5px 5px;   
 }
 
@@ -268,6 +269,12 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	overflow: hidden;
 }
 
+.lf .hidden {
+	display: none;
+}
+
+.lf .h50,
+.lf .h75,
 .lf .h100,
 .lf .h150,
 .lf .h200,
@@ -285,6 +292,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	/*overflow: hidden;*/
 }
 
+.lf .h50 { height:50px; }
+.lf .h75 { height:75px; }
 .lf .h100 { height:100px; }
 .lf .h150 { height:150px; }
 .lf .h200 { height:200px; }
@@ -299,6 +308,17 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .h650 { height:650px; }
 .lf .h700 { height:700px; }
 .lf .h750 { height:750px; }
+
+.lf .f9, .lf .fxxsmall { font-size: 9px; }
+.lf .f10, .lf .fxsmall { font-size: 10px }
+.lf .f12, .lf .fsmall { font-size: 12px }
+.lf .f14, .lf .fmedium { font-size: 14px }
+.lf .f16, .lf .flarge { font-size: 16px }
+.lf .f20, .lf .fxlarge { font-size: 20px }
+.lf .f24, .lf .fxxlarge { font-size: 24px }
+.lf .f36, .lf .fhuge { font-size: 36px }
+.lf .f48, .lf .fxhuge { font-size: 48px }
+.lf .f64, .lf .fxxhuge { font-size: 64px }
 
 /* Custom - Colors */
 .lf .white { background-color: #fff !important; }
@@ -581,6 +601,17 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	width: 100%;
 }
 
+.lf img.fit-font {
+	display: block;
+	width: 1.5rem;
+}
+
+.lf img.icon {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
 .lf img.small {
 	max-width: 150px;
 	max-height:150px;
@@ -703,7 +734,7 @@ html.lf, .lf body {
 }
 
 .lf .table input {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 /*Forms*/
@@ -725,7 +756,6 @@ html.lf, .lf body {
 	font-size: 16px;
 	min-height: 40px;
 	line-height: 20px;
-	margin-bottom: 10px;
 	padding: 0.5rem 0.75rem;
 	width: 100%;
 }
@@ -849,6 +879,10 @@ html.lf, .lf body {
 	font-size:0.3em;
 }
 
+.lf .lf-captcha input {
+	min-height: 0;
+	display: inline;
+}
 
 /*Mobile*/
 
@@ -865,8 +899,8 @@ and (max-width : 850px) {
 	/*Mobile - Userbar*/
 	.lf .userbar #admin_title,
 	.lf .userbar #site_preview {
-		text-align: center;
-		font-size: 2rem;
+		/*text-align: center;
+		font-size: 2rem;*/
 	}
 	
 	/*Mobile - Basics */
@@ -901,6 +935,7 @@ and (max-width : 850px) {
 	}
 	
 	/*Mobile - Layout */
+	
 	.lf .col-1,
 	.lf .col-2,
 	.lf .col-3,
@@ -937,6 +972,10 @@ and (max-width : 850px) {
 		margin-bottom: 0;
 	}
 	
+	.lf .row > *:last-child {
+		margin-bottom: 0;
+	}
+	
 	.lf .tile {
 		margin-bottom: 1.414rem;
 	}
@@ -952,10 +991,11 @@ and (max-width : 850px) {
 		padding: 20px 15px;
 	}
 	
-	.lf button,
 	.lf .button,
-	.lf input[type=submit] {
-		margin-top: 1.414rem;
+	.lf button,
+	.lf input,
+	.lf select {
+		margin: 1.414rem 0;
 	}
 	
 	.lf *:first-child > button,

@@ -40,7 +40,14 @@ $(document).ready(function(){
 	<div class="loginboxinner">
     	<div class="loginheader">
     		<h1 class="bebas">Sign In</h1>
-        	<div class="logo"><h1>LittleFoot CMS</h1></div>
+        	<div class="logo">
+				<h1 class="no_mar">
+					<span class="hidden">Littlefoot</span>
+					<a href="http://littlefootcms.com/">
+						<img src="%{relbase}%lf/media/images/lf-banner.png" />
+					</a>
+				</h1>
+			</div>
     	</div><!--loginheader-->
         
         <div class="loginform">

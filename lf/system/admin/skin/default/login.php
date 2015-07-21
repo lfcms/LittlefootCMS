@@ -26,19 +26,19 @@ if(count($_GET))
 		<link rel="stylesheet" href="%skinbase%css/custom.css" type="text/css" />
 	</head>
 
-	<body class="gray">
+	<body class="blue">
 		<div class="lf_login wrapper">	
 			<div class="row">
 				<div class="col-4"></div>
 				<div class="col-4 ">
-					<h2 class="text-center light">Littlefoot CMS</h2>
+					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/"><img src="%relbase%lf/system/template/images/lf-banner.png"/></a></h1>
 					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
 					<form id="login" action="<?=$this->base;?>_auth/login" method="post">
 						<ul class="vlist">
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
 							<li><input type="password" id="password" name="pass" placeholder="Password" /></li>
-							<li><button class="green button dark_b" href="" >Sign in</button></li>
-							<li><a class="button" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
+							<li><button class="light_blue button" href="" >Sign in</button></li>
+							<li><a class="blue button" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
 						</ul>
 						<!-- <p>
 							<?php echo $recaptcha; ?>

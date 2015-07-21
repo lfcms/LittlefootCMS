@@ -37,30 +37,24 @@
 	</head>
 
 	<body>
-		<div class="wrapper userbar dark_gray light">
+		<div class="wrapper userbar h50 dark_gray light">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
-					<div class="userbar">
-						<div class="col-2">
-							<a id="admin_title" href="<?=$this->base;?>"><i class="fa fa-bars"></i> lf admin</a>
-						</div>
-						<div class="col-7">
-							<a id="site_preview" href="%relbase%" target="blank_">
-								<i class="fa fa-eye"></i> <?=$this->domain;?>%relbase%
-							</a>
-						</div>
-						<div class="col-3">
+					<div class="col-12">
+						<div class="userbar">
+							<img class="fit-font icon pull-left martop" src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/> 
+							<a id="site_preview" class="pull-left" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
+						<?php if($_SESSION['upgrade']): ?>
+							<span id="upgrade" class="pull-left">
+								<a class="blue button" href="%baseurl%settings/">Upgrade Now!</a>
+							</span>
+						<?php endif; ?>
 							<span id="logout_button" class="pull-right">
 								<a class="x" href="%baseurl%_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
 								Hello <?=$this->api('me');?>.
 							</span>
-						<?php if($_SESSION['upgrade']): ?>
-							<span id="upgrade" class="pull-left">
-								<a class="blue button" href="%baseurl%settings/">Upgrade Now!</a>
-							</span>
-						<?php endif; ?>
 						</div>
 					</div>
 				</div>
