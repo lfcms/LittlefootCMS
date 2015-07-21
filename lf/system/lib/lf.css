@@ -734,7 +734,7 @@ html.lf, .lf body {
 }
 
 .lf .table input {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 
 /*Forms*/
@@ -756,7 +756,6 @@ html.lf, .lf body {
 	font-size: 16px;
 	min-height: 40px;
 	line-height: 20px;
-	margin-bottom: 10px;
 	padding: 0.5rem 0.75rem;
 	width: 100%;
 }
