@@ -879,6 +879,10 @@ html.lf, .lf body {
 	font-size:0.3em;
 }
 
+.lf .lf-captcha input {
+	min-height: 0;
+	display: inline;
+}
 
 /*Mobile*/
 
