@@ -27,7 +27,7 @@ if(count($_GET))
 	</head>
 
 	<body class="blue">
-		<div class="lf_login wrapper">	
+		<div class="lf_login container">	
 			<div class="row">
 				<div class="col-4"></div>
 				<div class="col-4 ">
