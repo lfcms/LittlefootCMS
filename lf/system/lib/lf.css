@@ -225,6 +225,10 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	margin-bottom: 0 !important;
 }
 
+.lf .hspaced > * {
+	margin-right: 15px;
+}
+
 .lf .martop {
 	margin-top: 1.414rem !important;
 }
@@ -292,33 +296,33 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	/*overflow: hidden;*/
 }
 
-.lf .h50 { height:50px; }
-.lf .h75 { height:75px; }
-.lf .h100 { height:100px; }
-.lf .h150 { height:150px; }
-.lf .h200 { height:200px; }
-.lf .h250 { height:250px; }
-.lf .h300 { height:300px; }
-.lf .h350 { height:350px; }
-.lf .h400 { height:400px; }
-.lf .h450 { height:450px; }
-.lf .h500 { height:500px; }
-.lf .h550 { height:550px; }
-.lf .h600 { height:600px; }
-.lf .h650 { height:650px; }
-.lf .h700 { height:700px; }
-.lf .h750 { height:750px; }
+.lf .h50 { height:50px;  !important; }
+.lf .h75 { height:75px;  !important; }
+.lf .h100 { height:100px;  !important; }
+.lf .h150 { height:150px;  !important; }
+.lf .h200 { height:200px;  !important; }
+.lf .h250 { height:250px;  !important; }
+.lf .h300 { height:300px;  !important; }
+.lf .h350 { height:350px;  !important; }
+.lf .h400 { height:400px;  !important; }
+.lf .h450 { height:450px;  !important; }
+.lf .h500 { height:500px;  !important; }
+.lf .h550 { height:550px;  !important; }
+.lf .h600 { height:600px;  !important; }
+.lf .h650 { height:650px;  !important; }
+.lf .h700 { height:700px;  !important; }
+.lf .h750 { height:750px;  !important; }
 
-.lf .f9, .lf .fxxsmall { font-size: 9px; }
-.lf .f10, .lf .fxsmall { font-size: 10px }
-.lf .f12, .lf .fsmall { font-size: 12px }
-.lf .f14, .lf .fmedium { font-size: 14px }
-.lf .f16, .lf .flarge { font-size: 16px }
-.lf .f20, .lf .fxlarge { font-size: 20px }
-.lf .f24, .lf .fxxlarge { font-size: 24px }
-.lf .f36, .lf .fhuge { font-size: 36px }
-.lf .f48, .lf .fxhuge { font-size: 48px }
-.lf .f64, .lf .fxxhuge { font-size: 64px }
+.lf .f9, .lf .fxxsmall { font-size: 9px !important; }
+.lf .f10, .lf .fxsmall { font-size: 10px !important;  }
+.lf .f12, .lf .fsmall { font-size: 12px  !important; }
+.lf .f14, .lf .fmedium { font-size: 14px  !important; }
+.lf .f16, .lf .flarge { font-size: 16px  !important; }
+.lf .f20, .lf .fxlarge { font-size: 20px  !important; }
+.lf .f24, .lf .fxxlarge { font-size: 24px  !important; }
+.lf .f36, .lf .fhuge { font-size: 36px  !important; }
+.lf .f48, .lf .fxhuge { font-size: 48px  !important; }
+.lf .f64, .lf .fxxhuge { font-size: 64px  !important; }
 
 /* Custom - Colors */
 .lf .white { background-color: #fff !important; }
@@ -369,7 +373,6 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 /*Lists*/
 .lf .hlist {
-	margin-right: 20px;
 	display: inline;
 	float: left;
 }
@@ -584,13 +587,18 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	display: block;
 	width: 100%;
 	padding: 0.618rem;
-	border-left: 2px solid #F62319;
 	border-top: 1px solid rgba(51, 51, 51,  0.25);
 	border-right: 1px solid rgba(51, 51, 51,  0.25);
 	border-bottom: 1px solid rgba(51, 51, 51,  0.25);
 	overflow-wrap: break-word;
 	line-height: 1.414rem;
 }
+
+.lf .notice { border-left: 2px solid #1195AA; }
+.lf .success { border-left: 2px solid #00AA63; }
+.lf .warning { border-left: 2px solid #F62319; }
+.lf .error { border-left: 2px solid #F6AE0C; }
+
 
 /*Images*/
 .lf img {
