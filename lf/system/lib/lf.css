@@ -229,6 +229,10 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	margin-right: 15px;
 }
 
+.lf .hspaced > *:last-child {
+	margin-right: 0 !important;
+}
+
 .lf .martop {
 	margin-top: 1.414rem !important;
 }
