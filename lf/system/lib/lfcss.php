@@ -31,10 +31,12 @@ function col($num, $content = '') 	{ return div('col-'.$num, $content); }
 function tile($content = '', $class = NULL) 			
 { 
 	$addClass = '';
-	// if a class was provided, make sure it has a space in front
 	if(!is_null($class))
 	{
+		// if a class was provided, make sure it has a space in front
 		$addClass = ' '.$content;
+		
+		// switch second arg to content. real sneaky ;)
 		$content = $class;
 	}
 	
