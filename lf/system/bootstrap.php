@@ -28,6 +28,7 @@ define('ROOT', LF); // backward compatible
 require 'system/lib/helpers.php'; 		// Helpful functions
 require 'system/lib/orm.php'; 			// Object Relation Model base
 require 'system/lib/app.php'; 			// Littlefoot app base class
+//require 'system/lib/lfcss.php';			// Littlefoot css builder class
 require 'system/lib/user.php'; 			// user stuff
 require 'system/lib/recovery/install.php';
 require 'system/lib/auth.php'; 			// auth stuff
