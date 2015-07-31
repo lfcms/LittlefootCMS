@@ -25,8 +25,35 @@ function div($class, $content)
 	return '<div class="'.$class.'">'.$content.'</div>'; 
 }
 
-function row($content = '') 		{ return div('row', $content); }
-function col($num, $content = '') 	{ return div('col-'.$num, $content); }
+function row($content = '', $class = NULL) 			
+{ 
+	$addClass = '';
+	if(!is_null($class))
+	{
+		// if a class was provided, make sure it has a space in front
+		$addClass = ' '.$class;
+		
+		// switch second arg to content. real sneaky ;)
+		//$content = $class;
+	}
+	
+	return div('row'.$addClass, $content);
+}
+
+function col($num, $content = '', $class = NULL) 			
+{ 
+	$addClass = '';
+	if(!is_null($class))
+	{
+		// if a class was provided, make sure it has a space in front
+		$addClass = ' '.$class;
+		
+		// switch second arg to content. real sneaky ;)
+		//$content = $class;
+	}
+	
+	return div('col-'.$num.$addClass, $content); 
+}
 
 function tile($content = '', $class = NULL) 			
 { 
@@ -34,10 +61,10 @@ function tile($content = '', $class = NULL)
 	if(!is_null($class))
 	{
 		// if a class was provided, make sure it has a space in front
-		$addClass = ' '.$content;
+		$addClass = ' '.$class;
 		
 		// switch second arg to content. real sneaky ;)
-		$content = $class;
+		//$content = $class;
 	}
 	
 	return div('tile'.$addClass, $content); 
@@ -47,11 +74,13 @@ function tile($content = '', $class = NULL)
 function tileHeader($content = '', $class = NULL) 			
 { 
 	$addClass = '';
-	// if a class was provided, make sure it has a space in front
 	if(!is_null($class))
 	{
-		$addClass = ' '.$content;
-		$content = $class;
+		// if a class was provided, make sure it has a space in front
+		$addClass = ' '.$class;
+		
+		// switch second arg to content. real sneaky ;)
+		//$content = $class;
 	}
 	
 	return div('tile-header'.$addClass, $content); 
@@ -60,11 +89,13 @@ function tileHeader($content = '', $class = NULL)
 function tileContent($content = '', $class = NULL) 			
 { 
 	$addClass = '';
-	// if a class was provided, make sure it has a space in front
 	if(!is_null($class))
 	{
-		$addClass = ' '.$content;
-		$content = $class;
+		// if a class was provided, make sure it has a space in front
+		$addClass = ' '.$class;
+		
+		// switch second arg to content. real sneaky ;)
+		//$content = $class;
 	}
 	
 	return div('tile-content'.$addClass, $content); 
@@ -73,11 +104,13 @@ function tileContent($content = '', $class = NULL)
 function tileFooter($content = '', $class = NULL) 			
 { 
 	$addClass = '';
-	// if a class was provided, make sure it has a space in front
 	if(!is_null($class))
 	{
-		$addClass = ' '.$content;
-		$content = $class;
+		// if a class was provided, make sure it has a space in front
+		$addClass = ' '.$class;
+		
+		// switch second arg to content. real sneaky ;)
+		//$content = $class;
 	}
 	
 	return div('tile-footer'.$addClass, $content); 
