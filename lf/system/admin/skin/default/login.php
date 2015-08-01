@@ -38,7 +38,7 @@ if(count($_GET))
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
 							<li><input type="password" id="password" name="pass" placeholder="Password" /></li>
 							<li><button class="light_blue button" href="" >Sign in</button></li>
-							<li><a class="blue button" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
+							<li><a class="transparent button" id="forgot" href="<?=$this->base;?>_auth/forgotform">Forgot your password?</a></li>
 						</ul>
 						<!-- <p>
 							<?php echo $recaptcha; ?>
