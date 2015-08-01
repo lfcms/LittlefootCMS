@@ -178,6 +178,25 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .col-11 { width: 91.66%; }
 .lf .col-12 { width: 100%; }
 
+.lf .row-tight > .col-1, 
+.lf .row-tight > .col-2,
+.lf .row-tight > .col-3, 
+.lf .row-tight > .col-4, 
+.lf .row-tight > .col-5, 
+.lf .row-tight > .col-6, 
+.lf .row-tight > .col-7, 
+.lf .row-tight > .col-8, 
+.lf .row-tight > .col-9,
+.lf .row-tight > .col-10, 
+.lf .row-tight > .col-11, 
+.lf .row-tight > .col-12 {
+	padding: 0;
+}
+
+.lf .row-tight {
+	margin: 0;
+}
+
 .lf .block {
 	display: block;
 }
