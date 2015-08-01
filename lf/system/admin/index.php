@@ -106,7 +106,7 @@ else if($user->hasaccess('admin'))
 	{
 		$replace = str_replace(
 			'<li>',
-			'<li class="active green light_a">',
+			'<li class="active blue light_a">',
 			$links[0][$match]
 		);
 		

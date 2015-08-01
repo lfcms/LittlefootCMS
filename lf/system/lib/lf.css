@@ -253,6 +253,18 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	margin-bottom: 0 !important;
 }
 
+.lf .padtop {
+	padding-top: 1.414rem !important;
+}
+
+.lf .padbot {
+	padding-bottom: 1.414rem !important;
+}
+
+.lf .no_pad {
+	padding: 0 !important;
+}
+
 .lf .rounded {
 	border-radius: 3px !important;
 }
@@ -456,7 +468,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf .efvlist > li:active,
 .lf .efvlist li.active {
-	border-left-color: #00AA63;
+	border-left-color: #1195AA;
 }
 
 /*Navigation*/
