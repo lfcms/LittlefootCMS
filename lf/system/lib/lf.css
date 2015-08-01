@@ -343,22 +343,22 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	/*overflow: hidden;*/
 }
 
-.lf .h50 { height:50px;  !important; }
-.lf .h75 { height:75px;  !important; }
-.lf .h100 { height:100px;  !important; }
-.lf .h150 { height:150px;  !important; }
-.lf .h200 { height:200px;  !important; }
-.lf .h250 { height:250px;  !important; }
-.lf .h300 { height:300px;  !important; }
-.lf .h350 { height:350px;  !important; }
-.lf .h400 { height:400px;  !important; }
-.lf .h450 { height:450px;  !important; }
-.lf .h500 { height:500px;  !important; }
-.lf .h550 { height:550px;  !important; }
-.lf .h600 { height:600px;  !important; }
-.lf .h650 { height:650px;  !important; }
-.lf .h700 { height:700px;  !important; }
-.lf .h750 { height:750px;  !important; }
+.lf .h50 { height:50px !important; }
+.lf .h75 { height:75px !important; }
+.lf .h100 { height:100px !important; }
+.lf .h150 { height:150px !important; }
+.lf .h200 { height:200px !important; }
+.lf .h250 { height:250px !important; }
+.lf .h300 { height:300px !important; }
+.lf .h350 { height:350px !important; }
+.lf .h400 { height:400px !important; }
+.lf .h450 { height:450px !important; }
+.lf .h500 { height:500px !important; }
+.lf .h550 { height:550px !important; }
+.lf .h600 { height:600px !important; }
+.lf .h650 { height:650px !important; }
+.lf .h700 { height:700px !important; }
+.lf .h750 { height:750px !important; }
 
 .lf .f9, .lf .fxxsmall { font-size: 9px !important; }
 .lf .f10, .lf .fxsmall { font-size: 10px !important;  }
@@ -417,6 +417,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .dark_red { background-color: #AA1A00 !important; }
 
 .lf .yellow { background-color: #F6AE0C !important; }
+
+.lf .transparent { background-color: rgba(0, 0, 0, 0.0) !important; }
 
 /*Lists*/
 .lf .hlist {
@@ -890,7 +892,7 @@ html.lf, .lf body {
 	text-align: center; 
     text-decoration: none;
 	width: 100%;
-	background-color: #777;
+	background-color: #CCC;
 	opacity: 0.95;
 	transition: background-color 0.5s;
 	-webkit-transition: background-color 0.5s;
