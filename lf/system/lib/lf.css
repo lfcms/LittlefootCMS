@@ -254,15 +254,27 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .rounded {
-	border-radius: 5px;
+	border-radius: 3px !important;
 }
 
-.lf .rounded > li:first-child {
-    border-radius: 5px 5px 0px 0px;
+.lf ul.rounded > li:first-child {
+    border-radius: 3px 3px 0px 0px !important;
 }
 
-.lf .rounded > li:last-child {
-    border-radius: 0px 0px 5px 5px;   
+.lf ul.rounded > li:last-child {
+    border-radius: 0px 0px 3px 3px !important;   
+}
+
+.lf .round-all * {
+    border-radius: 3px !important;
+}
+
+.lf .squared {
+     border-radius: 0 !important;
+}
+
+.lf .square-all * {
+    border-radius: 0 !important;
 }
 
 .lf .scroll-y {
