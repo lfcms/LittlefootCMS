@@ -44,6 +44,29 @@ class auth extends app
 		redirect302();
 	}
 	
+	public function updateprofile($args)
+	{
+		//pre($_POST);
+		
+		/*if($_POST['password'] != '')
+		{
+			(new LfUsers)
+				->setPass($_POST['password'])
+				->byId( (new User)->fromSession()->getId() )
+				->save();
+				
+			// notice
+		}*/
+		
+		redirect302();
+	}
+	
+	public function profile($args)
+	{
+		include 'system/template/profile.php';
+		//echo getcwd();
+	}
+	
 	public function logout($args)
 	{
 		// reset session
