@@ -9,7 +9,7 @@ $admin_apps = str_replace(
 <h4 class="no_martop"><i class="fa fa-desktop"></i> Control</h4>
 <div class="row">
 	<div class="col-12">
-		<ul class="efvlist rounded">
+		<ul class="efvlist rounded fxlarge">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
@@ -41,12 +41,12 @@ $admin_apps = str_replace(
 <h4><i class="fa fa-th-large"></i> Apps</h4>
 <div class="row">
 	<div class="col-12">
-		<ul class="efvlist rounded">
+		<ul class="efvlist rounded fxlarge">
 			<?php
 			
 			foreach($admin_apps as $shortcut): 
 				if(isset($this->action[1]) && $shortcut == $this->action[1]) 
-					$highlight = ' class="active green light_a"';
+					$highlight = ' class="active blue light_a"';
 				else 
 					$highlight = '';
 				
