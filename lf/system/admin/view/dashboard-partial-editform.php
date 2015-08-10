@@ -1,9 +1,14 @@
 <?php include 'model/templateselect.php'; 
 
-$thelink = $this->links[$save['id']][0];
+// this is a gross fix to me not knowing where editform is called. will clean this up later
+if(!isset($thelink)) 
+	$thelink = $this->links[$save['id']][0];
 
+// TODO: pull these save values from the links on this page 
+// (replace into preview() to allow multi app assignment)
 $save['app'] = $thelink['app'];
 $save['ini'] = $thelink['ini'];
+$save['section'] = $thelink['section'];
 
 // Default args is an input with the current value. Customizable by app.
 $args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';

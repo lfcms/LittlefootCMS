@@ -45,7 +45,6 @@ class dashboard extends app
 		
 		*/
 		
-		
 		include 'model/dashboard.main.php';
 		
 		ob_start();
@@ -56,7 +55,95 @@ class dashboard extends app
 		
 		
 	}
+	
+	public function wysiwyg($vars)
+	{
+		
+		echo '<p>Return to <a href="%baseurl%dashboard/main/'.$vars[1].'/#nav_'.$vars[1].'">dashboard</a></p>';
+		echo '<h2>WYSIWYG</h2>';
+		
+		$save = (new LfActions)->getById($vars[1]);
+		
+		//$thelink = $this->links[$save['id']][0];
+		$thelink = (new LfLinks)->getById($vars[1]);
+		
+		include 'view/dashboard.wysiwyg.php';
+	}
 
+	public function preview($vars)
+	{
+		
+		$action = (new LfActions)->findById($vars[1]);
+		$links = (new LfLinks)->findByInclude($vars[1]);
+		
+		
+		$skin = $action->template;
+		if($skin == 'default')
+			$skin = $this->lf->settings['default_skin'];
+		
+		ob_start();
+		readfile(LF.'skins/'.$skin.'/index.php');
+		$template = ob_get_clean();
+		
+		ob_start();
+		include LF.'cache/nav.cache.html';
+		$nav = ob_get_clean();
+		
+		$content = '<h2>%content%</h2>';
+		
+		
+		//pre($links->result);
+		
+		$content .= implode(', ', $action->get()).'<br />';
+		
+		foreach($links->result as $row)
+		{
+			$content .= implode(', ', $row).'<br />';
+		}
+		
+		
+		
+		$content .= '
+			<div class="row">
+				<div class="col-4">Add new app:</div>
+				<div class="col-4">
+					<select name="" id="">
+						<option value="">App1</option>
+					</select>
+				</div>
+				<div class="col-4">
+					<input type="submit" />
+				</div>
+			</div>
+		 
+		
+		';
+		
+		
+		
+		$template = str_replace(
+			array(
+				'%content%',
+				'%skinbase%',
+				'%nav%',
+				'%baseurl%',
+				'</head>'
+			),
+			array(
+				$content,
+				$this->lf->wwwInstall.'lf/skins/'.$skin,
+				$nav,
+				$this->lf->wwwAdmin.'dashboard/preview/'.$vars[1].'/',
+				'<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" /><link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/3rdparty/icons.css" /></head>'
+			),
+			$template
+		);
+		
+		echo $template;
+		
+		exit();
+	}
+	
 	public function linkapp($vars)
 	{	
 		if($this->simple) return;
@@ -522,6 +609,10 @@ class dashboard extends app
 			$this->db->query($sql);
 		}
 		$this->updatenavcache();
+		
+		if(strpos($_SERVER['HTTP_REFERER'],'wysiwyg') !== false)
+			redirect302();
+			
 		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
 	}
 	
