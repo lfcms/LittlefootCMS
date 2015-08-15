@@ -44,6 +44,31 @@ class User
 		
 		// else Anonymous by default
     }
+
+
+	public function selectBox($uid = 0)
+        {
+               $users = (new LfUsers)
+                       ->cols('id, display_name')
+                       ->order('display_name')
+                       ->find();
+
+               $select = '<select name="uid" id="">';
+               $select .= '<option value="">Select User</option>';
+               foreach($users->getAll() as $user)
+               {
+                       $selected = '';
+                       if($user['id'] == $uid)
+                               $selected = 'selected="selected"';
+
+                       $select .= '<option '.$selected.' value="'.$user['id'].'">
+                                                       '.$user['display_name'].'
+                                               </option>';
+               }
+               $select .= '</select>';
+
+               return $select;
+        }
 	
 	public function setPass($pass)
 	{
