@@ -903,7 +903,7 @@ html.lf, .lf body {
 	text-align: center; 
     text-decoration: none;
 	width: 100%;
-	background-color: #CCC;
+	background-color: rgba(100, 100, 100, 0.5);
 	opacity: 0.95;
 	transition: background-color 0.5s;
 	-webkit-transition: background-color 0.5s;
