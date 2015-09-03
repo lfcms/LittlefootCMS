@@ -80,6 +80,28 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	padding: 5px;
 }
 
+.lf blockquote {
+  background: rgba(100, 100, 100, 0.1);
+  border-left: 10px solid #CCC;
+  margin: 1.5rem 15px;
+  padding: 1em 15px;
+  font-family: "FontAwesome";
+  quotes: "\f10d";
+}
+
+.lf blockquote:before {
+  color: #CCC;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+.lf blockquote p {
+  display: inline;
+}
+
 .lf hr {
 	border: none;
 	border-bottom: 1px solid rgba(68, 68, 68, 0.25);
@@ -706,17 +728,6 @@ html.lf, .lf body {
 	list-style: none;
 }
 
-.lf blockquote, .lf q {
-	quotes: none;
-}
-
-.lf blockquote:before,
-.lf blockquote:after,
-.lf q:before, .lf q:after {
-	content: '';
-	content: none;
-}
-
 /*Userbar*/
 .userbar {
     font-size: 1.3rem;
@@ -892,7 +903,7 @@ html.lf, .lf body {
 	text-align: center; 
     text-decoration: none;
 	width: 100%;
-	background-color: #CCC;
+	background-color: rgba(100, 100, 100, 0.5);
 	opacity: 0.95;
 	transition: background-color 0.5s;
 	-webkit-transition: background-color 0.5s;
