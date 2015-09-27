@@ -16,6 +16,31 @@ class User
 		'display_name' => 'Anonymous'
 	);
 	
+	// resolve {user:34} to user 34's display_name. {user:0} resolves to "Anonymous".
+	public function resolveIds($out, $wholeLastName = false)
+	{
+		// move this to core user class
+		if(preg_match_all('/{user:(\d+)}/',$out,$match))
+		{
+			$ids = array_unique($match[1]);
+			$out = str_replace('{user:0}', 'Anonymous', $out);
+			foreach( (new LfUsers)->cols('id, display_name')->getAllById($ids) as $user )
+			{
+				if($wholeLastName)
+					$name = $user['display_name'];
+				else
+				{
+					$names = explode(' ', $user['display_name']);
+					$name = $names[0].' '.$names[1][0].'.'; // shorten last name to initial
+				}
+				
+				$out = str_replace('{user:'.$user['id'].'}', $name, $out);
+			}
+		}
+
+		return $out;
+	}
+	
 	public function __construct($details = null)
     {
 		$this->start = time();
@@ -44,6 +69,31 @@ class User
 		
 		// else Anonymous by default
     }
+
+
+	public function selectBox($uid = 0)
+	{
+	   $users = (new LfUsers)
+		   ->cols('id, display_name')
+		   ->order('display_name')
+		   ->find();
+
+	   $select = '<select name="uid" id="">';
+	   $select .= '<option value="">Select User</option>';
+	   foreach($users->getAll() as $user)
+	   {
+		   $selected = '';
+		   if($user['id'] == $uid)
+				$selected = 'selected="selected"';
+
+		   $select .= '<option '.$selected.' value="'.$user['id'].'">
+							'.$user['display_name'].'
+					   </option>';
+	   }
+	   $select .= '</select>';
+
+	   return $select;
+	}
 	
 	public function setPass($pass)
 	{

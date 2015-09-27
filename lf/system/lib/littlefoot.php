@@ -346,25 +346,25 @@ class Littlefoot
 		$this->select['title'] = 'LFCMS';
 		$this->select['alias'] = '404';
 		
-		// redirect to URL specified in 'force_url' setting
-		if(isset($this->settings['force_url']) 
-		  && $this->settings['force_url'] != '' )
-		{
-			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
-			$request = $_SERVER['HTTP_HOST'].$relbase;
-			$compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
-			
-			// ty Anoop K [ http://stackoverflow.com/questions/4503135/php-get-site-url-protocol-http-vs-https ]
-			$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-			
-			if($request != $compare)
-			{
-				$redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-				$redirect = preg_replace('/^'.preg_quote($request, '/').'/', $compare, $redirect);
-				redirect302($protocol.$redirect);
-			}
-		}
-		
+		// ty Anoop K [ http://stackoverflow.com/questions/4503135/php-get-site-url-protocol-http-vs-https ]
+               $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+
+               $this->protocol = $protocol;
+
+                // redirect to URL specified in 'force_url' setting
+               if(isset($this->settings['force_url']) && $this->settings['force_url'] != '' )
+                {
+                        $relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
+                        $request = $_SERVER['HTTP_HOST'].$relbase;
+                        $compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
+
+                        if($request != $compare)
+                        {
+                                $redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+                                redirect302($protocol.$redirect);
+                        }
+                }
+
 		// detect file being used as base (for API)
 		$filename = 'index.php';
 		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))

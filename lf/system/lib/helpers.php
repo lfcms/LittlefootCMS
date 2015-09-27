@@ -371,3 +371,22 @@ function curl_get_contents($url) {
 
     return $data;
 }
+// This is way better outside of the app class. Doesnt even use it...
+function notice($msg = '', $namespace = 'lf')
+{
+	if($msg != '')
+	{
+		$_SESSION['notice_'.$namespace][] = $msg;
+	}
+	else if(isset($_SESSION['notice_'.$namespace]))
+	{
+		$temp = $_SESSION['notice_'.$namespace];
+		unset($_SESSION['notice_'.$namespace]);
+		return implode(', ', $temp);
+	}
+}
+// same thing
+function hasnotice($namespace = 'lf')
+{
+	return isset($_SESSION['notice_'.$namespace]);
+}

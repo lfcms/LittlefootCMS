@@ -96,6 +96,10 @@ class auth extends app
 			include LF.'system/template/signup.php';
 	}
 	
+	public function profile($vars)
+	{
+		//include LF.'system/template/auth.profile.php';
+	}
 	
 	public function create($vars)
 	{
@@ -112,8 +116,10 @@ class auth extends app
 		if($result)
 			while($row = $this->db->fetch())
 			{
-				if($row['email'] == $_POST['email']) $email = true;
-				if($row['user'] == $_POST['user']) $user = true;
+				if($row['email'] == $_POST['email']) 
+					$email = true;
+				if($row['user'] == $_POST['user']) 
+					$user = true;
 			}
 		
 		if($email || $user)
