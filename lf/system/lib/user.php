@@ -5,9 +5,9 @@ class User
 	public $start; // creation time
 	private $timeout;
 	public $error = array();
-	
+
 	protected $password = null;
-	
+
 	protected $details = array(
 		'id' => 0,
 		'access' => 'none',
@@ -15,7 +15,7 @@ class User
 		'user' => '',
 		'display_name' => 'Anonymous'
 	);
-	
+
 	// resolve {user:34} to user 34's display_name. {user:0} resolves to "Anonymous".
 	public function resolveIds($out, $wholeLastName = false)
 	{
@@ -31,20 +31,24 @@ class User
 				else
 				{
 					$names = explode(' ', $user['display_name']);
-					$name = $names[0].' '.$names[1][0].'.'; // shorten last name to initial
+					if(isset($names[1]))
+						$name = $names[0].' '.$names[1][0].'.'; // shorten last name to initial
+					else {
+						$name = $names[0];
+					}
 				}
-				
+
 				$out = str_replace('{user:'.$user['id'].'}', $name, $out);
 			}
 		}
 
 		return $out;
 	}
-	
+
 	public function __construct($details = null)
     {
 		$this->start = time();
-	
+
         if(is_array($details)){
             $this->setDetails($details);
         }
@@ -66,7 +70,7 @@ class User
 					->first()
 			);
 		}
-		
+
 		// else Anonymous by default
     }
 
@@ -94,73 +98,73 @@ class User
 
 	   return $select;
 	}
-	
+
 	public function setPass($pass)
 	{
 		$this->details['pass'] = sha1($pass);
 		return $this;
 	}
-	
+
 	public function fromSession()
 	{
 		if( isset($_SESSION['login']) )
 			$this->setDetails($_SESSION['login']->getDetails());
 		else
 			$this->error[] = 'Not SESSION login found';
-		
+
 		return $this;
 	}
-	
+
 	public function getDetails()
 	{
 		return $this->details;
 	}
-	
+
 	public function hasAccess($access)
 	{
 		// move to using an array of access for inherits
 		return $this->getaccess() == $access;
 	}
-	
+
 	public function setDetails($details)
 	{
 		// apply only valid details
 		foreach($this->details as $key => $ignore)
 			if(isset($details[$key]))
 				$this->details[$key] = $details[$key];
-		
+
 		return $this;
 	}
-	
+
 	## NEW
 	public function doLogin($ldap = NULL)
 	{
 		if(!count($_POST))
 			return false;
-		
+
 		// Get user/pass from $_POST and hash pass
 		$username = $_POST['user'];
 		$password = $_POST['pass'];
-		
-		
+
+
 		# If LDAP is configured
 		if(!is_null($ldap))
 		{
 			$this->debug[] = 'ldap configured';
 			## See if we can authenticate against the configured LDAP
 			$ldapResults = $this->ldapLogin($ldap, $username, $password);
-				
+
 			## If login succeeds,
 			if($ldapResults)
 			{
 				$this->debug[] = 'ldap login success';
-				
+
 				### See if the user we just authenticated as is valid
 				$login = (new LfUsers)
 					->cols('id, user, email, display_name, access')
 					->byUser($username)
 					->first();
-				
+
 				### If the LDAP login is valid, but we dont have a local user
 				if(!$login)
 				{
@@ -173,7 +177,7 @@ class User
 						->setAccess('user')
 						->setDisplay_name($ldapResults['displayname'][0])
 						->save();
-					
+
 					$login = (new LfUsers)
 						->cols('id, user, email, display_name, access')
 						->byUser($ldapResults['cn'][0])
@@ -195,7 +199,7 @@ class User
 		else
 		{
 			$this->debug[] = 'no ldap configured';
-			
+
 			// Traditional Database lookup
 			$login = (new LfUsers)
 				->cols('id, user, email, display_name, access')
@@ -203,8 +207,8 @@ class User
 				->byPass(sha1($password))
 				->first();
 		}
-		
-				
+
+
 		unset($_POST);
 		// return with error if post fails
 		if(!$login)
@@ -212,42 +216,42 @@ class User
 			$this->error[] = "Incorrect Username or Password";
 			return $this;
 		}
-		
+
 		if(isset($login['status']) && $login['status'] != 'valid')
 		{
-			if($login['status'] == 'banned') 
+			if($login['status'] == 'banned')
 				$this->error = "You are banned.";
-			else 
+			else
 				$this->error = "You need to validate your account first.";
-			
+
 			return $this;
 		}
-		
+
 		// if admin, check for reCaptcha
-		if(isset($login['access']) && $login['access'] == 'admin') 
+		if(isset($login['access']) && $login['access'] == 'admin')
 		{
 			// If I ever want to do anything during admin request
 			// like recaptcha...
 		}
-		
-		if($this->error != array()) 
+
+		if($this->error != array())
 			$_SESSION['_lf_login_error'] = implode(', ', $this->error);
 		else
 			$this
 				->setDetails($login)
 				->toSession();
-				
+
 		/*pre($_SESSION);
 		pre($this->debug);
 		pre($login);
 		exit;*/
 	}
-	
+
 	## NEW
 	public function ldapLogin($server, $user, $pass)
 	{
 		$server = json_decode(str_replace("'", '"', $server), true);
-		
+
 		$host = $server['host'];
 		$port = $server['port'];
 		$basedn = $server['basedn'];
@@ -286,46 +290,46 @@ class User
 		$r = ldap_bind($ds, $dn, $_POST['pass']);
 
 		ldap_close($ds);
-		
+
 		if($r)
 			return $info;
 
 		return $r;
 	}
-	
+
 	public function isValidLogin()
 	{
 		return $this->getId() > 0;
 	}
-	
+
 	public function isTimedOut()
 	{
 		return $this->logoutTime < time();
 	}
-	
+
 	public function getTimeout()
 	{
 		return $this->timeout;
 	}
-	
+
 	public function refreshTimeout()
 	{
 		$this->timeout = time() + 60*60*2; // + 2 hours
 		return $this;
 	}
-	
+
 	public function toSession()
 	{
         $_SESSION['login'] = $this->refreshTimeout();
-		
+
         return $this;
 	}
-	
+
 	public function save()
 	{
-		$id = $this->details['id'];	
+		$id = $this->details['id'];
 		unset($this->details['id']);
-		
+
 		if($id == 0)
 			$this->details['id'] = (new orm)->qUsers('lf')->insertArray($this->details);
 		else
@@ -333,18 +337,18 @@ class User
 			(new orm)->qUsers('lf')->updateByid($id, $this->details);
 			$this->details['id'] = $id;
 		}
-		
+
 		unset($this->details['pass']);
-		
+
 		return $this;
 	}
-	
+
 	// not feelin this. may drop it
 	public function q()
 	{
 		return (new orm)->q('lf_users');
 	}
-	
+
 	/**
 	 * Magic
 	 */
@@ -352,19 +356,19 @@ class User
 	{
 		if(!preg_match('/^(get|set)(.+)$/', $name, $match))
 			return false;
-		
+
 		$method = $match[1].'Magic';
 		$var 	= $match[2];
-		
+
 		return $this->$method($var, $args);
 	}
-	
+
 	private function getMagic($var, $args)
 	{
 		$var = strtolower($var);
 		return $this->details[$var];
 	}
-	
+
 	private function setMagic($var, $args)
 	{
 		$var = strtolower($var);
