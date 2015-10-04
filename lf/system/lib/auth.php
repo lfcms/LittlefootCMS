@@ -46,7 +46,19 @@ class auth extends app
 	
 	public function updateprofile($args)
 	{
-		//pre($_POST);
+		pre($_POST);
+		
+		if($_POST['password'] == '')
+			unset($_POST['password']);
+		
+		unset($_POST['id']);
+		
+		$id = (new User)->fromSession()->getId();
+		
+		(new LfUsers)
+			->byId($id)
+			->setArray($_POST)
+			->save();
 		
 		/*if($_POST['password'] != '')
 		{
@@ -58,7 +70,7 @@ class auth extends app
 			// notice
 		}*/
 		
-		redirect302();
+		//redirect302();
 	}
 	
 	public function profile($args)
@@ -94,11 +106,6 @@ class auth extends app
 			include LF.'system/template/signup.local';
 		else
 			include LF.'system/template/signup.php';
-	}
-	
-	public function profile($vars)
-	{
-		//include LF.'system/template/auth.profile.php';
 	}
 	
 	public function create($vars)
