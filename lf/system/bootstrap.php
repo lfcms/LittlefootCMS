@@ -5,13 +5,18 @@
  *@license LICENSE.txt
  *@package LittlefootCMS
  */
- 
+
 // doesn't support below PHP 5.3
 if(version_compare(phpversion(), '5.4')  == -1)
 {
 	echo 'You are using PHP '.phpversion().' which is <a href="http://php.net/eol.php">End of Life</a>. You need at least PHP 5.4 to run LittlefootCMS. Contact your hosting provider to resolve this.';
 	exit;
 }
+
+//pre(ini_get('date.timezone'),'var_dump');
+date_default_timezone_set('America/New_York');
+//phpinfo();
+//exit;
 
 define('ENV', 'PRODUCTION');
 
@@ -35,13 +40,13 @@ require 'system/lib/auth.php'; 			// auth stuff
 require 'system/lib/littlefoot.php'; 	// Request, Auth, Nav, Content, Render
 
 // Add local lib paths to include_path
-if(is_dir(LF.'lib')) 
+if(is_dir(LF.'lib'))
 	ini_set('include_path', ini_get('include_path').':'.LF.'lib');
-if(is_dir(LF.'system/lib')) 
+if(is_dir(LF.'system/lib'))
 	ini_set('include_path', ini_get('include_path').':'.LF.'system/lib');
 
 
-// Session name needs to be alphanumeric, 
+// Session name needs to be alphanumeric,
 // just MD5 it to keep it unique and to not show the docroot
 session_name(md5(LF.$_SERVER['SERVER_NAME']));
 session_start();

@@ -70,7 +70,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	overflow-y: hidden;
 	font-family: monospace;
 	border: 1px solid rgba(0,  0,  0,  0.25);
-	background-color: rgba(51, 51, 51,  0.25);
+	background-color: rgba(100, 100, 100, 0.1);
 	white-space: pre;
 }
 
