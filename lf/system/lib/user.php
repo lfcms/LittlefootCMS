@@ -16,6 +16,11 @@ class User
 		'display_name' => 'Anonymous'
 	);
 	
+	public function idFromSession()
+	{
+		return $this->fromSession()->getId();
+	}
+	
 	// resolve {user:34} to user 34's display_name. {user:0} resolves to "Anonymous".
 	public function resolveIds($out, $wholeLastName = false)
 	{

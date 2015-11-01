@@ -46,19 +46,31 @@ class auth extends app
 	
 	public function updateprofile($args)
 	{
-		pre($_POST);
-		
-		if($_POST['password'] == '')
-			unset($_POST['password']);
+		if($_POST['pass'] != '')
+			$_POST['pass'] = sha1($_POST['pass']);
 		
 		unset($_POST['id']);
+		unset($_POST['access']);
+	
+		$id = (new User)->idFromSession();
 		
-		$id = (new User)->fromSession()->getId();
+		// only allow these keys in the final update
+		$filter = array(
+			'display_name' => 0, 
+			'user' => 0,
+			'email' => 0, 
+			'pass' => 0
+		);
+		
+		$update = array_intersect_key($_POST, $filter);
 		
 		(new LfUsers)
 			->byId($id)
-			->setArray($_POST)
+			->setArray($update)
+			->debug()
 			->save();
+		
+		//echo (new LfUsers)->byId($id);
 		
 		/*if($_POST['password'] != '')
 		{
@@ -70,7 +82,9 @@ class auth extends app
 			// notice
 		}*/
 		
-		//redirect302();
+		notice('<div class="notice">Profile updated</div>');
+		
+		redirect302();
 	}
 	
 	public function profile($args)
