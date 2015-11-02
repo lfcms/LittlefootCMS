@@ -388,7 +388,7 @@ class orm implements IteratorAggregate
 		return orm::$method($magic, $args);
     }
 
-
+	
 	public function distinct($column)
 	{
 		$this->distinctCol = $column;
@@ -967,7 +967,6 @@ class orm implements IteratorAggregate
 			$setcol = "set$col";
 			$insert->$setcol($val);
 		}
-		$insert->debug();
 		return $insert->save();
 	}
 
