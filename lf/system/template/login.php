@@ -10,7 +10,7 @@ if($user->getId() != 0)
                 $link .= ' <a href="'.$this->base.'admin/">admin</a>';
         $link .= '<a href="'.$this->base.'_auth/logout">logout</a>';
 
-        ?><div class="auth_welcome">Hello, <?=$user->getDisplay_name();?>. <?=$link;?></div>
+        ?><div class="auth_welcome">Hello, <a href="%baseurl%_auth/profile"><?=$user->getDisplay_name();?></a>. <?=$link;?></div>
 
 <?php } else {
 
