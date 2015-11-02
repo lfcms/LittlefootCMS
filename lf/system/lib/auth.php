@@ -44,6 +44,55 @@ class auth extends app
 		redirect302();
 	}
 	
+	public function updateprofile($args)
+	{
+		if($_POST['pass'] != '')
+			$_POST['pass'] = sha1($_POST['pass']);
+		
+		unset($_POST['id']);
+		unset($_POST['access']);
+	
+		$id = (new User)->idFromSession();
+		
+		// only allow these keys in the final update
+		$filter = array(
+			'display_name' => 0, 
+			'user' => 0,
+			'email' => 0, 
+			'pass' => 0
+		);
+		
+		$update = array_intersect_key($_POST, $filter);
+		
+		(new LfUsers)
+			->byId($id)
+			->setArray($update)
+			->debug()
+			->save();
+		
+		//echo (new LfUsers)->byId($id);
+		
+		/*if($_POST['password'] != '')
+		{
+			(new LfUsers)
+				->setPass($_POST['password'])
+				->byId( (new User)->fromSession()->getId() )
+				->save();
+				
+			// notice
+		}*/
+		
+		notice('<div class="notice">Profile updated</div>');
+		
+		redirect302();
+	}
+	
+	public function profile($args)
+	{
+		include 'system/template/profile.php';
+		//echo getcwd();
+	}
+	
 	public function logout($args)
 	{
 		// reset session
@@ -71,11 +120,6 @@ class auth extends app
 			include LF.'system/template/signup.local';
 		else
 			include LF.'system/template/signup.php';
-	}
-	
-	public function profile($vars)
-	{
-		//include LF.'system/template/auth.profile.php';
 	}
 	
 	public function create($vars)
