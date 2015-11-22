@@ -132,16 +132,7 @@ class Littlefoot
 	public function __construct($db = NULL)
 	{
 		$this->start = microtime(true); // timing the WHOLE operation
-		
-		$this->startTimer(__METHOD__); 	// timing __construct() method
 		$this->lf = &$this; 			// ensures universal availability of "$this->lf"
-		$this->db = (new orm)->initDb(); // set up local db object
-		(new install)->test(); 			// test that we can connect and have data
-		
-		$this->loadVersion() 			// read version from file
-			->load_plugins() 			// load plugins from database
-			->hook_run('post lf __construct') // same thing, different hook
-			->endTimer(__METHOD__); 	// finish timing __construct() method
 	}
 	
 	public function __destruct()
@@ -203,6 +194,12 @@ class Littlefoot
 	 */
 	public function cms()
 	{
+		$this->db = (new orm)->initDb(); // set up local db object
+		(new install)->test(); 			// test that we can connect and have data
+		
+		$this->loadVersion() 			// read version from file
+			->load_plugins(); 			// load plugins from database
+		
 		echo $this->lf	// ->lf is optional
 			->loadSettings()	// Pull settings from lf_settings
 			->request()			// Parse REQUEST_URI into usable pieces
@@ -276,7 +273,6 @@ class Littlefoot
 			include 'index.php';
 			exit;
 		}
-		
 		return $this;
 	}
 	
@@ -809,6 +805,7 @@ class Littlefoot
 			
 			// reset for next go around
 			$this->appurl = '';
+		
 		}
 		
 		chdir(LF); // cd back to LF root for the rest of the execution
