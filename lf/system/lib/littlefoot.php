@@ -9,7 +9,7 @@
  * 
  * ## Environment
  * 
- * While in the Littlefoot context (executing inside the class), one has access to the entire Environment
+ * While in the Littlefoot context (executing inside the class), one has access to the entire $this->lf Environment
  * 
  * [Programming in Littlefoot](http://littlefootcms.com/byid/21)
  *
@@ -126,12 +126,16 @@ class Littlefoot
 	/**
 	 * Initialize Littlefoot Object
 	 * 
+	 * Only intended to give access to methods, don't commit to doing anything on __construct.
+	 * 
+	 * All standard heavy lifting shifted to run in ->cms();
+	 * 
 	 * $this->lf = &$this; // ensures universal availability of "$this->lf"
 	 * 
 	 */
 	public function __construct($db = NULL)
 	{
-		$this->start = microtime(true); // timing the WHOLE operation
+		$this->start = microtime(true); // start timing the WHOLE operation
 		$this->lf = &$this; 			// ensures universal availability of "$this->lf"
 	}
 	
@@ -174,19 +178,19 @@ class Littlefoot
 	 * 1. $this->request() // should move to __construct()
 	 * 
 	 * 1. $this->authenticate() // should use auth() class in cms()
-	 *
+	 * 
 	 * 1. admin?
-	 *
+	 * 
 	 * 1. apply acl // should be called from auth() class
-	 *
+	 * 
 	 * 1. simplecms?or:nav(is404?)
-	 *
+	 * 
 	 * 1. testACL?403 // should be called from auth() class (or in a separate ACL object)
-	 *
+	 * 
 	 * 1. getcontent() //contains simplecms?mvc
-	 *
+	 * 
 	 * 1. simplecms?%nav%
-	 *
+	 * 
 	 * 1. echo [render()](http://littlefootcms.com/files/docs/classes/Littlefoot.html#method_render)
 	 * 
 	 * @param string $debug Is debug set to true
@@ -194,21 +198,23 @@ class Littlefoot
 	 */
 	public function cms()
 	{
-		$this->db = (new orm)->initDb(); // set up local db object
-		(new install)->test(); 			// test that we can connect and have data
+		$this->db = (new orm)->initDb();	// set up local db object, backward compatible. 
+												// modern apps do not rely on $this->db to do db stuff. the orm class is used instead.
 		
-		$this->loadVersion() 			// read version from file
-			->load_plugins(); 			// load plugins from database
+		(new install)->test(); 				// test that we can connect to the db and have data, 
+												// otherwise present db config form
 		
-		echo $this->lf	// ->lf is optional
-			->loadSettings()	// Pull settings from lf_settings
-			->request()			// Parse REQUEST_URI into usable pieces
-			->route('auth', '_auth', false) // Route auth() class on /_auth/
-			->applyAcl()		// Pull ACL that affects this user
-			->loadAdmin()		// If /admin was requested, load it and stop here
-			->navSelect()		// Get data for SimpleCMS, or determine requested Nav ID
-			->getcontent() 		// Deal with SimpleCMS or execute linked apps
-			->render(); 		// Display content in skin, return HTML output result
+		$this->loadVersion() 				// load version from LF/system/version file
+			->loadPlugins() 				// load plugins from `lf_plugins` table
+			->loadSettings()				// load settings from `lf_settings` table
+			->request()						// Parse $_SERVER['REQUEST_URI']; into pieces Littlefoot can understand
+			->route('auth', '_auth', false) // Route auth() class per $wwwIndex/_auth/$method
+			->loadACL()						// load ACL rules from lf_acl_global, lf_acl_inherit, and `lf_acl_user` that affect current $_SESSION user.
+			->routeAdmin()					// If /admin was requested, load it and stop here
+			->navSelect()					// Get data for SimpleCMS, or determine requested Nav ID from url $actions
+			->getcontent(); 				// Deal with SimpleCMS or execute linked apps
+		
+		echo $this->render(); 				// Display content in skin, return HTML output result
 			
 		return $this;
 	}
@@ -264,7 +270,7 @@ class Littlefoot
 		return $out;
 	}
 	
-	public function loadAdmin()
+	public function routeAdmin()
 	{
 		// if requested, load admin/
 		if($this->admin)
@@ -337,29 +343,29 @@ class Littlefoot
 		
 		$this->hook_run('pre lf request');
 		
-		// Default values
+		// Assign default request values
 		$this->select['template'] = $this->settings['default_skin'];
 		$this->select['title'] = 'LFCMS';
 		$this->select['alias'] = '404';
 		
 		// ty Anoop K [ http://stackoverflow.com/questions/4503135/php-get-site-url-protocol-http-vs-https ]
-               $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+	    $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 
-               $this->protocol = $protocol;
+	    $this->protocol = $protocol;
 
-                // redirect to URL specified in 'force_url' setting
-               if(isset($this->settings['force_url']) && $this->settings['force_url'] != '' )
-                {
-                        $relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
-                        $request = $_SERVER['HTTP_HOST'].$relbase;
-                        $compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
+		// redirect to URL specified in 'force_url' setting if not already being accessed that way
+	    if(isset($this->settings['force_url']) && $this->settings['force_url'] != '' )
+		{
+			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
+			$request = $_SERVER['HTTP_HOST'].$relbase;
+			$compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
 
-                        if($request != $compare)
-                        {
-                                $redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-                                redirect302($protocol.$redirect);
-                        }
-                }
+			if($request != $compare)
+			{
+				$redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				redirect302($protocol.$redirect);
+			}
+		}
 
 		// detect file being used as base (for API)
 		$filename = 'index.php';
@@ -370,7 +376,7 @@ class Littlefoot
 		$pos = strpos($_SERVER['SCRIPT_NAME'], $filename);
 		$subdir = $pos != 0 ? substr($_SERVER['SCRIPT_NAME'], 1, $pos-1) : '/';
 		
-		// Break up request URI and extract GET request
+		// Break up request URI on ? and extract GET request
 		$url = explode('?', $_SERVER['REQUEST_URI'], 2);
 		if(substr($url[0], -1) != '/')
 			$url[0] .= '/'; //Force trailing slash
@@ -383,7 +389,12 @@ class Littlefoot
 		$this->rawQuery = $url[1];
 		
 		// Detect subdirectory, use of index.php, request of admin, other URI variables and the GET request
-		$urlregex = '/^(\/'.str_replace('/', '\/', $subdir).')(.+.php\/)?(admin\/)?(.*)/';
+		$urlregex = '/'. 	// beginning regex delimiter
+			'^(\/'.str_replace('/', '\/', $subdir).')'.	// match the subdir
+			'(.+.php\/)?'.	// figure out what the user is calling their index.php
+			'(admin\/)?'.	// detect if request involves admin/ access
+			'(.*)'.			// capture the rest of the string, this is the "action" by default
+			'/'; 			// end regex delimiter
 		preg_match($urlregex, $url[0], $request);
 		
 		// Simplify request matches
@@ -392,14 +403,17 @@ class Littlefoot
 		$admin  = $request[3];
 		$action = $request[4];
 		
-		$fixrewrite = false; // add in 302 to fix rewrite duplicate content #FIX
+		// set admin boolean from regex result
+		$this->admin = $admin == 'admin/' ? true : false;
+		
+		// Add in 302 to fix rewrite and prevent duplicate content
+		$fixrewrite = false;
 		if($this->settings['rewrite'] == 'on')
 		{
 			if($index == 'index.php/') 
 				$fixrewrite = true;
 			$index = '';
 		}
-		
 		if($this->settings['rewrite'] == 'off')
 		{
 			if($index == '') 
@@ -407,51 +421,47 @@ class Littlefoot
 			$index = $filename.'/';
 		}
 		
+		// set port if non-standard 80 and 443
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
 		else 
 			$port = '';
 		
+		// determine if we are https:// or not, set protocol
 		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
 			$protocol = 'https://';
 		else
 			$protocol = 'http://';
 		
+		// www.domain.com
 		$this->domain = $_SERVER['HTTP_HOST'];
+		
+		// http://www.domain.com/littlefoot/
+		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;
 		
 		// http://www.domain.com/littlefoot/index.php/
 		$this->wwwIndex 	= $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		
-		// http://www.domain.com/littlefoot/
-		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;			
-		
 		// http://www.domain.com/littlefoot/index.php/admin/
-		$this->wwwAdmin		= $this->wwwIndex.'admin/';							
+		$this->wwwAdmin		= $this->wwwIndex.'admin/';
 		
+		// If rewrite needed fixed, this will redirect to the proper location given the request.
+		if($fixrewrite) 
+			redirect302($this->wwwIndex.$admin.$this->action);
 		
-		// backward compatible
+		// explode the remaining URL component to see what was requested, delimiting on '/'
+		$this->action = explode('/', $action, -1);
+		if(count($this->action) < 1) // If the action array has no elements,
+			$this->action[] = '';	 // Set first action as alias '' (empty string)
+		
+		$this->hook_run('post lf request');
+		$this->endTimer(__METHOD__);
+		
+		// Backward compatible, dont use these.
 		$this->base = $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		$this->baseurl = $this->base; // keep $Xurl usage
 		$this->relbase = $subdir; // /subdir/ for use with web relative file reference
 		$this->basenoget = $this->base.$admin.$action;
-		
-		if($fixrewrite) 
-			redirect302($this->base.$admin.$this->action);
-		
-		if(substr_count($action, '/') > 60) die('That is a ridiculous number of slashes in your URI.');
-		else
-		{
-			$this->action = explode('/', $action, -1);
-			
-			// Ensure action variable isn't empty
-			if(count($this->action) < 1)
-				$this->action[] = '';
-		}
-		
-		$this->admin = $admin == 'admin/' ? true : false;
-		
-		$this->hook_run('post lf request');
-		$this->endTimer(__METHOD__);
 		
 		return $this;
 	}
@@ -489,7 +499,7 @@ class Littlefoot
 		return $this;
 	}
 	
-	private function applyAcl()
+	private function loadACL()
 	{
 		$this->startTimer(__METHOD__);
 		
@@ -581,16 +591,43 @@ class Littlefoot
 		return $this;
 	}
 	
+	/**
+	 * navSelect
+	 * 
+	 * TODO: need to utilize cache instead of query
+	 * 
+	 * Something like 
+	 *
+	 * ```
+	 * // something/(like/(this/)?)?)
+	 * $regex = '/'.implode('\/(', $this->actions).str_repeat( ')?' , count($this->actions) - 1 ).'/';
+	 * preg_match_all($regex, $navcache, $selected); // would yeild all parents and chosen navigation item,
+	 * 												// exposing the other actions as app variables.
+	 * ```
+	 * 
+	 * I should really put this into a github issue...
+	 * 
+	 */
+	
+	// TODO: need to utilize cache instead of query
+	// Something like 
+	/*
+	
+	// something/(like/(this/)?)?)
+	$regex = '/'.implode('\/(', $this->actions).str_repeat( ')?' , count($this->actions) - 1 ).'/';
+	preg_match_all($regex, $navcache, $selected); // would yeild all parents and chosen navigation item,
+													// exposing the other actions as app variables.
+	*/
 	public function navSelect()
 	{
 		$this->startTimer(__METHOD__);
 		if($this->settings['simple_cms'] != '_lfcms')
 			$this->simpleSelect();
 		
-		// need to utilize cache instead of query
+		
+		
 		
 		/* Determine requested nav item from lf_actions */
-		
 		// get all possible matches for current request, 
 		// always grab the first one in case nothing is selected
 		$matches = $this->db->fetchall("
@@ -1144,15 +1181,15 @@ class Littlefoot
 	/**
 	 * Initializes the plugin listener from lf_plugins table
 	 */
-	public function load_plugins()
+	public function loadPlugins()
 	{
-		$result = (new orm)->qPlugins('lf')->getAll();
+		$result = (new LfPlugins)->getAll(); //(new orm)->qPlugins('lf')->getAll();
 		
 		if($result)
 			foreach($result as $plugin)
 				$this->plugins[ $plugin['hook'] ][ $plugin['plugin'] ] = $plugin['config'];
 		
-		$this->hook_run('plugins_loaded');
+		$this->hook_run('plugins loaded');
 		
 		return $this;
 	}
