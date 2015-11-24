@@ -181,7 +181,7 @@ class app
 	{
 		foreach($args as $var => $val)
 			$$var = $val;
-		
+			
 		ob_start();
 		include 'view/'.$partial.'.php';
 		return ob_get_clean();

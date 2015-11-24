@@ -657,14 +657,24 @@ class orm implements IteratorAggregate
 		return $this;
 	}
 
-	public function count()
+	public function resultCount()
 	{
-		$this->columns = 'count(*) as count';
+		return count($this->result);
+	}
+	
+	// number of rows in table
+	public function rowCount()
+	{
+		$save = $this->columns;
+		$this->columns = array('count(*) as count');
 
 		$crud = $this->crud;
 		$result = $this->$crud();
+		
 		if(isset($result[0]))
 			$result = $result[0];
+		
+		$this->columns = $save; // I just wanted a row count, no need to trash my object
 		return $result['count'];
 	}
 

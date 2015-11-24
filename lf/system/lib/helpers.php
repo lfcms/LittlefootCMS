@@ -390,3 +390,22 @@ function hasnotice($namespace = 'lf')
 {
 	return isset($_SESSION['notice_'.$namespace]);
 }
+
+// idk if I wrote this. I think it was Kyle S
+function since($timestamp)
+{
+	$timestamp = time() - $timestamp;
+	$ret = '';
+	if($timestamp > 86400*30)
+		$ret .= (int)($timestamp / (86400*30)) . " months";
+	else if($timestamp > 86400)
+		$ret .= (int)($timestamp / 86400) . " days";
+	else if($timestamp > 3600)
+		$ret .= (int)($timestamp / 3600) . " hours";
+	else if($timestamp > 60)
+		$ret .= (int)($timestamp / 60) . " minutes";
+	else
+		$ret .= $timestamp . " seconds";
+	$ret .= " ago";
+	return $ret;
+}
