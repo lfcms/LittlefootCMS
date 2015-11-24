@@ -141,7 +141,7 @@ class Littlefoot
 	
 	public function __destruct()
 	{
-		if($this->debug) 
+		if($this->debug == 'on') 
 			$this->printDebug();
 	}
 	
