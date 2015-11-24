@@ -947,6 +947,10 @@ html.lf, .lf body {
 
 /*Mobile*/
 
+.lf select.menu {
+	display: none;
+}
+
 /*
 	Put this in your <head> to make it work
 
@@ -1045,7 +1049,7 @@ and (max-width : 850px) {
 		margin-bottom: 0;
 	}
 	
-	/*Mobile - Forms */
+	/*Mobile - Forms*/
 	.lf button,
 	.lf .button,
 	.lf input[type=submit] {
@@ -1078,8 +1082,29 @@ and (max-width : 850px) {
 		padding: 30px 15px;
 	}*/
 	
-	/*Mobile - Login */
+	/*Mobile - Login*/
 	.lf .lf_login {
 		padding: 0 15px;
+	}
+	
+	/*Mobile Menu*/
+	.lf select.menu {
+		display: block;
+		border: none;
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
+	.lf select.menu option {
+		padding: 5px;
+	}
+	.lf select.menu:after {
+		position: absolute;
+		content: "Menu";
+		right: 0;
+		bottom: -1em;
+	}
+	.lf nav.main_nav {
+		display: none;
 	}
 }
