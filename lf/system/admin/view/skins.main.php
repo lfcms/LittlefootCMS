@@ -5,15 +5,23 @@
 	<div class="col-3 pull-right">
 		<div class="tile rounded">
 			<div class="tile-header gray light">
-				<h3>New Skin</h3>
+				<h3>Create Skin</h3>
 			</div>
 			<div class="tile-content">
 				<div class="row">
 					<div class="col-12">
-						<h4 class="no_martop">Create</h4>
 						<form id="create_skin_form" action="%appurl%blankskin/" method="post">
-							<input id="create_skin_namebox" type="text" name="name" placeholder="Name your new skin" />
-							<button class="green">create skin</button>
+							<div class="row no_martop">
+								<div class="col-12">
+									<input id="create_skin_namebox" type="text" name="name" placeholder="Skin Name" />
+								
+								</div>
+							</div>
+							<div class="row no_marbot">
+								<div class="col-12">
+									<button class="green">Create Skin</button>
+								</div>
+							</div>
 						</form> 
 					</div>
 				</div>
@@ -46,7 +54,7 @@
 				<div class="tile rounded <?=$highlight;?>">
 					<!-- Skin Title -->
 					<div class="tile-header">
-						<h4><?=$skin;?> <i class="<?=$icon;?>"></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash"></i></a></h4>
+						<h4><?=$skin;?> <i class="<?=$icon;?> green_fg" title="This skin is set as DEFAULT."></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash"></i></a></h4>
 					</div>
 					
 					<div class="h250 fit">
@@ -61,13 +69,13 @@
 						</div>
 						<div class="row">
 							<div class="col-5">
-								<a href="%appurl%setdefault/<?=$skin;?>" class="button green"><i class="fa fa-power-off"></i> default</a>
+								<a href="%appurl%setdefault/<?=$skin;?>" class="button green"><i class="fa fa-power-off"></i> Default</a>
 							</div>
 							<div class="col-4">
-								<a href="%appurl%edit/<?=$skin;?>/" class="button blue"><i class="fa fa-pencil-square-o"></i> edit</a>
+								<a href="%appurl%edit/<?=$skin;?>/" class="button blue"><i class="fa fa-pencil-square-o"></i> Edit</a>
 							</div>
 							<div class="col-3">
-								<a href="%appurl%zip/<?=$skin;?>/" class="button"><i class="fa fa-file-archive-o"></i> zip</a>
+								<a href="%appurl%zip/<?=$skin;?>/" class="button"><i class="fa fa-file-archive-o"></i> Zip</a>
 							</div>
 						</div>
 					</div>

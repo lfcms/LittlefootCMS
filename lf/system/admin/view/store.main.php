@@ -6,9 +6,17 @@
 	<div class="col-4">
 		<h3 class="no_martop">Apps</h3>
 		<form action="%appurl%zipfromurl/" method="post">
-			<input type="text" name="url" placeholder="Install .zip from URL" />
-			<input type="text" name="app" placeholder="App Name" />
-			<input type="submit" name="download[app]" value="Download" class="blue marbot" />
+			<ul class="vlist">
+				<li>
+					<input type="text" name="url" placeholder="Install .zip from URL" />
+				</li>
+				<li>
+					<input type="text" name="app" placeholder="App Name" />
+				</li>
+				<li>
+					<input type="submit" name="download[app]" value="Download" class="blue marbot" />
+				</li>
+			</ul>
 		</form>
 		<!--<h4>Upload</h4>
 		<form id="upload_app_form" enctype="multipart/form-data" action="%appurl%install/app/" method="post">
