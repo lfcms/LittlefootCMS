@@ -917,7 +917,32 @@ html.lf, .lf body {
 	opacity: 1;
 }
 
-/*Utility */
+/*Menu*/
+.lf input[type=checkbox] {
+	display: none;
+}
+
+.lf input[type=checkbox] + label nav {
+	display: none;
+}
+
+.lf input[type=checkbox] + label span.close-menu {
+	display: none;
+}
+
+.lf input[type=checkbox]:checked + label nav {
+	display: block;
+}
+
+.lf input[type=checkbox]:checked + label span.open-menu {
+	display: none;
+}
+
+.lf input[type=checkbox]:checked + label span.close-menu {
+	display: block;
+}
+
+/*Utility*/
 .lf .notice {
 	border-left: 2px solid #1195AA;
 }
@@ -1088,23 +1113,8 @@ and (max-width : 850px) {
 	}
 	
 	/*Mobile Menu*/
-	.lf select.menu {
-		display: block;
-		border: none;
-		-webkit-box-shadow: none;
-		-moz-box-shadow: none;
-		box-shadow: none;
-	}
-	.lf select.menu option {
-		padding: 5px;
-	}
-	.lf select.menu:after {
-		position: absolute;
-		content: "Menu";
-		right: 0;
-		bottom: -1em;
-	}
-	.lf nav.main_nav {
-		display: none;
+	.lf nav.main_nav li,
+	.lf nav.menu li {
+		width: 100%;
 	}
 }
