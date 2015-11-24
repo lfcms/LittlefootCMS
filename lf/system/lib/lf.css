@@ -826,19 +826,13 @@ html.lf, .lf body {
 	line-height: 20px;
 	padding: 0.5rem 0.75rem;
 	width: 100%;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 }
 
 .lf input[type=radio] {
 	margin-top: 15px;
-}
-
-.lf select {
-	background-image: url('data:image/gif;base64, .lfR0lGODlhFAAUALMAAP////r6+vT09O3t7eTk5Nvb29nZ2dbW1tTU1NHR0c/Pz6Skq5qaolVVYgAAAAAAACH5BAEHAAAALAAAAAAUABQAAARHEMhJaw02W6G7HNrCdES2NM2YFdaJpplRuS9cHRRd2xPidYmfRiHMBIsV30RXU01wuR1vIps1VyaUs1IybSsgJIUjnmDKkggAOw==');
-	background-position: center right;
-	background-repeat: no-repeat;
-	/* -webkit-appearance: none; */
-	/* -moz-appearance: none; */
-	/* appearance: none; */
 }
 
 .lf input[type=text]:focus,
