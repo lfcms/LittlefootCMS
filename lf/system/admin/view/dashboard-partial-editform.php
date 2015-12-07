@@ -14,83 +14,78 @@ $save['section'] = $thelink['section'];
 $args = '<input type="text" value="'.$save['ini'].'" name="ini" placeholder="app ini" />';
 
 // Args for app config ini
-if(is_file(ROOT.'apps/'.$save['app'].'/args.php'))
-	include ROOT.'apps/'.$save['app'].'/args.php';
+if(is_file(LF.'apps/'.$save['app'].'/args.php'))
+	include LF.'apps/'.$save['app'].'/args.php';
 	
 ?>
 <form id="nav_form" action="%appurl%update/" method="post">
-
-<div class="row">
-	<div class="col-3">
-		Position: <input type="number" name="position" value="<?=$save['position'];?>" />
+	<div class="row">
+		<div class="col-3">
+			Position: <input type="number" name="position" value="<?=$save['position'];?>" />
+		</div>
+		<div class="col-9">
+			Label: <input type="text" name="label" value="<?=$save['label'];?>" />	
+		</div>
 	</div>
-	<div class="col-9">
-		Label: <input type="text" name="label" value="<?=$save['label'];?>" />	
+	<div class="row">
+		<div class="col-12">
+			Title: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" />
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="col-12">
-		Title: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" />
-	</div>
-</div>
-<div class="row">
-	<div class="col-6">
-		Parent:
-		<select name="parent">
-			<option value="-1"><?=$_SERVER['SERVER_NAME'].$this->request->relbase;?></option>
-			<optgroup label="Select Parent">
-				%subalias% <!-- this is on the nav partial at the top -->
-			</optgroup>
-		</select>
-	</div>
-	<div class="col-6">
-		Alias:
-		<input type="text" name="alias" value="<?php if(isset($save['alias'])) echo $save['alias']; ?>" />
-	</div>
-</div>
-<div class="row">
-	<div class="col-12">
-		Config: <?=$args;?>
-	</div>
-</div>
-<div class="row">
-	<div class="col-6">
-		Template: 
-		<select name="template">
-			<?=$template_select;?>
-		</select>
-	</div>
-	<div class="col-6">
-		Location: 
-		<?php if(isset($section_list)) { ?>
-			<select name="section">
-				<?php foreach($section_list as $section): ?>
-				<option value="<?=$section;?>"<?php if(isset($save['section']) && $section == $save['section']) echo  'selected=""'; ?>><?=$section;?></option>
-				<?php endforeach; ?>
+	<div class="row">
+		<div class="col-6">
+			Parent:
+			<select name="parent">
+				<option value="-1"><?=$_SERVER['SERVER_NAME'].$this->request->relbase;?></option>
+				<optgroup label="Select Parent">
+					%subalias% <!-- this is on the nav partial at the top -->
+				</optgroup>
 			</select>
-		<?php } else { ?>
-			<input type="text" name="section" />
-		<?php } ?>
+		</div>
+		<div class="col-6">
+			Alias:
+			<input type="text" name="alias" value="<?php if(isset($save['alias'])) echo $save['alias']; ?>" />
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="col-12">
-		Capture URL variables? (experimental) <input type="checkbox" name="app" <?=isset($save['isapp'])&&$save['isapp']==0?'':'checked="checked"'; ?> />
+	<div class="row">
+		<div class="col-6">
+			Theme: 
+			<select name="template">
+				<?=$template_select;?>
+			</select>
+		</div>
+		<div class="col-6">
+			Location (this is almost always "content"): <input type="text" name="section" placeholder="content" value="<?=isset($save['section'])?$save['section']:'';?>" />
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div class="col-8">
-		<button class="green">Update</button>
+	<div class="row">
+		<div class="col-6">
+			App: 
+			<input type="text" name="app" value="<?=$save['app'];?>" />
+		</div>
+		<div class="col-6">
+			Config: <?=$args;?>
+		</div>
 	</div>
-	<div class="col-4">
-		<a class="button" href="%appurl%">Cancel</a>
+	<!-- 
+	<div class="row">
+		<div class="col-12">
+			Greedy App? (experimental, dont uncheck this) <input type="checkbox" name="isapp" <?=isset($save['isapp'])&&$save['isapp']==0?'':'checked="checked"'; ?> />
+		</div>
+	</div> -->
+	<div class="row">
+		<div class="col-8">
+			<button class="green">Update</button>
+		</div>
+		<div class="col-4">
+			<a class="button" href="%appurl%">Cancel</a>
+		</div>
 	</div>
-</div>
 
 
-<?php /*if(isset($save['id'])) echo '<input type="hidden" name="id" value="'.$save['id'].'">'; */?>
-<?php /*if(isset($save['label'])) echo '<a class="cancel_edit" href="%appurl%">cancel</a>';*/?>
+	<?php /*if(isset($save['id'])) echo '<input type="hidden" name="id" value="'.$save['id'].'">'; */?>
+	<?php /*if(isset($save['label'])) echo '<a class="cancel_edit" href="%appurl%">cancel</a>';*/?>
 
-<input type="hidden" name="id" value="<?=$save['id'];?>">
+	<input type="hidden" name="id" value="<?=$save['id'];?>">
 
 </form>

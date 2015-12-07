@@ -30,7 +30,7 @@ if($match_file == 'default')
 	}
 }
 
-$template_select .= ' value="default">-- Default --</option>';
+$template_select .= ' value="default">-- Default Skin ('.$this->request->settings['default_skin'].') --</option>';
 
 foreach(scandir($pwd) as $file)
 {
