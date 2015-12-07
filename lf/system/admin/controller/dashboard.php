@@ -488,7 +488,7 @@ class dashboard extends app
 	public function update($vars) // nav/item update
 	{
 		if($this->simple) return;
-		
+				
 		$post = $_POST;
 		
 		// save, unset ini
@@ -582,14 +582,14 @@ class dashboard extends app
 			foreach($post as $key => $var)
 				$update[$key] = $this->db->escape($key)." = '".$this->db->escape($var)."'";*/
 				
-			$post['app'] = $post['app'] == 'on' ? '1' : '0';
+			//$post['isapp'] = $post['isapp'] == 'on' ? '1' : '0';
 			$update = array(
 //				"parent = 	'".$this->db->escape($post['parent'])."'",
 //				"position = ".intval($post['position']),
 				"alias = 	'".$this->db->escape($post['alias'])."'",
 				"title = 	'".$this->db->escape($post['title'])."'",
 				"label = 	'".$this->db->escape($post['label'])."'",
-				"app = 		'".$post['app']."'",
+				//"app = 		'".$post['isapp']."'",
 				"template = '".$this->db->escape($post['template'])."'"
 			);
 			
@@ -598,13 +598,19 @@ class dashboard extends app
 			$this->db->query($sql);
 			
 			$update = array(
+				"app = 	'".$this->db->escape($post['app'])."'",
 				"ini = 	'".$ini."'",
 				"section = 	'".$this->db->escape($post['section'])."'"
 			);
 			
 			// Move the item
 			$sql = "UPDATE lf_links SET ".implode(', ', $update)." WHERE include = ".$id;
-			
+				
+			/*pre($post);
+			pre($update);
+			pre(implode(', ', $update));
+			echo $sql;*/
+		
 			//echo $sql;
 			$this->db->query($sql);
 		}
