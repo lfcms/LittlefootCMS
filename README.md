@@ -6,7 +6,7 @@ Visit http://littlefootcms.com/manual for verbose documentation.
 
 ## Installation
 
-1. Download <a href="http://littlefootcms.com/files/download/littlefoot.zip">littlefoot.zip</a> and unzip to public_html
+1. Download <a href="http://littlefootcms.com/files/download/littlefoot.zip">littlefoot.zip</a> and unzip to your document root (eg, `public_html`)
 1. Visit http://yourdomain.com/littlefoot/
 1. You will be prompted for MySQL database credentials
  1. If you need to create a database in cPanel first, <a href="https://www.google.com/?gws_rd=ssl#q=create+mysql+database+in+cpanel">follow these instructions</a><br />
