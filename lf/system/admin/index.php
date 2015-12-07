@@ -116,9 +116,13 @@ else if($user->hasaccess('admin'))
 	$this->content['%nav%'][] = $nav;
 	
 	$this->select['template'] = 'default';
+	
+	
 	$renderResult = $this
 		->multiMVC('dashboard')
 		->render(LF.'system/admin/skin');
+	
+	$renderResult = $this->lf->adminTokenReplace($renderResult);
 	
 	echo $this->addCSRF($renderResult);
 }

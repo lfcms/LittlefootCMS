@@ -439,6 +439,9 @@ class Littlefoot
 		// http://www.domain.com/littlefoot/
 		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;
 		
+		// http://www.domain.com/littlefoot/lf/
+		$this->wwwLF 	= $protocol.$_SERVER['HTTP_HOST'].$subdir.'lf/';
+		
 		// http://www.domain.com/littlefoot/index.php/
 		$this->wwwIndex 	= $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		
@@ -458,6 +461,7 @@ class Littlefoot
 		$this->endTimer(__METHOD__);
 		
 		// Backward compatible, dont use these.
+		// They are only still hear cuz my old apps still use these :P
 		$this->base = $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
 		$this->baseurl = $this->base; // keep $Xurl usage
 		$this->relbase = $subdir; // /subdir/ for use with web relative file reference
@@ -484,7 +488,7 @@ class Littlefoot
 			
 			$out = $app->_router($this->action);
 			$out = str_replace('%appurl%', $this->appurl, $out);
-			$this->content['%content%'][] = $out;
+			$this->content['content'][] = $out;
 			
 			if(!$return)
 			{
@@ -718,25 +722,21 @@ class Littlefoot
 			$this->select['template'] = $this->settings['default_skin'];
 		
 		// set nav ul class if set
-		$class = isset($this->settings['nav_class']) 
-			? $this->settings['nav_class'] 
-			: 'navigation';
-		
 		// Apply class to root <ul> if it is set
-		if($class != '') 
-			$nav_cache = preg_replace(
-				'/^<ul>/', 
-				'<ul class="'.$class.'">', 
-				$nav_cache
-			);
+		$nav_cache = isset($this->settings['nav_class']) 
+			? preg_replace('/^<ul>/', '<ul class="'.$this->settings['nav_class'].'">', $nav_cache )
+			: $nav_cache;
 		
 		// if no items match the request, return 404
 		if($this->select['alias'] == '404')
 		{
 			header('HTTP/1.1 404 Not Found');
-			echo '<p>404 No menu items match your request</p>';
+			echo '<p>LF 404: No menu items match your request</p>';
 			return 0;
 		}
+		
+		// navcache needs this
+		$nav_cache = str_replace('%baseurl%', $this->lf->wwwIndex, $nav_cache);
 		
 		$this->nav_cache = $nav_cache;
 		$this->endTimer(__METHOD__);
@@ -751,9 +751,9 @@ class Littlefoot
 		
 		if(!$this->aclTest(implode('/', $this->action)))
 		{
-			$this->content['%content%'][] = "401 Unauthorized at "
+			$this->content['content'][] = "401 Unauthorized at "
 				.implode('/', $this->action)
-				."%login%";
+				.$this->getLogin();
 			return $this;
 		}
 		
@@ -793,7 +793,7 @@ class Littlefoot
 			// Test ACL for this app
 			if(!$this->aclTest(implode('/', $this->action).'|'.$_app['app']) || (isset($vars[0]) && !$this->aclTest(implode('/', $this->action).'|'.$_app['app'].'/'.$vars[0]))) 
 			{
-				$content['%'.$_app['section'].'%'][] = "403 Access Denied %login%";
+				$content[$_app['section']][] = "403 Access Denied ".$this->lf->getLogin();
 				continue;
 			}
 			
@@ -833,12 +833,15 @@ class Littlefoot
 					ob_get_clean().
 				'</div>';
 			
-			// replace %keywords% and save
-			$content['%'.$_app['section'].'%'][] = str_replace(
+			// replace %keywords%
+			$output = str_replace(
 				'%appurl%', 
 				$appurl, 
 				$output
 			);
+			
+			// and save
+			$content[$_app['section']][] = $output;
 			
 			// reset for next go around
 			$this->appurl = '';
@@ -847,24 +850,91 @@ class Littlefoot
 		
 		chdir(LF); // cd back to LF root for the rest of the execution
 		
-		$this->hook_run('post lf getcontent');
-		
 		$this->content = $content;
 		
-		// If simple CMS is not set, add %nav% to final output.
-		if($this->settings['simple_cms'] == '_lfcms')
-			// nav_cache comes from $this->request();
-			$this->content['%nav%'][] = $this->nav_cache;
+		$this->hook_run('post lf getcontent');
+		
+		if($this->settings['simple_cms'] == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
+			$this->content['nav'][] = $this->nav_cache;
 			
 		$this->endTimer(__METHOD__);
 		
 		return $this;
 	}
 	
+	public function legacyStringReplace($text)
+	{
+		$template = $text;
+		/*
+		// deprecated: use $this->lf->methods() instead
+		// Replace all %markers% with $content
+		if(isset($this->content))
+			foreach($this->content as $key => $value)
+				$template = str_replace($key, implode($value), $template);*/
+				
+		// replace global variables
+		$global_replace = array(
+			'%login%' => $this->getLogin(),
+			'%title%' => $this->getTitle(),
+			'%skinbase%' => $this->getSkinBase(),
+			'%baseurl%' => $this->wwwIndex,
+			'%relbase%' => $this->wwwLF
+		);
+		$template = str_replace(
+			array_keys($global_replace), 
+			array_values($global_replace), 
+			$template
+		);
+		
+		return $template;
+		
+	}
+	
+	// so you can breakpoint in an oop daisy chain: $this->lf->route(asdf)->oopbreak()->morestuffthatwonthappennow()
 	public function oopbreak($var = "OOPBREAK")
 	{
 		pre($var,'var_dump');
 		exit();
+	}
+	
+	public function printLogin()
+	{
+		include LF.'system/template/login.php';
+		return $this;
+	}
+	
+	public function getLogin()
+	{
+		ob_start();
+		$this->printLogin();
+		return ob_get_clean();
+	}
+	
+	public function getSkinBase()
+	{
+		return $this->wwwLF.'skins/'.$this->select['template'];
+	}
+	
+	public function setTitle($newTitle)
+	{
+		$this->select['title'] = $newTitle;
+		return $this;
+	}
+	
+	public function getTitle()
+	{
+		return $this->select['title'];
+	}
+	
+	public function printContent($key = 'content')
+	{
+		if(isset($this->content[$key]))
+			return implode($this->content[$key]);
+		else
+			return 'Content not found: No such key "'.$key.'" set';
+		
+			/*foreach($this->content as $key => $value)
+				$template = str_replace($key, implode($value), $template);*/
 	}
 	
 	public function render($dir = NULL)
@@ -879,13 +949,8 @@ class Littlefoot
 		
 		$this->loadLfCSS();
 		
-		// Pull Login View
-		ob_start();
-		include LF.'system/template/login.php';
-		$login = ob_get_clean();
 		
-		// Determine if home.php should be loaded 
-		// (sounds like something for getcontent())
+		// Determine if home.php should be loaded
 		$file = 'index';
 		if( isset($this->select['parent']) 
 			&& $this->select['parent'] == -1 
@@ -911,28 +976,30 @@ class Littlefoot
 			
 		$template = ob_get_clean();
 		
-		// Replace all %markers% with $content
-		if(isset($this->content))
-			foreach($this->content as $key => $value)
-				$template = str_replace($key, implode($value), $template);
-		
 		// | title replacement
 		if(isset($this->lf->settings['title']) && $this->lf->settings['title'] != '')
 			$this->select['title'] .= ' | '.$this->lf->settings['title'];
 		
+		
+		/*
+		// deprecated: use $this->lf->methods() instead
+		// Replace all %markers% with $content
+		if(isset($this->content))
+			foreach($this->content as $key => $value)
+				$template = str_replace($key, implode($value), $template);
 		// replace global variables
 		$global_replace = array(
-			'%login%' => $login,
-			'%title%' => $this->select['title'],
-			'%skinbase%' => $this->relbase.'lf/skins/'.$this->select['template'],
-			'%baseurl%' => $this->base,
+			'%login%' => $this->getLogin(),
+			'%title%' => $this->getTitle(),
+			'%skinbase%' => $this->getSkinBase(),
+			'%baseurl%' => $this->wwwIndex,
 			'%relbase%' => $this->relbase
 		);
 		$template = str_replace(
 			array_keys($global_replace), 
 			array_values($global_replace), 
 			$template
-		);
+		);*/
 		
 		// Search engine blocker
 		if(isset($this->lf->settings['bots']) && $this->lf->settings['bots'] == 'on')
@@ -940,15 +1007,9 @@ class Littlefoot
 		
 		$template = str_replace('<head>', '<head>'.$this->lf->head, $template);
 		
-		ob_start();
-		echo $template;
-		
 		$this->hook_run('post lf render');
-		
 		$this->endTimer(__METHOD__);
-		
-		// Clean up unused %replace%
-		return preg_replace('/%[a-z]+%/', '', ob_get_clean());
+		return $template;
 	}
 	
 	public function multiMVC($default = NULL, $section = 'content')
