@@ -12,6 +12,7 @@ if(isset($actions[$parent])):
 	
 		$apps = $this->links[$action['id']];
 		$theapp = $apps[0]['app']; // support multi app linking... not in use atm
+		$linkedApp = $apps[0];
 		
 		if($this->edit == $action['id'])
 		{

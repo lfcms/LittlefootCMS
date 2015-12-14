@@ -55,7 +55,7 @@ if(is_file(LF.'apps/'.$save['app'].'/args.php'))
 			</select>
 		</div>
 		<div class="col-6">
-			Location (this is almost always "content"): <input type="text" name="section" placeholder="content" value="<?=isset($save['section'])?$save['section']:'';?>" />
+			Location (eg, "content"): <input type="text" name="section" placeholder="content" value="<?=isset($save['section'])?$save['section']:'';?>" />
 		</div>
 	</div>
 	<div class="row">

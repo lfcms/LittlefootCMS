@@ -19,13 +19,9 @@ $(document).ready(function() {
 
 });*/
 </script>
-
-<h2 class="no_marbot" title="Manage your navigation and applications."><i class="fa fa-tachometer"></i> Dashboard</h2>
 <div class="row no_martop">
 	<div class="col-7">
-		<h3 title="Setting the position to 0 will hide a navigation item.">
-			<i class="fa fa-compass"></i> Navigation
-		</h3>
+		<h2 class="no_marbot" title="Manage your navigation and applications. Setting the position to 0 will hide a navigation item."><i class="fa fa-compass"></i> Menu</h2>
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row">
         	<div class="col-12 spaced">
@@ -35,9 +31,9 @@ $(document).ready(function() {
 		</div>
 	</div>
 	<div class="col-5">
-		<h3 title="Click an app below to add it to the navigation.">
-			<i class="fa fa-cubes"></i> App Gallery
-		</h3>
+		<h4 title="Click an app below to add it to the navigation.">
+			<i class="fa fa-plus"></i> Add to Menu
+		</h4>
 		<!-- <p>Install apps packaged as .zip files or download apps from the store. Click on the name of an app to attach it to the website.</p> -->
 		<div id="appgallery-container">
 			<ul class="efvlist rounded">

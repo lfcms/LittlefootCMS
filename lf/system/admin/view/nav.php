@@ -6,7 +6,7 @@ $admin_apps = str_replace(
 );
 	
 ?>
-<h4 class="no_martop"><i class="fa fa-desktop"></i> Control</h4>
+<h4 class="no_martop"><i class="fa fa-desktop"></i> Control </h4>
 <div class="row">
 	<div class="col-12">
 		<ul class="efvlist rounded fxlarge">
@@ -14,9 +14,9 @@ $admin_apps = str_replace(
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
 			
-			<li><a class="controls" href="<?=$this->base;?>dashboard/"><i class="fa fa-tachometer"></i><span><?=
+			<li><a class="controls" href="<?=$this->base;?>dashboard/"><i class="fa fa-compass"></i><span><?=
 				$this->settings['simple_cms']=='_lfcms'
-					?' Dashboard'
+					?' Menu'
 					:ucfirst($this->settings['simple_cms']).' Admin';
 				?></span></a></li>
 			<li><a class="controls" href="<?=$this->base;?>skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
