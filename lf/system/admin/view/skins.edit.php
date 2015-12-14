@@ -9,17 +9,16 @@
 	}
 </style>
 
+Back to <a href="%appurl%">Skin Manager</a>
 <h2>
-	<a href="%appurl%">Skins</a> > 
-	<a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a>
+	Edit Skin: <a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a>
 </h2>
 
 <form action="%appurl%update/<?=$vars[1];?>/" method="post" id="skinform">
 	<div class="row">
 		<!-- New Skin -->
-		<div class="col-3 pull-right">
+		<div class="col-3">
 			<div id="skin_nav">
-				<h3>Edit</h3>
 				<ul class="fvlist">
 					<?php if(!is_file($skin.'/home.php')): ?>
 
