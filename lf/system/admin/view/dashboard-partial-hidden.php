@@ -5,6 +5,8 @@ if(count($actions)):
 	
 		$apps = $this->links[$action['id']];
 		$theapp = $apps[0]['app']; // support multi app linking... not in use atm
+		
+		$linkedApp = $apps[0];
 	
 		include 'view/dashboard-sharednavitem.php';
 	/* ?>
@@ -38,6 +40,6 @@ if(count($actions)):
 	endforeach; 
 else: ?>
 
-Set positions to 0 to hide from main nav
+<p class="no_martop">Set positions to 0 to hide from main nav</p>
 
 <?php endif; ?>

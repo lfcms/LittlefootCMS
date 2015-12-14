@@ -9,21 +9,22 @@
 					<?=$action['label'];?>
 				</a>
 			</div>
-			<div class="col-4">					
-				<a href="%appurl%wysiwyg/<?=$action['id'];?>">WYSIWYG</a>
-			</div>
-			<div class="col-3">
+			<div class="col-8">
 				<span class="pull-right">
-					<?=$theapp;?> |
+					(<?=$linkedApp['ini'];?>)
+					<?=$linkedApp['app'];?> |
 					<?php if( is_file(LF.'apps/'.$theapp.'/admin.php')): ?>
 						<a href="%baseurl%apps/<?=$theapp;?>/"><i class="fa fa-keyboard-o"></i></a>
 					<?php else: ?>
 						<span><i class="fa fa-keyboard-o"></i></span>
 					<?php endif; ?>
+					
+					<a href="%appurl%wysiwyg/<?=$action['id'];?>">
+						<i class="fa fa-paint-brush"></i>
+					</a>
+					
+					<a class="x" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash"></i></a>
 				</span>
-			</div>
-			<div class="col-1">
-				<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash"></i></a>
 			</div>
 		</div>
 	</div>
