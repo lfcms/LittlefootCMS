@@ -2,8 +2,8 @@
 <?=$this->notice();?>
 <div class="row">
 	<div class="col-7">
-		<div class="tile rounded">
-			<div class="tile-header light_gray">
+		<div class="tile white">
+			<div class="tile-header">
 				<h3><i class="fa fa-cogs"></i> Options</h3>
 			</div>
 			<div class="tile-content">
@@ -97,8 +97,8 @@
 		</div>
 	</div>
 	<div class="col-5 spaced">
-		<div class="tile rounded">
-			<div class="tile-header light_gray">
+		<div class="tile white">
+			<div class="tile-header">
 				<h3><i class="fa fa-leaf"></i> Version</h3>
 			</div>
 			<div class="tile-content">

@@ -36,7 +36,7 @@
 		</script (http://december.com/html/4/element/script.html)>
 	</head>
 
-	<body>
+	<body class="off-white">
 		<div class="wrapper userbar h50 dark_gray light">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">

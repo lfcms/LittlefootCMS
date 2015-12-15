@@ -1,5 +1,5 @@
 <a id="nav_<?=$action['id'];?>"></a>
-<div class="tile rounded<?=$this->edit==$action['id']?' active':'';?>">
+<div class="tile white<?=$this->edit==$action['id']?' active':'';?>">
 	<div class="tile-header gray_fg">
 		<div class="row">
 			<div class="col-4">					
@@ -14,16 +14,16 @@
 			</div>
 			<div class="col-3">
 				<span class="pull-right">
-					<?=$theapp;?> |
+					<?=$theapp;?>
 					<?php if( is_file(LF.'apps/'.$theapp.'/admin.php')): ?>
-						<a href="%baseurl%apps/<?=$theapp;?>/"><i class="fa fa-keyboard-o"></i></a>
+						<a href="%baseurl%apps/<?=$theapp;?>/"><i class="fa fa-cog"></i></a>
 					<?php else: ?>
-						<span><i class="fa fa-keyboard-o"></i></span>
+						<span><i class="fa fa-cog"></i></span>
 					<?php endif; ?>
 				</span>
 			</div>
 			<div class="col-1">
-				<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash"></i></a>
+				<a class="x pull-right" <?=jsprompt('Are you sure?');?> href="%baseurl%dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash-o"></i></a>
 			</div>
 		</div>
 	</div>

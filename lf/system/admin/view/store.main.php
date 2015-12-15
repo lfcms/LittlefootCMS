@@ -26,7 +26,7 @@
 			<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>-->
 		<h4>Available Apps</h4>
-		<ul class="efvlist">
+		<ul class="efvlist white">
 		<?php foreach($apps as $app => $ignore): ?> 	
 			<li>
 			<?php if(!isset($app_files[$app])): ?>
@@ -62,7 +62,7 @@
 			<!--<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>-->
 		<h4>Available Skins</h4>
-		<ul class="fvlist">
+		<ul class="efvlist white">
 		<?php foreach($skins as $skin => $ignore): ?> 	
 			<li>
 			<?php if(!isset($skin_files[$skin])): ?>
@@ -97,7 +97,7 @@
 			<span>(<?php echo ini_get('upload_max_filesize'); ?> Upload Limit)</span>
 		</form>-->
 		<h4>Available Plugins</h4>
-		<ul class="fvlist">
+		<ul class="efvlist white">
 		<?php foreach($plugins as $plugin => $ignore): ?> 	
 			<li>
 			<?php if(!isset($plugin_files[$plugin])): ?>

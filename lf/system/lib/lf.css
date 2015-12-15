@@ -281,6 +281,9 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .martop {
 	margin-top: 1.414rem !important;
 }
+.lf .padtop {
+	padding-top: 1.414rem !important;
+}
 
 .lf .marbot {
 	margin-bottom: 1.414rem !important;
@@ -399,6 +402,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 /* Custom - Colors */
 .lf .white { background-color: #fff !important; }
+.lf .off-white  {background-color: #eaeaea !important; }
 .lf .light, .lf .white_fg, .lf .light_a a  { color: #fff !important; }
 .lf .light_b { border: 1px solid rgba(51, 51, 51,  0.25) !important; }
 .lf .light_bt { border-top: 1px solid rgba(51, 51, 51,  0.25) !important; }

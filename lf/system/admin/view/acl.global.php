@@ -3,7 +3,7 @@
 <div class="row">
 	<form action="%appurl%add/global" method="post">
 		<div class="col-2">
-			<button class="green" type="submit"><i class="fa fa-plus"></i> add new</button>
+			<button class="green" type="submit"><i class="fa fa-plus"></i> Add New</button>
 		</div>
 		<div class="col-2">
 			<select name="action" id="">
@@ -27,8 +27,8 @@
 <div class="notice marbot"><?=$this->notice();?></div>
 <?php endif; ?>
 
-<table class="table">
-	<tr class="gray light">
+<table class="table white">
+	<tr class="light_gray">
 		<th>Action</th>
 		<th>Permission</th>
 		<th>Edit</th>
@@ -39,7 +39,7 @@
 		<td><?=$acl['action'];?></td>
 		<td><?=$acl['perm']?'Allow':'Deny';?></td>
 		<td>Edit</td>
-		<td><a <?=jsprompt();?> href="%appurl%rm/global/<?=$acl['id'];?>" class="x">Delete</a></td>
+		<td><a <?=jsprompt();?> href="%appurl%rm/global/<?=$acl['id'];?>" class="x"><i class="fa fa-trash-o"></i></a></td>
 	</tr>
 	<?php endforeach; ?>
 </table>
