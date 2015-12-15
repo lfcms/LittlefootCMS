@@ -1,45 +1,66 @@
 <h2><i class="fa fa-users"></i> Users (<?=$usercount;?>)</h2>
 <div class="row">
-	<div class="col-4">
-		<a class="blue button" href="%appurl%newuser/">Create New User</a>
+	<div class="col-3 pull-right">
+		<div class="row no_martop">
+			<div class="col-12">
+				<div class="tile white">
+					<div class="tile-header">
+						<h3><i class="fa fa-plus"></i> Add New</h3>
+					</div>
+					<div class="tile-content">
+						<? if($this->hasnotice()): ?>
+						<div class="row">
+							<div class="col-12">
+								<span class="button light_gray"><?=$this->notice();?></span>
+							</div>
+						</div>
+						<? endif; ?>
+						<div class="row">
+							<div class="col-12">
+								<a class="green button" href="%appurl%newuser/">Create User</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				LDAP <?=extension_loaded('ldap')?'':'(PHP LDAP Module not installed)';?>:
+				<form action="%appurl%saveldap" method="post">
+					<input <?=isset($this->lf->settings['ldap'])?'value="'.$this->lf->settings['ldap'].'"':'';?>  <?=extension_loaded('ldap')?'':'disabled';?> type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
+				</form>
+			</div>
+		</div>
 	</div>
-	<div class="col-4">
-		<? if($this->hasnotice()): ?>
-		<span class="button light_gray"><?=$this->notice();?></span>
-		<? endif; ?>
-	</div>
-	<div class="col-4">
-		LDAP <?=extension_loaded('ldap')?'':'(PHP LDAP Module not installed)';?>:
-		<form action="%appurl%saveldap" method="post">
-			<input <?=isset($this->lf->settings['ldap'])?'value="'.$this->lf->settings['ldap'].'"':'';?>  <?=extension_loaded('ldap')?'':'disabled';?> type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
-		</form>
+	<div class="col-9">
+		<table class="table white">
+			<tr class="light_gray">
+				<th>User</th>
+				<th>eMail</th>
+				<th>Display Name</th>
+				<th>Access</th>
+				<th>Status</th>
+				<th>Edit</th>
+				<th>Delete</th>
+			</tr>
+			<?php foreach($users as $user): ?>
+			<tr class="text-center">
+				<td><?=$user['user'];?></td>
+				<td><a href="mailto:<?=$user['email'];?>"><?=$user['email'];?></a></td>
+				<td><?=$user['display_name'];?></td>
+				<td><?=$user['access'];?></td>
+				<td><?=$user['status'];?></td>
+				<td><a href="%appurl%edit/<?=$user['id'];?>"><i class="fa fa-edit"></i></a></td>
+				<td>
+				<?php if($user['id'] == $this->lf->api('getuid')): ?>
+				<span title="You can't delete yourself!"><i class="fa fa-lock"></i></span>
+				<?php else: ?>
+				<a <?=jsprompt();?> href="%appurl%rm/<?=$user['id'];?>" class="x"><i class="fa fa-trash-o"></i></a>
+				<?php endif; ?>
+				</td>
+			</tr>
+			<?php endforeach; ?>
+		</table>
 	</div>
 </div>
-<table class="table rounded">
-	<tr class="gray light">
-		<th>User</th>
-		<th>eMail</th>
-		<th>Display Name</th>
-		<th>Access</th>
-		<th>Status</th>
-		<th>Edit</th>
-		<th>Delete</th>
-	</tr>
-	<?php foreach($users as $user): ?>
-	<tr class="text-center">
-		<td><?=$user['user'];?></td>
-		<td><a href="mailto:<?=$user['email'];?>"><?=$user['email'];?></a></td>
-		<td><?=$user['display_name'];?></td>
-		<td><?=$user['access'];?></td>
-		<td><?=$user['status'];?></td>
-		<td><a href="%appurl%edit/<?=$user['id'];?>">edit</a></td>
-		<td>
-		<?php if($user['id'] == $this->lf->api('getuid')): ?>
-		<a title="You can't delete yourself!">you</a>
-		<?php else: ?>
-		<a <?=jsprompt();?> href="%appurl%rm/<?=$user['id'];?>" class="x">x</a>
-		<?php endif; ?>
-		</td>
-	</tr>
-	<?php endforeach; ?>
-</table>

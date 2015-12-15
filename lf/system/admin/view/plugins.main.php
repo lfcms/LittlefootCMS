@@ -3,8 +3,8 @@
 <div class="row">
 	<div class="col-9">
 		<form id="hook_form" action="%appurl%hookup" method="post">
-			<table class="table text-center" id="plugin_library">
-				<tr class="gray light">
+			<table class="table text-center white" id="plugin_library">
+				<tr class="light_gray">
 					<th>Hooks</th>
 					<th>Plugins</th>
 					<th>Config</th>
@@ -26,30 +26,25 @@
 					<td><?=$row['plugin'];?></td>
 					<td><?=$row['config'];?></td>
 					<td><?=$row['status'];?></td>
-					<td><a href="%appurl%rm/<?=$row['id'];?>" class="button red">Delete</a></td>
+					<td><a href="%appurl%rm/<?=$row['id'];?>" class="x"><i class="fa fa-trash-o"></i></a></td>
 				</tr>
 			<?php endforeach; ?>
 			</table>
 		</form>
 	</div>
 	<div class="col-3 spaced">
-		<div class="tile rounded">
-			<div class="tile-header gray light">
-				<h3>Plugins</h3>
+		<div class="tile white">
+			<div class="tile-header">
+				<h3><i class="fa fa-plus"></i> Add New</h3>
 			</div>
 			<div class="tile-content">
+				<h4>Plugins</h4>
 				<ul class="vlist">
 					<li>
 					<?=isset($plugin_list)?implode('</li><li>', $plugin_list):'No plugins found';?>
 					</li>
 				</ul>
-			</div>
-		</div>
-		<div class="tile rounded">
-			<div class="tile-header gray light">
-				<h3>Hooks</h3>
-			</div>
-			<div class="tile-content">
+				<h4>Hooks</h4>
 				<p>pre lf render</p>
 				<p>post app blog view</p>
 				<p>pre app pages</p>

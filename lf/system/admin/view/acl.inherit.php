@@ -2,7 +2,7 @@
 <div class="row">
 	<form action="%appurl%add/inherit" method="post">
 		<div class="col-2">
-			<button type="submit" class="green"><i class="fa fa-plus"></i> add new</button>
+			<button type="submit" class="green"><i class="fa fa-plus"></i> Add New</button>
 		</div>
 		<div class="col-2">
 			<select name="group" id="">
@@ -41,8 +41,8 @@
 <?php if($this->hasnotice()): ?>
 <div class="notice marbot"><?=$this->notice();?></div>
 <?php endif; ?>
-<table class="table">
-	<tr class="gray light">
+<table class="table white">
+	<tr class="light_gray">
 		<th>User or Group</th>
 		<th>Inherits</th>
 		<th>Edit</th>
@@ -60,7 +60,7 @@
 		<td><?=$acl['group'];?></td>
 		<td>Group / <?=$acl['inherits'];?></td>
 		<td>Edit</td>
-		<td><a <?=jsprompt();?> href="%appurl%rm/inherit/<?=$acl['id'];?>" class="x">Delete</a></td>
+		<td><a <?=jsprompt();?> href="%appurl%rm/inherit/<?=$acl['id'];?>" class="x"><i class="fa fa-trash-o"></i></a></td>
 	</tr>
 	<?php endforeach; ?>
 </table>

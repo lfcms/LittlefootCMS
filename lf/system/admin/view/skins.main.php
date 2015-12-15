@@ -3,9 +3,9 @@
 <div class="row">
 	<!-- New Skin -->
 	<div class="col-3 pull-right">
-		<div class="tile rounded">
-			<div class="tile-header gray light">
-				<h3>Create Skin</h3>
+		<div class="tile white">
+			<div class="tile-header">
+				<h3><i class="fa fa-plus"></i> Add New</h3>
 			</div>
 			<div class="tile-content">
 				<div class="row">
@@ -51,10 +51,10 @@
 		
 		?>
 			<div class="col-6">
-				<div class="tile rounded <?=$highlight;?>">
+				<div class="tile white <?=$highlight;?>">
 					<!-- Skin Title -->
 					<div class="tile-header">
-						<h4><?=$skin;?> <i class="<?=$icon;?> green_fg" title="This skin is set as DEFAULT."></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash"></i></a></h4>
+						<h4><?=$skin;?> <i class="<?=$icon;?> green_fg" title="This skin is set as DEFAULT."></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash-o"></i></a></h4>
 					</div>
 					
 					<div class="h250 fit">
