@@ -1038,8 +1038,7 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  * Try it: `var_dump(new LfUsers);`
  *
  */
-function __autoload($class_name) {
-
+spl_autoload_register(function ($class_name) {
 	if(!preg_match_all('/[A-Z][^A-Z]+/', $class_name, $matches))
 		return;
 
@@ -1051,9 +1050,8 @@ function __autoload($class_name) {
 	eval(sprintf(
 		'class %s extends orm { '.implode(' ', $guts).' }',
 		$class_name
-	));
-
-}
+	));    
+});
 
 //backward compatible after db methods were taken by orm
 class db extends orm {}
