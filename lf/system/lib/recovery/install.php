@@ -31,7 +31,7 @@ class install
 	
 	public function noconfig()
 	{
-		if(count($_POST))
+		if(count($_POST) > 0)
 			$this->post();
 		
 		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
@@ -80,9 +80,6 @@ class install
 			'mysql_database' 	=> $_POST['dbname'],
 		);
 		
-		
-		
-		
 		// Loop through database credentials provided, applying them to the configuration template
 		foreach($dbCredentials as $variable => $value)
 		{
@@ -99,7 +96,27 @@ class install
 		{
 			if(!file_put_contents(LF.'config.php', $dbConfigFile))
 			{
-				$this->errors[] = 'file_put_contents of "'.LF.'config.php" failed. The webserver user probably doesnt have permission to write the file.';
+				$this->errors[] = 'Unable to write to "'.LF.'config.php"';
+				
+				// Get permissions and owner of LF folder
+				$perms = substr(sprintf('%o', fileperms(LF)), -4);
+				$ownerUID = fileowner(LF);
+				
+				// Print current ownership
+				$this->errors[] = '"'.LF.'" Owner: "'.$ownerUID.'", Perms: '.$perms;
+				
+				// Print how to fix
+				if(extension_loaded('posix'))
+				{
+					$processUser = posix_getpwuid(posix_geteuid());
+					$processUserName = $processUser['name'];
+					$this->errors[] = "POSIX detected user '$processUserName' needs write access to the lf/ folder.";
+				}
+				else
+				{
+					$this->errors[] = "PHP module 'POSIX' is not loaded, so I can't auto-detect which user needs write permissions<br />"
+														.'"'.LF.'" needs to be writable by the user running this PHP script. Check the system processes to see who owns the process as it runs.';
+				}
 			}
 		}	
 		
