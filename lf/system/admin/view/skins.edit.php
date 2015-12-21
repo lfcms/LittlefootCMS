@@ -60,7 +60,7 @@ Back to <a href="%appurl%">Skin Manager</a>
 		</div>
 		<!-- New Skin -->
 		<div class="col-9">
-			<div id="editor" class="dark_b white"><?=htmlentities($data);?></div>
+			<div id="editor" class="light_b white"><?=htmlentities($data);?></div>
 			<input type="submit" class="martop green" value="Save" />
 		</div>
 	</div>

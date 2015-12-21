@@ -5,7 +5,7 @@ a, .lf abbr, .lf acronym, .lf address, .lf big, .lf cite, .lf code, .lf
 del, .lf dfn, .lf rem, .lf img, .lf ins, .lf kbd, .lf q, .lf s, .lf samp, .lf
 small, .lf strike, .lf strong, .lf sub, .lf sup, .lf tt, .lf var, .lf
 b, .lf u, .lf i, .lf center, .lf
-dl, .lf dt, .lf dd, .lf ol, .lf ul, .lf li, .lf
+dl, .lf dt, .lf dd, .lf li, .lf
 fieldset, .lf form, .lf label, .lf legend, .lf
 table, .lf caption, .lf tbody, .lf tfoot, .lf thead, .lf tr, .lf th, .lf td, .lf
 article, .lf aside, .lf canvas, .lf details, .lf rembed, .lf 
@@ -18,6 +18,13 @@ time, .lf mark, .lf audio, .lf video {
 	vertical-align: baseline;
 	/*font: inherit;*/
 	/*font-size: 100%;*/
+}
+
+.lf ol, .lf ul {
+	margin: 0;
+	padding-left: 10px;
+	border: 0;
+	vertical-align: baseline;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -451,21 +458,38 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .transparent { background-color: rgba(0, 0, 0, 0.0) !important; }
 
 /*Lists*/
+
 .lf .hlist {
 	display: inline;
 	float: left;
+	list-style-type: none;
+	padding: 0;
+}
+
+.lf .hlist ul {
+	list-style-type: none;
+	padding: 0;
 }
 
 .lf .hlist li {
 	float: left;
 }
 
-.lf .vlist, .lf
-.fvlist, .lf
-.efvlist {
+.lf .blist {
+	padding: 0.618rem 0;
+	display: block;
+	width: 100%;
+	clear: both;
+	overflow: hidden;
+}
+
+.lf .vlist,
+.lf .fvlist,
+.lf .efvlist {
 	display: block;
 	overflow: hidden;
-	width: 100%
+	width: 100%;
+	list-style-type: none;
 }
 
 .lf .vlist li{
@@ -542,6 +566,11 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf .main_nav {
     overflow: hidden;
+}
+
+.lf .main_nav ul {
+	list-style-type: none;
+	padding: 0;
 }
 
 .lf .main_nav li {
@@ -732,7 +761,7 @@ html.lf, .lf body {
 	width: 100%;
 }
 
-.lf ol, .lf ul {
+.lf ul.no_bullets {
 	list-style: none;
 }
 
@@ -1073,6 +1102,7 @@ and (max-width : 850px) {
 	.lf .fvlist,
 	.lf .efvlist {
 		margin-bottom: 1.414rem;
+		list-style: none;
 	}
 	
 	.lf .row > *:last-child > .vlist,
