@@ -463,12 +463,12 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	display: inline;
 	float: left;
 	list-style-type: none;
-	padding: 0;
+	padding-left: 0;
 }
 
 .lf .hlist ul {
 	list-style-type: none;
-	padding: 0;
+	padding-left: 0;
 }
 
 .lf .hlist li {
@@ -490,6 +490,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	overflow: hidden;
 	width: 100%;
 	list-style-type: none;
+	padding-left: 0;
 }
 
 .lf .vlist li{
@@ -570,7 +571,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf .main_nav ul {
 	list-style-type: none;
-	padding: 0;
+	padding-left: 0;
 }
 
 .lf .main_nav li {
