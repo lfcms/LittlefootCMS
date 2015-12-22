@@ -6,7 +6,7 @@ $admin_apps = str_replace(
 );
 	
 ?>
-<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right"></i></span>
+<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row">
 	<div class="col-12 no_pad">
 		<ul class="efvlist fmedium light_a">
@@ -38,7 +38,7 @@ $admin_apps = str_replace(
 
 <?php if($this->settings['simple_cms'] == '_lfcms'): ?>
 
-<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> Apps <i class="fa fa-caret-down pull-right"></i></span>
+<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> Apps <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row no_marbot">
 	<div class="col-12 no_pad">
 		<ul class="efvlist fmedium light_a">
