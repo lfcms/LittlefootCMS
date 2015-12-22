@@ -62,13 +62,13 @@
 		</div>
 		<div class="wide_container">
 			<div class="row no_martop">
-				<div class="col-1 dark_gray">
+				<div class="col-2 dark_gray">
 					<nav>
 						<?php /*pre($this->content); */
 						echo implode($this->content['%nav%']); ?>
 					</nav>
 				</div>
-				<div class="col-11">
+				<div class="col-10">
 					<div id="controller-<?php echo $this->lf->action[0]; ?>">
 						<?php echo implode($this->content['%content%']); ?>
 					</div>

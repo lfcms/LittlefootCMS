@@ -9,7 +9,7 @@ $admin_apps = str_replace(
 <span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row">
 	<div class="col-12 no_pad">
-		<ul class="efvlist fmedium light_a">
+		<ul class="efvlist flarge light_a">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
@@ -41,7 +41,7 @@ $admin_apps = str_replace(
 <span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> Apps <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row no_marbot">
 	<div class="col-12 no_pad">
-		<ul class="efvlist fmedium light_a">
+		<ul class="efvlist flarge light_a">
 			<?php
 			
 			foreach($admin_apps as $shortcut): 
