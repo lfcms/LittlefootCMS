@@ -37,7 +37,7 @@
 	</head>
 
 	<body class="off-white">
-		<div class="wrapper userbar h50 dark_gray light">
+		<div class="wrapper userbar h50 dark_gray light light_bb">
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
@@ -61,14 +61,14 @@
 			</div>
 		</div>
 		<div class="wide_container">
-			<div class="row">
-				<div class="col-2">
+			<div class="row no_martop">
+				<div class="col-1 dark_gray">
 					<nav>
 						<?php /*pre($this->content); */
 						echo implode($this->content['%nav%']); ?>
 					</nav>
 				</div>
-				<div class="col-10">
+				<div class="col-11">
 					<div id="controller-<?php echo $this->lf->action[0]; ?>">
 						<?php echo implode($this->content['%content%']); ?>
 					</div>

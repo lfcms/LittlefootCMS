@@ -288,9 +288,6 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .martop {
 	margin-top: 1.414rem !important;
 }
-.lf .padtop {
-	padding-top: 1.414rem !important;
-}
 
 .lf .marbot {
 	margin-bottom: 1.414rem !important;
@@ -318,6 +315,10 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 
 .lf .no_pad {
 	padding: 0 !important;
+}
+
+.lf .pad {
+	padding: 0.618rem !important;
 }
 
 .lf .rounded {
