@@ -1,4 +1,8 @@
-<h2><i class="fa fa-cog"></i> Settings</h2>
+<div class="row">
+	<div class="col-12">
+		<h2 class="no_marbot"><i class="fa fa-cog"></i> Settings</h2>
+	</div>
+</div>
 <?=$this->notice();?>
 <div class="row">
 	<div class="col-7">

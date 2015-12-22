@@ -19,8 +19,11 @@ $(document).ready(function() {
 
 });*/
 </script>
-
-<h2 class="no_marbot" title="Setting the position to 0 will hide a navigation item."><i class="fa fa-compass"></i> Navigation</h2>
+<div class="row">
+	<div class="col-12">
+		<h2 class="no_marbot" title="Setting the position to 0 will hide a navigation item."><i class="fa fa-compass"></i> Navigation</h2>
+	</div>
+</div>
 <div class="row">
 	<div class="col-9">
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->

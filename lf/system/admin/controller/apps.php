@@ -11,7 +11,7 @@ class apps extends app
 		// $var[0] = 'manage'
 		$app_name = $var[0];
 		
-		echo '<h2><a href="%appurl%'.$app_name.'/">'.ucfirst($app_name).'</a> Admin</h2>
+		echo '<div class="row"><div class="col-12"><h2 class="no_marbot">'.ucfirst($app_name).'<a href=%appurl%'.$app_name.'/> Admin</a></h2></div></div>
 			<div class="dashboard_manage">';
 		$var = array_slice($var, 1); // pass the rest of the vars to the admin.php script
 		

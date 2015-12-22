@@ -1,4 +1,8 @@
-<h2><i class="fa fa-paint-brush"></i> Skins Manager</h2>
+<div class="row">
+	<div class="col-12">
+		<h2 class="no_marbot"><i class="fa fa-paint-brush"></i> Skins Manager</h2>
+	</div>
+</div>
 
 <div class="row">
 	<!-- New Skin -->

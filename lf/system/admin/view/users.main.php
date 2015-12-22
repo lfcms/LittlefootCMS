@@ -1,4 +1,8 @@
-<h2><i class="fa fa-users"></i> Users (<?=$usercount;?>)</h2>
+<div class="row">
+	<div class="col-12">
+		<h2><i class="fa fa-users no_marbot"></i> Users (<?=$usercount;?>)</h2>
+	</div>
+</div>
 <div class="row">
 	<div class="col-3 pull-right">
 		<div class="row no_martop">
