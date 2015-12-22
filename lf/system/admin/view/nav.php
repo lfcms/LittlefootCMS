@@ -6,10 +6,10 @@ $admin_apps = str_replace(
 );
 	
 ?>
-<h4 class="no_martop"><i class="fa fa-sliders"></i> Control</h4>
+<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control</span>
 <div class="row">
-	<div class="col-12">
-		<ul class="efvlist rounded fxlarge">
+	<div class="col-12 no_pad">
+		<ul class="efvlist fmedium light_a">
 			<?php $this->lf->hook_run('pre lf admin nav'); ?>
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
@@ -38,10 +38,10 @@ $admin_apps = str_replace(
 
 <?php if($this->settings['simple_cms'] == '_lfcms'): ?>
 
-<h4><i class="fa fa-th"></i> Apps</h4>
-<div class="row">
-	<div class="col-12">
-		<ul class="efvlist rounded fxlarge">
+<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> Apps</span>
+<div class="row no_marbot">
+	<div class="col-12 no_pad">
+		<ul class="efvlist fmedium light_a">
 			<?php
 			
 			foreach($admin_apps as $shortcut): 
