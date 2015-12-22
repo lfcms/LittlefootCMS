@@ -35,9 +35,9 @@ $(document).ready(function() {
 	<div class="col-3">
 		<div class="tile white">
 			<div class="tile-header">
-				<h3 title="Click an app below to add it to the navigation.">
+				<h4 title="Click an app below to add it to the navigation.">
 					<i class="fa fa-plus"></i> Add New
-				</h3>
+				</h4>
 			</div>
 			
 			<div id="appgallery-container">

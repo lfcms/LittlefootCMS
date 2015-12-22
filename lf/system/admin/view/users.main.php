@@ -5,7 +5,7 @@
 			<div class="col-12">
 				<div class="tile white">
 					<div class="tile-header">
-						<h3><i class="fa fa-plus"></i> Add New</h3>
+						<h4><i class="fa fa-plus"></i> Add New</h4>
 					</div>
 					<div class="tile-content">
 						<? if($this->hasnotice()): ?>
