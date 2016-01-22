@@ -4,6 +4,7 @@ namespace lf;
 
 class cache
 {
+	// kinda want to change this to tempSet(), and clear only temp, and leave sess as a more permanent save to session that isnt clear at end of page load
 	public function sessSet($key, $value, $namespace = 'default')
 	{
 		$_SESSION['lf_cache'][$namespace][$key] = $value;
@@ -50,5 +51,10 @@ class cache
 		if(is_null($startTime)) return null;
 		$this->sessSet($key, microtime(true) - $startTime, 'timer_result');
 		return $this;
+	}
+	
+	public function getTimerResult($key)
+	{
+		return $this->sessGet($key, 'timer_result');
 	}
 }

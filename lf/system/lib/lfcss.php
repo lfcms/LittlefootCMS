@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 // this php framework generates lf.css HTML
 
 /* eg,

@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 if(!extension_loaded('mysqli'))
 {
 	echo '<h1>mysqli PHP extension is missing! Install it to use littlefoot.</h1>';
@@ -30,7 +32,7 @@ class install
 
 	public function test()
 	{
-		if( (new LfPages)->first() == NULL )
+		if( (new \LfPages)->first() == NULL )
 		{
 			if(count($_POST))
 				$this->post();

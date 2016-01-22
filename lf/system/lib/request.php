@@ -2,10 +2,32 @@
 
 namespace lf;
 
+// shortcut function to retrieve the session data saved by request
+function www($path)
+{ 
+	if($path == 'Action')
+		return www('Index').implode('/', (new \lf\request)->get('wwwAction') );
+	
+	return (new \lf\request)->get('www'.$path); 
+}
+
 class request
 {
 	/**  */ 
-	public $protocol = 'http://';
+	public $wwwProtocol = 'http://';
+	public $wwwParams = array();
+	
+	public $wwwIndex = null;
+	public $wwwDomain = null;
+	public $wwwLF = null;
+	public $wwwAdmin = null;
+	
+	public function __construct()
+	{
+		// this class relies on the $_SESSION like a remote data store
+		//if( is_null( (new \lf\cache)->sessGet('request') ) )
+		//	(new \lf\request)->parseUri()->toSession();
+	}
 	
 	public function fakeServerGlobal($requestUri = '/')
 	{
@@ -15,6 +37,14 @@ class request
 		$_SERVER['REQUEST_URI'] = $requestUri;
 		$_SERVER['SCRIPT_NAME'] = '/home/fake/public_html/index.php';
 		return $this;
+	}
+	
+	public function get($key)
+	{
+		if( is_null( (new \lf\cache)->sessGet('request') ) )
+			$this->parseUri();
+		
+		return (new \lf\cache)->sessGet('request')->$key;
 	}
 	
 	public function forceUrl($url = null)
@@ -46,6 +76,8 @@ class request
 	{
 		(new \lf\cache)->startTimer(__METHOD__);
 		
+		if( !isset($_SERVER['HTTP_HOST']) )
+			$this->fakeServerGlobal();
 		// this doesnt work here, thinking about a hook class
 		//$this->hook_run('pre lf request');
 		
@@ -55,12 +87,13 @@ class request
 //		$this->select['alias'] = '404';
 		
 		// ty Anoop K [ http://stackoverflow.com/questions/4503135/php-get-site-url-protocol-http-vs-https ]
-	    $this->protocol = (
+	    $this->wwwProtocol = (
 			( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ) 
 			|| $_SERVER['SERVER_PORT'] == 443) 
 				? "https://" 
 				: "http://";
-		
+				
+		$protocol = $this->wwwProtocol;
 		// test Force URL (this needs to go to littlefoot())
 		//$this->forceUrl();
 
@@ -131,7 +164,7 @@ class request
 			$protocol = 'http://';
 		
 		// www.domain.com
-		$this->domain = $_SERVER['HTTP_HOST'];
+		$this->wwwDomain = $_SERVER['HTTP_HOST'];
 		
 		// http://www.domain.com/littlefoot/
 		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;
@@ -150,24 +183,30 @@ class request
 			redirect302($this->wwwIndex.$admin.$this->action);
 		
 		// explode the remaining URL component to see what was requested, delimiting on '/'
-		$this->action = explode('/', $action, -1);
-		if(count($this->action) < 1) // If the action array has no elements,
-			$this->action[] = '';	 // Set first action as alias '' (empty string)
+		$this->wwwAction = explode('/', $action, -1);
+		if(count($this->wwwAction) < 1) // If the action array has no elements,
+			$this->wwwAction[] = '';	 // Set first action as alias '' (empty string)
 		
 		//$this->hook_run('post lf request');
-		//$this->endTimer(__METHOD__);
-		
-		// Backward compatible, dont use these.
-		// They are only still hear cuz my old apps still use these :P
-		$this->base = $protocol.$_SERVER['HTTP_HOST'].$subdir.$index;
-		$this->baseurl = $this->base; // keep $Xurl usage
-		$this->relbase = $subdir; // /subdir/ for use with web relative file reference
-		$this->basenoget = $this->base.$admin.$action;
 		
 		(new \lf\cache)->endTimer(__METHOD__);
 		
-		
+		$this->toSession();
 		
 		return $this;
 	}
 }
+
+// My nasty solution to ensuring $_SESSION['db'] is cleared
+// while allowing the orm class to use it without
+class ___LastSay2
+{
+	public function __destruct()
+	{
+		if( is_null( (new \lf\cache)->sessGet('request') ) )
+		{
+			(new \lf\cache)->sessClearKey('request');
+		}
+	}
+}
+$varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds444 = new ___LastSay2();

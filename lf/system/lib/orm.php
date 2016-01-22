@@ -1025,6 +1025,7 @@ class ___LastSay
 }
 $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
 
+
 /**
  * If the class is not already defined, you can instantiate a new class through autoload.
  *
@@ -1050,7 +1051,7 @@ spl_autoload_register(function ($class_name) {
 
 	// ty chelmertz http://stackoverflow.com/a/13504972
 	eval(sprintf(
-		'class %s extends orm { '.implode(' ', $guts).' }',
+		'class %s extends \lf\orm { '.implode(' ', $guts).' }',
 		$class_name
 	));    
 });

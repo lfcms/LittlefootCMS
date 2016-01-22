@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * user object
+ * - session write
+ * - sql table write
+ * - resolveIds
+ */
+
 class User
 {
 	public $start; // creation time
@@ -60,7 +67,7 @@ class User
 		else if(is_int($details))
 		{
 			$this->setDetails(
-				(new orm)->qUsers('lf')
+				(new LfUsers)
 					->cols('id, access, user, display_name')
 					->byId($details)
 					->first()
@@ -69,16 +76,15 @@ class User
 		else if(is_string($details))
 		{
 			$this->setDetails(
-				(new orm)->qUsers('lf')
+				(new LfUsers)
 					->cols('id, access, user, display_name')
 					->byDisplay_name($details)
 					->first()
 			);
 		}
 
-		// else Anonymous by default
+		// else new instance is Anonymous by default
     }
-
 
 	public function selectBox($uid = 0)
 	{
@@ -355,7 +361,7 @@ class User
 	}
 
 	/**
-	 * Magic
+	 * Magic method for routing get|set method calls instead of writing a bunch out
 	 */
 	public function __call($name, $args)
 	{

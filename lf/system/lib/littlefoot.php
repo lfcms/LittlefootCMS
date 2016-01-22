@@ -201,7 +201,7 @@ class Littlefoot
 		$this->db = (new orm)->initDb();	// set up local db object, backward compatible. 
 												// modern apps do not rely on $this->db to do db stuff. the orm class is used instead.
 		
-		(new install)->test(); 				// test that we can connect to the db and have data, 
+		(new \lf\install)->test(); 				// test that we can connect to the db and have data, 
 												// otherwise present db config form
 		
 		$this->loadVersion() 				// load version from LF/system/version file

@@ -158,30 +158,6 @@ class controller
 	public $default_method = 'main';
 	
 	/**
-	 * Initializes the app environment. For use with $this->lf->mvc() routing.
-	 * 
-	 * @param Littlefoot $lf The Littlefoot instance. Accessible at **$this->lf**
-	 * 
-	 * @param Database $dbconn Database wrapper. Accessible at **$this->db**
-	 * 
-	 * @param string $ini Configured ini value in `lf_actions` table. Accessible at **$this->ini**
-	 *
-	 * @param array $args URL Variables. Accessible at **$this->args**
-	 */
-	public function __construct($lf, $ini = '', $args = array())
-	{
-		$this->db = (new \lf\orm); // backward compatible (new orm) can be called on the fly from anywhere now
-		$this->request = $lf; // backward compatible
-		$this->lf = $lf->lf->lf->lf; // lol recursion
-		$this->auth = $lf->auth_obj;
-		$this->ini = $ini;
-		$this->args = $args;
-		
-		// so you can run things on construct without re-making it
-		if(method_exists($this, 'init')) $this->init($args); 
-	}
-	
-	/**
 	 * Default main() function. Should be replaced in all classes extended from app.
 	 
 	public function main() // = array() is for backward compatibility
