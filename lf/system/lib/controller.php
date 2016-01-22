@@ -1,5 +1,7 @@
 <?php
 
+namespace lf\app;
+
 /**
  * # App
  * 
@@ -135,7 +137,7 @@
  * ```
  * 
  */
-class app
+class controller
 {
 	/** @var Database Datbase wrapper accessible via $this->db */
 	public $db;
@@ -168,7 +170,7 @@ class app
 	 */
 	public function __construct($lf, $ini = '', $args = array())
 	{
-		$this->db = (new orm); // backward compatible (new orm) can be called on the fly from anywhere now
+		$this->db = (new \lf\orm); // backward compatible (new orm) can be called on the fly from anywhere now
 		$this->request = $lf; // backward compatible
 		$this->lf = $lf->lf->lf->lf; // lol recursion
 		$this->auth = $lf->auth_obj;
@@ -267,27 +269,6 @@ class app
 		
 		// replace appurl with instance base and return
 		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
-	}
-	
-	// ALPHA notice('some message to store in session')
-	// notice() // prints the message
-	public function notice($msg = '', $namespace = 'lf')
-	{
-		if($msg != '')
-		{
-			$_SESSION['notice_'.$namespace][] = $msg;
-		}
-		else if(isset($_SESSION['notice_'.$namespace]))
-		{
-			$temp = $_SESSION['notice_'.$namespace];
-			unset($_SESSION['notice_'.$namespace]);
-			return implode(', ', $temp);
-		}
-	}
-	
-	public function hasnotice($namespace = 'lf')
-	{
-		return isset($_SESSION['notice_'.$namespace]);
 	}
 }
 

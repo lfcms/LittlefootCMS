@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 /**
  * zormg
  *
@@ -30,7 +32,7 @@
  * SQLQS
  *
  */
-class orm implements IteratorAggregate
+class orm implements \IteratorAggregate
 {
 
 	/** @var bool $debug Prints resulting $sql after execution. */
@@ -163,7 +165,7 @@ class orm implements IteratorAggregate
 		$database_config = $db;
 		$this->conf = $db;
 
-		$this->mysqli = new mysqli(
+		$this->mysqli = new \mysqli(
 			$database_config['host'],
 			$database_config['user'],
 			$database_config['pass']

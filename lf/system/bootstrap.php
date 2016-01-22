@@ -32,12 +32,19 @@ define('ROOT', LF); // backward compatible
 // Littlefoot
 require 'system/lib/helpers.php'; 		// Helpful functions
 require 'system/lib/orm.php'; 			// Object Relation Model base
+	class orm extends \lf\orm { }	// backward compatible
 require 'system/lib/app.php'; 			// Littlefoot app base class
 require 'system/lib/lfcss.php';			// Littlefoot css builder class
 require 'system/lib/user.php'; 			// user stuff
 require 'system/lib/recovery/install.php';
 require 'system/lib/auth.php'; 			// auth stuff
 require 'system/lib/littlefoot.php'; 	// Request, Auth, Nav, Content, Render
+
+// LF 2.0
+require 'system/lib/cache.php'; 		// Request, Auth, Nav, Content, Render
+require 'system/lib/cms.php'; 			// Request, Auth, Nav, Content, Render
+require 'system/lib/request.php'; 		// Request, Auth, Nav, Content, Render
+require 'system/lib/controller.php'; 	// Request, Auth, Nav, Content, Render
 
 // Add local lib paths to include_path
 if(is_dir(LF.'lib'))
