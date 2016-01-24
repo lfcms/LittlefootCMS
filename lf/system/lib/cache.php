@@ -4,6 +4,27 @@ namespace lf;
 
 class cache
 {
+	// so I did this, but idk how I feel about it. since you can just use $_SESSION directly
+	public function tempSet($key, $value, $namespace = 'default')
+	{
+		$_SESSION['lf_temp'][$namespace][$key] = $value;
+		return $this;
+	}
+	
+	public function tempGet($key, $namespace = 'default')
+	{
+		if(isset($_SESSION['lf_temp'][$namespace][$key]))
+			return $_SESSION['lf_temp'][$namespace][$key];
+		return NULL;
+	}
+	
+	public function tempClearKey($key, $namespace = 'default')
+	{
+		if(isset($_SESSION['lf_temp'][$namespace][$key]))
+			unset($_SESSION['lf_temp'][$namespace][$key]);
+		return $this;
+	}
+	
 	// kinda want to change this to tempSet(), and clear only temp, and leave sess as a more permanent save to session that isnt clear at end of page load
 	public function sessSet($key, $value, $namespace = 'default')
 	{

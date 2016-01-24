@@ -17,6 +17,33 @@ class cms
 	
 	private $ini = NULL;	// configurable string in database per app `lf_links` table entry
 	
+	// would replace (new littlefoot)->cms()
+	public function run()
+	{
+		(new cache)->startTimer('cms');
+		(new install)->test();
+		(new request)->parseUri();
+			
+		$this->loadVersion() 				// load version from LF/system/version file
+			->loadPlugins() 				// load plugins from `lf_plugins` table
+			->loadSettings()				// load settings from `lf_settings` table
+			->route('auth', '_auth', false); // Route auth() class per $wwwIndex/_auth/$method
+		
+		(new acl)->loadAcl();						// load ACL rules from lf_acl_global, lf_acl_inherit, and `lf_acl_user` that affect current $_SESSION user.
+		
+		$this->routeAdmin()					// If /admin was requested, load it and stop here
+			->navSelect()					// Get data for SimpleCMS, or determine requested Nav ID from url $actions
+			->getcontent(); 				// Deal with SimpleCMS or execute linked apps
+		
+		echo $this->render(); 				// Display content in skin, return HTML output result
+
+		(new cache)->endTimer('cms');
+		
+		if($this->debug == 'on') 
+			$this->printDebug();
+		
+		return $this;
+	}
 	
 	// print HTML comment at the bottom of the source
 	// display cool stats and list of required files
@@ -38,31 +65,7 @@ class cms
 		$this->exec = $app;
 	}
 	
-	// would replace (new littlefoot)->cms()
-	public function run()
-	{
-		(new cache)->startTimer('cms');
-		(new install)->test();
-		(new request)->parseUri();
-			
-		$this->loadVersion() 				// load version from LF/system/version file
-			->loadPlugins() 				// load plugins from `lf_plugins` table
-			->loadSettings()				// load settings from `lf_settings` table
-			->route('auth', '_auth', false) // Route auth() class per $wwwIndex/_auth/$method
-			->loadACL()						// load ACL rules from lf_acl_global, lf_acl_inherit, and `lf_acl_user` that affect current $_SESSION user.
-			->routeAdmin()					// If /admin was requested, load it and stop here
-			->navSelect()					// Get data for SimpleCMS, or determine requested Nav ID from url $actions
-			->getcontent(); 				// Deal with SimpleCMS or execute linked apps
-		
-		echo $this->render(); 				// Display content in skin, return HTML output result
-
-		(new \lf\cache)->endTimer('cms');
-		
-		if($this->debug == 'on') 
-			$this->printDebug();
-		
-		return $this;
-	}
+	
 	
 	public function routeAdmin()
 	{
@@ -340,7 +343,7 @@ class cms
 	}
 	
 	/**
-	 * Initializes the plugin listener from lf_plugins table
+	 * checks for and executes an active plugin assigned to the triggered $hook
 	 */
 	public function hook_run($hook)
 	{
