@@ -5,11 +5,11 @@ namespace lf;
 /**
  * # cms class
  * 
- * this is the main class (formerly class littlefoot) that handles all the aspects of the higher level CMS operations such as lf_actions navigation selection from request_uri (formerly littlefoot->navSelect()), app loading from `lf_links`, skin rendering, acl testing (should really be its own class).
- * 
+ * this is the main class (formerly class littlefoot) that handles all the aspects of the higher level CMS operations such as lf_actions navigation selection from request_uri (formerly littlefoot->navSelect()), app loading from `lf_links`, skin rendering, acl testing (should really be its own class). \lf\Cms
  * 
  * 
  */
+ 
 class cms
 {
 	// simple CMS. 
@@ -83,7 +83,7 @@ class cms
 	{
 		$this->hook_run('pre settings');
 		
-		foreach((new LfSettings)->getAll() as $setting)
+		foreach((new \LfSettings)->getAll() as $setting)
 			$this->settings[$setting['var']] = $setting['val'];
 		
 		
@@ -129,51 +129,85 @@ class cms
 	 *		defaults to $this->lf->$vars generated in $this->lf->request()
 	 *
 	 */
-	public function mvc($controller, $ini = '', $vars = NULL)
+	public function mvc($controller, $ini = '', $action = NULL)
 	{
-		ob_start();
+		//ob_start();
 		
-		if($vars === NULL) $vars = (new \lf\request)->get('action');
+		if($action === NULL)
+			$action = (new \lf\request)->get('wwwParam');
 		
-		if(!isset($vars[0])) $vars[0] = '';
+		if(!isset($action[0])) 
+			$action[0] = '';
 		
-		
-		if(is_callable(array($controller, $vars[0])))
-			$func = $vars[0];
+		if(is_callable(array($controller, $action[0])))
+			$method = $action[0];
 		else
 		{
 			if(isset($controller->allow404)) return 404; // rewrite by default
 			if(isset($controller->default_method)) // if the $obj specifies a default method, 
-				$func = $controller->default_method; // use it
+				$method = $controller->default_method; // use it
 			else
-				$func = 'main'; // default to main()
+				$method = 'main'; // default to main()
 		}
 		
 		/*$this->hook_run('pre app');
 		$this->hook_run('pre app '.$controller);
-		if($func != $vars[0]) $this->hook_run('pre app '.$controller.' '.$func);
+		if($func != $action[0]) $this->hook_run('pre app '.$controller.' '.$func);
 		
 		$varstr = array();
-		foreach($vars as $var) // add vars until they are all there
+		foreach($action as $var) // add action until they are all there
 		{
 			$varstr[] = $var;
 			$this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
 		}*/
 		
-		echo $controller->$func($vars);
+		echo $controller->$method();
 		
-		/*while(count($varstr)) // subtract vars until they are all gone
+		/*while(count($varstr)) // subtract action until they are all gone
 		{	
 			$this->hook_run('post app '.$controller.' '.implode(' ', $varstr));
 			array_pop($varstr);
 		}
 		
-		if($func != $vars[0]) $this->hook_run('post app '.$controller.' '.$func);
+		if($func != $action[0]) $this->hook_run('post app '.$controller.' '.$func);
 		
 		$this->hook_run('post app '.$controller);
 		$this->hook_run('post app');*/
 		
 		return ob_get_clean();
+	}
+	
+	// Routing URL based on /subdir/action1/param1/method1/param2
+	// I moved this from app, but dont plan on actually fixing it until I need it again.
+	// I think when I wrote this, I was doing something studid and had to work around it.
+	public function router($args, $default_route = 'home', $filter = array())
+	{
+		(new \lf\request)->set('instbase', $this->lf->appurl.$args[0].'/'); // url lf->appurl to all
+		$this->inst = urldecode($args[0]); // can handle any string
+		
+		// Load 
+		$args = array_slice($args, 1); // move vars over to emulate direct execution
+		
+		/** @var string variable used to execute method based on $default_route( or $args[0] if set) */
+		$method = $default_route;
+		
+		// if a base variable is specified,
+		if(isset($args[0])) 
+			// if no filter is specified,
+			if($filter == array()) 
+				$method = $args[0];
+			// if $filter has more than no elements and $args[0] is in the filter,
+			else if(in_array($args[0], $filter)) 
+				$method = $args[0];
+		
+		// begin output capture
+		ob_start();
+		
+		// execute given method of $this object
+		$this->$method($args);
+		
+		// replace appurl with instance base and return
+		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
 	}
 	
 	public function multiMVC($default = NULL, $section = 'content')
@@ -217,37 +251,55 @@ class cms
 	}
 	
 	
-	
+	// you need to include the class .php file yourself.
+	/**
+	 * Test URL for given alias (default to given class) in action[0]
+	 * 
+	 * @param $class Name of the loaded class
+	 * @param $alias Defaults to $class. This only routes if we find $alias in $action[0].
+	 * @param $return bool "The output of this should be returned as a string rather than immediately rendering and exiting".
+	 */
 	public function route($class, $alias = NULL, $return = true)
 	{
-		$this->hook_run('pre '.$class); 
+		$this->hook_run('pre '.$class);
+		(new cache)->startTimer(__METHOD__);
 		
 		if(is_null($alias))
 			$alias = $class;
 		
-		$app = new $class($this);
+		$preRequest = (new request)->fromSession();
+		$actionArray = $preRequest->get('wwwAction');
+		
+		pre($preRequest);
+		pre($actionArray);
 		
 		// change to auth class 
-		if($this->action[0] == $alias && isset($this->action[1]))
+		if( $actionArray[0] == $alias && isset($actionArray[1]) )
 		{
-			$this->appurl = $this->wwwIndex.'_auth/';
+			$controller = new \lf\auth();
 			
-			// should really use MVC on this
+			// so we can revert after this operation if we just return as a string
+			$tempRequest = $preRequest;
 			
-			$out = $app->_router( \lf\www('Action') );
-			$out = str_replace('%appurl%', $this->appurl, $out);
-			$this->content['content'][] = $out;
+			$tempRequest
+				->actionPop()
+				->toSession();
+		
+			$this->content['content'][] = $this->mvc($controller);
 			
 			if(!$return)
 			{
 				// display in skin
+				(new cache)->endTimer(__METHOD__);
 				echo $this->render();
 				exit();
 			}
 		}
 		
-		$this->hook_run('post '.$class);
+		//$preRequest->toSession();
 		
+		(new cache)->endTimer(__METHOD__);
+		$this->hook_run('post '.$class);
 		return $this;
 	}
 	
@@ -331,7 +383,7 @@ class cms
 	 */
 	public function loadPlugins()
 	{
-		$result = (new LfPlugins)->getAll();
+		$result = (new \LfPlugins)->getAll();
 		
 		if($result)
 			foreach($result as $plugin)

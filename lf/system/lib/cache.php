@@ -2,6 +2,13 @@
 
 namespace lf;
 
+/**
+ * Quick memcache style key-value pair storage into $_SESSION, just for the duration of the single request. Better than singletons, better than passing around a single object to every app
+ * 
+ * 
+ * 
+ * 
+ */
 class cache
 {
 	// so I did this, but idk how I feel about it. since you can just use $_SESSION directly

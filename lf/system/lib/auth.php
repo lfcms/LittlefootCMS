@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 /**
  * @ignore
  * 
@@ -8,12 +10,10 @@
  * deals with session set, get, refreshTimeout
  * 
  */
-class auth extends app
+class auth
 {
-	public $auth; // backward compatible
-	
-	protected function init($args)
-	{
+	public function __construct()
+	{return;
 		$user = (new User)->fromSession();
 		
 		// Handle timeout
@@ -31,7 +31,7 @@ class auth extends app
 		$this->auth = $user->getDetails();
 	}
 	
-	public function login($args)
+	public function login()
 	{
 		// if user/pass matches, push to session
 		if( !isset($this->lf->settings['ldap']) 
@@ -44,7 +44,7 @@ class auth extends app
 		redirect302();
 	}
 	
-	public function updateprofile($args)
+	public function updateprofile()
 	{
 		if($_POST['pass'] != '')
 			$_POST['pass'] = sha1($_POST['pass']);
@@ -87,13 +87,13 @@ class auth extends app
 		redirect302();
 	}
 	
-	public function profile($args)
+	public function profile()
 	{
 		include 'system/template/profile.php';
 		//echo getcwd();
 	}
 	
-	public function logout($args)
+	public function logout()
 	{
 		// reset session
 		session_destroy();
@@ -101,7 +101,7 @@ class auth extends app
 	}
 	
 	//default
-	public function signup($vars)
+	public function signup()
 	{
 		if($this->lf->api('getuid') != 0) // logged in
 		{
@@ -122,7 +122,7 @@ class auth extends app
 			include LF.'system/template/signup.php';
 	}
 	
-	public function create($vars)
+	public function create()
 	{
 		$sql = "
 			SELECT email, user 
@@ -150,7 +150,7 @@ class auth extends app
 			if($user)			echo 'Username';
 								echo ' already in use.';
 			
-			$this->signup($vars);
+			$this->signup( (new request)->get('wwwParam') );
 		}
 		else
 		{

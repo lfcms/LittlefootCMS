@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 /**
  * user object
  * - session write
@@ -7,7 +9,7 @@
  * - resolveIds
  */
 
-class User
+class user
 {
 	public $start; // creation time
 	private $timeout;

@@ -3,6 +3,7 @@
 namespace lf;
 
 // shortcut function to retrieve the session data saved by request
+// eg, `\lf\www("Index");` returns 'http://www.domain.com/littlefoot/index.php/'
 function www($path)
 { 
 	if($path == 'Action')
@@ -11,16 +12,18 @@ function www($path)
 	return (new \lf\request)->get('www'.$path); 
 }
 
+
+// Parses $_SERVER['REQUEST_URI'] into usable parts, saves result to session, generates a fake REQUEST_URI, etc if it is not set.
 class request
 {
 	/**  */ 
 	public $wwwProtocol = 'http://';
-	public $wwwParams = array();
-	
 	public $wwwIndex = null;
 	public $wwwDomain = null;
 	public $wwwLF = null;
 	public $wwwAdmin = null;
+	public $wwwParam = array();
+	public $wwwAction = array();
 	
 	public function __construct()
 	{
@@ -42,7 +45,7 @@ class request
 	public function get($key)
 	{
 		if( is_null( (new \lf\cache)->sessGet('request') ) )
-			$this->parseUri();
+			$this->parseUri(); // JIT REQUEST_URI parse
 		
 		return (new \lf\cache)->sessGet('request')->$key;
 	}
@@ -66,10 +69,32 @@ class request
 		}
 	}
 	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionPop($count = 1)
+	{
+		if( count($this->wwwAction) < 1 )
+			return NULL;
+		
+		array_unshift( 
+			$this->wwwParam, 
+			end( $this->wwwAction ) 
+		);
+		
+		array_pop( $this->wwwAction );
+		
+		return $this;
+	}
+	
 	public function toSession()
 	{
 		(new \lf\cache)->sessSet('request', $this);
 		return $this;
+	}
+	
+	public function fromSession()
+	{
+		return (new \lf\cache)->sessGet('request');
 	}
 	
 	public function parseUri($uri = 'todo')

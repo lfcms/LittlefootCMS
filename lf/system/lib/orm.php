@@ -1017,7 +1017,7 @@ class ___LastSay
 	public function __destruct()
 	{
 		if(isset($_SESSION['db']))
-		{
+		{ 
 			$_SESSION['db']->close();
 			unset($_SESSION['db']);
 		}
@@ -1042,6 +1042,8 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  *
  */
 spl_autoload_register(function ($class_name) {
+	
+	// This is whats filtering it.
 	if(!preg_match_all('/[A-Z][^A-Z]+/', $class_name, $matches))
 		return;
 
@@ -1051,7 +1053,7 @@ spl_autoload_register(function ($class_name) {
 
 	// ty chelmertz http://stackoverflow.com/a/13504972
 	eval(sprintf(
-		'class %s extends \lf\orm { '.implode(' ', $guts).' }',
+		'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
 		$class_name
 	));    
 });

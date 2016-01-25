@@ -1,6 +1,6 @@
 <?php
 
-namespace lf\app;
+namespace lf;
 
 /**
  * # App
@@ -139,31 +139,16 @@ namespace lf\app;
  */
 class controller
 {
-	/** @var Database Datbase wrapper accessible via $this->db */
-	public $db;
-	
 	/** @var string Configuration data set in the navigation configuration. This data is saved to the lf_actions table. */
 	protected $ini;
 	
-	/** @var Littlefoot For backword compatibility. Synonymous with $this->lf */
-	protected $request;
-	
-	/** @var Littlefoot Littlefoot instance: Access to URL variables, mvc(), etc */
-	protected $lf;
-	
-	/** @var auth Auth object. Access to access data (username, id, etc) */
-	protected $auth;
-	
-	/** @var default_method Used to specify the default method when none is specified. This is set to 'main' by default. */
-	public $default_method = 'main';
-	
 	/**
 	 * Default main() function. Should be replaced in all classes extended from app.
-	 
+	 */
 	public function main() // = array() is for backward compatibility
 	{
 		echo '::default main function::';
-	}*/
+	}
 	
 	/**
 	 * Used for loading partial views given an argument
@@ -217,35 +202,7 @@ class controller
 	 * @return string Captured output buffer from execution of $this->$method()
 	
 	*/
-	public function _router($args, $default_route = 'home', $filter = array())
-	{
-		$this->instbase = $this->lf->appurl.$args[0].'/'; // url lf->appurl to all
-		$this->inst = urldecode($args[0]); // can handle any string
-		
-		// Load 
-		$args = array_slice($args, 1); // move vars over to emulate direct execution
-		
-		/** @var string variable used to execute method based on $default_route( or $args[0] if set) */
-		$method = $default_route;
-		
-		// if a base variable is specified,
-		if(isset($args[0])) 
-			// if no filter is specified,
-			if($filter == array()) 
-				$method = $args[0];
-			// if $filter has more than no elements and $args[0] is in the filter,
-			else if(in_array($args[0], $filter)) 
-				$method = $args[0];
-		
-		// begin output capture
-		ob_start();
-		
-		// execute given method of $this object
-		$this->$method($args);
-		
-		// replace appurl with instance base and return
-		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
-	}
+	
 }
 
 ?>

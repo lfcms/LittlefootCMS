@@ -22,43 +22,29 @@ class acl
 	{
 		(new \lf\cache)->startTimer(__METHOD__);
 		
-		// inherit
+		// inherit 
 		$inherit = array();
-		foreach( (new LfAclInherit)->getAll() as $row )
+		foreach( (new \LfAclInherit)->getAll() as $row )
 			$inherit[$row['group']][] = $row['inherits']; // sort output as $group => array($inherit1, $inherit2)
 		
-		//$user = new \User();
+		/// I think I am getting an anonymous user here, idk why I do this :\
+		$user = new \User();
 		
 		// get a list of groups from inheritance
-		$groups = get_acl_groups($inherit, (new \User)->getAccess()); // I think I am getting an anonymous user here, idk why I did that :\
+		$groups = get_acl_groups($inherit, $user->getAccess()); 
 		$groups[] = $user->getAccess();
-		$groups[] = $this->api('getuid');
+		$groups[] = $user->getUid();
 //		$groupsql = "'".implode("', '", $groups)."'"; // and get them ready for SQL
 		
 		// Build user ACL from above group list and individual rules
 		$useracl = array();
-		$baseacl = array();
-		
-/*
-		// old query
-		$rows = $this->db->fetchall("
-			SELECT action, perm FROM lf_acl_user 
-			WHERE affects IN ('".$this->api('getuid')."', ".$groupsql.")
-		"); // ) AND action = '".implode('/', $this->action)."'
-		foreach($rows as $row)
-			$userAcl[$row['action']] = $row['perm'];
-	*/	
-		// new query
-		foreach( (new LfAclUser)->->getAllByAffects($groups) as $row )
+		foreach( (new \LfAclUser)->getAllByAffects($groups) as $row )
 			$useracl[$row['action']] = $row['perm'];
 		
-		// build base acl
-		$rows = $this->db->fetchall("SELECT action, perm FROM lf_acl_global"); // WHERE action = '".implode('/', $this->action)."'
-		foreach( (new LfAclGlobal)->cols('action, perm')->getAll() as $row)
+		// Build Global ACL from global rules. These apply, then user rules apply on top of it.
+		$baseacl = array();
+		foreach( (new \LfAclGlobal)->cols('action, perm')->getAll() as $row)
 			$baseacl[$row['action']] = $row['perm'];
-		
-		//$this->baseacl = $baseAcl;
-		//$this->auth['acl'] = $userAcl;
 		
 		$this->base = $baseacl;
 		$this->user = $useracl;
@@ -109,3 +95,4 @@ class acl
 		// access is granted by default
 		return $this->defaultAccess;
 	}
+}

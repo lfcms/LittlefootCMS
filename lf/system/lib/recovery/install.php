@@ -47,7 +47,7 @@ class install
 	private function nodb()
 	{
 		$msg = 'Unable to query database.';
-		include ROOT.'system/lib/recovery/install.form.php';
+		include LF.'system/lib/recovery/install.form.php';
 	}
 	
 	private function post()

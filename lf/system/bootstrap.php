@@ -27,9 +27,9 @@ $folder = dirname(__FILE__).'/../';
 if(!chdir($folder)) die('Access Denied to '.$folder); // if unable to cd there, kill script
 define('LF', getcwd().'/'); // The absolute path to the lf/ directory is the ROOT of the application
 
-define('ROOT', LF); // backward compatible
+define('ROOT', LF); // backward compatibility.
 
-// Littlefoot
+// Littlefoot 1.0
 require 'system/lib/helpers.php'; 		// Helpful functions
 require 'system/lib/orm.php'; 			// Object Relation Model base
 	class orm extends \lf\orm { }	// backward compatible
@@ -40,18 +40,36 @@ require 'system/lib/recovery/install.php';
 require 'system/lib/auth.php'; 			// auth stuff
 require 'system/lib/littlefoot.php'; 	// Request, Auth, Nav, Content, Render
 
-// LF 2.0
-require 'system/lib/cache.php'; 		// Request, Auth, Nav, Content, Render
-require 'system/lib/cms.php'; 			// Request, Auth, Nav, Content, Render
-require 'system/lib/request.php'; 		// Request, Auth, Nav, Content, Render
-require 'system/lib/controller.php'; 	// Request, Auth, Nav, Content, Render
+// LF 2.0 - Dawn of the namespaces and session cache
+
+// relies on 1.0 minus the littlefoot class which has been broken into smaller systems
+// namely: acl, request, cms, and I add a new session cache class
+
+/* Completely replaces littlefoot->cms. Just have to update your index to...
+
+~~~
+<?php
+
+require_once('lf/system/bootstrap.php');
+$cms = new \lf\cms();
+$cms->run();
+~~~
+
+*/
+
+ 		
+
+require 'system/lib/cache.php'; // Quick memcache style key-value pair storage
+require 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
+require 'system/lib/controller.php'; // Without all the init, I may not even use this
+require 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
+require 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
 
 // Add local lib paths to include_path
 if(is_dir(LF.'lib'))
 	ini_set('include_path', ini_get('include_path').':'.LF.'lib');
 if(is_dir(LF.'system/lib'))
 	ini_set('include_path', ini_get('include_path').':'.LF.'system/lib');
-
 
 // Session name needs to be alphanumeric,
 // just MD5 it to keep it unique and to not show the docroot
