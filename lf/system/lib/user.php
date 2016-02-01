@@ -38,7 +38,7 @@ class user
 		{
 			$ids = array_unique($match[1]);
 			$out = str_replace('{user:0}', 'Anonymous', $out);
-			foreach( (new LfUsers)->cols('id, display_name')->getAllById($ids) as $user )
+			foreach( (new \LfUsers)->cols('id, display_name')->getAllById($ids) as $user )
 			{
 				if($wholeLastName)
 					$name = $user['display_name'];
@@ -214,7 +214,7 @@ class user
 			$this->debug[] = 'no ldap configured';
 
 			// Traditional Database lookup
-			$login = (new LfUsers)
+			$login = (new \LfUsers)
 				->cols('id, user, email, display_name, access')
 				->byUser($username)
 				->byPass(sha1($password))

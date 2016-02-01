@@ -3,14 +3,14 @@
 namespace lf;
 
 // recurse through inheritance, get list of children.
-function get_acl_groups($inherit, $process)
+function get_inherited($inherit, $process)
 {
 	if(!isset($inherit[$process])) return array(); // anon will trigger this
 	
 	$groups = $inherit[$process]; // $groups = an array of groups inherited by the $process group
 	foreach($groups as $group)
 		if(isset($inherit[$group]))
-			$groups = array_merge( $groups, get_acl_groups($inherit, $group) ); 
+			$groups = array_merge( $groups, get_inherited($inherit, $group) ); 
 	return array_unique($groups);
 }
 
@@ -27,11 +27,11 @@ class acl
 		foreach( (new \LfAclInherit)->getAll() as $row )
 			$inherit[$row['group']][] = $row['inherits']; // sort output as $group => array($inherit1, $inherit2)
 		
-		/// I think I am getting an anonymous user here, idk why I do this :\
-		$user = new \User();
+		// whoever we are, anon, admin, whatever
+		$user = (new User)->fromSession();
 		
 		// get a list of groups from inheritance
-		$groups = get_acl_groups($inherit, $user->getAccess()); 
+		$groups = get_inherited($inherit, $user->getAccess()); 
 		$groups[] = $user->getAccess();
 		$groups[] = $user->getUid();
 //		$groupsql = "'".implode("', '", $groups)."'"; // and get them ready for SQL
@@ -49,11 +49,14 @@ class acl
 		$this->base = $baseacl;
 		$this->user = $useracl;
 		
-		(new \lf\cache)->sessSet('acl', $this);
-		
-		// should make this into magic __call per http://stackoverflow.com/a/3716750
 		(new \lf\cache)->endTimer(__METHOD__); 
 		
+		return $this;
+	}
+	
+	public function toSession()
+	{
+		(new \lf\cache)->sessSet('acl', $this);
 		return $this;
 	}
 	

@@ -2,6 +2,18 @@
 
 namespace lf;
 
+// `\lf\get('request')` is way better than `(new \lf\cache)->get('request')->getStuff`
+function get($key, $namespace = 'default')
+{
+	return (new cache)->sessGet($key, $namespace);
+}
+
+// `\lf\set('request', $value)` is way better
+function set($key, $value, $namespace = 'default')
+{
+	return (new cache)->sessSet($key, $value, $namespace);
+}
+
 /**
  * Quick memcache style key-value pair storage into $_SESSION, just for the duration of the single request. Better than singletons, better than passing around a single object to every app
  * 
@@ -60,10 +72,17 @@ class cache
 		return $this;
 	}
 	
+	public function readFile($filename)
+	{
+		ob_start();
+		readFile(LF.'cache/'.$filename);
+		return ob_get_clean();
+	}
+	
 	// files
 	public function toFile($data, $filename)
 	{
-		//todo, just use file_put_contents...
+		return file_put_contents($filename, $data);
 	}
 	
 	// timers

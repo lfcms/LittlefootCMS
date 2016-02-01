@@ -5,31 +5,52 @@ namespace lf;
 // shortcut function to retrieve the session data saved by request
 // eg, `\lf\www("Index");` returns 'http://www.domain.com/littlefoot/index.php/'
 function www($path)
-{ 
-	if($path == 'Action')
-		return www('Index').implode('/', (new \lf\request)->get('wwwAction') );
-	
-	return (new \lf\request)->get('www'.$path); 
+{
+	return (new \lf\request)->get('www'.$path);
+}
+
+function wwwIndexAction()
+{
+	return www('Index').implode('/', www('Action') );
+}
+
+function wwwAppUrl()
+{
+	$admin = get('request')->isAdmin()
+		? 'admin/'
+		: '';
+	return www('Index')
+		.$admin
+		.implode('/', www('Action') )
+		.'/';
 }
 
 
 // Parses $_SERVER['REQUEST_URI'] into usable parts, saves result to session, generates a fake REQUEST_URI, etc if it is not set.
 class request
 {
-	/**  */ 
 	public $wwwProtocol = 'http://';
 	public $wwwIndex = null;
 	public $wwwDomain = null;
 	public $wwwLF = null;
-	public $wwwAdmin = null;
+	public $wwwAdmin = false;
 	public $wwwParam = array();
 	public $wwwAction = array();
+	public $wwwTitle = 'LittlefootCMS'; // <title />
 	
-	public function __construct()
+	public function __construct($title = NULL)
 	{
+		if( !is_null($title) )
+			$this->pageTitle = $title;
 		// this class relies on the $_SESSION like a remote data store
 		//if( is_null( (new \lf\cache)->sessGet('request') ) )
 		//	(new \lf\request)->parseUri()->toSession();
+	}
+	
+	public function setTitle($newTitle)
+	{
+		$this->pageTitle = $newTitle;
+		return $this;
 	}
 	
 	public function fakeServerGlobal($requestUri = '/')
@@ -45,7 +66,7 @@ class request
 	public function get($key)
 	{
 		if( is_null( (new \lf\cache)->sessGet('request') ) )
-			$this->parseUri(); // JIT REQUEST_URI parse
+			$this->parseUri()->toSession(); // JIT REQUEST_URI parse
 		
 		return (new \lf\cache)->sessGet('request')->$key;
 	}
@@ -76,13 +97,19 @@ class request
 		if( count($this->wwwAction) < 1 )
 			return NULL;
 		
-		array_unshift( 
-			$this->wwwParam, 
-			end( $this->wwwAction ) 
-		);
-		
-		array_pop( $this->wwwAction );
-		
+		while($count--)
+		{
+			array_unshift( $this->wwwParam, end( $this->wwwAction ) );
+			array_pop( $this->wwwAction );
+		}
+		return $this;
+	}
+	
+	// pop all remaining action items into param
+	public function fullActionPop()
+	{
+		$this->wwwParam = $this->wwwAction;
+		$this->wwwAction = array();
 		return $this;
 	}
 	
@@ -95,6 +122,12 @@ class request
 	public function fromSession()
 	{
 		return (new \lf\cache)->sessGet('request');
+	}
+	
+	public function isAdmin()
+	{
+		// could have just returned ->admin, but this must be boolean
+		return $this->admin ? true : false;
 	}
 	
 	public function parseUri($uri = 'todo')
@@ -192,7 +225,7 @@ class request
 		$this->wwwDomain = $_SERVER['HTTP_HOST'];
 		
 		// http://www.domain.com/littlefoot/
-		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir;
+		$this->wwwInstall 	= $protocol.$_SERVER['HTTP_HOST'].$subdir; 
 		
 		// http://www.domain.com/littlefoot/lf/
 		$this->wwwLF 	= $protocol.$_SERVER['HTTP_HOST'].$subdir.'lf/';
@@ -216,8 +249,6 @@ class request
 		
 		(new \lf\cache)->endTimer(__METHOD__);
 		
-		$this->toSession();
-		
 		return $this;
 	}
 }
@@ -228,7 +259,7 @@ class ___LastSay2
 {
 	public function __destruct()
 	{
-		if( is_null( (new \lf\cache)->sessGet('request') ) )
+		if( !is_null( (new \lf\cache)->sessGet('request') ) )
 		{
 			(new \lf\cache)->sessClearKey('request');
 		}

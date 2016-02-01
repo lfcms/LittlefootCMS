@@ -53,7 +53,7 @@
 								<a class="x" href="%baseurl%_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
-								Hello <?=$this->api('me');?>.
+								Hello <?=(new \lf\user)->fromSession()->getDisplay_name();?>.
 							</span>
 						</div>
 					</div>
@@ -65,12 +65,12 @@
 				<div class="col-2">
 					<nav>
 						<?php /*pre($this->content); */
-						echo implode($this->content['%nav%']); ?>
+						echo implode($this->content['nav']); ?>
 					</nav>
 				</div>
 				<div class="col-10">
 					<div id="controller-<?php echo $this->lf->action[0]; ?>">
-						<?php echo implode($this->content['%content%']); ?>
+						<?php echo implode($this->content['content']); ?>
 					</div>
 				</div>
 			</div>

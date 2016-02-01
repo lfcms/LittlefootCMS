@@ -22,8 +22,8 @@ if(count($_GET))
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Login Page | <?php echo $_SERVER['HTTP_HOST']; ?></title>
-		<link href="%relbase%lf/system/lib/lf.css" rel="stylesheet">
-		<link rel="stylesheet" href="%skinbase%css/custom.css" type="text/css" />
+		<link href="<?=\lf\www('LF');?>system/lib/lf.css" rel="stylesheet">
+		<link rel="stylesheet" href="<?=(new \lf\cms)->getSkinBase();?>css/custom.css" type="text/css" />
 	</head>
 
 	<body class="blue">
@@ -31,7 +31,7 @@ if(count($_GET))
 			<div class="row">
 				<div class="col-4"></div>
 				<div class="col-4 ">
-					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/" target="_blank"><img src="%relbase%lf/system/template/images/lf-banner.png"/></a></h1>
+					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/" target="_blank"><img src="<?=\lf\www('LF');?>system/template/images/lf-banner.png"/></a></h1>
 					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
 					<form id="login" action="<?=$this->base;?>_auth/login" method="post">
 						<ul class="vlist">

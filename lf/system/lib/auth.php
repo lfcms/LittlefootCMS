@@ -205,7 +205,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		}
 	}
 	
-	public function validate($vars)
+	public function validate()
 	{
 		if(!isset($vars[1]) || strlen($vars[1]) != 40 || !preg_match('/^[a-f0-9]+$/', $vars[1], $match)) return 'Wrong validation code.';
 		
@@ -219,7 +219,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		echo 'Account validated. Please <a href="%baseurl%profile/">log in</a>';
 	}
 	
-	public function forgotform($vars)
+	public function forgotform()
 	{
 		// Aaron G made me do this too
 		if(is_file(LF.'system/template/forgot.local'))
@@ -228,7 +228,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 			include LF.'system/template/forgot.php';
 	}
 	
-	public function forgotresult($vars)
+	public function forgotresult()
 	{
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE email = '".$this->db->escape($_POST['email'])."'");
 		if(!$user) redirect302($this->lf->appurl);
@@ -248,7 +248,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		} else echo 'Failed to sent. Contact an admin.';
 	}
 	
-	public function resetpassform($vars)
+	public function resetpassform()
 	{
 		
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($vars[1])." AND hash = '".$this->db->escape($vars[2])."'");
@@ -267,7 +267,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		else echo 'Bad link';
 	}
 	
-	public function resetpass($vars)
+	public function resetpass()
 	{
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($_POST['id'])." AND hash = '".$this->db->escape($_POST['hash'])."'");
 		if($user)

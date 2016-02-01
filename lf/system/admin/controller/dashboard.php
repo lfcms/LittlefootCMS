@@ -3,12 +3,12 @@
 /**
  * @ignore
  */
-class dashboard extends app
+class dashboard
 {
 	private $pwd;
 	private $simple = false;
 	
-	public function init($vars)
+	public function init()
 	{
 		$this->pwd = ROOT.'apps/';
 		
@@ -30,7 +30,7 @@ class dashboard extends app
 		}
 	}
 	
-	public function main($vars)
+	public function main()
 	{
 		
 		if($this->simple) return;
@@ -629,7 +629,7 @@ class dashboard extends app
 		include 'model/apps.navcache.php';
 		
 		// Grab all possible actions
-		$actions = $this->db->fetchall("SELECT * FROM lf_actions WHERE position != 0 ORDER BY ABS(parent), ABS(position) ASC");
+		$actions = (new \lf\orm)->fetchall("SELECT * FROM lf_actions WHERE position != 0 ORDER BY ABS(parent), ABS(position) ASC");
 		
 		// Make a matrix sorted by parent and position
 		$menu = array();

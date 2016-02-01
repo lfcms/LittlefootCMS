@@ -5,13 +5,14 @@
  */
 class skins extends app
 {
-	function init($args)
+	function init()
 	{
 		$this->pwd = ROOT.'skins/';
 	}
 	
-	public function main($vars)
+	public function main()
 	{
+		$vars = \lf\www('Param');
 		$pwd = $this->pwd;
 		$request = $this->request;
 		$install = extension_loaded('zip') ? '<input type="submit" value="Install" />' : "Error: Zip Extension missing.";

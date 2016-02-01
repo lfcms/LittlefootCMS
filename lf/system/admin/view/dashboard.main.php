@@ -26,8 +26,8 @@ $(document).ready(function() {
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
         <div class="row no_martop">
         	<div class="col-12 spaced">
-				<?=$this->partial('dashboard-partial-nav', array('actions' => $actions));?>
-				<?=$this->partial('dashboard-partial-hidden', array('actions' => $hidden));?>
+				<?=(new \lf\cms)->partial('dashboard-partial-nav', array('actions' => $actions));?>
+				<?=(new \lf\cms)->partial('dashboard-partial-hidden', array('actions' => $hidden));?>
 			</div>
 		</div>
 	</div>
