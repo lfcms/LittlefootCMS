@@ -905,7 +905,7 @@ class orm implements \IteratorAggregate
 				if(isset($this->result[$row]))
 					return $this->result[$row];
 				else
-					return false;
+					return NULL;
 
 			return $this->nextRow();
 		}

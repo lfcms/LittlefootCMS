@@ -109,6 +109,7 @@ else
 {
 	// Display login form
 	include('skin/'.\lf\get('skin','admin').'/login.php');
+	//include(LF.'system/template/login.php');
 	exit;
 }
 

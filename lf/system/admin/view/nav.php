@@ -15,9 +15,9 @@ $admin_apps = str_replace(
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
 			
 			<li><a class="controls" href="<?=\lf\www('Index');?>admin/dashboard/"><i class="fa fa-compass"></i><span><?=
-				$this->settings['simple_cms']=='_lfcms'
+				\lf\getSetting('simple_cms')=='_lfcms'
 					?' Navigation'
-					:ucfirst($this->settings['simple_cms']).' Admin';
+					:ucfirst(\lf\getSetting('simple_cms')).' Admin';
 				?></span></a></li>
 			<li><a class="controls" href="<?=\lf\www('Index');?>admin/skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
 			<li><a class="controls" href="<?=\lf\www('Index');?>admin/plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
@@ -36,7 +36,7 @@ $admin_apps = str_replace(
 	</div>
 </div>
 
-<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
+<?php if( \lf\getSetting('simple_cms') == '_lfcms'): ?>
 
 <h4><i class="fa fa-th"></i> Apps</h4>
 <div class="row">

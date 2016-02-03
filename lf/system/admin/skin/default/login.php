@@ -33,7 +33,7 @@ if(count($_GET))
 				<div class="col-4 ">
 					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/" target="_blank"><img src="<?=\lf\www('LF');?>system/template/images/lf-banner.png"/></a></h1>
 					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
-					<form id="login" action="<?=$this->base;?>_auth/login" method="post">
+					<form id="login" action="<?=\lf\www('Index');?>_auth/login" method="post">
 						<ul class="vlist">
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
 							<li><input type="password" id="password" name="pass" placeholder="Password" /></li>

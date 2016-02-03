@@ -3,10 +3,12 @@
 /**
  * @ignore
  */
-class settings extends app
+class settings
 {
-	public function main($var)
+	public function main()
 	{
+		$var = \lf\www('Param');
+		
 		/* UPGRADE */
 		$master = curl_get_contents('http://littlefootcms.com/files/build-release/master');
 		$dev = curl_get_contents('http://littlefootcms.com/files/build-release/dev');
@@ -88,8 +90,10 @@ class settings extends app
 		include 'view/settings.main.php';
 	}
 	
-	public function saveoptions($args)
+	public function saveoptions()
 	{
+		$args = \lf\www('Param');
+		
 		$oldSettings = $this->lf->settings;
 		$newSettings = $_POST['setting'];
 		
@@ -141,8 +145,10 @@ class settings extends app
 		}*/
 	}
 	
-	public function upgradedev($args)
+	public function upgradedev()
 	{
+		$args = \lf\www('Param');
+		
 		if($this->request->api('version') == '1-DEV')
 			include LF.'system/upgrade.dev.php';
 		redirect302();
@@ -153,8 +159,10 @@ class settings extends app
 		include LF.'system/lib/recovery/upgrade.php';
 	}
 	
-	public function lfup($var)
+	public function lfup()
 	{
+		$var = \lf\www('Param');
+		
 		if(isset($this->lf->settings['release']) && $this->lf->settings['release'] == 'DEV')
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system-dev.zip', LF.'system.zip');
 		else
@@ -204,8 +212,9 @@ class settings extends app
 		redirect302();
 	}
 
-	public function rm($vars)
+	public function rm()
 	{
+		$vars = \lf\www('Param');
 		if(!isset($vars[1])) redirect302();
 		
 		if(is_dir(LF.'backup/'.$vars[1]))
@@ -213,8 +222,9 @@ class settings extends app
 		redirect302();
 	}
 	
-	public function reinstall($args)
+	public function reinstall()
 	{
+		$args = \lf\www('Param');
 		if(!isset($args[1])) return 'invalid request';
 		
 		if(!preg_match('/^[a-zA-Z0-9_\.]+$/', $args[1], $match))
@@ -229,6 +239,7 @@ class settings extends app
 	
 	public function restore($vars)
 	{
+		$vars = \lf\www('Param');
 		if(!isset($vars[1])) redirect302();
 		
 		$time = time(); 

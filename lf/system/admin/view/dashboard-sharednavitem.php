@@ -29,7 +29,7 @@
 	</div>
 	<?php if($this->edit == $action['id']): /* Load form if selected */ ?>
 	<div class="tile-content">
-		<?=$this->partial('dashboard-partial-editform', array('save' => $action));?>
+		<?=(new \lf\cms)->partial('dashboard-partial-editform', array('save' => $action));?>
 	</div>
 	<?php endif; ?>
 </div>

@@ -12,6 +12,12 @@ namespace lf;
  * 
  */
 
+// I am really into shortcut functions
+function getSetting($name)
+{
+	return (new \lf\cms)->getSetting($name);
+}
+ 
 class cms
 {
 	// simple CMS. 
@@ -19,14 +25,14 @@ class cms
 	static private $instances = array(); // session instances.
 	private $ini = NULL;	// configurable string in database per app `lf_links` table entry
 	
+	private $version = NULL; // lfcms release version
 	
 	
 	// would replace (new littlefoot)->cms()
 	public function run()
-	{	
+	{
 		(new cache)->startTimer('cms');
 		(new install)->test();
-		(new user)->toSession();
 		
 		set('request', (new request)->parseUri() );
 		
@@ -66,6 +72,14 @@ class cms
 		return $this;
 	}
 	
+	public function getVersion()
+	{
+		if( is_null( $this->version ) )
+			$this->loadVersion();
+		
+		return $this->version;
+	}
+	
 	public function simpleCms($app)
 	{
 		$this->exec = $app;
@@ -88,22 +102,33 @@ class cms
 	{
 		$this->hook_run('pre settings');
 		
-		foreach((new \LfSettings)->getAll() as $setting)
-			$this->settings[$setting['var']] = $setting['val'];
+		foreach( (new \LfSettings)->getAll() as $setting )
+			$settings[$setting['var']] = $setting['val'];
 		
+		set('settings', $settings);
 		
-		if(isset($this->settings['debug']))
-			$this->debug = $this->settings['debug'];
+		if( isset($settings['debug']) )
+			set('debug', $settings['debug']);
 		
 		return $this;
 	}
 	
 	public function getSettings()
 	{
-		if($this->settings == array())
-			$this->loadSettings();
+		$settings = get('settings'); // try to get from session
+		if( is_null($settings) )
+		{
+			$this->loadSettings();	// push to session
+			$settings = get('settings'); // get from resulting session
+		}
 		
-		return $this->settings;
+		return $settings;
+	}
+	
+	public function getSetting($name)
+	{
+		$settings = $this->getSettings();
+		return $settings[$name];
 	}
 	
 	/**
@@ -134,23 +159,25 @@ class cms
 	 *		defaults to $this->$vars generated in $this->request()
 	 *
 	 */
-	public function mvc($controller, $ini = '', $action = NULL)
+	public function mvc($controller, $ini = '', $param = NULL)
 	{
 		ob_start();
 		
+		if($param === NULL)
+			$param = (new \lf\request)->get('wwwParam');
 		
-		if($action === NULL)
-			$action = (new \lf\request)->get('wwwParam');
+		if(!isset($param[0])) 
+			$param[0] = '';
 		
-		if(!isset($action[0])) 
-			$action[0] = '';
-		
-		if(is_callable(array($controller, $action[0])))
-			$method = $action[0];
+		if(is_callable(array($controller, $param[0])))
+			$method = $param[0];
 		else
 		{
-			if(isset($controller->allow404)) return 404; // rewrite by default
-			if(isset($controller->default_method)) // if the $obj specifies a default method, 
+			if(isset($controller->allow404)) 
+				return 404; // rewrite by default
+			
+			// if the $obj specifies a default method,
+			if(isset($controller->default_method)) 
 				$method = $controller->default_method; // use it
 			else
 				$method = 'main'; // default to main()
@@ -158,10 +185,10 @@ class cms
 		
 		/*$this->hook_run('pre app');
 		$this->hook_run('pre app '.$controller);
-		if($func != $action[0]) $this->hook_run('pre app '.$controller.' '.$func);
+		if($func != $param[0]) $this->hook_run('pre app '.$controller.' '.$func);
 		
 		$varstr = array();
-		foreach($action as $var) // add action until they are all there
+		foreach($param as $var) // add action until they are all there
 		{
 			$varstr[] = $var;
 			$this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
@@ -175,7 +202,7 @@ class cms
 			array_pop($varstr);
 		}
 		
-		if($func != $action[0]) $this->hook_run('post app '.$controller.' '.$func);
+		if($func != $param[0]) $this->hook_run('post app '.$controller.' '.$func);
 		
 		$this->hook_run('post app '.$controller);
 		$this->hook_run('post app');*/
@@ -507,6 +534,23 @@ class cms
 			include ROOT.'plugins/'.$plugin.'/index.php';
 			(new \lf\cache)->endTimer(__METHOD__.$hookDetails);
 		}
+		
+		return $this;
+	}
+	
+	// Simple CMS item selection
+	public function simpleSelect($app = NULL)
+	{
+		// If this is being called without an app listed, assume simpleCMS
+		if(is_null($app))
+			$app = $this->settings['simple_cms'];
+		
+		$this->select['template'] = $this->getSetting('default_skin');
+		$this->select['title'] = $app;
+		$this->select['alias'] = '';
+		
+		// shift everything to param off `/`
+		get('request')->fullActionPop();
 		
 		return $this;
 	}

@@ -14,6 +14,18 @@ function set($key, $value, $namespace = 'default')
 	return (new cache)->sessSet($key, $value, $namespace);
 }
 
+// retrieve or set $_POST key. Cuz typing $_POST is too hard.
+function post($key, $value = NULL)
+{
+	if( !is_null($value) )		
+		$_POST[$key] = $value;
+
+	if( !isset($_POST[$key]) )
+		return null;
+	
+	return $_POST[$key];
+}
+
 /**
  * Quick memcache style key-value pair storage into $_SESSION, just for the duration of the single request. Better than singletons, better than passing around a single object to every app
  * 

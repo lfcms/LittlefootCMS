@@ -12,6 +12,8 @@ $hidden = (new LfActions)
 	->order('label')
 	->getAll();
 
+$vars = \lf\www('Param');
+
 // If an id is specified in the URL, save as the 'edit' variable in current class.
 $this->edit = 0;
 if(isset($vars[1]))

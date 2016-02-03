@@ -31,7 +31,7 @@ if(isset($actions[$parent])):
 		
 		if(isset($actions[$action['id']])): ?>
 		<!-- <ul> -->
-			<?=$this->partial('dashboard-partial-nav', array('actions' => $actions, 'parent' => $action['id'], 'prefix' => $prefix.$action['position'].'.'));?>
+			<?=(new \lf\cms)->partial('dashboard-partial-nav', array('actions' => $actions, 'parent' => $action['id'], 'prefix' => $prefix.$action['position'].'.'));?>
 		<!-- </ul> -->
 		
 	<?php endif; ?>

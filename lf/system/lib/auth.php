@@ -13,8 +13,12 @@ namespace lf;
 class auth
 {
 	public function __construct()
-	{return;
+	{
+		return false;
 		$user = (new User)->fromSession();
+		
+		pre($user);
+		pre($_SESSION['login']);
 		
 		// Handle timeout
 		if($user->timedOut() && false) //timeout disabled for now
@@ -34,15 +38,14 @@ class auth
 	public function login()
 	{
 		// if user/pass matches, push to session
-		if( !isset($this->lf->settings['ldap']) 
-		|| $this->lf->settings['ldap'] == '') 
-			$this->lf->settings['ldap'] = NULL;
-			
-		(new User)->doLogin($this->lf->settings['ldap']);
+		(new User)
+			->loginFromPost()
+			->toSession();
 		
 		// Redirect back to what you were looking at. If login refreshes, that happens here.
 		redirect302();
 	}
+	
 	
 	public function updateprofile()
 	{
