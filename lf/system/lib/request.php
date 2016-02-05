@@ -37,6 +37,7 @@ class request
 	public $wwwParam = array();
 	public $wwwAction = array();
 	public $wwwTitle = 'LittlefootCMS'; // <title />
+	public $wwwCwd = array();
 	
 	public function __construct($title = NULL)
 	{
@@ -90,11 +91,58 @@ class request
 		}
 	}
 	
+	// opposite of pop
+	public function actionPush($count = 1)
+	{
+		if( count($this->wwwParam) < $count )
+		{
+			$this->error[] = 'Dont have '.$count.' in wwwParam for that';
+			return NULL;
+		}
+		
+		while($count--)
+		{
+			array_push( $this->wwwAction, $this->wwwParam[0] );
+			array_shift( $this->wwwParam );
+		}
+		return $this;
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionDrop($count = 1)
+	{
+		if( count($this->wwwAction) == 0 )
+			return NULL;
+		
+		while($count--)
+			$this->wwwCwd[] = array_shift( $this->wwwAction );
+		
+		return $this;
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionUndrop($count = 1)
+	{
+		if( count($this->wwwCwd) < 0 )
+			return NULL;
+		
+		while($count--)
+		{
+			// take last of cwd, add to front of action.
+			array_unshift( $this->wwwAction, end( $this->wwwCwd ) );
+			array_pop( $this->wwwCwd );
+		}
+		
+		return $this;
+	}
+	
 	// pop last element off action, into beginning of param
 	// return bool indicates success 1 or fail 0
 	public function actionPop($count = 1)
 	{
-		if( count($this->wwwAction) < 1 )
+		if( count($this->wwwAction) == 0 )
 			return NULL;
 		
 		while($count--)

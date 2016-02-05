@@ -15,29 +15,29 @@ class settings
 		
 		$rewrite['options'] = array('on', 'off');
 		$rewrite['value'] = 'on';
-		if(!isset($this->lf->settings['rewrite']) || $this->lf->settings['rewrite'] == 'off') 
+		if(\lf\getSetting('rewrite') == 'off') 
 			$rewrite['value'] = 'off';
 		
 		$debug['options'] = array('on', 'off');
 		$debug['value'] = 'on';
-		if(!isset($this->lf->settings['debug']) || $this->lf->settings['debug'] == 'off') 
+		if(\lf\getSetting('debug') == 'off') 
 			$debug['value'] = 'off';
 			
 		$bots['options'] = array('on', 'off');
 		$bots['value'] = 'on';
-		if(!isset($this->lf->settings['bots']) || $this->lf->settings['bots'] == 'off') 
+		if(\lf\getSetting('bots') == 'off') 
 			$bots['value'] = 'off';
 			
 		$release['options'] = array('DEV', 'STABLE');
 		$release['value'] = 'DEV';
-		if(!isset($this->lf->settings['release']) || $this->lf->settings['release'] == 'STABLE') 
+		if(\lf\getSetting('release') == 'STABLE') 
 			$release['value'] = 'STABLE';
 		
 		$newest = $release['value']=='DEV'?$dev:$master;
 			
 		$signup['options'] = array('on', 'off');
 		$signup['value'] = 'on';
-		if(!isset($this->lf->settings['signup']) || $this->lf->settings['signup'] == 'off') 
+		if(\lf\getSetting('signup') == 'off') 
 			$signup['value'] = 'off';
 		
 		/* SIMPLECMS */
@@ -48,19 +48,19 @@ class settings
 			if(is_file(LF.'apps/'.$app.'/index.php'))
 				$simplecms['options'][] = $app;
 		}
-		$simplecms['value'] = $this->lf->settings['simple_cms'];
+		$simplecms['value'] = \lf\getSetting('simple_cms');
 		
 		$url = '';
-		if(isset($this->lf->settings['force_url']))
-			$url = $this->lf->settings['force_url'];
+		if(!is_null(\lf\getSetting('force_url')))
+			$url = \lf\getSetting('force_url');
 		
 		$title = '';
-		if(isset($this->lf->settings['title']))
-			$title = $this->lf->settings['title'];
+		if(!is_null(\lf\getSetting('title')))
+			$title = \lf\getSetting('title');
 			
 		$nav_class = '';
-		if(isset($this->lf->settings['nav_class']))
-			$nav_class = $this->lf->settings['nav_class'];
+		if(!is_null(\lf\getSetting('nav_class')))
+			$nav_class = \lf\getSetting('nav_class');
 			
 		// Backup list
 		$backups = array();
@@ -94,22 +94,23 @@ class settings
 	{
 		$args = \lf\www('Param');
 		
-		$oldSettings = $this->lf->settings;
+		$oldSettings = (new \lf\cms)->getSettings();
 		$newSettings = $_POST['setting'];
 		
 		foreach($oldSettings as $var => $val)
 		{
 			if(isset($newSettings[$var]))
 			{
-				(new LfSettings)
+				$result = (new LfSettings)
 					->byVar($var)
 					->setVal($newSettings[$var])
-					->debug()
+					//->debug()
 					->save();
 					
 				unset($newSettings[$var]);
 			}
 		}
+		
 		
 		foreach($newSettings as $var => $val)
 		{
@@ -117,11 +118,11 @@ class settings
 				->add()
 				->setVar($var)
 				->setVal($val)
-				->debug()
+				//->debug()
 				->save();
 		}
-			
-		$this->notice('Options saved');
+		
+		notice('Options saved');
 		redirect302();
 		
 		/* gotta find a way to do this in ORM 
@@ -140,7 +141,7 @@ class settings
 				$sql .= " END WHERE var IN ('".implode("', '", $params)."')";
 				$this->db->query($sql);
 				
-				$this->notice('Options saved');
+				notice('Options saved');
 			}
 		}*/
 	}
@@ -149,8 +150,9 @@ class settings
 	{
 		$args = \lf\www('Param');
 		
-		if($this->request->api('version') == '1-DEV')
+		if( (new \lf\cms)->getVersion() == '1-DEV' )
 			include LF.'system/upgrade.dev.php';
+		
 		redirect302();
 	}
 	
@@ -163,7 +165,7 @@ class settings
 	{
 		$var = \lf\www('Param');
 		
-		if(isset($this->lf->settings['release']) && $this->lf->settings['release'] == 'DEV')
+		if(\lf\getSetting('release') == 'DEV')
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system-dev.zip', LF.'system.zip');
 		else
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', LF.'system.zip');
@@ -176,12 +178,12 @@ class settings
 		
 		if(!is_file(LF.'system.zip'))
 		{
-			$this->notice(LF.'system.zip does not exist');
+			notice(LF.'system.zip does not exist');
 		}
 		else if(!rename(LF.'system', LF.'backup/system-'.$time)) 
 		{
 			// if unable to rename...
-			$this->notice('Unable to move '.LF.'system to '.LF.'backup/system-'.$time);
+			notice('Unable to move '.LF.'system to '.LF.'backup/system-'.$time);
 		} 
 		else
 		{
@@ -191,7 +193,7 @@ class settings
 			Unzip($dir,$file);
 			
 			if(!is_dir(LF.'system'))
-				$this->notice('Failed to unzip system.zip');
+				notice('Failed to unzip system.zip');
 			else
 			{
 				unlink(LF.'system.zip');
@@ -205,7 +207,7 @@ class settings
 					//exit(); 
 				}*/
 				
-				$this->notice('Upgraded Littlefoot successfully.');
+				notice('Upgraded Littlefoot successfully.');
 			}
 		}
 		

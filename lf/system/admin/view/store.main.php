@@ -1,6 +1,6 @@
 <h2 title="Store: Click an app to install it. Update links will download the latest."><i class="fa fa-shopping-cart"></i> Store</h2>
 
-<?=$this->notice();?>
+<?=notice();?>
 
 <div class="row">
 	<div class="col-4">

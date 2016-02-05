@@ -1,4 +1,4 @@
-<?=$this->partial('acl.header', array('active' => 'user'));?>
+<?=(new \lf\cms)->partial('acl.header', array('active' => 'user'));?>
 
 
 <div class="row">
@@ -40,7 +40,7 @@
 </div>
 
 
-<?php if($this->hasnotice()): ?>
+<?php if(hasnotice()): ?>
 <div class="notice marbot"><?=$this->notice();?></div>
 <?php endif; ?>
 

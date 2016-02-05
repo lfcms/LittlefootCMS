@@ -3,24 +3,27 @@
 /**
  * @ignore
  */
-class users extends app
+class users
 {	
-	public function main($args)
+	public function main()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		$users = orm::q('lf_users')->order()->getAll();
 		$usercount = count($users); 
 		include 'view/users.main.php';
 	}
 	
-	public function edit($args)
+	public function edit()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		$user = orm::q('lf_users')->filterByid($args[1])->first();
 		include 'view/users.edit.php'; 
 	}
 	
 	## NEW
-	public function saveldap($args)
+	public function saveldap()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 			// move this to upgrade
 		(new orm)->query('ALTER TABLE lf_settings MODIFY val VARCHAR(128)');
 		
@@ -41,19 +44,20 @@ class users extends app
 				->save();
 		}
 		
-		$this->notice('LDAP Set');
+		notice('LDAP Set');
 		
 		redirect302();
 	}
 	
-	public function update($args)
+	public function update()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		// If a password was provided, apply it.
 		if($_POST['pass'] != '')
 		{
 			if($_POST['pass'] != $_POST['pass2'])
 			{
-				$this->notice('User Saved');
+				notice('User Saved');
 				redirect302($this->lf->appurl);
 			}
 			
@@ -65,18 +69,20 @@ class users extends app
 		unset($_POST['pass2']);
 		orm::q('lf_users')->debug()->updateById($args[1], $_POST);
 		
-		$this->notice('User Saved');
+		notice('User Saved');
 		
 		redirect302($this->lf->appurl);
 	}
 	
-	public function newuser($args)
+	public function newuser()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		include 'view/users.create.php';
 	}
 	
-	public function create($args)
+	public function create()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		$postnames = array(
 			'user' => "Username",
 			'pass' => "Password",
@@ -98,17 +104,17 @@ class users extends app
 		
 		if(isset($error))
 		{
-			$this->notice('Unable to create user:<br/>* '.implode('<br />* ', $error));
+			notice('Unable to create user:<br/>* '.implode('<br />* ', $error));
 			//redirect302();
 			echo "ERROR";
 		}
 		
 		// Verify that an admin requested this action
-		$sql = "SELECT id FROM lf_users WHERE id = ".$this->request->api('getuid')." AND pass = '".sha1($_POST['adminpass'])."'";
-		$result = $this->db->fetch($sql);
-		if($result['id'] != $this->request->api('getuid'))
+		$sql = "SELECT id FROM lf_users WHERE id = ".(new \lf\user)->fromSession()->getId()." AND pass = '".sha1($_POST['adminpass'])."'";
+		$result = (new \lf\orm)->fetch($sql);
+		if($result['id'] != (new \lf\user)->fromSession()->getId() )
 		{
-			$this->notice('Admin password rejected.');
+			notice('Admin password rejected.');
 			redirect302();
 		}
 		
@@ -118,13 +124,13 @@ class users extends app
 		
 		$vars = $_POST;
 		$insert = array(
-			'user' 			=> $this->db->escape($vars['user']),
+			'user' 			=> (new \lf\orm)->escape($vars['user']),
 			'pass' 			=> sha1($vars['pass']),
-			'email' 		=> $this->db->escape($vars['email']),
-			'display_name' 	=> $this->db->escape($vars['nick']),
+			'email' 		=> (new \lf\orm)->escape($vars['email']),
+			'display_name' 	=> (new \lf\orm)->escape($vars['nick']),
 			'hash'			=> '',
 			'status'		=> 'valid',
-			'access'		=> $this->db->escape($vars['group']),
+			'access'		=> (new \lf\orm)->escape($vars['group']),
 		);
 		
 		$sql = "
@@ -133,7 +139,7 @@ class users extends app
 				VALUES	( NULL, NOW(), '".implode("', '",array_values($insert))."')
 		";
 		
-		$this->db->query($sql);
+		(new \lf\orm)->query($sql);
 		
 		if(isset($_POST['sendmail']))
 			mail(
@@ -151,15 +157,16 @@ Pass: '.$_POST['pass'].'
 Do not reply to this email. It was generated automatically.', 
 'From: noreply@'.$_SERVER['SERVER_NAME']);
 		
-		$this->notice('User "'.$_POST['user'].'" created');
+		notice('User "'.$_POST['user'].'" created');
 		
 		redirect302($this->lf->appurl);
 	}
 	
-	public function rm($vars)
+	public function rm()
 	{
+		$vars = \lf\www('Param');
 		$sql = "DELETE FROM lf_users WHERE id = ".intval($vars[1]);
-		$this->db->query($sql);
+		(new \lf\orm)->query($sql);
 		
 		redirect302($this->request->appurl);
 	}

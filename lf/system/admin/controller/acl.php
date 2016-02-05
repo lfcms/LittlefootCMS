@@ -3,12 +3,14 @@
 /**
  * @ignore
  */
-class acl extends app
+class acl
 {
 	public $default_method = 'user';
 	
-	public function user($vars)
+	public function user()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
 		// Pull links from nav cache
 		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
 		$nav = str_replace('%baseurl%', '', $nav);
@@ -17,7 +19,7 @@ class acl extends app
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
+		$result = \lf\orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
 		
 		$users = array(0 => 'Anonymous');
 		$groups = array();
@@ -29,13 +31,14 @@ class acl extends app
 		
 		$groups = array_unique($groups);
 		
-		$acls = orm::q('lf_acl_user')->getAll();
+		$acls = \lf\orm::q('lf_acl_user')->getAll();
 		
 		include 'view/acl.user.php';
 	}
 	
-	public function inherit($vars)
+	public function inherit()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		// Pull links from nav cache
 		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
 		$nav = str_replace('%baseurl%', '', $nav);
@@ -44,7 +47,10 @@ class acl extends app
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
+		$result = \lf\orm::q('lf_users')
+			->cols('id, display_name, access')
+			->order('display_name, access')
+			->getAll();
 		
 		$users = array();
 		$groups = array();
@@ -56,13 +62,14 @@ class acl extends app
 		
 		$groups = array_unique($groups);
 		
-		$acls = orm::q('lf_acl_inherit')->getAll();
+		$acls = \lf\orm::q('lf_acl_inherit')->getAll();
 	
 		include 'view/acl.inherit.php';
 	}
 	
-	public function acl_global($vars)
+	public function acl_global()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		// Pull links from nav cache
 		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
 		$nav = str_replace('%baseurl%', '', $nav);
@@ -71,7 +78,7 @@ class acl extends app
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
+		$result = \lf\orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
 		
 		$users = array(0 => 'Anonymous');
 		$groups = array();
@@ -83,21 +90,23 @@ class acl extends app
 		
 		$groups = array_unique($groups);
 		
-		$acls = orm::q('lf_acl_global ')->getAll();
+		$acls = \lf\orm::q('lf_acl_global ')->getAll();
 	
 		include 'view/acl.global.php';
 	}
 	
-	public function edit($vars)
+	public function edit()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		echo '<pre>';
 		print_r($vars);
 		print_r($_POST);
 		echo '</pre>';
 	}
 	
-	public function update($vars)
+	public function update()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		
 		echo '<pre>';
 		print_r($vars);
@@ -110,33 +119,35 @@ class acl extends app
 		exit();
 	}
 	
-	public function add($vars)
+	public function add()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		if($_POST['appurl'] != '') 
 			$_POST['action'] = $_POST['action'].'|'.$_POST['appurl'];
 		
 		unset($_POST['appurl']);
 		
 		foreach($_POST as $key => $val)
-			$_POST[$key] = $this->db->escape($val);
+			$_POST[$key] = (new \lf\orm)->escape($val);
 			
-		$this->db->query("
-			INSERT INTO lf_acl_".$this->db->escape($vars[1])." (`id`, `".implode("`, `", array_keys($_POST))."`)
+		(new \lf\orm)->query("
+			INSERT INTO lf_acl_".(new \lf\orm)->escape($vars[1])." (`id`, `".implode("`, `", array_keys($_POST))."`)
 			VALUES (NULL, '".implode("', '", array_values($_POST))."')
 		");
 		
-		$this->notice('Added ACL rule');
+		notice('Added ACL rule');
 		redirect302();
 	}
 	
-	public function rm($vars)
+	public function rm()
 	{
-		$this->db->query("
-			DELETE FROM lf_acl_".$this->db->escape($vars[1])."	
+		$vars = \lf\www('Param'); // backward compatibility
+		(new \lf\orm)->query("
+			DELETE FROM lf_acl_".(new \lf\orm)->escape($vars[1])."	
 			WHERE id = ".intval($vars[2])."
 		");
 		
-		$this->notice('Deleted ACL rule');
+		notice('Deleted ACL rule');
 		redirect302();
 	}
 }

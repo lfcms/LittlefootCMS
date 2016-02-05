@@ -1,5 +1,6 @@
+<?php $edit = \lf\get('edit'); ?>
 <a id="nav_<?=$action['id'];?>"></a>
-<div class="tile white<?=$this->edit==$action['id']?' active':'';?>">
+<div class="tile white<?=$edit==$action['id']?' active':'';?>">
 	<div class="tile-header gray_fg">
 		<div class="row">
 			<div class="col-4">					
@@ -27,7 +28,7 @@
 			</div>
 		</div>
 	</div>
-	<?php if($this->edit == $action['id']): /* Load form if selected */ ?>
+	<?php if($edit == $action['id']): /* Load form if selected */ ?>
 	<div class="tile-content">
 		<?=(new \lf\cms)->partial('dashboard-partial-editform', array('save' => $action));?>
 	</div>

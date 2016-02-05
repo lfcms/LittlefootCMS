@@ -1,4 +1,4 @@
-<?=$this->partial('acl.header', array('active' => 'inherit'));?>
+<?=(new \lf\cms)->partial('acl.header', array('active' => 'inherit'));?>
 <div class="row">
 	<form action="%appurl%add/inherit" method="post">
 		<div class="col-2">
@@ -38,7 +38,7 @@
 		</div>
 	</form>
 </div>
-<?php if($this->hasnotice()): ?>
+<?php if(hasnotice()): ?>
 <div class="notice marbot"><?=$this->notice();?></div>
 <?php endif; ?>
 <table class="table white">

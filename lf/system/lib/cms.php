@@ -194,6 +194,10 @@ class cms
 			$this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
 		}*/
 		
+		// auto-run init() function if its there
+		if(is_callable(array($controller, 'init')))
+			echo $controller->init();
+		
 		echo $controller->$method();
 		
 		/*while(count($varstr)) // subtract action until they are all gone
@@ -585,7 +589,7 @@ class cms
 	public function navSelect()
 	{
 		(new cache)->startTimer(__METHOD__);
-		if($this->settings['simple_cms'] != '_lfcms')
+		if(getSetting('simple_cms') != '_lfcms')
 			$this->simpleSelect();
 		
 		/* Determine requested nav item from lf_actions */
@@ -616,7 +620,6 @@ class cms
 		// loop through action to determine selected nav
 		// trace down to last child
 		
-		
 		$parent = -1; // start at the root nav items
 		$selected = array(); // nothing selected to start with
 		for($i = 0; $i < count(www('Action')); $i++) // loop through action array
@@ -630,11 +633,17 @@ class cms
 						$parent = $nav['id'];
 						break;
 					}
-					
-		//pre($test_select,'var_dump');
-		//pre($matches,'var_dump');
-		//pre($selected,'var_dump');
-		//pre(get('request'),'var_dump');
+		
+		/*		
+		pre('TEST SELECT');
+		pre($test_select,'var_dump');
+		pre('MATCHES');
+		pre($matches,'var_dump');
+		pre('SELECTED');
+		pre($selected,'var_dump');
+		pre('REQUEST');
+		pre(get('request'),'var_dump');
+		*/
 		
 		// if a selection was made, alter the action so it has proper params
 		if($selected != array())
@@ -646,6 +655,7 @@ class cms
 			// This is where we find which navigation item we are visiting
 			$this->select = end($selected);
 		}
+		
 		
 		// If home page is an app and no select was made from getnav(), 
 		// set current page as /
@@ -703,6 +713,8 @@ class cms
 		
 		$this->content['nav'][] = $this->renderBaseUrl($nav_cache); // replace the %baseurl% placeholders
 		
+		
+		
 		(new cache)->endTimer(__METHOD__);
 		return $this;
 	}
@@ -714,6 +726,47 @@ class cms
 			$this->select['template'] = $this->settings['default_skin'];
 		
 		return $this;
+	}
+	
+	// Return sorted list of actions
+	public function getSortedActions()
+	{
+		// Query lf_actions navigation items, 
+		$result = (new \LfActions)
+			->byPosition('!=', 0)
+			->order('ABS(position)')
+			->getAll();
+		
+		if( is_null( $result ) )
+			return NULL;
+		
+		// loop to generate parent => child hierarchy
+		$actions = array();
+		foreach($result as $action)
+			$actions[$action['parent']][] = $action;
+		
+		return $actions;
+	}
+	
+	// Return list of hidden actions
+	public function getHiddenActions()
+	{
+		return (new \LfActions)
+			->byPosition(0)
+			->order('label')
+			->getAll();
+	}
+	
+	// Return a list of links sorted by nav id assignment
+	public function getLinks()
+	{
+		// Pull lf_links, reorganize as $nav_id => $linkdata[]
+		$result = (new \LfLinks)->getAll();
+		$links = array();
+		foreach($result as $link)
+			$links[$link['include']][] = $link;
+			
+		return $links;
 	}
 	
 	public function setContent($data, $namespace = 'content')
@@ -735,7 +788,7 @@ class cms
 		}
 		
 		// Pull $apps list with section=>app
-		if($this->settings['simple_cms'] != '_lfcms') #DEV
+		if(getSetting('simple_cms') != '_lfcms') #DEV
 		{
 			$apps[0] = array(
 				'id' => 0, 
@@ -838,7 +891,8 @@ class cms
 		
 		if($this->settings['simple_cms'] == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
 			$this->content['nav'][] = $this->nav_cache;
-			
+		
+		
 		(new cache)->endTimer(__METHOD__);
 		
 		return $this;

@@ -30,6 +30,7 @@ class dashboard
 		}
 	}
 	
+	// Display navigation items and app gallery
 	public function main()
 	{
 		
@@ -45,7 +46,31 @@ class dashboard
 		
 		*/
 		
-		include 'model/dashboard.main.php';
+		$actions = (new \lf\cms)->getSortedActions();
+		$hidden = (new \lf\cms)->getHiddenActions();
+		$links = (new \lf\cms)->getLinks();
+
+		// (new \model\dashboard)
+		
+
+		$vars = \lf\www('Param');
+
+		// If an id is specified in the URL, save as the 'edit' variable in current class.
+		$edit = 0;
+		if(isset($vars[1]))
+			$edit = $vars[1];
+		
+		// Generate list of apps for App Gallery
+		$apps = array();
+		foreach(scandir(ROOT.'apps') as $file)
+		{
+			if($file == '.' || $file == '..') continue;
+
+			$app = ROOT.'apps/'.$file;
+
+			if(is_dir($app))
+				$apps[] = $file;
+		}
 		
 		ob_start();
 		

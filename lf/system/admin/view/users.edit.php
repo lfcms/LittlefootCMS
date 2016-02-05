@@ -1,7 +1,8 @@
 <h2><a href="%appurl%">Users</a> Edit</h2>
+<?=notice();?>
 <div class="row">
 	<div class="col-6">
-		<form class="dashboard_manage" action="%baseurl%users/update/<?=$user['id'];?>" method="post">
+		<form class="dashboard_manage" action="<?=\lf\www('Admin');?>users/update/<?=$user['id'];?>" method="post">
 			<ul class="vlist">
 				<li><input type="text" name="user" value="<?=$user['user'];?>" placeholder="Username" required></li>
 				<li><input type="password" name="pass" placeholder="Password"></li>
