@@ -5,7 +5,6 @@ if( is_null( \lf\get('subalias') ) )
 
 if(!isset($parent)) $parent = '-1';
 if(!isset($prefix)) $prefix="";
-
 if(isset($actions[$parent])):
 	foreach($actions[$parent] as $action): 
 	
@@ -14,7 +13,6 @@ if(isset($actions[$parent])):
 		
 		if(\lf\get('edit') == $action['id'])
 		{
-			
 			\lf\set('subalias', 
 				str_replace( 
 					'value="'.$action['parent'].'"', 
@@ -29,13 +27,16 @@ if(isset($actions[$parent])):
 		include 'view/dashboard-sharednavitem.php';
 		
 		if(isset($actions[$action['id']])): ?>
-		<!-- <ul> -->
-			<?=(new \lf\cms)->partial( 'dashboard-partial-nav', array(
-				'actions' => $actions, 
-				'parent' => $action['id'], 
-				'prefix' => $prefix.$action['position'].'.'
-			));?>
-		<!-- </ul> -->
+		<!-- <ul> uncomment this to cascade -->
+			<?=(new \lf\cms)
+					->partial( 
+						'dashboard-partial-nav', 
+						array(
+							'actions' => $actions, 
+							'parent' => $action['id'], 
+							'prefix' => $prefix.$action['position'].'.'
+						));?>
+		<!-- </ul> uncomment this to cascade -->
 		
 	<?php endif; ?>
 	

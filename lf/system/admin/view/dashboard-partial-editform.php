@@ -1,8 +1,59 @@
-<?php include 'model/templateselect.php'; 
+<?php
+// 
+$match_file = 'default';
+if(isset($save['template']))
+	$match_file = $save['template'];
+	
+$pwd = ROOT.'skins';
 
-// this is a gross fix to me not knowing where editform is called. will clean this up later
+
+// Build template option
+$template_select = '<option';
+		
+if($match_file == 'default')
+{
+	$template_select .= ' selected="selected"';
+	
+	$skin = LF.'skins/'.\lf\getSetting('default_skin').'/index.php';
+	
+	// Get all %replace% keywords for selected template (remove system variables)
+	if(!is_file($skin))
+	{
+		echo 'Currently selected skin does not exist. Please see the Skins tab to correct this.';
+		$section_list = array('none');
+	}
+	else
+	{
+		$template = file_get_contents($skin);
+		preg_match_all("/%([a-z]+)%/", str_replace(array('%baseurl%', '%skinbase%', '%nav%', '%title%'), '', $template), $tokens);
+		$section_list = $tokens[1];
+	}
+}
+
+$template_select .= ' value="default">-- Default Skin ('.\lf\getSetting('default_skin').') --</option>';
+
+foreach(scandir($pwd) as $file)
+{
+	if($file == '.' || $file == '..') continue;
+
+	$skin = $pwd.'/'.$file.'/index.php';
+	if(is_file($skin))
+	{
+		$template_select .= '<option';
+		
+		if($match_file == $file)
+		{
+			$template_select .= ' selected="selected"';
+		}
+		
+		$template_name = /*$conf['skin'] == $file ? "Default" :*/ ucfirst($file);
+		
+		$template_select .= ' value="'.$file.'">'.$template_name.'</option>';
+	}
+}
+
 if(!isset($thelink)) 
-	$thelink = $this->links[$save['id']][0];
+	$thelink = (new \lf\cms)->getLinks()[$save['id']][0];
 
 // TODO: pull these save values from the links on this page 
 // (replace into preview() to allow multi app assignment)
@@ -55,7 +106,7 @@ if(is_file(LF.'apps/'.$save['app'].'/args.php'))
 			</select>
 		</div>
 		<div class="col-6">
-			Location (this is almost always "content"): <input type="text" name="section" placeholder="content" value="<?=isset($save['section'])?$save['section']:'';?>" />
+			Location (unsure? put "content"): <input type="text" name="section" placeholder="content" value="<?=isset($save['section'])?$save['section']:'';?>" />
 		</div>
 	</div>
 	<div class="row">

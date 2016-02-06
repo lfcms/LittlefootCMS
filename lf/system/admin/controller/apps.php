@@ -11,17 +11,18 @@ class apps
 		
 		// $var[0] = 'manage'
 		$app_name = $var[0];
-		
-		echo '<h2><a href="%appurl%'.$app_name.'/">'.ucfirst($app_name).'</a> Admin</h2>
+		echo '<h2 class="no_marbot">
+				<a href="'.\lf\wwwAppUrl().$app_name.'/">
+					'.ucfirst($app_name).'
+				</a> Admin</h2>
 			<div class="dashboard_manage">';
-			
+		
 		\lf\get('request')->actionDrop(); // drop the 'apps' action in front
 		\lf\get('request')->actionPush(); // make '$app' the new root action
 		
 		// manage
 		preg_match('/[A-Za-z0-9_]+/', $args[0], $matches);		
 		$app_path = ROOT.'apps/'.$matches[0];
-		
 		
 		//$preview = 'admin';
 		$admin = true;
@@ -50,7 +51,7 @@ class apps
 		
 		echo '</div>';
 		
-		return str_replace('%appurl%', '%appurl%'.$app_name.'/'.$urlpreview, ob_get_clean());
+		return \lf\resolveAppUrl( ob_get_clean() );
 	}
 	
 	public function manage($var)

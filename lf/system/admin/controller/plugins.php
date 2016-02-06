@@ -21,7 +21,7 @@ class plugins
 	{
 		$args = \lf\www('Param'); // backward compatibility
 		orm::q('lf_plugins')->filterByid($args[1])->delete();
-		redirect302($this->lf->appurl);
+		redirect302();
 	}
 	
 	public function hookup()

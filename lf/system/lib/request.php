@@ -16,15 +16,26 @@ function wwwIndexAction()
 
 function wwwAppUrl()
 {
-	$admin = get('request')->isAdmin()
-		? 'admin/'
-		: '';
-	return www('Index')
-		.$admin
-		.implode('/', www('Action') )
-		.'/';
+	// make an array without surrounding / delimiter
+	$parts = array();
+	
+	if( get('request')->isAdmin() )
+		$parts[] = 'admin';
+	
+	if( www('Cwd') != array() )
+		$parts[] = implode('/', www('Cwd') );
+	
+	if( www('Action') != array() )
+		$parts[] = implode('/', www('Action') );
+	
+	// implode everything with / delimiter
+	return www('Index').implode('/', $parts ).'/';
 }
 
+function resolveAppUrl($html)
+{
+	return str_replace('%appurl%', wwwAppUrl(), $html);
+}
 
 // Parses $_SERVER['REQUEST_URI'] into usable parts, saves result to session, generates a fake REQUEST_URI, etc if it is not set.
 class request

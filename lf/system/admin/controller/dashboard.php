@@ -13,10 +13,10 @@ class dashboard
 		$this->pwd = ROOT.'apps/';
 		
 		// if simple cms is enabled, load the select app's admin instead of the usual nav interface
-		if($this->lf->settings['simple_cms'] != '_lfcms')
+		if(\lf\getSetting('simple_cms') != '_lfcms')
 		{
 			$cwd = getcwd();
-			chdir(ROOT.'apps/'.$this->lf->settings['simple_cms']);
+			chdir(LF.'apps/'.\lf\getSetting('simple_cms'));
 			
 			echo '<div class="dashboard_manage">';
 			if(is_file('admin.php')) 
@@ -46,11 +46,7 @@ class dashboard
 		
 		*/
 		
-		$actions = (new \lf\cms)->getSortedActions();
-		$hidden = (new \lf\cms)->getHiddenActions();
 		$links = (new \lf\cms)->getLinks();
-
-		// (new \model\dashboard)
 		
 
 		$vars = \lf\www('Param');
@@ -81,8 +77,22 @@ class dashboard
 		
 	}
 	
-	public function wysiwyg($vars)
+	public function printNav()
+	{		
+		echo (new \lf\cms)					// just using this to call ->partial
+				->partial(						// load partial with args...
+					'dashboard-partial-nav', 		// $filename,
+					array(							// $localVariables...
+						'actions' => (new \lf\cms)->getSortedActions()	// 'variableName' => $variableValue,
+				));
+		
+		$hidden = (new \lf\cms)->getHiddenActions();
+		echo (new \lf\cms)->partial('dashboard-partial-hidden', array('actions' => $hidden));
+	}
+	
+	public function wysiwyg()
 	{
+		$vars = \lf\www('Param');
 		
 		echo '<p>Return to <a href="%baseurl%dashboard/main/'.$vars[1].'/#nav_'.$vars[1].'">dashboard</a></p>';
 		echo '<h2>WYSIWYG</h2>';
@@ -95,8 +105,9 @@ class dashboard
 		include 'view/dashboard.wysiwyg.php';
 	}
 
-	public function preview($vars)
+	public function preview()
 	{
+		$vars = \lf\www('Param');
 		
 		$action = (new LfActions)->findById($vars[1]);
 		$links = (new LfLinks)->findByInclude($vars[1]);
@@ -169,8 +180,9 @@ class dashboard
 		exit();
 	}
 	
-	public function linkapp($vars)
-	{	
+	public function linkapp()
+	{
+		$vars = \lf\www('Param');	
 		if($this->simple) return;
 		
 		if(!isset($vars[1])) return 'invalid arguement';
@@ -178,13 +190,13 @@ class dashboard
 		$pwd = LF.'/apps/';
 		
 		// address conflicting alias names.
-		$result = $this->db->fetchall("
+		$result = (new \lf\orm)->fetchall("
 			SELECT *
 			FROM lf_actions
 			WHERE parent = '-1'
 				AND (
-					alias = '".$this->db->escape($vars[1])."'
-					OR alias LIKE '".$this->db->escape($vars[1])."_%'
+					alias = '".(new \lf\orm)->escape($vars[1])."'
+					OR alias LIKE '".(new \lf\orm)->escape($vars[1])."_%'
 				)
 			ORDER by alias ASC
 		");
@@ -227,12 +239,12 @@ class dashboard
 		
 		if($pos != 0)
 		{
-			$sql = 'SELECT COUNT(id) as pos FROM lf_actions WHERE parent = '.$this->db->escape($_POST['parent']).' AND position != 0';
-			$result = $this->db->query($sql);
-			$row = $this->db->fetch($result);
+			$sql = 'SELECT COUNT(id) as pos FROM lf_actions WHERE parent = '.(new \lf\orm)->escape($_POST['parent']).' AND position != 0';
+			$result = (new \lf\orm)->query($sql);
+			$row = (new \lf\orm)->fetch($result);
 			
 			if($row['pos'] >= $pos)
-				$this->db->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.$this->db->escape($_POST['parent']).' AND position >= '.$pos);
+				(new \lf\orm)->query('UPDATE lf_actions SET position = position + 1 WHERE parent = '.(new \lf\orm)->escape($_POST['parent']).' AND position >= '.$pos);
 			else
 				$pos = $row['pos'] + 1;
 		}
@@ -275,13 +287,13 @@ class dashboard
 		// ^ link was valid, move on to running the sql
 		
 		$insert = array(
-			"parent"	=> $this->db->escape($_POST['parent']),
+			"parent"	=> (new \lf\orm)->escape($_POST['parent']),
 			"position"	=> $pos,
-			"alias"		=> $this->db->escape($_POST['alias']),
-			"title"		=> $this->db->escape($_POST['title']),
-			"label"		=> $this->db->escape($_POST['label']),
+			"alias"		=> (new \lf\orm)->escape($_POST['alias']),
+			"title"		=> (new \lf\orm)->escape($_POST['title']),
+			"label"		=> (new \lf\orm)->escape($_POST['label']),
 			"app"		=> $_POST['isapp'] == 'on' ? '1' : '0',
-			"template"	=> $this->db->escape($_POST['template'])
+			"template"	=> (new \lf\orm)->escape($_POST['template'])
 		);
 		
 		$id = (new LfActions)->insertArray($insert);
@@ -290,8 +302,8 @@ class dashboard
 		$insert = array(
 			"include"	=> $id,
 			"app"		=> $app,
-			"ini"		=> $this->db->escape($_POST['ini']),
-			"section"	=> $this->db->escape($_POST['section']),
+			"ini"		=> (new \lf\orm)->escape($_POST['ini']),
+			"section"	=> (new \lf\orm)->escape($_POST['section']),
 			"recursive"	=> 0
 		);
 		
@@ -343,41 +355,42 @@ class dashboard
 		}
 	}	
 	
-	public function rm($vars)
+	public function rm()
 	{
+		$vars = \lf\www('Param');
 		if($this->simple) return;
 		
 		// get current position/parent
-		$current = $this->db->fetch('SELECT position, parent FROM lf_actions WHERE id = '.intval($vars[1]));
+		$current = (new \lf\orm)->fetch('SELECT position, parent FROM lf_actions WHERE id = '.intval($vars[1]));
 		
 		if(isset($current['parent']))
 		{
-			$this->db->query('DELETE FROM lf_actions WHERE id = '.intval($vars[1]));
-			$this->db->query('DELETE FROM lf_links WHERE include = '.intval($vars[1]));
+			(new \lf\orm)->query('DELETE FROM lf_actions WHERE id = '.intval($vars[1]));
+			(new \lf\orm)->query('DELETE FROM lf_links WHERE include = '.intval($vars[1]));
 			
 			// update positions of all item behind the rm'd sibling
 			if($current['position'] > 0)
-				$this->db->query('UPDATE lf_actions SET position = position - 1 WHERE parent = '.$current['parent'].' AND position > '.$current['position']);
+				(new \lf\orm)->query('UPDATE lf_actions SET position = position - 1 WHERE parent = '.$current['parent'].' AND position > '.$current['position']);
 			
 			// find all orphaned nav items and remove them, 
 			// loop until all are cleared
 			while(true) 
 			{
-				$result = $this->db->query('
+				$result = (new \lf\orm)->query('
 					SELECT a.id	FROM `lf_actions` a 
 					LEFT JOIN lf_actions b ON a.parent = b.id
 					WHERE b.id IS NULL AND a.parent != -1
 				');
 				
-				if($this->db->numrows() == 0) 
+				if((new \lf\orm)->numrows() == 0) 
 					break;
 				
 				$orphans = array();
-				while($row = $this->db->fetch())
+				while($row = (new \lf\orm)->fetch())
 					$orphans[] = $row['id'];
 					
-				$this->db->query('DELETE FROM lf_actions WHERE id IN ('.implode(',', $orphans).')');
-				$this->db->query('DELETE FROM lf_links WHERE include IN ('.implode(',', $orphans).')');
+				(new \lf\orm)->query('DELETE FROM lf_actions WHERE id IN ('.implode(',', $orphans).')');
+				(new \lf\orm)->query('DELETE FROM lf_links WHERE include IN ('.implode(',', $orphans).')');
 			}
 		}
 		
@@ -385,8 +398,10 @@ class dashboard
 		redirect302();
 	}
 	
-	public function delapp($var)
+	public function delapp()
 	{
+		$vars = \lf\www('Param');
+		
 		if($this->simple) return;
 		
 		$success = preg_match('/[a-z]+/', $var[1], $matches);
@@ -400,14 +415,16 @@ class dashboard
 		redirect302();
 	}
 	
-	public function manage($var)
+	public function manage()
 	{
+		$vars = \lf\www('Param');
 		// backward compatible
 		redirect302($this->lf->base.'apps/'.$var[1]);
 	}
 	
-	public function download($var)
+	public function download()
 	{
+		$vars = \lf\www('Param');
 		if($this->simple) return;
 		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
@@ -417,8 +434,9 @@ class dashboard
 		include 'view/dashboard.download.php';
 	}
 	
-	public function getappfromnet($vars)
+	public function getappfromnet()
 	{
+		$vars = \lf\www('Param');
 		if($this->simple) return;
 		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
@@ -453,8 +471,9 @@ class dashboard
 		redirect302();
 	}
 	
-	public function install($vars)
+	public function install()
 	{
+		$vars = \lf\www('Param');
 		// this has been deprecated for now. kinda works... kinda doesnt...
 		redirect302();
 		
@@ -510,15 +529,16 @@ class dashboard
 		redirect302();
 	}
 
-	public function update($vars) // nav/item update
+	public function update() // nav/item update
 	{
+		$vars = \lf\www('Param');
 		if($this->simple) return;
-				
+		
 		$post = $_POST;
 		
 		// save, unset ini
 		$id = intval($post['id']);
-		$ini = $this->db->escape($post['ini']);
+		$ini = (new \lf\orm)->escape($post['ini']);
 		unset($post['id'], $post['ini']);
 		if($post['position'] <= 0) 
 		{
@@ -527,10 +547,10 @@ class dashboard
 		}
 		
 		//select current children id's and positions
-		$old = $this->db->fetch('SELECT position, parent FROM lf_actions WHERE id = '.$id);
+		$old = (new \lf\orm)->fetch('SELECT position, parent FROM lf_actions WHERE id = '.$id);
 		
 		// get # of children of destination parent
-		$result = $this->db->fetch('SELECT COUNT(id) as count FROM lf_actions WHERE parent = '.$this->db->escape($post['parent']));
+		$result = (new \lf\orm)->fetch('SELECT COUNT(id) as count FROM lf_actions WHERE parent = '.(new \lf\orm)->escape($post['parent']));
 		$count = $result['count'];
 		
 		// handle parent/position updates
@@ -541,14 +561,14 @@ class dashboard
 				
 			// make room in destination parent children: update pos++ where pos > dest[pos]
 			if($post['position'] != 0)
-			$this->db->query("UPDATE lf_actions SET position = position + 1 WHERE parent = ".intval($post['parent'])." AND position >= ".intval($post['position']));
+			(new \lf\orm)->query("UPDATE lf_actions SET position = position + 1 WHERE parent = ".intval($post['parent'])." AND position >= ".intval($post['position']));
 			
 			// move into new parent: update parent = dest[parent] where id = old[id]
-			$this->db->query("UPDATE lf_actions SET parent = ".intval($post['parent']).", position = ".intval($post['position'])." WHERE id = ".$id);
+			(new \lf\orm)->query("UPDATE lf_actions SET parent = ".intval($post['parent']).", position = ".intval($post['position'])." WHERE id = ".$id);
 			
 			// close gap left behind: update pos-- where pos > dest[pos]
 			if($old['position'] != 0)
-			$this->db->query("UPDATE lf_actions SET position = position - 1 WHERE parent = ".$old['parent']." AND position > ".$old['position']);
+			(new \lf\orm)->query("UPDATE lf_actions SET position = position - 1 WHERE parent = ".$old['parent']." AND position > ".$old['position']);
 		}
 		else if($post['position'] != $old['position']) // if moving within current siblings
 		{
@@ -556,31 +576,31 @@ class dashboard
 				$post['position'] = $count;
 				
 			if($old['position'] == 0) // starting from 0
-				$this->db->query('
+				(new \lf\orm)->query('
 					UPDATE lf_actions SET position = position + 1 
 					WHERE parent = '.$old['parent'].' AND position >= '.intval($post['position'])); // make room for new item
 					
 			else if($post['position'] == 0) // going to 0
-				$this->db->query('
+				(new \lf\orm)->query('
 					UPDATE lf_actions SET position = position - 1 
 					WHERE parent = '.$old['parent'].' AND position > '.intval($old['position'])); // make room for new item
 					
 			else if($post['position'] < $old['position']) // moving lower
-				$this->db->query('
+				(new \lf\orm)->query('
 					UPDATE lf_actions SET position = position + 1 
 					WHERE parent = '.$old['parent'].' 
 					AND position >= '.intval($post['position']).' 
 					AND position < '.$old['position']);
 					
 			else if($post['position'] > $old['position']) // moving higher
-				$this->db->query('
+				(new \lf\orm)->query('
 					UPDATE lf_actions SET position = position - 1 
 					WHERE parent = '.$old['parent'].' 
 					AND position <= '.intval($post['position']).' 
 					AND position > '.$old['position']);
 			
 			// move to place
-			$this->db->query("UPDATE lf_actions SET position = ".intval($post['position'])." WHERE id = ".$id);
+			(new \lf\orm)->query("UPDATE lf_actions SET position = ".intval($post['position'])." WHERE id = ".$id);
 		}
 
 		// This has already been taken care of above
@@ -591,41 +611,41 @@ class dashboard
 		{
 			$update = array();
 			foreach($post as $key => $var)
-				$update[$key] = $this->db->escape($key)." = '".$this->db->escape($var)."'";
+				$update[$key] = (new \lf\orm)->escape($key)." = '".(new \lf\orm)->escape($var)."'";
 			
 			// Move the item
 			$sql = "UPDATE lf_actions SET ".implode(', ', $update)." WHERE id = ".$id;
-			$this->db->query($sql);
+			(new \lf\orm)->query($sql);
 			
 			// update ini
 			$sql = "UPDATE lf_links SET ini = '".$ini."' WHERE include = ".$id;
-			$this->db->query($sql);
+			(new \lf\orm)->query($sql);
 		}
 		else
 		{
 			/*$update = array();
 			foreach($post as $key => $var)
-				$update[$key] = $this->db->escape($key)." = '".$this->db->escape($var)."'";*/
+				$update[$key] = (new \lf\orm)->escape($key)." = '".(new \lf\orm)->escape($var)."'";*/
 				
 			//$post['isapp'] = $post['isapp'] == 'on' ? '1' : '0';
 			$update = array(
-//				"parent = 	'".$this->db->escape($post['parent'])."'",
+//				"parent = 	'".(new \lf\orm)->escape($post['parent'])."'",
 //				"position = ".intval($post['position']),
-				"alias = 	'".$this->db->escape($post['alias'])."'",
-				"title = 	'".$this->db->escape($post['title'])."'",
-				"label = 	'".$this->db->escape($post['label'])."'",
+				"alias = 	'".(new \lf\orm)->escape($post['alias'])."'",
+				"title = 	'".(new \lf\orm)->escape($post['title'])."'",
+				"label = 	'".(new \lf\orm)->escape($post['label'])."'",
 				//"app = 		'".$post['isapp']."'",
-				"template = '".$this->db->escape($post['template'])."'"
+				"template = '".(new \lf\orm)->escape($post['template'])."'"
 			);
 			
 			// Move the item
 			$sql = "UPDATE lf_actions SET ".implode(', ', $update)." WHERE id = ".$id;
-			$this->db->query($sql);
+			(new \lf\orm)->query($sql);
 			
 			$update = array(
-				"app = 	'".$this->db->escape($post['app'])."'",
+				"app = 	'".(new \lf\orm)->escape($post['app'])."'",
 				"ini = 	'".$ini."'",
-				"section = 	'".$this->db->escape($post['section'])."'"
+				"section = 	'".(new \lf\orm)->escape($post['section'])."'"
 			);
 			
 			// Move the item
@@ -637,14 +657,14 @@ class dashboard
 			echo $sql;*/
 		
 			//echo $sql;
-			$this->db->query($sql);
+			(new \lf\orm)->query($sql);
 		}
 		$this->updatenavcache();
 		
 		if(strpos($_SERVER['HTTP_REFERER'],'wysiwyg') !== false)
 			redirect302();
-			
-		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
+		
+		redirect302(\lf\wwwAppUrl().'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function updatenavcache()

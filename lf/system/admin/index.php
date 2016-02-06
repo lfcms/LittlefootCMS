@@ -71,7 +71,7 @@ if($user->hasAccess('admin') )
 	// find active nav item
 	preg_match_all(
 		'/<li><a class="[^"]+" href="('
-			.preg_quote($this->base, '/')
+			.preg_quote(\lf\www('Admin'), '/')
 			.'([^\"]+))"/', 
 		$nav, 
 		$links
