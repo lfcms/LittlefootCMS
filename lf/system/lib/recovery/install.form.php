@@ -36,9 +36,9 @@ else
 	$msg = '';
 
 $error_msg = '';
-if(isset($errors))
-	foreach($errors as $error)
-		$error_msg .= '<div class="marbot rounded">'.$error.'</div>';
+if(count($this->errors) > 0)
+	foreach($this->errors as $error)
+		$error_msg .= '<div class="marbot error rounded">'.$error.'</div>';
 
 ?>
 <html class="lf">
