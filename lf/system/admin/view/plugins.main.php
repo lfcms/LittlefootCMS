@@ -1,4 +1,8 @@
-<h2><i class="fa fa-plug"></i> Plugins Manager</h2>
+<div class="row">
+	<div class="col-12">
+		<h2 class="no_marbot"><i class="fa fa-plug"></i> Plugins Manager</h2>
+	</div>
+</div>
 
 <div class="row">
 	<div class="col-9">
@@ -35,7 +39,7 @@
 	<div class="col-3 spaced">
 		<div class="tile white">
 			<div class="tile-header">
-				<h3><i class="fa fa-plus"></i> Add New</h3>
+				<h4><i class="fa fa-plus"></i> Add New</h4>
 			</div>
 			<div class="tile-content">
 				<h4>Plugins</h4>

@@ -1,4 +1,8 @@
-<h2><i class="fa fa-cog"></i> Settings</h2>
+<div class="row">
+	<div class="col-12">
+		<h2><i class="fa fa-cog"></i> Settings</h2>
+	</div>
+</div>
 <?=notice();?>
 <div class="row">
 	<div class="col-7">

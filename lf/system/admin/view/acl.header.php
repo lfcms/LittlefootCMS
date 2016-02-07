@@ -1,4 +1,8 @@
-<h2><i class="fa fa-key"></i> Access Control Lists</h2>
+<div class="row">
+	<div class="col-12">
+		<h2 class="no_marbot"><i class="fa fa-key"></i> Access Control Lists</h2>
+	</div>
+</div>
 
 <div class="row">
 	<div class="col-2">

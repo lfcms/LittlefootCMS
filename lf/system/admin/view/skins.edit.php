@@ -17,36 +17,51 @@ Back to <a href="%appurl%">Skin Manager</a>
 <form action="%appurl%update/<?=$vars[1];?>/" method="post" id="skinform">
 	<div class="row">
 		<!-- New Skin -->
-		<div class="col-3">
-			<div id="skin_nav">
-				<ul class="fvlist">
-					<?php if(!is_file($skin.'/home.php')): ?>
+		<div class="col-3 pull-right">
+			<div class="tile white">
+				<div class="tile-header">
+					<h3>
+						<i class="fa fa-edit"></i> Files
+					</h3>
+				</div>
+				<div class="row no_martop no_marbot">
+					<div class="col-12">
+						<ul class="fvlist white">
+							<?php if(!is_file($skin.'/home.php')): ?>
 
-					<li><a href="%appurl%makehome/<?=$matches[0];?>">(create home.php)</a></li>
+							<li><a href="%appurl%makehome/<?=$matches[0];?>">(create home.php)</a></li>
 
-					<?php endif;
+							<?php endif;
 
-					foreach($files as $id => $url):
+							foreach($files as $id => $url):
 
-						$li = '';
-						$a = '';
-						if($id == $vars[2]) $li = ' class="green"'; 
-						if($id == $vars[2]) $a = ' class="light"'; 
+								$li = '';
+								$a = '';
+								if($id == $vars[2]) $li = ' class="blue"'; 
+								if($id == $vars[2]) $a = ' class="light"'; 
 
-					?>
-						
-					<li<?=$li;?>><a<?=$a;?> title="<?=$url;?>" href="%appurl%edit/<?=$matches[0];?>/<?=$id;?>/"><?=$url;?></a></li>
+							?>
 
-					<?php endforeach; ?>
-					
-				</ul>
-				<input type="submit" class="martop blue" value="Save" />
+							<li<?=$li;?>><a<?=$a;?> title="<?=$url;?>" href="%appurl%edit/<?=$matches[0];?>/<?=$id;?>/"><?=$url;?></a></li>
+
+							<?php endforeach; ?>
+
+						</ul>
+					</div>
+				</div>
+				<div class="tile-content">
+					<div class="row">
+						<div class="col-12">
+							<input type="submit" class="green" value="Save" />
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- New Skin -->
 		<div class="col-9">
-			<div id="editor" class="dark_b"><?=htmlentities($data);?></div>
-			<input type="submit" class="martop blue" value="Save" />
+			<div id="editor" class="light_b white"><?=htmlentities($data);?></div>
+			<input type="submit" class="martop green" value="Save" />
 		</div>
 	</div>
 </form>

@@ -1,11 +1,15 @@
-<h2><i class="fa fa-users"></i> Users (<?=$usercount;?>)</h2>
+<div class="row">
+	<div class="col-12">
+		<h2 class="no_marbot"><i class="fa fa-users no_marbot"></i> Users (<?=$usercount;?>)</h2>
+	</div>
+</div>
 <div class="row">
 	<div class="col-3 pull-right">
 		<div class="row no_martop">
 			<div class="col-12">
 				<div class="tile white">
 					<div class="tile-header">
-						<h3><i class="fa fa-plus"></i> Add New</h3>
+						<h4><i class="fa fa-plus"></i> Add New</h4>
 					</div>
 					<div class="tile-content">
 						<? if(hasnotice()): ?>

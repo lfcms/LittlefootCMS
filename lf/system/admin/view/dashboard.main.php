@@ -20,7 +20,11 @@ $(document).ready(function() {
 });*/
 </script>
 
+<div class="row">
+	<div class="col-12">
 <h2 class="no_marbot" title="Setting the position to 0 will hide a navigation item."><i class="fa fa-compass"></i> Navigation Editor</h2>
+	</div>
+</div>
 <div class="row">
 	<div class="col-9">
         <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
@@ -34,9 +38,9 @@ $(document).ready(function() {
 	<div class="col-3">
 		<div class="tile white">
 			<div class="tile-header">
-				<h3 title="Click an app below to add it to the navigation.">
+				<h4 title="Click an app below to add it to the navigation.">
 					<i class="fa fa-plus"></i> Add New
-				</h3>
+				</h4>
 			</div>
 			
 			<div id="appgallery-container">

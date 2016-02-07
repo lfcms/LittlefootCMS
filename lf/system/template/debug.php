@@ -1,3 +1,4 @@
+
 <!-- LF Debug Info
 
 	Version: <?=$this->version;?>
