@@ -87,9 +87,11 @@ if(is_file(LF.'apps/'.$save['app'].'/args.php'))
 		<div class="col-6">
 			Parent:
 			<select name="parent">
-				<option value="-1"><?=$_SERVER['SERVER_NAME'].$this->request->relbase;?></option>
-				<optgroup label="Select Parent">
-					%subalias% <!-- this is on the nav partial at the top -->
+				<option value="-1"><?=\lf\www('Install');?></option>
+				<optgroup label="Or select other parent">
+					<?=(new dashboard)->navParentSelect($save['parent']);?>
+					
+					<!-- <?=\lf\get('subalias');?> <!-- this is on the nav partial at the top -->
 				</optgroup>
 			</select>
 		</div>

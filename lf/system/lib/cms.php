@@ -362,6 +362,18 @@ class cms
 		return $this;
 	}
 	
+	public function headAppend($content)
+	{
+		$this->head[] = $content;
+		return $this;
+	}
+	
+	public function loadStylesheet($url)
+	{
+		$this->headAppend('<link rel="stylesheet" href="'.$url.'apps/git/git.css" />');
+		return $this;
+	}
+	
 	public function getLogin()
 	{
 		ob_start();

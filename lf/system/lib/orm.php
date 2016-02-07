@@ -271,9 +271,9 @@ class orm implements \IteratorAggregate
 			$result = $this->mysqli_result;
 		else if(is_object($query))
 			$result = $query;
-		else
+		else // if is string
 			$result = $this->query($query);
-
+			
 		return $result->fetch_assoc();
 	}
 

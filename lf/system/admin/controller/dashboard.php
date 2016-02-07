@@ -77,8 +77,33 @@ class dashboard
 		
 	}
 	
+	public function navParentSelect($id = NULL)
+	{
+		$actions = (new \lf\cms)->getSortedActions();
+		$navOptions = $this->navOptionRecurse($actions);
+		
+		if( ! is_null($id) )
+			$navOptions = str_replace('value="'.$id.'"', 'value="'.$id.'" selected="selected"', $navOptions);
+		
+		return $navOptions;
+	}
+	
+	public function navOptionRecurse($actions, $parent = -1, $prefix = '')
+	{
+		ob_start();
+		
+		foreach($actions[$parent] as $action)
+		{
+			echo '<option value="'.$action['id'].'">'.$prefix.$action['position'].'. '.$action['label'].'</option>';
+			if(isset($actions[$action['id']]))
+				echo $this->navOptionRecurse($actions, $action['id'], $prefix.$action['position'].'.');
+		}
+		
+		return ob_get_clean();
+	}
+	
 	public function printNav()
-	{		
+	{
 		echo (new \lf\cms)					// just using this to call ->partial
 				->partial(						// load partial with args...
 					'dashboard-partial-nav', 		// $filename,
@@ -216,7 +241,7 @@ class dashboard
 		
 		$id = $this->create($vars);
 		
-		redirect302($this->request->appurl.'main/'.$id.'#nav_'.$id);
+		redirect302(\lf\wwwAppUrl().'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function create($vars) // nav/item create
@@ -545,7 +570,6 @@ class dashboard
 			$post['position'] = 0;
 			$post['parent'] = -1;
 		}
-		
 		//select current children id's and positions
 		$old = (new \lf\orm)->fetch('SELECT position, parent FROM lf_actions WHERE id = '.$id);
 		

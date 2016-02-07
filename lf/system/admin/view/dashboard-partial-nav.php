@@ -8,10 +8,10 @@ if(!isset($prefix)) $prefix="";
 if(isset($actions[$parent])):
 	foreach($actions[$parent] as $action): 
 	
-		$apps = $this->links[$action['id']];
-		$theapp = $apps[0]['app']; // support multi app linking... not in use atm
+		$apps = (new \lf\cms)->getLinks($action['id']);
+		//$theapp = $apps[0]['app']; // support multi app linking... not in use atm
 		
-		if(\lf\get('edit') == $action['id'])
+		/*if(\lf\get('edit') == $action['id'])
 		{
 			\lf\set('subalias', 
 				str_replace( 
@@ -20,7 +20,7 @@ if(isset($actions[$parent])):
 					\lf\get('subalias')
 				)
 			);
-		}
+		}*/
 		
 		\lf\set('subalias', \lf\get('subalias').'<option value="'.$action['id'].'"> '.$prefix.$action['position'].' '.$action['label'].'</option>');
 		
@@ -30,7 +30,7 @@ if(isset($actions[$parent])):
 		<!-- <ul> uncomment this to cascade -->
 			<?=(new \lf\cms)
 					->partial( 
-						'dashboard-partial-nav', 
+						'dashboard-partial-nav', // recursive print through sorted nav list
 						array(
 							'actions' => $actions, 
 							'parent' => $action['id'], 
