@@ -14,27 +14,15 @@ if(!extension_loaded('mysqli'))
  */
 class install
 {
-	public function __construct()
-	{
-		
-	}
+	private $errors = array();
 	
-	public function noconfig()
-	{
-		if(count($_POST))
-			$this->post();
-		
-		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
-		include LF.'system/lib/recovery/install.form.php';
-		
-		exit();
-	}
+	public function __construct() { }
 
 	public function test()
 	{
 		if( (new \LfPages)->first() == NULL )
 		{
-			if(count($_POST))
+			if(count($_POST) > 0)
 				$this->post();
 			else
 				$this->nodb();
@@ -43,68 +31,137 @@ class install
 		}
 	}
 	
+	public function noconfig()
+	{
+		if(count($_POST) > 0)
+			$this->post();
+		
+		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
+		include LF.'system/lib/recovery/install.form.php';
+		
+		exit();
+	}
+	
 	// we tried to db, but couldn't... so nodb
 	private function nodb()
 	{
-		$msg = 'Unable to query database.';
+		$this->errors[] = 'Unable to query database.';
+		$this->printInstallForm();
+	}
+	
+	public function postValidate()
+	{
+		if($_POST['host'] == '')   $this->errors[] = "Missing 'Database Hostname' information";
+		if($_POST['user'] == '')   $this->errors[] = "Missing 'Database Username' information";
+		//if($_POST['pass'] == '')   $this->errors[] = "Missing 'Database Password' information";
+		if($_POST['dbname'] == '') $this->errors[] = "Missing 'Database Name' information";
+		if($_POST['auser'] == '')  $this->errors[] = "Missing 'Admin Username' information";
+		if($_POST['apass'] == '')  $this->errors[] = "Missing 'Admin Password' information";
+		
+		return $this;
+	}
+	
+	public function printInstallForm()
+	{
 		include LF.'system/lib/recovery/install.form.php';
+		return $this;
 	}
 	
 	private function post()
 	{
-		// validate input
-		if($_POST['host'] == '') $errors[] = "Missing 'Hostname' information";
-		if($_POST['user'] == '') $errors[] = "Missing 'Username' information";
-		if($_POST['pass'] == '') $errors[] = "Missing 'Password' information";
-		if($_POST['dbname'] == '') $errors[] = "Missing 'Database Name' information";
-		if($_POST['auser'] == '') $errors[] = "Missing 'Admin Username' information";
-		if($_POST['apass'] == '') $errors[] = "Missing 'Admin Password' information";
+		$this->postValidate();
 
-		if(isset($warnings) && !isset($_POST['warning_check']))
-		{
-			$errors[] = 'Warnings have been detected. Fix them or check the box to ignore them.';
-		}
-
-		if(isset($errors))
-		{
-			include LF.'system/lib/recovery/install.form.php';
-			exit();
-		}
-
-		$conf = file_get_contents('config-dist.php');
-		$replace = array(
-			'localhost' => $_POST['host'],
-			'mysql_user' => $_POST['user'],
-			'mysql_passwd' => $_POST['pass'],
-			'mysql_database' => $_POST['dbname'],
+		if(count($this->errors) > 0) return $this->printInstallForm();
+		
+		// Take config.php template, replace credentials with $_POST data
+		$dbConfigFile = file_get_contents(LF.'config-dist.php');
+		$dbCredentials = array(
+			'localhost' 			=> $_POST['host'],
+			'mysql_user'		 	=> $_POST['user'],
+			'mysql_passwd' 		=> $_POST['pass'],
+			'mysql_database' 	=> $_POST['dbname'],
 		);
 		
-		foreach($replace as $from => $to)
+		// Loop through database credentials provided, applying them to the configuration template
+		foreach($dbCredentials as $variable => $value)
 		{
-			if($to == '') 
-				$err = true;
+			if($value == '') 
+				$this->error[] = "Submitted database value for '$variable' is blank.";
 
-			$conf = str_replace($from, $to, $conf);
+			$dbConfigFile = str_replace($variable, $value, $dbConfigFile);
 		}
+		
+		if(count($this->errors) > 0) return $this->printInstallForm();
+		
+		// If the config.php is not already there, write it
+		if(!is_file(LF.'config.php') || (isset($_POST['overwrite']) && $_POST['overwrite'] == 'on'))
+		{
+			if(!file_put_contents(LF.'config.php', $dbConfigFile))
+			{
+				$this->errors[] = 'Unable to write to "'.LF.'config.php"';
+				
+				// Get permissions and owner of LF folder
+				$perms = substr(sprintf('%o', fileperms(LF)), -4);
+				$ownerUID = fileowner(LF);
+				
+				// Print current ownership
+				$this->errors[] = '"'.LF.'" Owner: "'.$ownerUID.'", Perms: '.$perms;
+				
+				// Print how to fix
+				if(extension_loaded('posix'))
+				{
+					$processUser = posix_getpwuid(posix_geteuid());
+					$processUserName = $processUser['name'];
+					$this->errors[] = "POSIX detected user '$processUserName' needs write access to the lf/ folder.";
+				}
+				else
+				{
+					$this->errors[] = "PHP module 'POSIX' is not loaded, so I can't auto-detect which user needs write permissions<br />"
+														.'"'.LF.'" needs to be writable by the user running this PHP script. Check the system processes to see who owns the process as it runs.';
+				}
+			}
+		}	
+		
+		// Verify that we wound up with a config.php
+		if(!is_file(LF.'config.php'))
+			$this->errors[] = 'Config file missing after write attempt.';
 
-		if(!is_file('config.php') || (isset($_POST['overwrite']) && $_POST['overwrite'] == 'on'))
-			file_put_contents('config.php', $conf);
-
-		if( isset($_POST['data']) 
-			&& $_POST['data'] == 'on' 
-			&& is_file('config.php')
-		){
+		
+// 		pre($_POST);
+// 		pre($this->errors);
+// 		pre(LF);
+// 		pre($dbConfigFile,'var_dump');
+// 		pre($dbCredentials);
+// 		exit;
+		
+		if(count($this->errors) > 0) return $this->printInstallForm();
+		
+		
+		
+		
+		
+		
+		// If we are to import the MySQL data
+		if( isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php') )
+		{
+			// Initialize ORM. This attempts to make a database connection, testing it.
 			$orm = new orm();
 
+			// If we had trouble?
 			if($orm->error != array())
-				$errors = $orm->error;
+			{
+				// Save Errors in the array
+				$this->errors = array_merge($this->errors, $orm->error);
+				
+				if(count($this->errors) > 0) return $this->printInstallForm();
+			}
 			else
 			{
-				// run import script
+				// Run the default lf.sql
 				echo $orm->import(ROOT.'system/lib/recovery/lf.sql', false);
 				
 				// Add admin user
-				$aUser = $_POST['auser'];
+				$aUser = $_POST['auser'];	
 				$aPass = $_POST['apass'];
 				(new User)
 					->setAccess('admin')

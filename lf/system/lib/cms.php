@@ -51,7 +51,7 @@ class cms
 
 		(new cache)->endTimer('cms');
 		
-		if($this->debug == 'on') 
+		if(getSetting('debug') == 'on') 
 			$this->printDebug();
 		
 		return $this;

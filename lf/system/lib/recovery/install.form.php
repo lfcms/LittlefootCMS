@@ -36,9 +36,9 @@ else
 	$msg = '';
 
 $error_msg = '';
-if(isset($errors))
-	foreach($errors as $error)
-		$error_msg .= '<div class="marbot rounded">'.$error.'</div>';
+if(count($this->errors) > 0)
+	foreach($this->errors as $error)
+		$error_msg .= '<div class="marbot error rounded">'.$error.'</div>';
 
 ?>
 <html class="lf">
@@ -59,8 +59,7 @@ if(isset($errors))
 					</div>
 					<div class="col-6">
 						<?=isset($msg) ? $msg : '';?>
-						<?=isset($error_msg) ? $error_msg : '';?>						
-						<h2>Configuration</h2>
+						<?=isset($error_msg) ? $error_msg : '';?>					
 						<p>Enter your database credentials and preferred admin password, then click Install.</p>
 						<ul class="fvlist">
 							<li>
@@ -72,7 +71,7 @@ if(isset($errors))
 						</ul>
 						<div class="row">
 							<div class="col-6">
-								<h3>Database</h3>
+								<h3>MySQL Access</h3>
 								<ul class="vlist">
 									<li>
 										Host: <input type="text" value="<?=$host;?>" name="host" value="localhost" />
@@ -102,14 +101,14 @@ if(isset($errors))
 										
 							</div>
 							<div class="col-6">
-								<h3>Admin Password</h3>
+								<h3>Site Admin User</h3>
 								<ul class="vlist">
 									<li>
 										<label for="auser">Username</label>
-										<input type="text" name="auser" id="auser" value="admin" />
+										<input type="text" name="auser" id="auser" value="admin" required/>
 									</li>
 										<label for="apass">Password</label>
-										<input type="password" name="apass" id="apass" placeholder="Sup3rSecr3tP@$$word" />
+										<input type="password" name="apass" id="apass" placeholder="Sup3rSecr3tP@$$word" required/>
 									<li>
 									</li>
 									<li>
