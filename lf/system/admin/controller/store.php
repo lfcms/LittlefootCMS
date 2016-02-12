@@ -205,7 +205,7 @@ class store
 		$sql = ROOT.'apps/'.$app.'/install.sql';
 		if(is_file($sql))
 		{
-			$this->db->import($sql);
+			(new \lf\orm)->import($sql);
 			unlink($sql);
 		}
 	}
@@ -218,7 +218,7 @@ class store
 		$sql = ROOT.'apps/'.$app.'/upgrade.sql';
 		if(is_file($sql))
 		{
-			$this->db->import($sql);
+			(new \lf\orm)->import($sql);
 			unlink($sql);
 		}
 	}*/

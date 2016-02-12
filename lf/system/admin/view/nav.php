@@ -45,7 +45,7 @@ $admin_apps = str_replace(
 			<?php
 			
 			foreach($admin_apps as $shortcut): 
-				if(isset($this->action[1]) && $shortcut == $this->action[1]) 
+				if($shortcut == \lf\www('Action')[0]) 
 					$highlight = ' class="active blue light_a"';
 				else 
 					$highlight = '';

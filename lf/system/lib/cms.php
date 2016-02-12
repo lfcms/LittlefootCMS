@@ -3,53 +3,77 @@
 namespace lf;
 
 /**
+ * A shortcut for (new \lf\cms)->getSetting() 
+ * 
+ * @param $name Name of the setting to retrieve
+ * 
+ */
+function getSetting($name)
+{
+	return (new \lf\cms)->getSetting($name);
+}
+
+/**
  * # cms class
  * 
  * The `cms` class is used primarily to execute apps assigned to navigation items that are browsed by their alias (eg, '/blog' has the `blog` app assigned to it, so when the page loads, the linked app will return its resulting output and then render it the assigned theme). All the operations used to perform this are public.
  * 
  * this is the main class (formerly class littlefoot) that handles all the aspects of the higher level CMS operations such as lf_actions navigation selection from request_uri (formerly littlefoot->navSelect()), app loading from `lf_links`, skin rendering, acl testing (should really be its own class). \lf\Cms
  * 
- * 
  */
-
-// I am really into shortcut functions
-function getSetting($name)
-{
-	return (new \lf\cms)->getSetting($name);
-}
- 
 class cms
 {
-	// simple CMS. 
+	/** @param $exec '_lfcms' to run full CMS from `lf_actions`/`lf_links` */
 	private $exec = '_lfcms';
-	static private $instances = array(); // session instances.
-	private $ini = NULL;	// configurable string in database per app `lf_links` table entry
 	
-	private $version = NULL; // lfcms release version
+	/** @param $instances session instances. debating on using this or the lf_cache session... */
+	static private $instances = array(); // 
 	
+	/** @param $ini configurable string in database per app `lf_links` table entry */
+	private $ini = NULL;
 	
-	// would replace (new littlefoot)->cms()
+	/** @param $version lfcms release version */
+	private $version = NULL;
+	
+	/**
+	 * Originally `(new littlefoot)->cms()`
+	 * 
+	 * Executes the Littlefoot CMS frontend (possibly loading /admin, if requested)
+	 * 
+	 * @return $this The resulting $this object
+	 */
 	public function run()
 	{
-		(new cache)->startTimer('cms');
+		// Start the 'cms' timer
+		(new cache)->startTimer(__METHOD__);
 		(new install)->test();
 		
 		set('request', (new request)->parseUri() );
 		
-		$this->loadVersion() 				// load version from LF/system/version file
-			->loadPlugins() 				// load plugins from `lf_plugins` table
-			->loadSettings()				// load settings from `lf_settings` table
-			->route( (new auth), '_auth', false ); // Route auth() class per $wwwIndex/_auth/$method
+		// load version from LF/system/version file
+		$this->loadVersion() 						
+			// load plugins from `lf_plugins` table
+			->loadPlugins() 						
+			// load settings from `lf_settings` table
+			->loadSettings()						
+			// Route auth() class per $wwwIndex/_auth/$method
+			->route( (new auth), '_auth', false ); 
 		
-		set( 'acl', (new acl)->loadAcl() ); // load acl object into session
+		// load acl object into session
+		set( 'acl', (new acl)->load() ); 
 		
-		$this->routeAdmin()					// If /admin was requested, load it and stop here
-			->navSelect()					// Get data for SimpleCMS, or determine requested Nav ID from url $actions
-			->getcontent(); 				// Deal with SimpleCMS or execute linked apps
+		// If /admin was requested, load it and stop here
+		$this->routeAdmin()					
+			// Get data for SimpleCMS, or determine requested Nav ID from url $actions
+			->navSelect()					
+			// Deal with SimpleCMS or execute linked apps
+			->getcontent(); 				
 		
-		echo $this->render(); 				// Display content in skin, return HTML output result
-
-		(new cache)->endTimer('cms');
+		// Display content in skin, return HTML output result
+		echo $this->render(); 				
+	
+		// Stop the 'cms' timer. Store elapsed time for debug.
+		(new cache)->endTimer(__METHOD__);
 		
 		if(getSetting('debug') == 'on') 
 			$this->printDebug();
@@ -571,38 +595,50 @@ class cms
 		return $this;
 	}
 	
+	// match action to hrefs in LF/cache/nav.cache.html, return match
+	// may make SQL query easier, but we still have to get the action id
+	public function actionFromCache($action = null)
+	{
+		if( is_null( $action) )
+			$action = \lf\www('Action');
+		
+		
+		// visiting /something/like/this would generate `something/(like/(this/)?)?)` as a test pattern
+		$actionRegex = implode('/(', $action);
+		
+		if( count($action) > 0)
+			$actionRegex .= '/'.str_repeat(')?',count($action)-1); // end /delimiter/
+		
+		$actionRegexTest = '/%baseurl%('.str_replace('/', '\/', $actionRegex).')"/';
+		
+		// We load the cached navigation...
+		$navCache = (new \lf\cache)->readFile('nav.cache.html');
+		
+		// And see where our request URL best fits of the navigation <li><a> URLs 
+		preg_match_all( $actionRegexTest, $navCache, $matches );
+		
+		return $matches;
+	}
+	
 	/**
-	 * navSelect
+	 * # navSelect
 	 * 
-	 * TODO: need to utilize cache instead of query
+	 * Determine which navigation item was requested based on wwwAction and navigation hierarchy.
 	 * 
-	 * Something like 
-	 *
-	 * ```
-	 * // something/(like/(this/)?)?)
-	 * $regex = '/'.implode('\/(', www('Action')s).str_repeat( ')?' , count(www('Action')s) - 1 ).'/';
-	 * preg_match_all($regex, $navcache, $selected); // would yeild all parents and chosen navigation item,
-	 * 												// exposing the other actions as app variables.
-	 * ```
-	 * 
-	 * I should really put this into a github issue...
-	 * 
-	 */
-	
-	// TODO: need to utilize cache instead of query
-	// Something like 
-	/*
-	
-	// something/(like/(this/)?)?)
-	$regex = '/'.implode('\/(', www('Action')s).str_repeat( ')?' , count(www('Action')s) - 1 ).'/';
-	preg_match_all($regex, $navcache, $selected); // would yeild all parents and chosen navigation item,
-													// exposing the other actions as app variables.
+	 * Results with `$this->select` containing the `lf_actions` row data of the matching navigation item.
 	*/
 	public function navSelect()
 	{
 		(new cache)->startTimer(__METHOD__);
 		if(getSetting('simple_cms') != '_lfcms')
 			$this->simpleSelect();
+		
+		// determines current action request
+		
+		// by default, not found. needed to detect request for / when action at -1, 1 doesnt have an empty alias
+		$this->select['alias'] = '404'; 
+		
+		
 		
 		/* Determine requested nav item from lf_actions */
 		// get all possible matches for current request, 
@@ -725,8 +761,6 @@ class cms
 		
 		$this->content['nav'][] = $this->renderBaseUrl($nav_cache); // replace the %baseurl% placeholders
 		
-		
-		
 		(new cache)->endTimer(__METHOD__);
 		return $this;
 	}
@@ -793,7 +827,7 @@ class cms
 		$funcstart = microtime(true);
 		$this->hook_run('pre '.__METHOD__);
 		
-		if( ! get('acl')->aclTest( implode('/', www('Action') ) ) )
+		if( ! get('acl')->test( implode('/', www('Action') ) ) )
 		{
 			$this->setContent( "401 Unauthorized at ".wwwIndexAction().$this->getLogin() );
 			return $this;
@@ -834,9 +868,9 @@ class cms
 		{
 				
 			// Test ACL for this app
-			/*if( ! get('acl')->aclTest(implode('/', www('Action')).'|'.$_app['app'] ) 
+			/*if( ! get('acl')->test(implode('/', www('Action')).'|'.$_app['app'] ) 
 				|| ( isset($vars[0]) 
-					&& get('acl')->aclTest(implode('/', www('Action')).'|'.$_app['app'].'/'.$vars[0])
+					&& get('acl')->test(implode('/', www('Action')).'|'.$_app['app'].'/'.$vars[0])
 			))
 			{
 				$this->setContent("403 Access Denied ".$this->getLogin(), $_app['section']);

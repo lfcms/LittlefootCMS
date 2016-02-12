@@ -425,11 +425,9 @@ class dashboard
 	
 	public function delapp()
 	{
-		$vars = \lf\www('Param');
-		
 		if($this->simple) return;
 		
-		$success = preg_match('/[a-z]+/', $var[1], $matches);
+		$success = preg_match('/[a-z]+/', \lf\www('Param')[1], $matches);
 		
 		if(!$success) return 0;
 		
@@ -442,9 +440,7 @@ class dashboard
 	
 	public function manage()
 	{
-		$vars = \lf\www('Param');
-		// backward compatible
-		redirect302($this->lf->base.'apps/'.$var[1]);
+		redirect302(\lf\wwwAppUrl());
 	}
 	
 	public function download()

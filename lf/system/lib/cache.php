@@ -2,19 +2,29 @@
 
 namespace lf;
 
-// `\lf\get('request')` is way better than `(new \lf\cache)->get('request')->getStuff`
+/**
+ * This function is a shortcut to calling `(new cache)-sessGet($key)`
+ * 
+ * `\lf\get('request')` is shorter than `(new \lf\cache)->get('request')`
+ */
 function get($key, $namespace = 'default')
 {
 	return (new cache)->sessGet($key, $namespace);
 }
 
-// `\lf\set('request', $value)` is way better
+/**
+ * This function is a shortcut to calling `(new cache)-sessSet($key, $value)`
+ * 
+ * `\lf\set('request', $value)` is shorter than `(new \lf\cache)->set('request', $value)`
+ */
 function set($key, $value, $namespace = 'default')
 {
 	return (new cache)->sessSet($key, $value, $namespace);
 }
 
-// retrieve or set $_POST key. Cuz typing $_POST is too hard.
+/**
+ * retrieve or set $_POST key. Cuz typing $_POST is too hard.
+ */
 function post($key, $value = NULL)
 {
 	if( !is_null($value) )		
@@ -28,24 +38,19 @@ function post($key, $value = NULL)
 
 /**
  * Quick memcache style key-value pair storage into $_SESSION, just for the duration of the single request. Better than singletons, better than passing around a single object to every app
- * 
- * 
- * 
- * 
  */
 class cache
 {
-	// so I did this, but idk how I feel about it. since you can just use $_SESSION directly
-	public function tempSet($key, $value, $namespace = 'default')
+	public function permSet($key, $value, $namespace = 'default')
 	{
-		$_SESSION['lf_temp'][$namespace][$key] = $value;
+		$_SESSION['lf_perm'][$namespace][$key] = $value;
 		return $this;
 	}
 	
-	public function tempGet($key, $namespace = 'default')
+	public function permGet($key, $namespace = 'default')
 	{
-		if(isset($_SESSION['lf_temp'][$namespace][$key]))
-			return $_SESSION['lf_temp'][$namespace][$key];
+		if(isset($_SESSION['lf_perm'][$namespace][$key]))
+			return $_SESSION['lf_perm'][$namespace][$key];
 		return NULL;
 	}
 	
@@ -56,13 +61,18 @@ class cache
 		return $this;
 	}
 	
-	// kinda want to change this to tempSet(), and clear only temp, and leave sess as a more permanent save to session that isnt clear at end of page load
+	/**
+	 * Temporarily set value into session for later user. Clears at end of PHP execution.
+	 */
 	public function sessSet($key, $value, $namespace = 'default')
 	{
 		$_SESSION['lf_cache'][$namespace][$key] = $value;
 		return $this;
 	}
 	
+	/**
+	 * Get temporary value into session for later user. Cleared at end of PHP execution.
+	 */
 	public function sessGet($key, $namespace = 'default')
 	{
 		if(isset($_SESSION['lf_cache'][$namespace][$key]))
@@ -70,6 +80,9 @@ class cache
 		return NULL;
 	}
 	
+	/**
+	 * Clear lf_cache $key from session
+	 */
 	public function sessClearKey($key, $namespace = 'default')
 	{
 		if(isset($_SESSION['lf_cache'][$namespace][$key]))
@@ -77,6 +90,9 @@ class cache
 		return $this;
 	}
 	
+	/**
+	 * Clear full lf_cache from session
+	 */
 	public function sessClearAll()
 	{
 		if(isset($_SESSION['lf_cache']))
@@ -84,6 +100,9 @@ class cache
 		return $this;
 	}
 	
+	/**
+	 * Return given $filename content as string
+	 */
 	public function readFile($filename)
 	{
 		ob_start();
@@ -91,19 +110,26 @@ class cache
 		return ob_get_clean();
 	}
 	
-	// files
+	/**
+	 * Save $data to $filename
+	 */
 	public function toFile($data, $filename)
 	{
 		return file_put_contents($filename, $data);
 	}
 	
-	// timers
+	/**
+	 * Start timer for $key 
+	 */
 	public function startTimer($key)
 	{
 		$this->sessSet($key, microtime(true), 'timer_start');
 		return $this;
 	}
 	
+	/**
+	 * End timer for $key
+	 */
 	public function endTimer($key)
 	{
 		$startTime = $this->sessGet($key, 'timer_start');
@@ -112,8 +138,25 @@ class cache
 		return $this;
 	}
 	
+	/**
+	 * Return $key from timer_result
+	 */
 	public function getTimerResult($key)
 	{
 		return $this->sessGet($key, 'timer_result');
 	}
 }
+
+/**
+ * Class just to destruct at end of PHP execution
+ */
+class cacheDestroyer
+{
+	public function __destruct()
+	{
+		(new \lf\cache)->sessClearAll();
+	}
+}
+
+// this object will __destruct and clear the session before session save that occurs at the end of PHP execution.
+$sessionDestroyer = new cacheDestroyer();

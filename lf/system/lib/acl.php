@@ -18,7 +18,7 @@ class acl
 {
 	private $defaultAccess = true;
 	
-	public function loadAcl()
+	public function load()
 	{
 		(new \lf\cache)->startTimer(__METHOD__);
 		
@@ -67,13 +67,13 @@ class acl
 		return $this;
 	}
 	
-	public function aclTest($action)
+	public function test($action)
 	{	// action = 'action/app|var1/var2'
 		
 		$sessAcl = (new \lf\cache)->sessGet('acl');
 		if( is_null($sessAcl) )
 		{
-			$this->loadAcl();
+			$this->load();
 			$sessAcl = $this;
 		}
 		

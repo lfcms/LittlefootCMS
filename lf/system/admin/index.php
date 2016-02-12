@@ -68,29 +68,29 @@ if($user->hasAccess('admin') )
 	include('view/nav.php');
 	$nav = ob_get_clean();
 
-	// find active nav item
-	preg_match_all(
-		'/<li><a class="[^"]+" href="('
-			.preg_quote(\lf\www('Admin'), '/')
-			.'([^\"]+))"/', 
-		$nav, 
-		$links
-	);
-	$match = -1;
-	foreach($links[2] as $id => $request)
-		if($request == \lf\www('Action')[0].'/') 
-			$match = $id;
-	
-	if($match != -1)
-	{
-		$replace = str_replace(
-			'<li>',
-			'<li class="active blue light_a">',
-			$links[0][$match]
+	// find active nav item (currently broken)
+		preg_match_all(
+			'/<li><a class="[^"]+" href="('
+				.preg_quote(\lf\www('Admin'), '/')
+				.'([^\"]+))"/', 
+			$nav, 
+			$links
 		);
+		$match = -1;
+		foreach($links[2] as $id => $request)
+			if($request == \lf\www('Action')[0].'/') 
+				$match = $id;
 		
-		$nav = str_replace($links[0][$match], $replace, $nav);
-	}
+		if($match != -1)
+		{
+			$replace = str_replace(
+				'<li>',
+				'<li class="active blue light_a">',
+				$links[0][$match]
+			);
+			
+			$nav = str_replace($links[0][$match], $replace, $nav);
+		}
 	
 	$this->content['nav'][] = $nav;
 	

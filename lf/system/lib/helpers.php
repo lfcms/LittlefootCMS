@@ -348,6 +348,8 @@ function strdump($str)
 function pre($str, $func = NULL)
 {
 	echo '<pre>';
+	echo '<h4>PRE</h4>';
+	
 	if(is_null($func))
 		print_r($str);
 	else
