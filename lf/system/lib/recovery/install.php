@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 if(!extension_loaded('mysqli'))
 {
 	echo '<h1>mysqli PHP extension is missing! Install it to use littlefoot.</h1>';
@@ -18,7 +20,7 @@ class install
 
 	public function test()
 	{
-		if( (new LfPages)->first() == NULL )
+		if( (new \LfPages)->first() == NULL )
 		{
 			if(count($_POST) > 0)
 				$this->post();
@@ -51,7 +53,7 @@ class install
 	{
 		if($_POST['host'] == '')   $this->errors[] = "Missing 'Database Hostname' information";
 		if($_POST['user'] == '')   $this->errors[] = "Missing 'Database Username' information";
-		if($_POST['pass'] == '')   $this->errors[] = "Missing 'Database Password' information";
+		//if($_POST['pass'] == '')   $this->errors[] = "Missing 'Database Password' information";
 		if($_POST['dbname'] == '') $this->errors[] = "Missing 'Database Name' information";
 		if($_POST['auser'] == '')  $this->errors[] = "Missing 'Admin Username' information";
 		if($_POST['apass'] == '')  $this->errors[] = "Missing 'Admin Password' information";

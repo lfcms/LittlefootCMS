@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 /**
  * @ignore
  * 
@@ -8,13 +10,15 @@
  * deals with session set, get, refreshTimeout
  * 
  */
-class auth extends app
+class auth
 {
-	public $auth; // backward compatible
-	
-	protected function init($args)
+	public function __construct()
 	{
+		return false;
 		$user = (new User)->fromSession();
+		
+		pre($user);
+		pre($_SESSION['login']);
 		
 		// Handle timeout
 		if($user->timedOut() && false) //timeout disabled for now
@@ -31,20 +35,19 @@ class auth extends app
 		$this->auth = $user->getDetails();
 	}
 	
-	public function login($args)
+	public function login()
 	{
 		// if user/pass matches, push to session
-		if( !isset($this->lf->settings['ldap']) 
-		|| $this->lf->settings['ldap'] == '') 
-			$this->lf->settings['ldap'] = NULL;
-			
-		(new User)->doLogin($this->lf->settings['ldap']);
+		(new User)
+			->loginFromPost()
+			->toSession();
 		
 		// Redirect back to what you were looking at. If login refreshes, that happens here.
 		redirect302();
 	}
 	
-	public function updateprofile($args)
+	
+	public function updateprofile()
 	{
 		if($_POST['pass'] != '')
 			$_POST['pass'] = sha1($_POST['pass']);
@@ -87,13 +90,13 @@ class auth extends app
 		redirect302();
 	}
 	
-	public function profile($args)
+	public function profile()
 	{
 		include 'system/template/profile.php';
 		//echo getcwd();
 	}
 	
-	public function logout($args)
+	public function logout()
 	{
 		// reset session
 		session_destroy();
@@ -101,7 +104,7 @@ class auth extends app
 	}
 	
 	//default
-	public function signup($vars)
+	public function signup()
 	{
 		if($this->lf->api('getuid') != 0) // logged in
 		{
@@ -122,7 +125,7 @@ class auth extends app
 			include LF.'system/template/signup.php';
 	}
 	
-	public function create($vars)
+	public function create()
 	{
 		$sql = "
 			SELECT email, user 
@@ -150,7 +153,7 @@ class auth extends app
 			if($user)			echo 'Username';
 								echo ' already in use.';
 			
-			$this->signup($vars);
+			$this->signup( (new request)->get('wwwParam') );
 		}
 		else
 		{
@@ -205,7 +208,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		}
 	}
 	
-	public function validate($vars)
+	public function validate()
 	{
 		if(!isset($vars[1]) || strlen($vars[1]) != 40 || !preg_match('/^[a-f0-9]+$/', $vars[1], $match)) return 'Wrong validation code.';
 		
@@ -219,7 +222,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		echo 'Account validated. Please <a href="%baseurl%profile/">log in</a>';
 	}
 	
-	public function forgotform($vars)
+	public function forgotform()
 	{
 		// Aaron G made me do this too
 		if(is_file(LF.'system/template/forgot.local'))
@@ -228,7 +231,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 			include LF.'system/template/forgot.php';
 	}
 	
-	public function forgotresult($vars)
+	public function forgotresult()
 	{
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE email = '".$this->db->escape($_POST['email'])."'");
 		if(!$user) redirect302($this->lf->appurl);
@@ -248,7 +251,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		} else echo 'Failed to sent. Contact an admin.';
 	}
 	
-	public function resetpassform($vars)
+	public function resetpassform()
 	{
 		
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($vars[1])." AND hash = '".$this->db->escape($vars[2])."'");
@@ -267,7 +270,7 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 		else echo 'Bad link';
 	}
 	
-	public function resetpass($vars)
+	public function resetpass()
 	{
 		$user = $this->db->fetch("SELECT * FROM lf_users WHERE id = ".intval($_POST['id'])." AND hash = '".$this->db->escape($_POST['hash'])."'");
 		if($user)

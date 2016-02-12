@@ -33,6 +33,96 @@ defined('LF') or die('LF undefined');
  *
  */
 
+// set admin_skin to default in session
+\lf\set('skin', 'default', 'admin');
+
+// Load user from session
+$user = (new \lf\User)->fromSession();
+
+// if the session user does not have admin access,
+if($user->hasAccess('admin') )
+{
+	//formauth
+	require_once(ROOT.'system/lib/3rdparty/nocsrf.php');
+	// todo: fix CSRF to session, not page load.
+	//$this->checkCSRF();
+
+	//$this->base .= 'admin/'; // backward compatible
+
+	// get latest version
+	if(!isset($_SESSION['upgrade']))
+	{
+		$newversion = curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+		
+		if($this->version != $newversion && $this->version != '1-DEV')
+			$_SESSION['upgrade'] = $newversion;
+		else
+			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
+	}
+	
+	if(\lf\www('Action')[0] == '')
+		\lf\www('Action')[0] = 'dashboard';
+	
+	// Nav item
+	ob_start();
+	include('view/nav.php');
+	$nav = ob_get_clean();
+
+	// find active nav item (currently broken)
+		preg_match_all(
+			'/<li><a class="[^"]+" href="('
+				.preg_quote(\lf\www('Admin'), '/')
+				.'([^\"]+))"/', 
+			$nav, 
+			$links
+		);
+		$match = -1;
+		foreach($links[2] as $id => $request)
+			if($request == \lf\www('Action')[0].'/') 
+				$match = $id;
+		
+		if($match != -1)
+		{
+			$replace = str_replace(
+				'<li>',
+				'<li class="active blue light_a">',
+				$links[0][$match]
+			);
+			
+			$nav = str_replace($links[0][$match], $replace, $nav);
+		}
+	
+	$this->content['nav'][] = $nav;
+	
+	$this->select['template'] = 'default';
+	
+	$renderResult = $this
+		->multiMVC('dashboard')
+		->render();
+	
+	//$renderResult = (new \lf\cms)->legacyTokenReplace($renderResult);
+	
+	//echo $this->addCSRF($renderResult);
+	echo $renderResult;
+}
+else
+{
+	// Display login form
+	include('skin/'.\lf\get('skin','admin').'/login.php');
+	//include(LF.'system/template/login.php');
+	exit;
+}
+
+
+
+
+
+
+exit;
+
+
+/*
+
 $request = $this->action;// backward compatible
  
 $admin_skin = 'default'; // this needs to be an option instead of hard coded
@@ -46,6 +136,9 @@ $this->adminurl = $this->adminBase; // backward compatible
 // Generate new User() and test access
 $user = new User();
 $user->fromSession();
+
+*/
+
 
 // should make separate 'group' defintions
 if( ! $user->hasaccess('admin') ) 

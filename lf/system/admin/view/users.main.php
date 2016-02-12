@@ -12,10 +12,10 @@
 						<h4><i class="fa fa-plus"></i> Add New</h4>
 					</div>
 					<div class="tile-content">
-						<? if($this->hasnotice()): ?>
+						<? if(hasnotice()): ?>
 						<div class="row">
 							<div class="col-12">
-								<span class="button light_gray"><?=$this->notice();?></span>
+								<span class="button light_gray"><?=notice();?></span>
 							</div>
 						</div>
 						<? endif; ?>
@@ -32,7 +32,7 @@
 			<div class="col-12">
 				LDAP <?=extension_loaded('ldap')?'':'(PHP LDAP Module not installed)';?>:
 				<form action="%appurl%saveldap" method="post">
-					<input <?=isset($this->lf->settings['ldap'])?'value="'.$this->lf->settings['ldap'].'"':'';?>  <?=extension_loaded('ldap')?'':'disabled';?> type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
+					<input <?= ! is_null( \lf\getSetting('ldap') ) ? 'value="'.\lf\getSetting('ldap').'"' : '' ;?>  <?=extension_loaded('ldap')?'':'disabled';?> type="text" name="ldap" placeholder="{'port':636,'basedn':'ou=People,dc=mydomain','host':'ldaps://ldap.mydomain.com'}" />
 				</form>
 			</div>
 		</div>
@@ -57,7 +57,7 @@
 				<td><?=$user['status'];?></td>
 				<td><a href="%appurl%edit/<?=$user['id'];?>"><i class="fa fa-edit"></i></a></td>
 				<td>
-				<?php if($user['id'] == $this->lf->api('getuid')): ?>
+				<?php if($user['id'] == (new \lf\user)->fromSession()->getId() ): ?>
 				<span title="You can't delete yourself!"><i class="fa fa-lock"></i></span>
 				<?php else: ?>
 				<a <?=jsprompt();?> href="%appurl%rm/<?=$user['id'];?>" class="x"><i class="fa fa-trash-o"></i></a>

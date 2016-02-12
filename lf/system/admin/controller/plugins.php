@@ -3,10 +3,11 @@
 /**
  * @ignore
  */
-class plugins extends app
+class plugins
 {
-	public function main($args)
+	public function main()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		//$this->db->query("UPDATE lf_settings SET val = '' WHERE var = 'plugins'");
 		//$registered_hooks = $this->lf->settings['plugins'];
 		
@@ -16,14 +17,16 @@ class plugins extends app
 		include 'view/plugins.main.php';
 	}
 	
-	public function rm($args)
+	public function rm()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		orm::q('lf_plugins')->filterByid($args[1])->delete();
-		redirect302($this->lf->appurl);
+		redirect302();
 	}
 	
-	public function hookup($args)
+	public function hookup()
 	{
+		$args = \lf\www('Param'); // backward compatibility
 		
 		//$plugin_hooks = $this->db->fetch("SELECT * FROM lf_settings WHERE var = 'plugins'");
 		$plugin_hook = orm::q('lf_plugins')->filterByhook($_POST['hook'])->filterByplugin($_POST['plugin'])->first();

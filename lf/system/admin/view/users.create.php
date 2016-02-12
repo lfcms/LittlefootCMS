@@ -1,10 +1,10 @@
 <h2><a href="%appurl%">Users</a> Create</h2>
-<? if($this->hasnotice()): ?>
-		<span class="button light_gray"><?=$this->notice();?></span>
+<? if(hasnotice()): ?>
+		<span class="button light_gray"><?=notice();?></span>
 		<? endif; ?>
 <div class="row">
 	<div class="col-6">
-		<form class="dashboard_manage" action="%baseurl%users/create/" method="post">
+		<form class="dashboard_manage" action="<?=\lf\www('Admin');?>users/create/" method="post">
 			<ul class="vlist">
 				<li><input type="text" name="user" placeholder="Username" required></li>
 				<li><input type="password" name="pass" placeholder="Password" required></li>

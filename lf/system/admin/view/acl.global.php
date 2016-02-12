@@ -1,4 +1,4 @@
-<?=$this->partial('acl.header', array('active' => 'global'));?>
+<?=(new \lf\cms)->partial('acl.header', array('active' => 'global'));?>
 
 <div class="row">
 	<form action="%appurl%add/global" method="post">
@@ -23,7 +23,7 @@
 	</form>
 </div>
 
-<?php if($this->hasnotice()): ?>
+<?php if(hasnotice()): ?>
 <div class="notice marbot"><?=$this->notice();?></div>
 <?php endif; ?>
 

@@ -9,34 +9,34 @@ $admin_apps = str_replace(
 <span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row">
 	<div class="col-12 no_pad">
-		<ul class="efvlist flarge light_a">
-			<?php $this->lf->hook_run('pre lf admin nav'); ?>
+		<ul class="efvlist rounded fxlarge">
+			<?php $this->hook_run('pre lf admin nav'); ?>
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
 			
-			<li><a class="controls" href="<?=$this->base;?>dashboard/"><i class="fa fa-compass"></i><span><?=
-				$this->settings['simple_cms']=='_lfcms'
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/dashboard/"><i class="fa fa-compass"></i><span><?=
+				\lf\getSetting('simple_cms')=='_lfcms'
 					?' Navigation'
-					:ucfirst($this->settings['simple_cms']).' Admin';
+					:ucfirst(\lf\getSetting('simple_cms')).' Admin';
 				?></span></a></li>
-			<li><a class="controls" href="<?=$this->base;?>skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
-			<li><a class="controls" href="<?=$this->base;?>plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
-			<!--<li><a class="media" href="<?=$this->base;?>media/"><span>Media</span></a></li>-->
-			<li><a class="controls" href="<?=$this->base;?>users/"><i class="fa fa-users"></i><span> Users</span></a></li>
-			<li><a class="controls" href="<?=$this->base;?>acl/"><i class="fa fa-key"></i><span> Access</span></a></li>
-			<!-- <li><a class="" href="<?=$this->base;?>upgrade/"><span>Upgrade</span></a></li> -->
-			<li><a class="controls" href="<?=$this->base;?>settings/"><i class="fa fa-cog"></i><span> Settings</span></a></li>
-			<li><a class="controls" href="<?=$this->base;?>store/"><i class="fa fa-shopping-cart"></i><span> Store</span></a></li>
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
+			<!--<li><a class="media" href="<?=\lf\www('Index');?>admin/media/"><span>Media</span></a></li>-->
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/users/"><i class="fa fa-users"></i><span> Users</span></a></li>
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/acl/"><i class="fa fa-key"></i><span> Access</span></a></li>
+			<!-- <li><a class="" href="<?=\lf\www('Index');?>admin/upgrade/"><span>Upgrade</span></a></li> -->
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/settings/"><i class="fa fa-cog"></i><span> Settings</span></a></li>
+			<li><a class="controls" href="<?=\lf\www('Index');?>admin/store/"><i class="fa fa-shopping-cart"></i><span> Store</span></a></li>
 			<li><a class="controls" target="_blank" href="http://littlefootcms.com/manual/Admin+Documentation" title="Hover over headings for tips!"><i class="fa fa-question"></i><span> Help</span></a></li>
 			<li><a class="controls" target="_blank" href="https://github.com/eflip/littlefootcms/issues/"><i class="fa fa-bug"></i><span> Report Bug</span></a></li>
 			<!--<li><a class="" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
 			
-			<?php $this->lf->hook_run('post lf admin nav'); ?>
+			<?php $this->hook_run('post lf admin nav'); ?>
 		</ul>
 	</div>
 </div>
 
-<?php if($this->settings['simple_cms'] == '_lfcms'): ?>
+<?php if( \lf\getSetting('simple_cms') == '_lfcms'): ?>
 
 <span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> Apps <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row no_marbot">
@@ -45,13 +45,13 @@ $admin_apps = str_replace(
 			<?php
 			
 			foreach($admin_apps as $shortcut): 
-				if(isset($this->action[1]) && $shortcut == $this->action[1]) 
+				if($shortcut == \lf\www('Action')[0]) 
 					$highlight = ' class="active blue light_a"';
 				else 
 					$highlight = '';
 				
 			?>
-				<li<?=$highlight;?>><a class="elements" href="<?=$this->base;?>apps/<?php echo $shortcut; ?>/">
+				<li<?=$highlight;?>><a class="elements" href="<?=\lf\www('Index');?>admin/apps/<?php echo $shortcut; ?>/">
 						<span><?php echo ucfirst($shortcut); ?></span>
 				</a></li>
 			<?php endforeach; ?>

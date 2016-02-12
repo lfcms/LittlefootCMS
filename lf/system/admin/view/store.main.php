@@ -4,7 +4,7 @@
 	</div>
 </div>
 
-<?=$this->notice();?>
+<?=notice();?>
 
 <div class="row">
 	<div class="col-4">

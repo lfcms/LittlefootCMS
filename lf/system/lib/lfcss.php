@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 // this php framework generates lf.css HTML
 
 /* eg,
@@ -25,16 +27,30 @@ function div($class, $content)
 	return '<div class="'.$class.'">'.$content.'</div>'; 
 }
 
+/*
+
+echo \lf\row('no_martop',
+	\lf\col(9,
+		(new blog)->printThreads()
+	).
+	\lf\col(3,
+		(new blog)->printCategories()
+	)
+);
+
+*/
 function row($content = '', $class = NULL) 			
-{ 
+{
 	$addClass = '';
-	if(!is_null($class))
+	
+	// if second argument is provided
+	if( !is_null( $class ) )
 	{
-		// if a class was provided, make sure it has a space in front
-		$addClass = ' '.$class;
+		// use the first as the class
+		$addClass = ' '.$content;
 		
-		// switch second arg to content. real sneaky ;)
-		//$content = $class;
+		// and the second as the content
+		$content = $class;
 	}
 	
 	return div('row'.$addClass, $content);

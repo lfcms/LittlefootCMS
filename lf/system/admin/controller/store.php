@@ -1,12 +1,12 @@
 <?php
 
-class store extends app
+class store
 {
 	public $repobase = "http://littlefootcms.com/files/download";
 	
 	public function main()
 	{
-		//$this->lf->vars[];
+		//\lf\www('Param')[];
 		
 		$apps = curl_get_contents($this->repobase.'/apps/apps.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
@@ -30,7 +30,7 @@ class store extends app
 		pre($_POST);
 		exit();
 		
-		$type = $this->lf->vars[1];
+		$type = \lf\www('Param')[1];
 		
 		switch($type)
 		{
@@ -40,9 +40,9 @@ class store extends app
 		
 		*/
 		
-		$this->notice('Feature not yet implemented');
+		notice('Feature not yet implemented');
 		
-		redirect302($this->lf->appurl);
+		redirect302();
 	}
 	/* .zip upload - disabled for now
 	public function install($vars)
@@ -96,9 +96,9 @@ class store extends app
 	
 	public function dlplugin()
 	{
-		if(!isset($this->lf->vars[1])) return 'Missing Arg 2';
+		if(!isset(\lf\www('Param')[1])) return 'Missing Arg 2';
 		
-		$this->item = $this->lf->vars[1];
+		$this->item = \lf\www('Param')[1];
 		$this->type = 'plugins';
 		
 		return $this->downloader();
@@ -106,9 +106,9 @@ class store extends app
 	
 	public function dlskin()
 	{
-		if(!isset($this->lf->vars[1])) return 'Missing Arg 2';
+		if(!isset(\lf\www('Param')[1])) return 'Missing Arg 2';
 		
-		$this->item = $this->lf->vars[1];
+		$this->item = \lf\www('Param')[1];
 		$this->type = 'skins';
 		
 		return $this->downloader();
@@ -116,9 +116,9 @@ class store extends app
 	
 	public function dlapp()
 	{
-		if(!isset($this->lf->vars[1])) return 'Missing Arg 2';
+		if(!isset(\lf\www('Param')[1])) return 'Missing Arg 2';
 		
-		$this->item = $this->lf->vars[1];
+		$this->item = \lf\www('Param')[1];
 		$this->type = 'apps';
 		
 		return $this->downloader();
@@ -205,7 +205,7 @@ class store extends app
 		$sql = ROOT.'apps/'.$app.'/install.sql';
 		if(is_file($sql))
 		{
-			$this->db->import($sql);
+			(new \lf\orm)->import($sql);
 			unlink($sql);
 		}
 	}
@@ -218,7 +218,7 @@ class store extends app
 		$sql = ROOT.'apps/'.$app.'/upgrade.sql';
 		if(is_file($sql))
 		{
-			$this->db->import($sql);
+			(new \lf\orm)->import($sql);
 			unlink($sql);
 		}
 	}*/

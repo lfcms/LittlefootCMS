@@ -3,15 +3,17 @@
 /**
  * @ignore
  */
-class skins extends app
+class skins
 {
-	function init($args)
+	function init()
 	{
 		$this->pwd = ROOT.'skins/';
 	}
 	
-	public function main($vars)
+	public function main()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
 		$pwd = $this->pwd;
 		$request = $this->request;
 		$install = extension_loaded('zip') ? '<input type="submit" value="Install" />' : "Error: Zip Extension missing.";
@@ -30,8 +32,10 @@ class skins extends app
 		include 'view/skins.main.php';
 	}
 	
-	public function edit($vars)
+	public function edit()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$skin = $this->pwd.$matches[0];
 		
@@ -70,8 +74,10 @@ class skins extends app
 		include 'view/skins.edit.php';
 	}
 	
-	public function download($var)
+	public function download()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
 		$files = array_flip(scandir(ROOT.'skins'));
@@ -79,8 +85,10 @@ class skins extends app
 		include 'view/skins.download.php';
 	}
 	
-	public function getappfromnet($vars)
+	public function getappfromnet()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
 		
@@ -105,8 +113,11 @@ class skins extends app
 		redirect302();
 	}
 	
-	public function install($vars)
+	public function install()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
+		// lol this was way before `redirect302()`
 		header('HTTP/1.1 302 Moved Temporarily');
 		header('Location: '. $_SERVER['HTTP_REFERER']);
 		
@@ -159,29 +170,27 @@ class skins extends app
 		exit();
 	}
 	
-	public function blankskin($vars)
+	public function blankskin()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
+		
 		$name = $_POST['name'];
-		if(!preg_match('/^[_\-a-zA-Z0-9]+$/', $name, $match)) redirect302();
-		if(!mkdir(ROOT.'skins/'.$match[0])) { return "Failed to make directory at ".ROOT.'skins/'.$match[0]; }
-		$data = '<html>
-	<head>
-		<title>%title%</title>
-		<link rel="stylesheet" type="text/css" href="%skinbase%/css/styles.css" />
-	</head>
-	<body>
-		<h1>Blank Template</h1>
-		%login%<br />
-		%nav%<br />
-		<div>%content%</div>
-	</body>
-</html>';
+		if(!preg_match('/^[_\-a-zA-Z0-9]+$/', $name, $match)) 
+			redirect302();
+		
+		if(!mkdir(ROOT.'skins/'.$match[0])) 
+			return "Failed to make directory at ".ROOT.'skins/'.$match[0];
+		
+		$data = file_get_contents(LF.'system/template/blanktheme.php');
+		
 		file_put_contents(ROOT.'skins/'.$match[0].'/index.php', $data);
+		
 		redirect302();
 	}
 	
-	public function rm($vars)
+	public function rm()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$vars['app'] = $matches[0];
 		$app = $this->pwd.$matches[0];
@@ -194,8 +203,9 @@ class skins extends app
 		exit();
 	}
 	
-	public function makehome($args)
+	public function makehome()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		preg_match('/[_\-a-zA-Z0-9]+/', $args[1], $matches);
 		$skin = $this->pwd.$matches[0];
 		
@@ -205,8 +215,9 @@ class skins extends app
 		redirect302();
 	}
 	
-	public function update($vars)
+	public function update()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$skin = $this->pwd.$matches[0];
 		
@@ -239,11 +250,12 @@ class skins extends app
 		} else redirect302();
 	}
 	
-	public function setdefault($vars)
+	public function setdefault()
 	{	
+		$vars = \lf\www('Param'); // backward compatibility
 		if(preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches))
 		{
-			$this->db->query("UPDATE lf_settings SET val = '".$matches[0]."' WHERE var = 'default_skin'");
+			(new \lf\orm)->query("UPDATE lf_settings SET val = '".$matches[0]."' WHERE var = 'default_skin'");
 			header('HTTP/1.1 302 Moved Temporarily');
 			header('Location: '. $_SERVER['HTTP_REFERER']);
 			exit();
@@ -253,8 +265,9 @@ class skins extends app
 		$this->main('');
 	}
 	
-	public function zip($vars)
+	public function zip()
 	{
+		$vars = \lf\www('Param'); // backward compatibility
 		if(!preg_match('/^[_\-a-zA-Z0-9]+$/', $vars[1], $match))
 			redirect302();
 		else

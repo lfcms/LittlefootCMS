@@ -41,12 +41,12 @@
 			$highlight = '';
 			$icon = '';
 			
-			if($skin == $request->settings['default_skin']){
+			if( $skin == \lf\getSetting('default_skin') ){
 				$highlight = 'selected';
 				$icon = 'fa fa-check';
 			}
 			if(is_file(ROOT.'skins/'.$skin.'/screenshot.png'))
-				$screenshot = '%relbase%lf/skins/'.$skin.'/screenshot.png';
+				$screenshot = \lf\www('LF').'skins/'.$skin.'/screenshot.png';
 			else
 				$screenshot = 'http://placehold.it/350x500';
 				// need to replace with local default image

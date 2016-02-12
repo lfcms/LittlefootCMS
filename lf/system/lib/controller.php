@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 /**
  * # App
  * 
@@ -135,57 +137,18 @@
  * ```
  * 
  */
-class app
+class controller
 {
-	/** @var Database Datbase wrapper accessible via $this->db */
-	public $db;
-	
 	/** @var string Configuration data set in the navigation configuration. This data is saved to the lf_actions table. */
 	protected $ini;
 	
-	/** @var Littlefoot For backword compatibility. Synonymous with $this->lf */
-	protected $request;
-	
-	/** @var Littlefoot Littlefoot instance: Access to URL variables, mvc(), etc */
-	protected $lf;
-	
-	/** @var auth Auth object. Access to access data (username, id, etc) */
-	protected $auth;
-	
-	/** @var default_method Used to specify the default method when none is specified. This is set to 'main' by default. */
-	public $default_method = 'main';
-	
-	/**
-	 * Initializes the app environment. For use with $this->lf->mvc() routing.
-	 * 
-	 * @param Littlefoot $lf The Littlefoot instance. Accessible at **$this->lf**
-	 * 
-	 * @param Database $dbconn Database wrapper. Accessible at **$this->db**
-	 * 
-	 * @param string $ini Configured ini value in `lf_actions` table. Accessible at **$this->ini**
-	 *
-	 * @param array $args URL Variables. Accessible at **$this->args**
-	 */
-	public function __construct($lf, $ini = '', $args = array())
-	{
-		$this->db = (new orm); // backward compatible (new orm) can be called on the fly from anywhere now
-		$this->request = $lf; // backward compatible
-		$this->lf = $lf->lf->lf->lf; // lol recursion
-		$this->auth = $lf->auth_obj;
-		$this->ini = $ini;
-		$this->args = $args;
-		
-		// so you can run things on construct without re-making it
-		if(method_exists($this, 'init')) $this->init($args); 
-	}
-	
 	/**
 	 * Default main() function. Should be replaced in all classes extended from app.
-	 
+	 */
 	public function main() // = array() is for backward compatibility
 	{
 		echo '::default main function::';
-	}*/
+	}
 	
 	/**
 	 * Used for loading partial views given an argument
@@ -239,56 +202,7 @@ class app
 	 * @return string Captured output buffer from execution of $this->$method()
 	
 	*/
-	public function _router($args, $default_route = 'home', $filter = array())
-	{
-		$this->instbase = $this->lf->appurl.$args[0].'/'; // url lf->appurl to all
-		$this->inst = urldecode($args[0]); // can handle any string
-		
-		// Load 
-		$args = array_slice($args, 1); // move vars over to emulate direct execution
-		
-		/** @var string variable used to execute method based on $default_route( or $args[0] if set) */
-		$method = $default_route;
-		
-		// if a base variable is specified,
-		if(isset($args[0])) 
-			// if no filter is specified,
-			if($filter == array()) 
-				$method = $args[0];
-			// if $filter has more than no elements and $args[0] is in the filter,
-			else if(in_array($args[0], $filter)) 
-				$method = $args[0];
-		
-		// begin output capture
-		ob_start();
-		
-		// execute given method of $this object
-		$this->$method($args);
-		
-		// replace appurl with instance base and return
-		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
-	}
 	
-	// ALPHA notice('some message to store in session')
-	// notice() // prints the message
-	public function notice($msg = '', $namespace = 'lf')
-	{
-		if($msg != '')
-		{
-			$_SESSION['notice_'.$namespace][] = $msg;
-		}
-		else if(isset($_SESSION['notice_'.$namespace]))
-		{
-			$temp = $_SESSION['notice_'.$namespace];
-			unset($_SESSION['notice_'.$namespace]);
-			return implode(', ', $temp);
-		}
-	}
-	
-	public function hasnotice($namespace = 'lf')
-	{
-		return isset($_SESSION['notice_'.$namespace]);
-	}
 }
 
 ?>

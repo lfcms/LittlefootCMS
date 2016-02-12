@@ -25,3 +25,7 @@ The preferred convention for issue titles is as follows:
 ### Screenshots
 
 Please include a screenshot. [GitHub made it really easy](https://help.github.com/articles/issue-attachments/)
+
+## Design thoughts
+
+* I want to be able to access anything from any context.

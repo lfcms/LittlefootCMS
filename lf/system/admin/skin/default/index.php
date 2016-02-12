@@ -42,18 +42,20 @@
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
 						<div class="userbar">
-							<img class="fit-font icon pull-left martop" src="%relbase%lf/system/template/images/lf-icon-white-transparent.png"/> 
-							<a id="site_preview" class="pull-left" href="%relbase%" target="blank_"><?=$this->domain;?>%relbase%</a>
+							<img class="fit-font icon pull-left martop" src="<?=\lf\www('LF');?>system/template/images/lf-icon-white-transparent.png"/> 
+							<a id="site_preview" class="pull-left" href="<?=\lf\www('Index');?>" target="blank_"><?=\lf\www('Index');?></a>
 						<?php if($_SESSION['upgrade']): ?>
 							<span id="upgrade" class="pull-left">
-								<a class="blue button" href="%baseurl%settings/">Upgrade Now!</a>
+								<a class="blue button" href="<?=\lf\www('Index');?>settings/">Upgrade Now!</a>
 							</span>
 						<?php endif; ?>
 							<span id="logout_button" class="pull-right">
-								<a class="x" href="%baseurl%_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
+								<a class="x" href="<?=\lf\www('Index');?>_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
-								Hello <?=$this->api('me');?>.
+								Hello <?=(new \lf\user)
+											->fromSession()
+											->getDisplay_name();?>.
 							</span>
 						</div>
 					</div>
@@ -65,12 +67,12 @@
 				<div class="col-2 dark_gray">
 					<nav>
 						<?php /*pre($this->content); */
-						echo implode($this->content['%nav%']); ?>
+						echo implode($this->content['nav']); ?>
 					</nav>
 				</div>
 				<div class="col-10">
 					<div id="controller-<?php echo $this->lf->action[0]; ?>">
-						<?php echo implode($this->content['%content%']); ?>
+						<?php echo implode($this->content['content']); ?>
 					</div>
 				</div>
 			</div>

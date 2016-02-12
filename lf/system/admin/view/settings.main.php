@@ -1,9 +1,9 @@
 <div class="row">
 	<div class="col-12">
-		<h2 class="no_marbot"><i class="fa fa-cog"></i> Settings</h2>
+		<h2><i class="fa fa-cog"></i> Settings</h2>
 	</div>
 </div>
-<?=$this->notice();?>
+<?=notice();?>
 <div class="row">
 	<div class="col-7">
 		<div class="tile white">
@@ -114,9 +114,13 @@
 				<hr />
 				<div class="row">
 					<div class="col-12">
-						<h4><i class="fa fa-clock-o"></i> Current version: <?=$this->request->api('version');?></h4>
+						<?php $lfVersion = (new \lf\cms)->getVersion(); ?>
+						<h4>
+							<i class="fa fa-clock-o"></i> 
+							Current version: <?=$lfVersion;?>
+						</h4>
 						
-						<?php if($newest != $this->request->api('version')): ?>
+						<?php if($newest != $lfVersion ): ?>
 							<p>
 								Latest version available: <?=$newest;?>
 							</p>
@@ -124,7 +128,7 @@
 							<p>You are up to date!</p>
 						<?php endif; ?>
 
-						<?php if($this->request->api('version') == '1-DEV'): ?> 
+						<?php if( $lfVersion == '1-DEV'): ?> 
 							<p><a href="%appurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
 						<?php else: ?> 
 							<p><a href="%appurl%applyUpgrade">Run lf/system/lib/recovery/upgrade.php</a></p>

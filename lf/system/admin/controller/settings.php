@@ -3,39 +3,41 @@
 /**
  * @ignore
  */
-class settings extends app
+class settings
 {
-	public function main($var)
+	public function main()
 	{
+		$var = \lf\www('Param');
+		
 		/* UPGRADE */
 		$master = curl_get_contents('http://littlefootcms.com/files/build-release/master');
 		$dev = curl_get_contents('http://littlefootcms.com/files/build-release/dev');
 		
 		$rewrite['options'] = array('on', 'off');
 		$rewrite['value'] = 'on';
-		if(!isset($this->lf->settings['rewrite']) || $this->lf->settings['rewrite'] == 'off') 
+		if(\lf\getSetting('rewrite') == 'off') 
 			$rewrite['value'] = 'off';
 		
 		$debug['options'] = array('on', 'off');
 		$debug['value'] = 'on';
-		if(!isset($this->lf->settings['debug']) || $this->lf->settings['debug'] == 'off') 
+		if(\lf\getSetting('debug') == 'off') 
 			$debug['value'] = 'off';
 			
 		$bots['options'] = array('on', 'off');
 		$bots['value'] = 'on';
-		if(!isset($this->lf->settings['bots']) || $this->lf->settings['bots'] == 'off') 
+		if(\lf\getSetting('bots') == 'off') 
 			$bots['value'] = 'off';
 			
 		$release['options'] = array('DEV', 'STABLE');
 		$release['value'] = 'DEV';
-		if(!isset($this->lf->settings['release']) || $this->lf->settings['release'] == 'STABLE') 
+		if(\lf\getSetting('release') == 'STABLE') 
 			$release['value'] = 'STABLE';
 		
 		$newest = $release['value']=='DEV'?$dev:$master;
 			
 		$signup['options'] = array('on', 'off');
 		$signup['value'] = 'on';
-		if(!isset($this->lf->settings['signup']) || $this->lf->settings['signup'] == 'off') 
+		if(\lf\getSetting('signup') == 'off') 
 			$signup['value'] = 'off';
 		
 		/* SIMPLECMS */
@@ -46,19 +48,19 @@ class settings extends app
 			if(is_file(LF.'apps/'.$app.'/index.php'))
 				$simplecms['options'][] = $app;
 		}
-		$simplecms['value'] = $this->lf->settings['simple_cms'];
+		$simplecms['value'] = \lf\getSetting('simple_cms');
 		
 		$url = '';
-		if(isset($this->lf->settings['force_url']))
-			$url = $this->lf->settings['force_url'];
+		if(!is_null(\lf\getSetting('force_url')))
+			$url = \lf\getSetting('force_url');
 		
 		$title = '';
-		if(isset($this->lf->settings['title']))
-			$title = $this->lf->settings['title'];
+		if(!is_null(\lf\getSetting('title')))
+			$title = \lf\getSetting('title');
 			
 		$nav_class = '';
-		if(isset($this->lf->settings['nav_class']))
-			$nav_class = $this->lf->settings['nav_class'];
+		if(!is_null(\lf\getSetting('nav_class')))
+			$nav_class = \lf\getSetting('nav_class');
 			
 		// Backup list
 		$backups = array();
@@ -88,24 +90,27 @@ class settings extends app
 		include 'view/settings.main.php';
 	}
 	
-	public function saveoptions($args)
+	public function saveoptions()
 	{
-		$oldSettings = $this->lf->settings;
+		$args = \lf\www('Param');
+		
+		$oldSettings = (new \lf\cms)->getSettings();
 		$newSettings = $_POST['setting'];
 		
 		foreach($oldSettings as $var => $val)
 		{
 			if(isset($newSettings[$var]))
 			{
-				(new LfSettings)
+				$result = (new LfSettings)
 					->byVar($var)
 					->setVal($newSettings[$var])
-					->debug()
+					//->debug()
 					->save();
 					
 				unset($newSettings[$var]);
 			}
 		}
+		
 		
 		foreach($newSettings as $var => $val)
 		{
@@ -113,11 +118,11 @@ class settings extends app
 				->add()
 				->setVar($var)
 				->setVal($val)
-				->debug()
+				//->debug()
 				->save();
 		}
-			
-		$this->notice('Options saved');
+		
+		notice('Options saved');
 		redirect302();
 		
 		/* gotta find a way to do this in ORM 
@@ -136,15 +141,18 @@ class settings extends app
 				$sql .= " END WHERE var IN ('".implode("', '", $params)."')";
 				$this->db->query($sql);
 				
-				$this->notice('Options saved');
+				notice('Options saved');
 			}
 		}*/
 	}
 	
-	public function upgradedev($args)
+	public function upgradedev()
 	{
-		if($this->request->api('version') == '1-DEV')
+		$args = \lf\www('Param');
+		
+		if( (new \lf\cms)->getVersion() == '1-DEV' )
 			include LF.'system/upgrade.dev.php';
+		
 		redirect302();
 	}
 	
@@ -153,9 +161,11 @@ class settings extends app
 		include LF.'system/lib/recovery/upgrade.php';
 	}
 	
-	public function lfup($var)
+	public function lfup()
 	{
-		if(isset($this->lf->settings['release']) && $this->lf->settings['release'] == 'DEV')
+		$var = \lf\www('Param');
+		
+		if(\lf\getSetting('release') == 'DEV')
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system-dev.zip', LF.'system.zip');
 		else
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system.zip', LF.'system.zip');
@@ -168,12 +178,12 @@ class settings extends app
 		
 		if(!is_file(LF.'system.zip'))
 		{
-			$this->notice(LF.'system.zip does not exist');
+			notice(LF.'system.zip does not exist');
 		}
 		else if(!rename(LF.'system', LF.'backup/system-'.$time)) 
 		{
 			// if unable to rename...
-			$this->notice('Unable to move '.LF.'system to '.LF.'backup/system-'.$time);
+			notice('Unable to move '.LF.'system to '.LF.'backup/system-'.$time);
 		} 
 		else
 		{
@@ -183,7 +193,7 @@ class settings extends app
 			Unzip($dir,$file);
 			
 			if(!is_dir(LF.'system'))
-				$this->notice('Failed to unzip system.zip');
+				notice('Failed to unzip system.zip');
 			else
 			{
 				unlink(LF.'system.zip');
@@ -197,15 +207,16 @@ class settings extends app
 					//exit(); 
 				}*/
 				
-				$this->notice('Upgraded Littlefoot successfully.');
+				notice('Upgraded Littlefoot successfully.');
 			}
 		}
 		
 		redirect302();
 	}
 
-	public function rm($vars)
+	public function rm()
 	{
+		$vars = \lf\www('Param');
 		if(!isset($vars[1])) redirect302();
 		
 		if(is_dir(LF.'backup/'.$vars[1]))
@@ -213,8 +224,9 @@ class settings extends app
 		redirect302();
 	}
 	
-	public function reinstall($args)
+	public function reinstall()
 	{
+		$args = \lf\www('Param');
 		if(!isset($args[1])) return 'invalid request';
 		
 		if(!preg_match('/^[a-zA-Z0-9_\.]+$/', $args[1], $match))
@@ -229,6 +241,7 @@ class settings extends app
 	
 	public function restore($vars)
 	{
+		$vars = \lf\www('Param');
 		if(!isset($vars[1])) redirect302();
 		
 		$time = time(); 

@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 /**
  * zormg
  *
@@ -30,7 +32,7 @@
  * SQLQS
  *
  */
-class orm implements IteratorAggregate
+class orm implements \IteratorAggregate
 {
 
 	/** @var bool $debug Prints resulting $sql after execution. */
@@ -163,7 +165,7 @@ class orm implements IteratorAggregate
 		$database_config = $db;
 		$this->conf = $db;
 
-		$this->mysqli = new mysqli(
+		$this->mysqli = new \mysqli(
 			$database_config['host'],
 			$database_config['user'],
 			$database_config['pass']
@@ -269,9 +271,9 @@ class orm implements IteratorAggregate
 			$result = $this->mysqli_result;
 		else if(is_object($query))
 			$result = $query;
-		else
+		else // if is string
 			$result = $this->query($query);
-
+			
 		return $result->fetch_assoc();
 	}
 
@@ -903,7 +905,7 @@ class orm implements IteratorAggregate
 				if(isset($this->result[$row]))
 					return $this->result[$row];
 				else
-					return false;
+					return NULL;
 
 			return $this->nextRow();
 		}
@@ -1015,13 +1017,14 @@ class ___LastSay
 	public function __destruct()
 	{
 		if(isset($_SESSION['db']))
-		{
+		{ 
 			$_SESSION['db']->close();
 			unset($_SESSION['db']);
 		}
 	}
 }
 $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
+
 
 /**
  * If the class is not already defined, you can instantiate a new class through autoload.
@@ -1039,6 +1042,8 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  *
  */
 spl_autoload_register(function ($class_name) {
+	
+	// This is whats filtering it.
 	if(!preg_match_all('/[A-Z][^A-Z]+/', $class_name, $matches))
 		return;
 
@@ -1048,7 +1053,7 @@ spl_autoload_register(function ($class_name) {
 
 	// ty chelmertz http://stackoverflow.com/a/13504972
 	eval(sprintf(
-		'class %s extends orm { '.implode(' ', $guts).' }',
+		'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
 		$class_name
 	));    
 });
