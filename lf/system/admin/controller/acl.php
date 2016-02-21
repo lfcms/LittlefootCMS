@@ -1,5 +1,7 @@
 <?php
 
+namespace lf\admin;
+
 /**
  * @ignore
  */

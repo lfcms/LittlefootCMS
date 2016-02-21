@@ -1,7 +1,9 @@
 <?php
 
+namespace lf\admin;
+
 /**
- * @ignore
+ * LF Admin Users Manager controller
  */
 class users
 {	

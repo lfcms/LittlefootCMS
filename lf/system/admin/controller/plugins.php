@@ -1,7 +1,9 @@
 <?php
 
+namespace lf\admin;
+
 /**
- * @ignore
+ * Plugin manager controller
  */
 class plugins
 {

@@ -1,11 +1,13 @@
 <?php
 
+namespace lf\admin;
+
 /**
- * @ignore
+ * LF Admin Skins Manager controller
  */
 class skins
 {
-	function init()
+	public function init()
 	{
 		$this->pwd = ROOT.'skins/';
 	}

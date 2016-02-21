@@ -14,6 +14,9 @@ function get_inherited($inherit, $process)
 	return array_unique($groups);
 }
 
+/**
+ * Load and test ACL access
+ */
 class acl
 {
 	private $defaultAccess = true;

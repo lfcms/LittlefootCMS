@@ -1,7 +1,9 @@
 <?php 
 
+namespace lf\admin;
+
 /**
- * @ignore
+ * LF Admin Settings class
  */
 class settings
 {

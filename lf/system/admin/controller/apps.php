@@ -1,5 +1,7 @@
 <?php
 
+namespace lf\admin;
+
 class apps
 {
 	public function main()
