@@ -3,8 +3,16 @@
 namespace lf;
 
 /**
- * zormg
- *
+ * Littlefoot ORM
+ * 
+ * ## Auto Load
+ * 
+ * You can query for all rows from any database table of format `abc_efg` (letters separated by underscore), with `(new AbcEfg)->find()`
+ * 
+ * 
+ * 
+ * 
+ * 
  * Littlefoot ORM: SQLQuery
  *
  * unless you define it otherwise, new <classname> will be hijacked

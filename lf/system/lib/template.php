@@ -1,5 +1,7 @@
 <?php
 
+namespace lf;
+
 class Template
 {
 	//should have constants to define application root
