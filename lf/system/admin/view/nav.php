@@ -43,9 +43,9 @@ $admin_apps = str_replace(
 	<div class="col-12 no_pad">
 		<ul class="efvlist flarge light_a">
 			<?php
-			
-			foreach($admin_apps as $shortcut): 
-				if($shortcut == \lf\www('Action')[0]) 
+			foreach($admin_apps as $shortcut):
+				
+				if(\lf\www('Action')[0] = 'apps' && $shortcut == \lf\www('Action')[1]) 
 					$highlight = ' class="active blue light_a"';
 				else 
 					$highlight = '';

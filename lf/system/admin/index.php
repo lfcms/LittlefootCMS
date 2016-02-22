@@ -97,7 +97,7 @@ if($user->hasAccess('admin') )
 	$this->select['template'] = 'default';
 	
 	$renderResult = $this
-		->multiMVC('dashboard')
+		->multiMVC('dashboard', 'content', '\\lf\\admin\\')
 		->render();
 	
 	//$renderResult = (new \lf\cms)->legacyTokenReplace($renderResult);

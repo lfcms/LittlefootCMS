@@ -32,13 +32,11 @@ define('ROOT', LF); // backward compatibility.
 // Littlefoot 1.0
 require 'system/lib/helpers.php'; 		// Helpful functions
 require 'system/lib/orm.php'; 			// Object Relation Model base
-	class orm extends \lf\orm { }	// backward compatible
-require 'system/lib/app.php'; 			// Littlefoot app base class
 require 'system/lib/lfcss.php';			// Littlefoot css builder class
 require 'system/lib/user.php'; 			// user stuff
-require 'system/lib/recovery/install.php';
+require 'system/lib/recovery/install.php'; // I want to move this out of recovery/, but will keep everything else in there.
 require 'system/lib/auth.php'; 			// auth stuff
-require 'system/lib/littlefoot.php'; 	// Request, Auth, Nav, Content, Render
+require 'system/lib/littlefoot.php'; 	// LEGACY Request, Auth, Nav, Content, Render
 
 // LF 2.0 - Dawn of the namespaces and session cache
 
@@ -61,7 +59,6 @@ $cms->run();
 
 require 'system/lib/cache.php'; // Quick memcache style key-value pair storage
 require 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
-require 'system/lib/controller.php'; // Without all the init, I may not even use this
 require 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
 require 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
 
@@ -77,3 +74,4 @@ session_name(md5(LF.$_SERVER['SERVER_NAME']));
 session_start();
 // tried putting this in $lf->authenticate
 // couldn't login when I did that... will fix later
+// actually leaning toward just always having a session going. even if anonymous.

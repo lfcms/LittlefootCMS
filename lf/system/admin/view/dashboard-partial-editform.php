@@ -1,4 +1,4 @@
-<?php
+<?php namespace lf\admin;
 // 
 $match_file = 'default';
 if(isset($save['template']))

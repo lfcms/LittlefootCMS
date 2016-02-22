@@ -103,7 +103,7 @@ class settings
 		{
 			if(isset($newSettings[$var]))
 			{
-				$result = (new LfSettings)
+				$result = (new \LfSettings)
 					->byVar($var)
 					->setVal($newSettings[$var])
 					//->debug()
@@ -124,7 +124,7 @@ class settings
 				->save();
 		}
 		
-		notice('Options saved');
+		notice('<div class="notice">Options saved</div>');
 		redirect302();
 		
 		/* gotta find a way to do this in ORM 
@@ -136,12 +136,12 @@ class settings
 			
 				foreach($_POST['setting'] as $var => $val)
 				{
-					$sql .= " WHEN '".$this->db->escape($var)."' THEN '".$this->db->escape($val)."'";
-					$params[] = $this->db->escape($var);
+					$sql .= " WHEN '".(new orm)->escape($var)."' THEN '".(new orm)->escape($val)."'";
+					$params[] = (new orm)->escape($var);
 				}
 				
 				$sql .= " END WHERE var IN ('".implode("', '", $params)."')";
-				$this->db->query($sql);
+				(new orm)->query($sql);
 				
 				notice('Options saved');
 			}
@@ -236,7 +236,7 @@ class settings
 		
 		chdir(LF.'apps/'.$match[0]);
 		
-		$this->db->import('install.sql');
+		(new orm)->import('install.sql');
 		
 		redirect302();
 	}
