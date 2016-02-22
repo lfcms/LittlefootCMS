@@ -1,5 +1,9 @@
 <?php
 
+namespace lf;
+
+// will delete this eventually
+
 /**
  * @package LittlefootCMS
  * @organization eFlip.com, LLC
@@ -34,7 +38,7 @@
  * 
  * 
  */
-class Littlefoot
+class LegacyLittlefoot
 {
 	/** @var Database $db Database Wrapper */
 	public $db;

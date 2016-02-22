@@ -68,7 +68,7 @@ if($user->hasAccess('admin') )
 	include('view/nav.php');
 	$nav = ob_get_clean();
 
-	// find active nav item (currently broken)
+	// find active nav item (doesnt work for main nav)
 		preg_match_all(
 			'/<li><a class="[^"]+" href="('
 				.preg_quote(\lf\www('Admin'), '/')
@@ -97,7 +97,7 @@ if($user->hasAccess('admin') )
 	$this->select['template'] = 'default';
 	
 	$renderResult = $this
-		->multiMVC('dashboard')
+		->multiMVC('dashboard', 'content', '\\lf\\admin\\')
 		->render();
 	
 	//$renderResult = (new \lf\cms)->legacyTokenReplace($renderResult);

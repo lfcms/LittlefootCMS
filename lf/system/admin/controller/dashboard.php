@@ -1,5 +1,7 @@
 <?php 
 
+namespace lf\admin;
+
 /**
  * @ignore
  */
@@ -122,10 +124,10 @@ class dashboard
 		echo '<p>Return to <a href="%baseurl%dashboard/main/'.$vars[1].'/#nav_'.$vars[1].'">dashboard</a></p>';
 		echo '<h2>WYSIWYG</h2>';
 		
-		$save = (new LfActions)->getById($vars[1]);
+		$save = (new \LfActions)->getById($vars[1]);
 		
 		//$thelink = $this->links[$save['id']][0];
-		$thelink = (new LfLinks)->getById($vars[1]);
+		$thelink = (new \LfLinks)->getById($vars[1]);
 		
 		include 'view/dashboard.wysiwyg.php';
 	}
@@ -134,13 +136,13 @@ class dashboard
 	{
 		$vars = \lf\www('Param');
 		
-		$action = (new LfActions)->findById($vars[1]);
-		$links = (new LfLinks)->findByInclude($vars[1]);
+		$action = (new \LfActions)->findById($vars[1]);
+		$links = (new \LfLinks)->findByInclude($vars[1]);
 		
 		
 		$skin = $action->template;
 		if($skin == 'default')
-			$skin = $this->lf->settings['default_skin'];
+			$skin = \lf\get('default_skin');
 		
 		ob_start();
 		readfile(LF.'skins/'.$skin.'/index.php');
@@ -321,7 +323,7 @@ class dashboard
 			"template"	=> (new \lf\orm)->escape($_POST['template'])
 		);
 		
-		$id = (new LfActions)->insertArray($insert);
+		$id = (new \LfActions)->insertArray($insert);
 		
 		//$recurse = $_POST['recursive'] == 'on' ? 1 : 0;
 		$insert = array(
@@ -332,7 +334,7 @@ class dashboard
 			"recursive"	=> 0
 		);
 		
-		(new LfLinks)->insertArray($insert);
+		(new \LfLinks)->insertArray($insert);
 		
 		if($vars[0] == 'create')
 			// redirect them after this completes

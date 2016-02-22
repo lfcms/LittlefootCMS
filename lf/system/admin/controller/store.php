@@ -1,5 +1,10 @@
 <?php
 
+namespace lf\admin;
+
+/**
+ * LF Admin store Manager controller
+ */
 class store
 {
 	public $repobase = "http://littlefootcms.com/files/download";

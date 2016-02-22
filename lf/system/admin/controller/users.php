@@ -1,14 +1,16 @@
 <?php
 
+namespace lf\admin;
+
 /**
- * @ignore
+ * LF Admin Users Manager controller
  */
 class users
 {	
 	public function main()
 	{
 		$args = \lf\www('Param'); // backward compatibility
-		$users = orm::q('lf_users')->order()->getAll();
+		$users = \lf\orm::q('lf_users')->order()->getAll();
 		$usercount = count($users); 
 		include 'view/users.main.php';
 	}
@@ -16,7 +18,7 @@ class users
 	public function edit()
 	{
 		$args = \lf\www('Param'); // backward compatibility
-		$user = orm::q('lf_users')->filterByid($args[1])->first();
+		$user = \lf\orm::q('lf_users')->filterByid($args[1])->first();
 		include 'view/users.edit.php'; 
 	}
 	
@@ -25,7 +27,7 @@ class users
 	{
 		$args = \lf\www('Param'); // backward compatibility
 			// move this to upgrade
-		(new orm)->query('ALTER TABLE lf_settings MODIFY val VARCHAR(128)');
+		(new \lf\orm)->query('ALTER TABLE lf_settings MODIFY val VARCHAR(128)');
 		
 		if(!isset($this->lf->settings['ldap']))
 		{
