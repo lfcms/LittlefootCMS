@@ -345,15 +345,13 @@ function strdump($str)
 		echo '# '.$i.': "'.$str[$i].'" "'.ord($str[$i]).'<br />';
 }
 
-function pre($str, $func = NULL)
+function pre($str, $func = 'print_r')
 {
 	echo '<pre>';
 	echo '<h4>PRE</h4>';
 	
-	if(is_null($func))
-		print_r($str);
-	else
-		$func($str);
+	$func($str);
+	
 	echo '</pre>';
 }
 

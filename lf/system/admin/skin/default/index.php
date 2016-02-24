@@ -42,15 +42,15 @@
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
 						<div class="userbar">
-							<img class="fit-font icon pull-left martop" src="<?=\lf\www('LF');?>system/template/images/lf-icon-white-transparent.png"/> 
-							<a id="site_preview" class="pull-left" href="<?=\lf\www('Index');?>" target="blank_"><?=\lf\www('Index');?></a>
+							<img class="fit-font icon pull-left martop" src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-icon-white-transparent.png"/> 
+							<a id="site_preview" class="pull-left" href="<?=\lf\requestGet('IndexUrl');?>" target="blank_"><?=\lf\requestGet('IndexUrl');?></a>
 						<?php if($_SESSION['upgrade']): ?>
 							<span id="upgrade" class="pull-left">
 								<a class="blue button" href="<?=\lf\www('Index');?>settings/">Upgrade Now!</a>
 							</span>
 						<?php endif; ?>
 							<span id="logout_button" class="pull-right">
-								<a class="x" href="<?=\lf\www('Index');?>_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
+								<a class="x" href="<?=\lf\requestGet('IndexUrl');?>_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
 							<span id="admin_greeting" class="pull-right">
 								Hello <?=(new \lf\user)

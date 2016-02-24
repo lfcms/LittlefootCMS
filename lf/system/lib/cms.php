@@ -464,7 +464,7 @@ class cms
 		$MVCresult = $this->mvc(new $fullclass);
 		
 		$this->setContent( 
-			str_replace('%appurl%', wwwAppUrl(), $MVCresult ), 
+			str_replace('%appurl%', \lf\requestGet('ActionUrl'), $MVCresult ), 
 			$section
 		);
 		

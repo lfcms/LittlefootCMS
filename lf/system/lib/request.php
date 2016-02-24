@@ -18,7 +18,7 @@ function isAdmin()
 
 function resolveAppUrl($html)
 {
-	return str_replace('%appurl%', getActionUrl(), $html);
+	return str_replace('%appurl%', requestGet('ActionUrl'), $html);
 }
 
 // Parses $_SERVER['REQUEST_URI'] into usable parts, generates a fake REQUEST_URI, etc if it is not set.
@@ -280,8 +280,8 @@ class request
 		// }
 	// }
 	
-	// opposite of pop
-	public function actionPush($count = 1)
+	// take last action, set as first param, repeat $count times
+	public function actionToParam($count = 1)
 	{
 		if( count($this->pieces['param']) < $count )
 		{
@@ -294,6 +294,7 @@ class request
 			array_push( $this->pieces['action'], $this->pieces['param'][0] );
 			array_shift( $this->pieces['param'] );
 		}
+		
 		return $this;
 	}
 	

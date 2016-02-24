@@ -6,22 +6,30 @@ class apps
 {
 	public function main()
 	{
-		$args = \lf\www('Param');
+		$args = \lf\requestGet('Param');
 		$var = $args;
+		
 		
 		if(\lf\getSetting('simple_cms') != '_lfcms') return;
 		
 		// $var[0] = 'manage'
 		$app_name = $var[0];
 		echo '<h2 class="no_marbot">
-				<a href="'.\lf\wwwAppUrl().$app_name.'/">
+				<a href="'.\lf\requestGet('ActionUrl').$app_name.'/">
 					'.ucfirst($app_name).'
 				</a> Admin</h2>
 			<div class="dashboard_manage">';
 		
-		$request = (new \lf\RequestSession)->getRequest();
-		$request->actionDrop() // drop the 'apps' action in front
-		$request->actionPush(); // make '$app' the new root action
+		$request = (new \lf\request)
+			->load()
+			->actionDrop() // drop the 'apps' action in front
+			->actionToParam(); // make '$app' the new root action
+		
+		pre($request, 'var_dump');
+		
+			//->save();
+		
+		pre( (new \lf\request)->load() );
 		
 		// manage
 		preg_match('/[A-Za-z0-9_]+/', $args[0], $matches);		
@@ -50,7 +58,7 @@ class apps
 	
 	public function manage($var)
 	{
-		$var = \lf\www('param');
+		$var = \lf\requestGet('Param');
 		// backward compatible
 		redirect302(\lf\www('Admin').'apps/'.$var[1]);
 	}
