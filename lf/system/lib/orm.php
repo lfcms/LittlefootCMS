@@ -4,13 +4,34 @@ namespace lf;
 
 /**
  * Littlefoot ORM
+ * > Object-relational mapping (ORM, O/RM, and O/R mapping) in computer science is a programming technique for converting data between incompatible type systems in object-oriented programming languages. This creates, in effect, a "virtual object database" that can be used from within the programming language. - [Wikipedia, the free encyclopedia](http://en.wikipedia.org/wiki/Object-relational_mapping)
+ * 
+ * Littlefoot comes with a [schema-agnostic ORM class](https://github.com/eflip/LittlefootCMS/blob/development/lf/system/lib/orm.php) which offers an object oriented approach to database manipulation. The idea is to store different pieces of a query as variables in the object and allow you to manipulate those variables using various object methods before execution. This ORM [implements](https://github.com/eflip/LittlefootCMS/blob/development/lf/system/lib/orm.php#L408) PHP's magic method [__call](http://php.net/manual/en/language.oop5.overloading.php#object.call) which allows arbitrary column names to be used in the method call using regex.
  * 
  * ## Auto Load
  * 
  * You can query for all rows from any database table of format `abc_efg` (letters separated by underscore), with `(new AbcEfg)->find()`
  * 
  * 
+ * There is a fun shortcut to the above where you can just call new class instances out of a given table name using `__autoload`.
  * 
+ * `$users = (new LfUsers);`
+ * 
+ * If you were to call `(new BlogThreads)`, the autoload function would quickly define a class called `BlogThreads` extended from the `orm` on the fly with a table set as `blog_threads`.
+ * 
+ * ### extends
+ * 
+ * You can extend from orm.
+ * 
+ * `class myPages extends orm { public $table = 'app_pages'; }`
+ * 
+ * And for lulz, you can extend from an __autoload'd class name to define the table on the fly.
+ * 
+ * `class myPages extends AppPages {}`
+ * 
+ * ### Database Object
+ * 
+ * The first time this is called, [a new mysqli object will be created](https://github.com/eflip/LittlefootCMS/blob/0f2a55346a590cc75676f201a78403a3dd65cf1e/lf/system/lib/orm.php#L180) and stored in $_SESSION['db']. After that, the same mysqli object is simply returned. If you are in the littlefoot context, this is already likely accessible at `$this->db`.
  * 
  * 
  * Littlefoot ORM: SQLQuery
@@ -101,10 +122,11 @@ class orm implements \IteratorAggregate
 	/**
 	 * Initialize `$this->mysqli_result` with `initDb()`. Pulls from $_SESSION if a previous connection already exists.
 	 *
+	 * You can initialize the orm as follows:
 	 *
-	 *
-	 * Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
-	 *
+	 * * `$myOrm = (new orm);`
+	 * * But you can't do much with it as the table target is fundamental to making a quer
+	 * * Store the Database wrapper and the specified table which is ideally called from orm::q('my_table')
 	 *
 	 * @param Database $db Database wrapper
 	 */
@@ -316,10 +338,11 @@ class orm implements \IteratorAggregate
 	}
 
 	/**
-	 * Run query, return result, increment SQL counter
+	 * Run query, return SQL result, increment SQL counter
+	 * 
+	 * `$sqlResult = (new orm)->query('SELECT * FROM lf_users');`
 	 *
 	 * @param string $q MySQL Query
-	 *
 	 * @param bool $big If the request is big
 	 */
 	function query($q, $big = false)
@@ -408,7 +431,7 @@ class orm implements \IteratorAggregate
 	/**
 	 * ## Regex
 	 *
-	 *
+	 * This allows you to call functions like `->getAllByCategory('Cats')` and `joinOnId...`
 	 *
 	 *
 	 *
@@ -1034,6 +1057,9 @@ class ___LastSay
 $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
 
 
+
+
+
 /**
  * If the class is not already defined, you can instantiate a new class through autoload.
  *
@@ -1045,11 +1071,14 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  * 		private $table = 'lf_users';
  * }
  * ```
+ * There is a fun shortcut to the above where you can just call new class instances out of a given table name using `__autoload`.
  *
  * Try it: `var_dump(new LfUsers);`
- *
+ * 
+ * If you were to call `(new BlogThreads)`, the autoload function would quickly define a class called `BlogThreads` extended from the `orm` on the fly with a table set as `blog_threads`.
+ * 
  */
-spl_autoload_register(function ($class_name) {
+spl_autoload_register( function ($class_name) {
 	
 	// This is whats filtering it.
 	if(!preg_match_all('/[A-Z][^A-Z]+/', $class_name, $matches))

@@ -60,8 +60,8 @@ if($user->hasAccess('admin') )
 			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
 	}
 	
-	if(\lf\www('Action')[0] == '')
-		\lf\www('Action')[0] = 'dashboard';
+	if(\lf\requestGet('Action')[0] == '')
+		\lf\requestGet('Action')[0] = 'dashboard';
 	
 	// Nav item
 	ob_start();
@@ -71,14 +71,14 @@ if($user->hasAccess('admin') )
 	// find active nav item (doesnt work for main nav)
 		preg_match_all(
 			'/<li><a class="[^"]+" href="('
-				.preg_quote(\lf\www('Admin'), '/')
+				.preg_quote(\lf\requestGet('AdminUrl'), '/')
 				.'([^\"]+))"/', 
 			$nav, 
 			$links
 		);
 		$match = -1;
 		foreach($links[2] as $id => $request)
-			if($request == \lf\www('Action')[0].'/') 
+			if($request == \lf\requestGet('Action')[0].'/') 
 				$match = $id;
 		
 		if($match != -1)

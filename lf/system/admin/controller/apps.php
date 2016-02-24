@@ -9,7 +9,7 @@ class apps
 		$args = \lf\www('Param');
 		$var = $args;
 		
-		if(isset($this->lf->simple) && $this->lf->simple != '_lfcms') return;
+		if(\lf\getSetting('simple_cms') != '_lfcms') return;
 		
 		// $var[0] = 'manage'
 		$app_name = $var[0];
@@ -19,23 +19,15 @@ class apps
 				</a> Admin</h2>
 			<div class="dashboard_manage">';
 		
-		\lf\get('request')->actionDrop(); // drop the 'apps' action in front
-		\lf\get('request')->actionPush(); // make '$app' the new root action
+		$request = (new \lf\RequestSession)->getRequest();
+		$request->actionDrop() // drop the 'apps' action in front
+		$request->actionPush(); // make '$app' the new root action
 		
 		// manage
 		preg_match('/[A-Za-z0-9_]+/', $args[0], $matches);		
 		$app_path = ROOT.'apps/'.$matches[0];
 		
-		//$preview = 'admin';
 		$admin = true;
-		/*$urlpreview = '';
-		if(isset($var[0]) && $var[0] == 'preview') 
-		{
-			$preview = 'index';
-			$admin = false;
-			\lf\get('request')->actionPop();
-			$urlpreview = 'preview/';
-		}*/
 		
 		ob_start();
 		//if(is_file($app_path.'/'.$preview.'.php'))

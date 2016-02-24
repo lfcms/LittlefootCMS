@@ -166,9 +166,14 @@ class cms
 	{
 		// Start the 'cms' timer
 		(new cache)->startTimer(__METHOD__);
+		
+		// test the installation. can we connect to MySQL, etc?
 		(new install)->test();
 		
-		set('request', (new request)->parseUri() );
+		// initialize request into session. 
+		// this can technically be done JIT with `->load()`, 
+		// but I prefer to do it myself.
+		(new request)->parse()->save();
 		
 		// load version from LF/system/version file
 		$this->loadVersion() 						
@@ -180,7 +185,7 @@ class cms
 			->route( (new auth), '_auth', false ); 
 		
 		// load acl object into session
-		set( 'acl', (new acl)->load() ); 
+		(new acl)->compile()->save();
 		
 		// If /admin was requested, load it and stop here
 		$this->routeAdmin()					
@@ -232,7 +237,7 @@ class cms
 	public function routeAdmin()
 	{
 		// if request is detected as an 'admin' request...
-		if( get('request')->isAdmin() )
+		if( (new \lf\request)->load()->isAdmin() )
 		{
 			chdir(LF.'system/admin');
 			include 'index.php';
@@ -308,7 +313,7 @@ class cms
 		ob_start();
 		
 		if($param === NULL)
-			$param = (new \lf\request)->get('wwwParam');
+			$param = requestGet('Param');
 		
 		if(!isset($param[0])) 
 			$param[0] = '';
@@ -440,7 +445,7 @@ class cms
 		// Check for valid request
 		$success = preg_match(
 			'/^('.implode('|',$controllers).')$/', 
-			www('Action')[0], 
+			requestGet('Action')[0], 
 			$match
 		);
 
@@ -450,8 +455,8 @@ class cms
 
 		$class = $match[0];
 		
-		$save = get('request');
-		get('request')->actionPop( count(www('Action')) - 1 ); // move the last item off action to param
+		$save = (new \lf\request)->load();
+		(new \lf\request)->load()->actionPop( count(requestGet('Action')) - 1 ); // move the last item off action to param
 		
 		include "controller/$class.php";
 		
@@ -489,23 +494,22 @@ class cms
 			$alias = str_replace('\\', '_', $className);
 		
 		// store request state before upcoming alteration
-		$preRequest = get('request');
+		$originalRequest = (new \lf\request)->load();
 		
-		// get the current wwwAction
-		$actionArray = $preRequest->get('wwwAction');
+		// get the current action array
+		$actionArray = $originalRequest->getAction();
 		
 		// if the request matches even the first part of the action
 		if( $actionArray[0] == $alias )
 		{
 			// so we can revert after this operation if we just return as a string
-			$tempRequest = $preRequest;
+			$tempRequest = $originalRequest;
 			
-			$tempRequest
-				->actionPop()
-				->toSession();
+			// simulate actionPop for the upcoming MVC operation since we routed on action[0]
+			$tempRequest->actionPop()->save();
 		
-			$this->content['nav'][] = $this->renderNavCache();
-			$this->content['content'][] = $this->mvc($class);
+			$this->setContent( $this->renderNavCache(), 'nav' );
+			$this->setContent( $this->mvc($class) );
 			
 			if(!$return)
 			{
@@ -516,7 +520,8 @@ class cms
 			}
 		}
 		
-		//$preRequest->toSession();
+		// save back original context
+		$originalRequest->save();
 		
 		(new cache)->endTimer(__METHOD__);
 		$this->hook_run('post '.$className);
@@ -535,7 +540,7 @@ class cms
 	
 	public function renderBaseUrl($text)
 	{
-		return str_replace('%baseurl%', www('Index'), $text);
+		return str_replace('%baseurl%', requestGet('IndexUrl'), $text);
 	}
 	
 	public function printLogin()
@@ -565,7 +570,7 @@ class cms
 	
 	public function getSkinBase()
 	{
-		return www('LF').'skins/'.$this->getTemplateName().'/';
+		return requestGet('LfUrl').'skins/'.$this->getTemplateName().'/';
 	}
 	
 	public function setTitle($newTitle)
@@ -603,8 +608,8 @@ class cms
 	public function loadLfCSS()
 	{
 		$this->head .=  
-			'<link rel="stylesheet" href="'.www('LF').'system/lib/lf.css" />
-			<link rel="stylesheet" href="'.www('LF').'system/lib/3rdparty/icons.css" />';
+			'<link rel="stylesheet" href="'.requestGet('LfUrl').'system/lib/lf.css" />
+			<link rel="stylesheet" href="'.requestGet('LfUrl').'system/lib/3rdparty/icons.css" />';
 			
 		return $this;
 	}
@@ -619,7 +624,7 @@ class cms
 	
 	public function getTemplatePath()
 	{
-		if( get('request')->isAdmin() )
+		if( (new \lf\request)->load()->isAdmin() )
 			return LF.'system/admin/skin/'.$this->getTemplateName();
 		
 		return LF.'skins/'.$this->getTemplateName();
@@ -748,7 +753,7 @@ class cms
 		$this->select['alias'] = '';
 		
 		// shift everything to param off `/`
-		get('request')->fullActionPop();
+		(new request)->load()->fullActionPop();
 		
 		return $this;
 	}
@@ -758,7 +763,7 @@ class cms
 	public function actionFromCache($action = null)
 	{
 		if( is_null( $action) )
-			$action = \lf\www('Action');
+			$action = \lf\requestGet('Action');
 		
 		
 		// visiting /something/like/this would generate `something/(like/(this/)?)?)` as a test pattern
@@ -803,7 +808,7 @@ class cms
 		// always grab the first one in case nothing is selected
 		$matches = (new orm)->fetchAll("
 			SELECT * FROM lf_actions 
-			WHERE alias IN ('".implode("', '", www('Action') )."') 
+			WHERE alias IN ('".implode("', '", requestGet('Action') )."') 
 				OR (position = 1 AND parent = -1)
 			ORDER BY  ABS(parent), ABS(position) ASC
 		");
@@ -828,10 +833,10 @@ class cms
 		
 		$parent = -1; // start at the root nav items
 		$selected = array(); // nothing selected to start with
-		for($i = 0; $i < count(www('Action')); $i++) // loop through action array
+		for($i = 0; $i < count(requestGet('Action')); $i++) // loop through action array
 			if(isset($test_select[$parent])) // if our compiled parent->position matrix has this parent set
 				foreach($test_select[$parent] as $position => $nav)	// loop through child items 
-					if($nav['alias'] == www('Action')[$i]) // to find each navigation item in the hierarchy
+					if($nav['alias'] == requestGet('Action')[$i]) // to find each navigation item in the hierarchy
 					{
 						// we found the match, 
 						// move on to next action item matching
@@ -840,23 +845,12 @@ class cms
 						break;
 					}
 		
-		/*		
-		pre('TEST SELECT');
-		pre($test_select,'var_dump');
-		pre('MATCHES');
-		pre($matches,'var_dump');
-		pre('SELECTED');
-		pre($selected,'var_dump');
-		pre('REQUEST');
-		pre(get('request'),'var_dump');
-		*/
-		
 		// if a selection was made, alter the action so it has proper params
 		if($selected != array())
 		{
 			// separate action into vars and action base, 
 			// pull select nav from inner most child
-			get('request')->actionPop( count(www('Action')) - count($selected) );
+			(new request)->load()->actionPop( count( requestGet('Action')) - count($selected) );
 			
 			// This is where we find which navigation item we are visiting
 			$this->select = end($selected);
@@ -867,12 +861,9 @@ class cms
 		// set current page as /
 		if($this->select['alias'] == '404' && $base_save != NULL)
 		{		
-			get('request')->fullActionPop(); // pop all actions into param
+			(new request)->load()->fullActionPop(); // pop all actions into param
 			$this->select = $base_save;
 		}
-		
-		//pre(get('request'),'var_dump');
-		//pre($this->select,'var_dump');
 		
 		// in case the file doesn't exist
 		
@@ -889,7 +880,7 @@ class cms
 		// Update nav_cache to show active items
 		
 		$actionbuilder = '%baseurl%'; // Start with reference to installation base
-		foreach( get('request')->get('wwwAction') as $action)
+		foreach( requestGet('Action') as $action)
 		{
 			if($action != '')	// Account for empty alias
 				$actionbuilder .= $action.'/';	// Loop through the full/path. 
@@ -985,7 +976,7 @@ class cms
 		$funcstart = microtime(true);
 		$this->hook_run('pre '.__METHOD__);
 		
-		if( ! get('acl')->test( implode('/', www('Action') ) ) )
+		if( ! (new acl)->load()->test( implode('/', requestGet('Action') ) ) )
 		{
 			$this->setContent( "401 Unauthorized at ".wwwIndexAction().$this->getLogin() );
 			return $this;
@@ -1021,14 +1012,14 @@ class cms
 		else
 			$content = array();
 		
-		$vars = www('Param');
+		$vars = requestGet('Param');
 		foreach($apps as $_app)
 		{
 				
 			// Test ACL for this app
-			/*if( ! get('acl')->test(implode('/', www('Action')).'|'.$_app['app'] ) 
+			/*if( ! get('acl')->test(implode('/', requestGet('Action')).'|'.$_app['app'] ) 
 				|| ( isset($vars[0]) 
-					&& get('acl')->test(implode('/', www('Action')).'|'.$_app['app'].'/'.$vars[0])
+					&& get('acl')->test(implode('/', requestGet('Action')).'|'.$_app['app'].'/'.$vars[0])
 			))
 			{
 				$this->setContent("403 Access Denied ".$this->getLogin(), $_app['section']);
@@ -1040,15 +1031,15 @@ class cms
 			if(!is_file($path.'/index.php')) continue;
 			
 			// figure out appurl (/action1/action2/ referring to this app)
-			$appurl = wwwIndexAction();
-			if(www('Action')[0] != '') 
+			$appurl = requestGet('ActionUrl');
+			if(requestGet('Action')[0] != '') 
 				$appurl .= '/'; // account for home page
 			//pre($appurl);
 			set('appurl', $appurl);
 			
 			// appbase (relbase for the app)
-			$appbase = $this->relbase.implode('/',www('Action'));
-			if(www('Action')[0] != '') 
+			$appbase = $this->relbase.implode('/',requestGet('Action'));
+			if(requestGet('Action')[0] != '') 
 				$appbase .= '/'; // account for home page
 			$this->appbase = $appbase;
 			

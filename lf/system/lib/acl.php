@@ -21,7 +21,7 @@ class acl
 {
 	private $defaultAccess = true;
 	
-	public function load()
+	public function compile()
 	{
 		(new \lf\cache)->startTimer(__METHOD__);
 		
@@ -57,9 +57,28 @@ class acl
 		return $this;
 	}
 	
-	public function toSession()
+	public function save()
 	{
-		(new \lf\cache)->sessSet('acl', $this);
+		(new \lf\cache)->sessSet('acl', [
+			'base' => $this->base,
+			'user' => $this->user
+		]);
+		
+		return $this;
+	}
+	
+	public function load()
+	{
+		$acl = (new \lf\cache)->sessGet('acl');
+		
+		if( is_null( $acl ) )
+			$this->compile()->save();
+		else
+		{			
+			$this->base = $acl['base'];
+			$this->user = $acl['user'];
+		}
+		
 		return $this;
 	}
 	

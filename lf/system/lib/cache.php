@@ -3,6 +3,26 @@
 namespace lf;
 
 /**
+ * This function is a shortcut to calling `(new \lf\cache)->endTimer($key)`
+ * 
+ * `\lf\startTimer(__METHOD__)` is shorter than `(new \lf\cache)->startTimer(__METHOD__)`
+ */
+function startTimer($key, $namespace = 'default')
+{
+	return (new \lf\cache)->startTimer(__METHOD__);
+}
+
+/**
+ * This function is a shortcut to calling `(new cache)-sessGet($key)`
+ * 
+ * `\lf\get('request')` is shorter than `(new \lf\cache)->get('request')`
+ */
+function endTimer($key, $namespace = 'default')
+{
+	return (new \lf\cache)->endTimer(__METHOD__);
+}
+
+/**
  * This function is a shortcut to calling `(new cache)-sessGet($key)`
  * 
  * `\lf\get('request')` is shorter than `(new \lf\cache)->get('request')`
