@@ -9,7 +9,7 @@ class users
 {	
 	public function main()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		$users = \lf\orm::q('lf_users')->order()->getAll();
 		$usercount = count($users); 
 		include 'view/users.main.php';
@@ -17,7 +17,7 @@ class users
 	
 	public function edit()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		$user = \lf\orm::q('lf_users')->filterByid($args[1])->first();
 		include 'view/users.edit.php'; 
 	}
@@ -25,7 +25,7 @@ class users
 	## NEW
 	public function saveldap()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 			// move this to upgrade
 		(new \lf\orm)->query('ALTER TABLE lf_settings MODIFY val VARCHAR(128)');
 		
@@ -53,7 +53,7 @@ class users
 	
 	public function update()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		// If a password was provided, apply it.
 		if($_POST['pass'] != '')
 		{
@@ -78,13 +78,13 @@ class users
 	
 	public function newuser()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		include 'view/users.create.php';
 	}
 	
 	public function create()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		$postnames = array(
 			'user' => "Username",
 			'pass' => "Password",
@@ -166,7 +166,7 @@ Do not reply to this email. It was generated automatically.',
 	
 	public function rm()
 	{
-		$vars = \lf\www('Param');
+		$vars = \lf\requestGet('Param');
 		$sql = "DELETE FROM lf_users WHERE id = ".intval($vars[1]);
 		(new \lf\orm)->query($sql);
 		

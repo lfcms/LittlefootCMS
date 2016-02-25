@@ -239,8 +239,6 @@ class cms
 		// if request is detected as an 'admin' request...
 		if( (new \lf\request)->load()->isAdmin() )
 		{
-			echo 'asdf';
-			
 			chdir(LF.'system/admin');
 			include 'index.php';
 			exit;
@@ -366,6 +364,69 @@ class cms
 	}
 	
 	/** 
+	 * cd to a folder containing another folder called controller/ with controller class files in it. 
+	 * 
+	 * This routes the first (left to right) URL /variable/ into controller/$variable.php, then does mvc on (new $variable)
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	public function multiMVC($default = NULL, $section = 'content', $namespace = '\\')
+	{	
+		// Get a list of admin tools
+		foreach(scandir('controller') as $controller)
+		{
+			if($controller[0] == '.') continue;
+			$controllers[] = str_replace('.php', '', $controller);
+		}
+
+		// Check for valid request
+		$success = preg_match(
+			'/^('.implode('|',$controllers).')$/', 
+			requestGet('Action')[0], 
+			$match
+		);
+
+		// default to dashboard class
+		if(!$success and !is_null($default)) 
+			$match[0] = $default;
+
+		$class = $match[0];
+		
+		// push all but single left most action 
+		$request = (new \lf\request)->load();
+		
+		// store original state for after upcoming mvc
+		$requestBackup = $request;
+		
+		$request
+			->fullActionPop()
+			->paramShift()
+			->save(); // might move this into each function... wont hurt to run twice...
+		
+		include "controller/$class.php";
+		
+		$fullclass = $namespace.$class;
+		$MVCresult = $this->mvc(new $fullclass);
+		
+		$this->setContent( 
+			str_replace('%appurl%', \lf\requestGet('ActionUrl'), $MVCresult ), 
+			$section
+		);
+		
+		// put it back how we found it.
+		$requestBackup->save();
+		
+		return $this;
+	}
+	
+	/** 
 	 * used to route based on args[0] as instance
 	 *
 	 * ### How to use _router
@@ -435,46 +496,7 @@ class cms
 		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
 	}
 	
-	public function multiMVC($default = NULL, $section = 'content', $namespace = '\\')
-	{	
-		// Get a list of admin tools
-		foreach(scandir('controller') as $controller)
-		{
-			if($controller[0] == '.') continue;
-			$controllers[] = str_replace('.php', '', $controller);
-		}
-
-		// Check for valid request
-		$success = preg_match(
-			'/^('.implode('|',$controllers).')$/', 
-			requestGet('Action')[0], 
-			$match
-		);
-
-		// default to dashboard class
-		if(!$success and !is_null($default)) 
-			$match[0] = $default;
-
-		$class = $match[0];
-		
-		$save = (new \lf\request)->load();
-		(new \lf\request)->load()->actionPop( count(requestGet('Action')) - 1 ); // move the last item off action to param
-		
-		include "controller/$class.php";
-		
-		$fullclass = $namespace.$class;
-		$MVCresult = $this->mvc(new $fullclass);
-		
-		$this->setContent( 
-			str_replace('%appurl%', \lf\requestGet('ActionUrl'), $MVCresult ), 
-			$section
-		);
-		
-		// put it back how we found it.
-		set('request', $save);
-		
-		return $this;
-	}
+	
 	
 	
 	// you need to include the class .php file yourself.

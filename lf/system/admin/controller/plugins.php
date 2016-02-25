@@ -9,7 +9,7 @@ class plugins
 {
 	public function main()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		//$this->db->query("UPDATE lf_settings SET val = '' WHERE var = 'plugins'");
 		//$registered_hooks = $this->lf->settings['plugins'];
 		
@@ -21,14 +21,14 @@ class plugins
 	
 	public function rm()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		orm::q('lf_plugins')->filterByid($args[1])->delete();
 		redirect302();
 	}
 	
 	public function hookup()
 	{
-		$args = \lf\www('Param'); // backward compatibility
+		$args = \lf\requestGet('Param'); // backward compatibility
 		
 		//$plugin_hooks = $this->db->fetch("SELECT * FROM lf_settings WHERE var = 'plugins'");
 		$plugin_hook = \lf\orm::q('lf_plugins')->filterByhook($_POST['hook'])->filterByplugin($_POST['plugin'])->first();

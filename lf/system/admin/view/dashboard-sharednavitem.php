@@ -23,12 +23,12 @@
 					echo $theapp;
 					
 					if( is_file(LF.'apps/'.$theapp.'/admin.php')): ?>
-						<a href="<?=\lf\www('Admin');?>apps/<?=$theapp;?>/"><i class="fa fa-cog"></i></a>
+						<a href="<?= \lf\requestGet('AdminUrl');?>apps/<?=$theapp;?>/"><i class="fa fa-cog"></i></a>
 					<?php else: ?>
 						<span><i class="fa fa-cog"></i></span>
 					<?php endif; ?>
 				|
-					<a class="x" <?=jsprompt('Are you sure?');?> href="<?=\lf\www('Admin');?>dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash-o"></i></a>
+					<a class="x" <?=jsprompt('Are you sure?');?> href="<?= \lf\requestGet('AdminUrl');?>dashboard/rm/<?=$action['id'];?>/"><i class="fa fa-trash-o"></i></a>
 					
 					
 				</span>
@@ -36,7 +36,7 @@
 		</div>
 	</div>
 	
-	<?php if(\lf\www('Param')[1] == $action['id']): /* Load form if selected */ ?>
+	<?php if(\lf\requestGet('Param')[1] == $action['id']): /* Load form if selected */ ?>
 	<div class="tile-content">
 		<?=(new \lf\cms)
 			->partial(

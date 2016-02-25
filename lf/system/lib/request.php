@@ -27,7 +27,8 @@ class request
 	// store the resulting peices, default to localhost
 	private $pieces = [
 		'protocol' => 'http://',
-		'domain' => 'localhost'
+		'domain' => 'localhost',
+		'action' => []
 	];
 	
 	// change $select to something better like $thingYouRequested
@@ -162,6 +163,16 @@ class request
 		return $this;
 	}
 	
+	/**
+	 * Give 
+	 * 
+	 * @param integer $keepCount 
+	 */
+	public function paramFromActionKeep( $keepCount )
+	{
+		
+	}
+	
 	public function load()
 	{
 		// load pieces from session
@@ -287,21 +298,57 @@ class request
 		// }
 	// }
 	
+	/*
+	 * * Action is between Cwd and Param. 
+	 * * Action takes/gives from/to Cwd and takes/gives from/to Param. 
+	 * * Action is the only one that needs to be moving stuff around.
+	 * 
+	 * Check it out:
+	 * 
+	 * `<?php pre( (new \lf\request)->load()->actionPush() ); ?>`
+	 */
+	
 	// take last action, set as first param, repeat $count times
-	public function actionPush($count = 1)
+	public function paramShift($count = 1)
 	{
+		// If there are less params than you asked for, 
 		if( count($this->pieces['param']) < $count )
 		{
-			$this->error[] = 'Dont have '.$count.' in wwwParam for that';
+			$this->error[] = 'Dont have '.$count.' in "param" for that';
+			// you get NULL
 			return NULL;
 		}
 		
+		// Loop $count times (decrement-- until zero)
 		while($count--)
 		{
-			array_push( $this->pieces['action'], $this->pieces['param'][0] );
-			array_shift( $this->pieces['param'] );
+			// push first param to end of action. "Push one or more elements onto the end of array"
+			array_push( 
+				$this->pieces['action'], 
+				// shift last param off: "Shift an element off the beginning of array"
+				array_shift( $this->pieces['param'] ) 
+			);
 		}
 		
+		return $this;
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionPop($count = 1)
+	{
+		if( count($this->pieces['action']) == 0 )
+			return NULL;
+		
+		// Loop $count times (decrement-- until zero)
+		while($count--)
+			// unshift: "Prepend one or more elements to the beginning of an array"
+			array_unshift( 
+				$this->pieces['param'], 
+				// pop: "Pop the element off the end of array"
+				array_pop( $this->pieces['action'] ) 
+			);
+			
 		return $this;
 	}
 	
@@ -316,6 +363,13 @@ class request
 			$this->pieces['cwd'][] = array_shift( $this->pieces['action'] );
 		
 		return $this;
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionCount()
+	{
+		return count( $this->pieces['action'] );
 	}
 	
 	// pop last element off action, into beginning of param
@@ -335,27 +389,20 @@ class request
 		return $this;
 	}
 	
-	// pop last element off action, into beginning of param
-	// return bool indicates success 1 or fail 0
-	public function actionPop($count = 1)
-	{
-		if( count($this->pieces['action']) == 0 )
-			return NULL;
-		
-		while($count--)
-		{
-			array_unshift( $this->pieces['param'], end( $this->pieces['action'] ) );
-			array_pop( $this->pieces['action'] );
-		}
-		return $this;
-	}
-	
 	// pop all remaining action items into param
 	public function fullActionPop()
 	{
 		$this->pieces['param'] = $this->pieces['action'];
 		$this->pieces['action'] = array();
 		return $this;
+	}
+	
+	/** I don't like the name. but this pushes all action to param, and pulls back $count */
+	public function actionKeep($count)
+	{
+		return $this
+			->fullActionPop()
+			->actionUnpop($count);
 	}
 	
 	public function isAdmin()

@@ -11,7 +11,7 @@ class acl
 	
 	public function user()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		// Pull links from nav cache
 		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
@@ -40,7 +40,7 @@ class acl
 	
 	public function inherit()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		// Pull links from nav cache
 		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
 		$nav = str_replace('%baseurl%', '', $nav);
@@ -71,7 +71,7 @@ class acl
 	
 	public function acl_global()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		// Pull links from nav cache
 		$nav = file_get_contents(ROOT.'cache/nav.cache.html');
 		$nav = str_replace('%baseurl%', '', $nav);
@@ -99,7 +99,7 @@ class acl
 	
 	public function edit()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		echo '<pre>';
 		print_r($vars);
 		print_r($_POST);
@@ -108,7 +108,7 @@ class acl
 	
 	public function update()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		echo '<pre>';
 		print_r($vars);
@@ -123,7 +123,7 @@ class acl
 	
 	public function add()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		if($_POST['appurl'] != '') 
 			$_POST['action'] = $_POST['action'].'|'.$_POST['appurl'];
 		
@@ -143,7 +143,7 @@ class acl
 	
 	public function rm()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		(new \lf\orm)->query("
 			DELETE FROM lf_acl_".(new \lf\orm)->escape($vars[1])."	
 			WHERE id = ".intval($vars[2])."
