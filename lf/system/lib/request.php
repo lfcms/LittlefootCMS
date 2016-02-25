@@ -4,65 +4,249 @@ namespace lf;
 
 // shortcut function to retrieve the session data saved by request
 // eg, `\lf\www("Index");` returns 'http://www.domain.com/littlefoot/index.php/'
-function www($path)
+function requestGet($methodSuffix)
 {
-	return (new \lf\request)->get('www'.$path);
+	$method = 'get'.$methodSuffix;
+	return (new \lf\request)->load()->$method();
 }
 
-function wwwIndexAction()
+// did they ask for admin
+function isAdmin()
 {
-	return www('Index').implode('/', www('Action') );
-}
-
-function wwwAppUrl()
-{
-	// make an array without surrounding / delimiter
-	$parts = array();
-	
-	if( get('request')->isAdmin() )
-		$parts[] = 'admin';
-	
-	if( www('Cwd') != array() )
-		$parts[] = implode('/', www('Cwd') );
-	
-	if( www('Action') != array() )
-		$parts[] = implode('/', www('Action') );
-	
-	// implode everything with / delimiter
-	return www('Index').implode('/', $parts ).'/';
+	return (new \lf\request)->load()->isAdmin();
 }
 
 function resolveAppUrl($html)
 {
-	return str_replace('%appurl%', wwwAppUrl(), $html);
+	return str_replace('%appurl%', requestGet('ActionUrl'), $html);
 }
 
-// Parses $_SERVER['REQUEST_URI'] into usable parts, saves result to session, generates a fake REQUEST_URI, etc if it is not set.
+// Parses $_SERVER['REQUEST_URI'] into usable parts, generates a fake REQUEST_URI, etc if it is not set.
 class request
 {
-	public $wwwProtocol = 'http://';
-	public $wwwIndex = null;
-	public $wwwDomain = null;
-	public $wwwLF = null;
-	public $wwwAdmin = false;
-	public $wwwParam = array();
-	public $wwwAction = array();
-	public $wwwTitle = 'LittlefootCMS'; // <title />
-	public $wwwCwd = array();
+	// store the resulting peices, default to localhost
+	private $pieces = [
+		'protocol' => 'http://',
+		'domain' => 'localhost',
+		'action' => []
+	];
 	
-	public function __construct($title = NULL)
+	/** Parse REQUEST_URI into `$pieces` */
+	public function parse($uri = null)
 	{
-		if( !is_null($title) )
-			$this->pageTitle = $title;
-		// this class relies on the $_SESSION like a remote data store
-		//if( is_null( (new \lf\cache)->sessGet('request') ) )
-		//	(new \lf\request)->parseUri()->toSession();
+		startTimer(__METHOD__);
+		
+		// if a $uri was not provided,
+		if( is_null( $uri ) )
+			// set as [REQUEST_URI](http://stackoverflow.com/a/4730834)
+			$uri = $_SERVER['REQUEST_URI'];
+		
+		// [ty Anoop K](http://stackoverflow.com/a/12364085)
+	    $protocol = (
+			( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ) 
+			|| $_SERVER['SERVER_PORT'] == 443) 
+				? "https://" 
+				: "http://";
+				
+		// detect file being used as base (for API)
+		$filename = 'index.php';
+		if(preg_match('/^(.*)\/([^\/]+\.php)$/', $_SERVER['SCRIPT_NAME'], $match))
+			$filename = $match[2];
+		
+		// Extract subdir
+		$pos = strpos($_SERVER['SCRIPT_NAME'], $filename);
+		$subdir = $pos != 0 ? substr($_SERVER['SCRIPT_NAME'], 1, $pos-1) : '/';
+		
+		// ignore anything to do with $_GET
+		$uri = explode('?', $_SERVER['REQUEST_URI']);
+		$uri = $uri[0];
+		
+		// if the last character in the REQUEST_URI is not `/`,
+		if(substr($uri, -1) != '/')
+			// Add a trailing slash
+			$uri .= '/'; 
+		
+		// Detect subdirectory, use of index.php, request of admin, and action
+		// beginning regex delimiter
+		$urlregex = '/'.
+			// match the subdir, dont capture
+			'^\/'.str_replace('/', '\/', $subdir).	
+			// figure out what the user is calling their index.php
+			'(.+.php\/)?'.
+			// detect if request involves admin/ access
+			'(admin\/)?'.	
+			// capture the rest of the string, this is the "action" by default
+			'(.*)'.			
+			// end regex delimiter, ignore $_GET variables
+			'\??/';		
+		preg_match($urlregex, $uri, $match);
+		
+		// was /index.php/ used? or did they use rewrite (eg, /blog/12-my-post)
+		$index = $match[1];
+		
+		// was admin requested?
+		$admin = $match[2] == 'admin/' ? true : false;
+		
+		// action is special because it is an array of the remaining REQUEST_URI delimited by `/`
+		$action = explode('/', $match[3], -1);
+		
+		// If the action array has no elements,
+		if( $action == [] ) 
+			// Set first action as alias '' (empty string)
+			$action[] = '';
+		
+		// Add in 302 to fix rewrite and prevent duplicate content
+		$fixrewrite = false;
+		if(getSetting('rewrite') == 'on')
+		{
+			if($index == 'index.php/') 
+				$fixrewrite = true;
+			
+			$index = '';
+		}
+		else
+		{
+			if($index == '') 
+				$fixrewrite = true;
+			
+			$index = $filename.'/';
+		}
+		
+		// set port if non-standard 80 and 443
+		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
+			$port = ':'.$_SERVER['SERVER_PORT']; 
+		else 
+			$port = '';
+		
+		// determine if we are https:// or not, set protocol
+		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+			$protocol = 'https://';
+		else
+			$protocol = 'http://';
+		
+		if( !isset($_SERVER['HTTP_HOST']) )
+			$this->fakeServerGlobal();
+		
+		$this->pieces = [
+			'protocol' 	=> $protocol,
+			'domain' 	=> $_SERVER['HTTP_HOST'],
+			'port' 		=> $port,
+			'subdir' 	=> $subdir,
+			'index' 	=> $index,
+			'admin' 	=> $admin,
+			'cwd'		=> [],
+			'action'	=> $action,
+			'param'		=> [],
+			'get'		=> $_GET,
+			'post'		=> $_POST
+		];
+		
+		// If rewrite needed fixed, this will redirect and keep the URL intact.
+		if($fixrewrite) 
+			redirect302( $this->getActionUrl() );
+		
+		//$this->hook_run('post lf request');
+		
+		endTimer(__METHOD__);
+		
+		return $this;
 	}
 	
-	public function setTitle($newTitle)
+	public function save()
 	{
-		$this->pageTitle = $newTitle;
+		// save pieces to SESSION
+		set('requestPieces', $this->pieces);
+		
 		return $this;
+	}
+	
+	/**
+	 * Give 
+	 * 
+	 * @param integer $keepCount 
+	 */
+	public function paramFromActionKeep( $keepCount )
+	{
+		
+	}
+	
+	public function load()
+	{
+		// load pieces from session
+		$this->pieces = get('requestPieces');
+		
+		// idk if I should catch and recover this way...
+		// is JIT ok here?
+		if( is_null( $this->pieces ) )
+			$this->parse()->save();
+		
+		return $this;
+	}
+	
+	/* URL Generators */
+	public function getPieces()
+	{
+		return $this->pieces;
+	}
+	
+	public function getCwd()
+	{
+		return $this->pieces['cwd'];
+	}
+	
+	public function getAction()
+	{
+		return $this->pieces['action'];
+	}
+	
+	public function getParam()
+	{
+		return $this->pieces['param'];
+	}
+	
+	public function getDomain()
+	{
+		return $this->pieces['domain'];
+	}
+	
+	public function getSubdirUrl()
+	{
+		extract($this->pieces);
+		return $protocol.$domain.$port.'/'.$subdir;
+	}
+	
+	public function getLfUrl()
+	{
+		extract($this->pieces);
+		return $this->getSubdirUrl().'lf/';
+	}
+	
+	public function getIndexUrl()
+	{
+		return $this->getSubdirUrl().$this->pieces['index'];
+	}
+	
+	public function getAdminUrl()
+	{
+		return $this->getIndexUrl().'admin/';
+	}
+
+	public function getActionUrl()
+	{
+		// make an array without surrounding / delimiter
+		$parts = array();
+		
+		if( $this->isAdmin() )
+			$parts[] = 'admin';
+		
+		if( $this->pieces['cwd'] != [] )
+			$parts[] = implode('/', $this->pieces['cwd'] );
+		
+		if( $this->pieces['action'] != [] )
+			$parts[] = implode('/', $this->pieces['action'] );
+		
+		// implode everything with / delimiter
+		return $this->getIndexUrl().implode('/', $parts ).'/';
 	}
 	
 	public function fakeServerGlobal($requestUri = '/')
@@ -75,75 +259,59 @@ class request
 		return $this;
 	}
 	
-	public function get($key)
-	{
-		if( is_null( (new \lf\cache)->sessGet('request') ) )
-			$this->parseUri()->toSession(); // JIT REQUEST_URI parse
+	// public function forceUrl($url = null)
+	// {
+		// // not in use...
+		// return
 		
-		return (new \lf\cache)->sessGet('request')->$key;
-	}
-	
-	public function forceUrl($url = null)
-	{
-		// redirect to URL specified in 'force_url' setting if not already being accessed that way
-	    if( isset($this->settings['force_url']) 
-			&& $this->settings['force_url'] != '' )
-		{
-			$relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
-			$request = $_SERVER['HTTP_HOST'].$relbase;
+		
+		// // redirect to URL specified in 'force_url' setting if not already being accessed that way
+	    // if( isset($this->settings['force_url']) 
+			// && $this->settings['force_url'] != '' )
+		// {
+			// $relbase = preg_replace('/index.php.*/', '', $_SERVER['PHP_SELF']);
+			// $request = $_SERVER['HTTP_HOST'].$relbase;
 			
-			$compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
+			// $compare = preg_replace('/^https?:\/\//', '', $this->settings['force_url']);
 
-			if($request != $compare)
-			{
-				$redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-				redirect302($this->protocol.$redirect);
-			}
-		}
-	}
+			// if($request != $compare)
+			// {
+				// $redirect = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				// redirect302($this->protocol.$redirect);
+			// }
+		// }
+	// }
 	
-	// opposite of pop
-	public function actionPush($count = 1)
+	/*
+	 * * Action is between Cwd and Param. 
+	 * * Action takes/gives from/to Cwd and takes/gives from/to Param. 
+	 * * Action is the only one that needs to be moving stuff around.
+	 * 
+	 * Check it out:
+	 * 
+	 * `<?php pre( (new \lf\request)->load()->actionPush() ); ?>`
+	 */
+	
+	// take first param, set as last action, repeat $count times
+	public function paramShift($count = 1)
 	{
-		if( count($this->wwwParam) < $count )
+		// If there are less params than you asked for, 
+		if( count($this->pieces['param']) < $count )
 		{
-			$this->error[] = 'Dont have '.$count.' in wwwParam for that';
+			$this->error[] = 'Dont have '.$count.' in "param" for that';
+			// you get NULL
 			return NULL;
 		}
 		
+		// Loop $count times (decrement-- until zero)
 		while($count--)
 		{
-			array_push( $this->wwwAction, $this->wwwParam[0] );
-			array_shift( $this->wwwParam );
-		}
-		return $this;
-	}
-	
-	// pop last element off action, into beginning of param
-	// return bool indicates success 1 or fail 0
-	public function actionDrop($count = 1)
-	{
-		if( count($this->wwwAction) == 0 )
-			return NULL;
-		
-		while($count--)
-			$this->wwwCwd[] = array_shift( $this->wwwAction );
-		
-		return $this;
-	}
-	
-	// pop last element off action, into beginning of param
-	// return bool indicates success 1 or fail 0
-	public function actionUndrop($count = 1)
-	{
-		if( count($this->wwwCwd) < 0 )
-			return NULL;
-		
-		while($count--)
-		{
-			// take last of cwd, add to front of action.
-			array_unshift( $this->wwwAction, end( $this->wwwCwd ) );
-			array_pop( $this->wwwCwd );
+			// push first param to end of action. "Push one or more elements onto the end of array"
+			array_push( 
+				$this->pieces['action'], 
+				// shift last param off: "Shift an element off the beginning of array"
+				array_shift( $this->pieces['param'] ) 
+			);
 		}
 		
 		return $this;
@@ -153,45 +321,83 @@ class request
 	// return bool indicates success 1 or fail 0
 	public function actionPop($count = 1)
 	{
-		if( count($this->wwwAction) == 0 )
+		if( count($this->pieces['action']) == 0 )
+			return NULL;
+		
+		// Loop $count times (decrement-- until zero)
+		while($count--)
+			// unshift: "Prepend one or more elements to the beginning of an array"
+			array_unshift( 
+				$this->pieces['param'], 
+				// pop: "Pop the element off the end of array"
+				array_pop( $this->pieces['action'] ) 
+			);
+			
+		return $this;
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionDrop($count = 1)
+	{
+		if( count($this->pieces['action']) == 0 )
+			return NULL;
+		
+		while($count--)
+			$this->pieces['cwd'][] = array_shift( $this->pieces['action'] );
+		
+		return $this;
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionCount()
+	{
+		return count( $this->pieces['action'] );
+	}
+	
+	// pop last element off action, into beginning of param
+	// return bool indicates success 1 or fail 0
+	public function actionUndrop($count = 1)
+	{
+		if( count($this->pieces['cwd']) < 0 )
 			return NULL;
 		
 		while($count--)
 		{
-			array_unshift( $this->wwwParam, end( $this->wwwAction ) );
-			array_pop( $this->wwwAction );
+			// take last of cwd, add to front of action.
+			array_unshift( $this->pieces['action'], end( $this->pieces['cwd'] ) );
+			array_pop( $this->pieces['cwd'] );
 		}
+		
 		return $this;
 	}
 	
 	// pop all remaining action items into param
 	public function fullActionPop()
 	{
-		$this->wwwParam = $this->wwwAction;
-		$this->wwwAction = array();
+		$this->actionPop( $this->actionCount() );
 		return $this;
 	}
 	
-	public function toSession()
+	/** I don't like the name. but this pushes all action to param, and pulls back $count */
+	public function actionKeep($count = 1)
 	{
-		(new \lf\cache)->sessSet('request', $this);
-		return $this;
-	}
-	
-	public function fromSession()
-	{
-		return (new \lf\cache)->sessGet('request');
+		return $this
+			->fullActionPop()
+			->paramShift($count)
+			->save(); // I kinda do want to put this at the end of all cwd/action/param shifting
 	}
 	
 	public function isAdmin()
 	{
 		// could have just returned ->admin, but this must be boolean
-		return $this->admin ? true : false;
+		return $this->pieces['admin'];
 	}
 	
-	public function parseUri($uri = 'todo')
+	/*public function parseUri($uri = 'todo')
 	{
-		(new \lf\cache)->startTimer(__METHOD__);
+		startTimer(__METHOD__);
 		
 		if( !isset($_SERVER['HTTP_HOST']) )
 			$this->fakeServerGlobal();
@@ -280,6 +486,7 @@ class request
 		else
 			$protocol = 'http://';
 		
+		// LEGACY
 		// www.domain.com
 		$this->wwwDomain = $_SERVER['HTTP_HOST'];
 		
@@ -300,17 +507,74 @@ class request
 			redirect302($this->wwwIndex.$admin.$this->action);
 		
 		// explode the remaining URL component to see what was requested, delimiting on '/'
-		$this->wwwAction = explode('/', $action, -1);
-		if(count($this->wwwAction) < 1) // If the action array has no elements,
-			$this->wwwAction[] = '';	 // Set first action as alias '' (empty string)
+		$this->pieces['action'] = explode('/', $action, -1);
+		if(count($this->pieces['action']) < 1) // If the action array has no elements,
+			$this->pieces['action'][] = '';	 // Set first action as alias '' (empty string)
 		
 		//$this->hook_run('post lf request');
 		
 		(new \lf\cache)->endTimer(__METHOD__);
 		
 		return $this;
-	}
+	}*/
 }
+
+/** manage request session */
+// class RequestSession
+// {
+	// public $request = NULL;
+	
+	// public function __construct()
+	// {
+		// $this->initRequest();
+	// }
+	
+	// /** Initialize request object, try from session, otherwise put a one into session and use that */
+	// private function initRequest()
+	// {
+		// $this->request = get('request');
+		
+		// if( is_null( $this->request ) )
+		// {
+			// $this->request = (new \lf\request)->parseUri();
+			// $this->save();
+		// }
+		
+		// return $this;
+	// }
+	
+	// // 
+	// public function getRequest()
+	// {
+		// return $this->request;
+	// }
+	
+	// public function set($request)
+	// {
+		// $this->request = $request;
+	// }
+	
+	// public function save()
+	// {
+		// set('request', $this->request);
+	// }
+	
+	// // relay everything else to request session
+	// public function __call($method, $args)
+	// {
+		
+		// if( !is_callable( array( (new request), $method), true, $callable_name) )
+			// return null;
+		
+		// $result = $this->request->$method($args);
+		
+		
+		// // any local changes need to be published to session
+		// $this->save();
+		
+		// return $result;
+	// }
+// }
 
 // My nasty solution to ensuring $_SESSION['db'] is cleared
 // while allowing the orm class to use it without

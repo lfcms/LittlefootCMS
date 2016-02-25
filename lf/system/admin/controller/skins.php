@@ -14,7 +14,7 @@ class skins
 	
 	public function main()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		$pwd = $this->pwd;
 		$request = $this->request;
@@ -36,7 +36,7 @@ class skins
 	
 	public function edit()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$skin = $this->pwd.$matches[0];
@@ -78,7 +78,7 @@ class skins
 	
 	public function download()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
@@ -89,7 +89,7 @@ class skins
 	
 	public function getappfromnet()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/skins/skins.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
@@ -117,7 +117,7 @@ class skins
 	
 	public function install()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		// lol this was way before `redirect302()`
 		header('HTTP/1.1 302 Moved Temporarily');
@@ -174,7 +174,7 @@ class skins
 	
 	public function blankskin()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		$name = $_POST['name'];
 		if(!preg_match('/^[_\-a-zA-Z0-9]+$/', $name, $match)) 
@@ -192,7 +192,7 @@ class skins
 	
 	public function rm()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$vars['app'] = $matches[0];
 		$app = $this->pwd.$matches[0];
@@ -207,7 +207,7 @@ class skins
 	
 	public function makehome()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		preg_match('/[_\-a-zA-Z0-9]+/', $args[1], $matches);
 		$skin = $this->pwd.$matches[0];
 		
@@ -219,7 +219,7 @@ class skins
 	
 	public function update()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches);
 		$skin = $this->pwd.$matches[0];
 		
@@ -254,7 +254,7 @@ class skins
 	
 	public function setdefault()
 	{	
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		if(preg_match('/[_\-a-zA-Z0-9]+/', $vars[1], $matches))
 		{
 			(new \lf\orm)->query("UPDATE lf_settings SET val = '".$matches[0]."' WHERE var = 'default_skin'");
@@ -269,7 +269,7 @@ class skins
 	
 	public function zip()
 	{
-		$vars = \lf\www('Param'); // backward compatibility
+		$vars = \lf\requestGet('Param'); // backward compatibility
 		if(!preg_match('/^[_\-a-zA-Z0-9]+$/', $vars[1], $match))
 			redirect302();
 		else

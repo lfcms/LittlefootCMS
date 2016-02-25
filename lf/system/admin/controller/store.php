@@ -11,7 +11,7 @@ class store
 	
 	public function main()
 	{
-		//\lf\www('Param')[];
+		//\lf\requestGet('Param')[];
 		
 		$apps = curl_get_contents($this->repobase.'/apps/apps.txt');
 		$apps = array_flip(explode("\n",$apps,-1));
@@ -35,7 +35,7 @@ class store
 		pre($_POST);
 		exit();
 		
-		$type = \lf\www('Param')[1];
+		$type = \lf\requestGet('Param')[1];
 		
 		switch($type)
 		{
@@ -101,9 +101,9 @@ class store
 	
 	public function dlplugin()
 	{
-		if(!isset(\lf\www('Param')[1])) return 'Missing Arg 2';
+		if(!isset(\lf\requestGet('Param')[1])) return 'Missing Arg 2';
 		
-		$this->item = \lf\www('Param')[1];
+		$this->item = \lf\requestGet('Param')[1];
 		$this->type = 'plugins';
 		
 		return $this->downloader();
@@ -111,9 +111,9 @@ class store
 	
 	public function dlskin()
 	{
-		if(!isset(\lf\www('Param')[1])) return 'Missing Arg 2';
+		if(!isset(\lf\requestGet('Param')[1])) return 'Missing Arg 2';
 		
-		$this->item = \lf\www('Param')[1];
+		$this->item = \lf\requestGet('Param')[1];
 		$this->type = 'skins';
 		
 		return $this->downloader();
@@ -121,9 +121,9 @@ class store
 	
 	public function dlapp()
 	{
-		if(!isset(\lf\www('Param')[1])) return 'Missing Arg 2';
+		if(!isset(\lf\requestGet('Param')[1])) return 'Missing Arg 2';
 		
-		$this->item = \lf\www('Param')[1];
+		$this->item = \lf\requestGet('Param')[1];
 		$this->type = 'apps';
 		
 		return $this->downloader();

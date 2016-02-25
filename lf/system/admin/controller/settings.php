@@ -9,7 +9,7 @@ class settings
 {
 	public function main()
 	{
-		$var = \lf\www('Param');
+		$var = \lf\requestGet('Param');
 		
 		/* UPGRADE */
 		$master = curl_get_contents('http://littlefootcms.com/files/build-release/master');
@@ -94,7 +94,7 @@ class settings
 	
 	public function saveoptions()
 	{
-		$args = \lf\www('Param');
+		$args = \lf\requestGet('Param');
 		
 		$oldSettings = (new \lf\cms)->getSettings();
 		$newSettings = $_POST['setting'];
@@ -150,7 +150,7 @@ class settings
 	
 	public function upgradedev()
 	{
-		$args = \lf\www('Param');
+		$args = \lf\requestGet('Param');
 		
 		if( (new \lf\cms)->getVersion() == '1-DEV' )
 			include LF.'system/upgrade.dev.php';
@@ -165,7 +165,7 @@ class settings
 	
 	public function lfup()
 	{
-		$var = \lf\www('Param');
+		$var = \lf\requestGet('Param');
 		
 		if(\lf\getSetting('release') == 'DEV')
 			downloadFile('http://littlefootcms.com/files/upgrade/littlefoot/system-dev.zip', LF.'system.zip');
@@ -218,7 +218,7 @@ class settings
 
 	public function rm()
 	{
-		$vars = \lf\www('Param');
+		$vars = \lf\requestGet('Param');
 		if(!isset($vars[1])) redirect302();
 		
 		if(is_dir(LF.'backup/'.$vars[1]))
@@ -228,7 +228,7 @@ class settings
 	
 	public function reinstall()
 	{
-		$args = \lf\www('Param');
+		$args = \lf\requestGet('Param');
 		if(!isset($args[1])) return 'invalid request';
 		
 		if(!preg_match('/^[a-zA-Z0-9_\.]+$/', $args[1], $match))
@@ -243,7 +243,7 @@ class settings
 	
 	public function restore($vars)
 	{
-		$vars = \lf\www('Param');
+		$vars = \lf\requestGet('Param');
 		if(!isset($vars[1])) redirect302();
 		
 		$time = time(); 

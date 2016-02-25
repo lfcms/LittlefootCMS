@@ -6,36 +6,29 @@ class apps
 {
 	public function main()
 	{
-		$args = \lf\www('Param');
+		$args = \lf\requestGet('Param');
 		$var = $args;
 		
-		if(isset($this->lf->simple) && $this->lf->simple != '_lfcms') return;
+		if(\lf\getSetting('simple_cms') != '_lfcms') return;
 		
 		// $var[0] = 'manage'
 		$app_name = $var[0];
 		echo '<h2 class="no_marbot">
-				<a href="'.\lf\wwwAppUrl().$app_name.'/">
+				<a href="'.\lf\requestGet('ActionUrl').$app_name.'/">
 					'.ucfirst($app_name).'
 				</a> Admin</h2>
 			<div class="dashboard_manage">';
 		
-		\lf\get('request')->actionDrop(); // drop the 'apps' action in front
-		\lf\get('request')->actionPush(); // make '$app' the new root action
+		$request = (new \lf\request)->load()
+			->actionDrop() // drop the 'apps' action in front to cwd
+			->actionKeep(1) // make '$app' the new root action
+			->save(); 
 		
 		// manage
 		preg_match('/[A-Za-z0-9_]+/', $args[0], $matches);		
 		$app_path = ROOT.'apps/'.$matches[0];
 		
-		//$preview = 'admin';
 		$admin = true;
-		/*$urlpreview = '';
-		if(isset($var[0]) && $var[0] == 'preview') 
-		{
-			$preview = 'index';
-			$admin = false;
-			\lf\get('request')->actionPop();
-			$urlpreview = 'preview/';
-		}*/
 		
 		ob_start();
 		//if(is_file($app_path.'/'.$preview.'.php'))
@@ -58,8 +51,8 @@ class apps
 	
 	public function manage($var)
 	{
-		$var = \lf\www('param');
+		$var = \lf\requestGet('Param');
 		// backward compatible
-		redirect302(\lf\www('Admin').'apps/'.$var[1]);
+		redirect302(\lf\requestGet('AdminUrl').'apps/'.$var[1]);
 	}
 }
