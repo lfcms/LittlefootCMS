@@ -32,6 +32,7 @@ class request
 	];
 	
 	// change $select to something better like $thingYouRequested
+	// may move this into CMS or make a new class for selecting nav items, like request
 	private $select = [
 		'title' => 'LittlefootCMS'
 	];
@@ -308,7 +309,7 @@ class request
 	 * `<?php pre( (new \lf\request)->load()->actionPush() ); ?>`
 	 */
 	
-	// take last action, set as first param, repeat $count times
+	// take first param, set as last action, repeat $count times
 	public function paramShift($count = 1)
 	{
 		// If there are less params than you asked for, 
@@ -392,17 +393,17 @@ class request
 	// pop all remaining action items into param
 	public function fullActionPop()
 	{
-		$this->pieces['param'] = $this->pieces['action'];
-		$this->pieces['action'] = array();
+		$this->actionPop( $this->actionCount() );
 		return $this;
 	}
 	
 	/** I don't like the name. but this pushes all action to param, and pulls back $count */
-	public function actionKeep($count)
+	public function actionKeep($count = 1)
 	{
 		return $this
 			->fullActionPop()
-			->actionUnpop($count);
+			->paramShift($count)
+			->save(); // I kinda do want to put this at the end of all cwd/action/param shifting
 	}
 	
 	public function isAdmin()

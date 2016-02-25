@@ -9,7 +9,6 @@ class apps
 		$args = \lf\requestGet('Param');
 		$var = $args;
 		
-		
 		if(\lf\getSetting('simple_cms') != '_lfcms') return;
 		
 		// $var[0] = 'manage'
@@ -20,16 +19,10 @@ class apps
 				</a> Admin</h2>
 			<div class="dashboard_manage">';
 		
-		$request = (new \lf\request)
-			->load()
-			->actionDrop(); // drop the 'apps' action in front
-			//->actionPush(); // make '$app' the new root action
-		
-		pre($request, 'var_dump');
-		
-			//->save();
-		
-		pre( (new \lf\request)->load() );
+		$request = (new \lf\request)->load()
+			->actionDrop() // drop the 'apps' action in front to cwd
+			->actionKeep(1) // make '$app' the new root action
+			->save(); 
 		
 		// manage
 		preg_match('/[A-Za-z0-9_]+/', $args[0], $matches);		
@@ -60,6 +53,6 @@ class apps
 	{
 		$var = \lf\requestGet('Param');
 		// backward compatible
-		redirect302(\lf\www('Admin').'apps/'.$var[1]);
+		redirect302(\lf\requestGet('AdminUrl').'apps/'.$var[1]);
 	}
 }

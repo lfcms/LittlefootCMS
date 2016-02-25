@@ -4,7 +4,7 @@
 		<? endif; ?>
 <div class="row">
 	<div class="col-6">
-		<form class="dashboard_manage" action="<?=\lf\www('Admin');?>users/create/" method="post">
+		<form class="dashboard_manage" action="<?=\lf\requestGet('AdminUrl');?>users/create/" method="post">
 			<ul class="vlist">
 				<li><input type="text" name="user" placeholder="Username" required></li>
 				<li><input type="password" name="pass" placeholder="Password" required></li>

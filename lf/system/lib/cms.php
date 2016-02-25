@@ -864,7 +864,10 @@ class cms
 					{
 						// we found the match, 
 						// move on to next action item matching
+						
+						// this result in all/that/match(/with/params/after)
 						$selected[] = $nav;
+						
 						$parent = $nav['id'];
 						break;
 					}
@@ -874,7 +877,8 @@ class cms
 		{
 			// separate action into vars and action base, 
 			// pull select nav from inner most child
-			(new request)->load()->actionPop( count( requestGet('Action')) - count($selected) );
+			// eg, given `someparent/blog/23-test`, pop twice
+			(new request)->load()->actionKeep( count($selected) )->save();
 			
 			// This is where we find which navigation item we are visiting
 			$this->select = end($selected);
@@ -996,7 +1000,7 @@ class cms
 	
 	public function getcontent()
 	{
-		(new cache)->startTimer(__METHOD__);
+		startTimer(__METHOD__);
 		$funcstart = microtime(true);
 		$this->hook_run('pre '.__METHOD__);
 		
@@ -1054,19 +1058,6 @@ class cms
 			$path = ROOT.'apps/'.$_app['app'];
 			if(!is_file($path.'/index.php')) continue;
 			
-			// figure out appurl (/action1/action2/ referring to this app)
-			$appurl = requestGet('ActionUrl');
-			if(requestGet('Action')[0] != '') 
-				$appurl .= '/'; // account for home page
-			//pre($appurl);
-			set('appurl', $appurl);
-			
-			// appbase (relbase for the app)
-			$appbase = $this->relbase.implode('/',requestGet('Action'));
-			if(requestGet('Action')[0] != '') 
-				$appbase .= '/'; // account for home page
-			$this->appbase = $appbase;
-			
 			// collect app output
 			ob_start();
 			chdir($path); // set current working dir to app base path
@@ -1078,24 +1069,17 @@ class cms
 			.', Position: '.$_app['section']
 			.', Config: '.$_app['ini'];
 			
-			(new cache)->startTimer($apptimer);
+			startTimer($apptimer);
 			include 'index.php'; // execute app
-			(new cache)->endTimer($apptimer);
+			endTimer($apptimer);
 			
 			$output = '
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
 					ob_get_clean().
 				'</div>';
 			
-			// replace %keywords%
-			$output = str_replace(
-				'%appurl%', 
-				get('appurl'), 
-				$output
-			);
-			
 			// and save
-			$content[$_app['section']][] = $output;
+			$content[$_app['section']][] = \lf\resolveAppUrl($output);
 			
 			// reset for next go around
 			$this->appurl = '';

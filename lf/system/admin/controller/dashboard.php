@@ -243,7 +243,7 @@ class dashboard
 		
 		$id = $this->create($vars);
 		
-		redirect302(\lf\wwwAppUrl().'main/'.$id.'#nav_'.$id);
+		redirect302(\lf\requestGet('ActionUrl').'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function create($vars) // nav/item create
@@ -442,7 +442,7 @@ class dashboard
 	
 	public function manage()
 	{
-		redirect302(\lf\wwwAppUrl());
+		redirect302(\lf\requestGet('ActionUrl'));
 	}
 	
 	public function download()
@@ -686,7 +686,7 @@ class dashboard
 		if(strpos($_SERVER['HTTP_REFERER'],'wysiwyg') !== false)
 			redirect302();
 		
-		redirect302(\lf\wwwAppUrl().'main/'.$id.'#nav_'.$id);
+		redirect302(\lf\requestGet('ActionUrl').'main/'.$id.'#nav_'.$id);
 	}
 	
 	public function updatenavcache()
