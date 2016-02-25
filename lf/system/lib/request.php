@@ -63,7 +63,9 @@ class request
 		$pos = strpos($_SERVER['SCRIPT_NAME'], $filename);
 		$subdir = $pos != 0 ? substr($_SERVER['SCRIPT_NAME'], 1, $pos-1) : '/';
 		
-		$uri = $_SERVER['REQUEST_URI'];
+		// ignore anything to do with $_GET
+		$uri = explode('?', $_SERVER['REQUEST_URI']);
+		$uri = $uri[0];
 		
 		// if the last character in the REQUEST_URI is not `/`,
 		if(substr($uri, -1) != '/')
