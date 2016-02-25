@@ -31,12 +31,6 @@ class request
 		'action' => []
 	];
 	
-	// change $select to something better like $thingYouRequested
-	// may move this into CMS or make a new class for selecting nav items, like request
-	private $select = [
-		'title' => 'LittlefootCMS'
-	];
-	
 	/** Parse REQUEST_URI into `$pieces` */
 	public function parse($uri = null)
 	{
@@ -220,6 +214,22 @@ class request
 		extract($this->pieces);
 		return $protocol.$domain.$port.'/'.$subdir;
 	}
+	
+	public function getLfUrl()
+	{
+		extract($this->pieces);
+		return $this->getSubdirUrl().'lf/';
+	}
+	
+	public function getIndexUrl()
+	{
+		return $this->getSubdirUrl().$this->pieces['index'];
+	}
+	
+	public function getAdminUrl()
+	{
+		return $this->getIndexUrl().'admin/';
+	}
 
 	public function getActionUrl()
 	{
@@ -237,35 +247,6 @@ class request
 		
 		// implode everything with / delimiter
 		return $this->getIndexUrl().implode('/', $parts ).'/';
-	}
-	
-	public function getLfUrl()
-	{
-		extract($this->pieces);
-		return $this->getSubdirUrl().'lf/';
-	}
-	
-	public function getIndexUrl()
-	{
-		return $this->getSubdirUrl().$this->pieces['index'];
-	}
-	
-	public function getAdminUrl()
-	{
-		return $this->getIndexUrl().'admin/';
-	}
-	
-	public function getTitle()
-	{
-		return $this->select['title'];
-	}
-	
-	/* Setters */
-	
-	public function setTitle($newTitle)
-	{
-		$this->select['title'] = $newTitle;
-		return $this;
 	}
 	
 	public function fakeServerGlobal($requestUri = '/')
