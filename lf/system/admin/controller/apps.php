@@ -22,8 +22,8 @@ class apps
 		
 		$request = (new \lf\request)
 			->load()
-			->actionDrop() // drop the 'apps' action in front
-			->actionToParam(); // make '$app' the new root action
+			->actionDrop(); // drop the 'apps' action in front
+			//->actionPush(); // make '$app' the new root action
 		
 		pre($request, 'var_dump');
 		

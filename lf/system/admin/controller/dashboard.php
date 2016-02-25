@@ -51,7 +51,7 @@ class dashboard
 		$links = (new \lf\cms)->getLinks();
 		
 
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 
 		// If an id is specified in the URL, save as the 'edit' variable in current class.
 		$edit = 0;
@@ -119,7 +119,7 @@ class dashboard
 	
 	public function wysiwyg()
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		
 		echo '<p>Return to <a href="%baseurl%dashboard/main/'.$vars[1].'/#nav_'.$vars[1].'">dashboard</a></p>';
 		echo '<h2>WYSIWYG</h2>';
@@ -134,7 +134,7 @@ class dashboard
 
 	public function preview()
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		
 		$action = (new \LfActions)->findById($vars[1]);
 		$links = (new \LfLinks)->findByInclude($vars[1]);
@@ -209,7 +209,7 @@ class dashboard
 	
 	public function linkapp()
 	{
-		$vars = \lf\www('Param');	
+		$vars =  \lf\requestGet('Param');	
 		if($this->simple) return;
 		
 		if(!isset($vars[1])) return 'invalid arguement';
@@ -384,7 +384,7 @@ class dashboard
 	
 	public function rm()
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		if($this->simple) return;
 		
 		// get current position/parent
@@ -429,7 +429,7 @@ class dashboard
 	{
 		if($this->simple) return;
 		
-		$success = preg_match('/[a-z]+/', \lf\www('Param')[1], $matches);
+		$success = preg_match('/[a-z]+/',  \lf\requestGet('Param')[1], $matches);
 		
 		if(!$success) return 0;
 		
@@ -447,7 +447,7 @@ class dashboard
 	
 	public function download()
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		if($this->simple) return;
 		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
@@ -459,7 +459,7 @@ class dashboard
 	
 	public function getappfromnet()
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		if($this->simple) return;
 		
 		$apps = file_get_contents('http://littlefootcms.com/files/download/apps/apps.txt');
@@ -496,7 +496,7 @@ class dashboard
 	
 	public function install()
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		// this has been deprecated for now. kinda works... kinda doesnt...
 		redirect302();
 		
@@ -554,7 +554,7 @@ class dashboard
 
 	public function update() // nav/item update
 	{
-		$vars = \lf\www('Param');
+		$vars =  \lf\requestGet('Param');
 		if($this->simple) return;
 		
 		$post = $_POST;

@@ -239,6 +239,8 @@ class cms
 		// if request is detected as an 'admin' request...
 		if( (new \lf\request)->load()->isAdmin() )
 		{
+			echo 'asdf';
+			
 			chdir(LF.'system/admin');
 			include 'index.php';
 			exit;

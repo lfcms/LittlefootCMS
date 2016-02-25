@@ -61,6 +61,13 @@ class request
 		$pos = strpos($_SERVER['SCRIPT_NAME'], $filename);
 		$subdir = $pos != 0 ? substr($_SERVER['SCRIPT_NAME'], 1, $pos-1) : '/';
 		
+		$uri = $_SERVER['REQUEST_URI'];
+		
+		// if the last character in the REQUEST_URI is not `/`,
+		if(substr($uri, -1) != '/')
+			// Add a trailing slash
+			$uri .= '/'; 
+		
 		// Detect subdirectory, use of index.php, request of admin, and action
 		// beginning regex delimiter
 		$urlregex = '/'.
@@ -74,16 +81,16 @@ class request
 			'(.*)'.			
 			// end regex delimiter, ignore $_GET variables
 			'\??/';		
-		preg_match($urlregex, $_SERVER['REQUEST_URI'], $request);
+		preg_match($urlregex, $uri, $match);
 		
 		// was /index.php/ used? or did they use rewrite (eg, /blog/12-my-post)
-		$index = $request[1];
+		$index = $match[1];
 		
 		// was admin requested?
-		$admin = $request[2] == 'admin/' ? true : false;
+		$admin = $match[2] == 'admin/' ? true : false;
 		
 		// action is special because it is an array of the remaining REQUEST_URI delimited by `/`
-		$action = explode('/', $request[3], -1);
+		$action = explode('/', $match[3], -1);
 		
 		// If the action array has no elements,
 		if( $action == [] ) 
@@ -281,7 +288,7 @@ class request
 	// }
 	
 	// take last action, set as first param, repeat $count times
-	public function actionToParam($count = 1)
+	public function actionPush($count = 1)
 	{
 		if( count($this->pieces['param']) < $count )
 		{
