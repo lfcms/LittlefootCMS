@@ -24,7 +24,7 @@
 </div>
 
 <?php if(hasnotice()): ?>
-<div class="notice marbot"><?=$this->notice();?></div>
+<div class="notice marbot"><?=notice();?></div>
 <?php endif; ?>
 
 <table class="table white">
