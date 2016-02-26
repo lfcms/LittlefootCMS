@@ -164,6 +164,9 @@ class cms
 	 */
 	public function run()
 	{
+		// load plugins from `lf_plugins` table, execute plugins hooked to 'pre cms run'
+		(new \lf\plugin)->run('pre cms run');
+		
 		// Start the 'cms' timer
 		(new cache)->startTimer(__METHOD__);
 		
@@ -176,9 +179,7 @@ class cms
 		(new request)->parse()->save();
 		
 		// load version from LF/system/version file
-		$this->loadVersion() 						
-			// load plugins from `lf_plugins` table
-			->loadPlugins() 						
+		$this->loadVersion()		
 			// load settings from `lf_settings` table
 			->loadSettings()						
 			// Route auth() class per $wwwIndex/_auth/$method
@@ -202,6 +203,8 @@ class cms
 		
 		if(getSetting('debug') == 'on') 
 			$this->printDebug();
+		
+		(new \lf\plugin)->run('post cms run');
 		
 		return $this;
 	}
@@ -249,7 +252,7 @@ class cms
 	
 	public function loadSettings()
 	{
-		$this->hook_run('pre settings');
+		(new plugin)->run('pre settings');
 		
 		foreach( (new \LfSettings)->getAll() as $setting )
 			$settings[$setting['var']] = $setting['val'];
@@ -312,6 +315,8 @@ class cms
 	{
 		ob_start();
 		
+		$className = get_class($controller);
+		
 		if($param === NULL)
 			$param = requestGet('Param');
 		
@@ -332,16 +337,28 @@ class cms
 				$method = 'main'; // default to main()
 		}
 		
-		/*$this->hook_run('pre app');
-		$this->hook_run('pre app '.$controller);
-		if($func != $param[0]) $this->hook_run('pre app '.$controller.' '.$func);
+		
+		// Load a single plugin instance for this upcoming pile of hook runs
+		$appPlugin = (new plugin);
+		
+		// Before every app
+		$appPlugin->run('pre app');
+		
+		// Before every app called $controller
+		$appPlugin->run('pre app '.$className);
+		
+		// not 100% on what this did as $func is not defined anywhere. likely going to delete this
+		// if($func != $param[0]) 
+			// $appPlugin->run('pre app '.$controller.' '.$func);
+		
 		
 		$varstr = array();
-		foreach($param as $var) // add action until they are all there
+		// For every parameter, add 1 to implode list until they are all there
+		foreach($param as $var) 
 		{
 			$varstr[] = $var;
-			$this->hook_run('pre app '.$controller.' '.implode(' ', $varstr));
-		}*/
+			$appPlugin->run('pre app '.$className.' '.implode(' ', $varstr));
+		}
 		
 		// auto-run init() function if its there
 		if(is_callable(array($controller, 'init')))
@@ -349,16 +366,19 @@ class cms
 		
 		echo $controller->$method();
 		
-		/*while(count($varstr)) // subtract action until they are all gone
+		while(count($varstr)) // subtract action until they are all gone
 		{	
-			$this->hook_run('post app '.$controller.' '.implode(' ', $varstr));
+			//pre( 'post app '.$className.' '.implode(' ', $varstr) );
+			
+			$appPlugin->run('post app '.$className.' '.implode(' ', $varstr));
 			array_pop($varstr);
 		}
 		
-		if($func != $param[0]) $this->hook_run('post app '.$controller.' '.$func);
+		//if($func != $param[0]) 
+		//	$appPlugin->run('post app '.$className.' '.$func);
 		
-		$this->hook_run('post app '.$controller);
-		$this->hook_run('post app');*/
+		$appPlugin->run('post app '.$className);
+		$appPlugin->run('post app');
 		
 		return ob_get_clean();
 	}
@@ -510,7 +530,7 @@ class cms
 	public function route($class, $alias = NULL, $return = true)
 	{
 		$className = get_class($class);
-		$this->hook_run('pre '.$className);
+		(new plugin)->run('pre '.$className);
 		(new cache)->startTimer(__METHOD__);
 		
 		// use class name as alias by default
@@ -548,7 +568,7 @@ class cms
 		$originalRequest->save();
 		
 		(new cache)->endTimer(__METHOD__);
-		$this->hook_run('post '.$className);
+		(new plugin)->run('post '.$className);
 		return $this;
 	}
 	
@@ -711,59 +731,61 @@ class cms
 	// you can render from a different LF folder. Just chdir to it before render, and it will not know you moved somewhere. this works in the index.php as well
 	public function render()
 	{
+		(new \lf\plugin)->run('pre cms render');
+		
 		(new \lf\cache)->startTimer(__METHOD__);
-		$this->hook_run('pre lf render')
+		
+		$this
 			->loadLfCSS()
 			->appendSiteTitle()
 			->searchEngineBlocker();
-		
 		
 		$template = $this->readTemplate();
 		
 		$template = str_replace('<head>', '<head>'.$this->head, $template);
 		
-		
-		
-		$this->hook_run('post lf render');
 		(new \lf\cache)->endTimer(__METHOD__);
+		
+		(new \lf\plugin)->run('post cms render');
+		
 		return $template;
 	}
 	
 	/**
 	 * Initializes the 'active plugin list' from `lf_plugins` table
 	 */
-	public function loadPlugins()
-	{
-		$result = (new \LfPlugins)->getAll();
+	// public function loadPlugins()
+	// {
+		// $result = (new \LfPlugins)->getAll();
 		
-		if($result)
-			foreach($result as $plugin)
-				$plugins[ $plugin['hook'] ][ $plugin['plugin'] ] = $plugin['config'];
+		// if($result)
+			// foreach($result as $plugin)
+				// $plugins[ $plugin['hook'] ][ $plugin['plugin'] ] = $plugin['config'];
 		
-		$this->hook_run('plugins loaded');
+		// (new plugin)->run('plugins loaded');
 		
-		return $this;
-	}
+		// return $this;
+	// }
 	
 	/**
 	 * checks for and executes an active plugin assigned to the triggered $hook
 	 */
-	public function hook_run($hook)
-	{
-		if(!isset($this->plugins[$hook])) 
-			return $this;
+	// public function hook_run($hook)
+	// {
+		// if(!isset($this->plugins[$hook])) 
+			// return $this;
 		
-		foreach($this->plugins[$hook] as $plugin => $config)
-		{
-			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
+		// foreach($this->plugins[$hook] as $plugin => $config)
+		// {
+			// $hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
 			
-			(new \lf\cache)->startTimer(__METHOD__.$hookDetails);
-			include ROOT.'plugins/'.$plugin.'/index.php';
-			(new \lf\cache)->endTimer(__METHOD__.$hookDetails);
-		}
+			// (new \lf\cache)->startTimer(__METHOD__.$hookDetails);
+			// include ROOT.'plugins/'.$plugin.'/index.php';
+			// (new \lf\cache)->endTimer(__METHOD__.$hookDetails);
+		// }
 		
-		return $this;
-	}
+		// return $this;
+	// }
 	
 	// Simple CMS item selection
 	public function simpleSelect($app = NULL)
@@ -1002,7 +1024,7 @@ class cms
 	{
 		startTimer(__METHOD__);
 		$funcstart = microtime(true);
-		$this->hook_run('pre '.__METHOD__);
+		(new plugin)->run('pre '.__METHOD__);
 		
 		if( ! (new acl)->load()->test( implode('/', requestGet('Action') ) ) )
 		{
@@ -1090,7 +1112,7 @@ class cms
 		
 		$this->content = $content;
 		
-		$this->hook_run('post lf getcontent');
+		(new plugin)->run('post lf getcontent');
 		
 		if($this->settings['simple_cms'] == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
 			$this->content['nav'][] = $this->nav_cache;

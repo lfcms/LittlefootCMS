@@ -22,7 +22,7 @@ class plugins
 	public function rm()
 	{
 		$args = \lf\requestGet('Param'); // backward compatibility
-		orm::q('lf_plugins')->filterByid($args[1])->delete();
+		\lf\orm::q('lf_plugins')->filterByid($args[1])->delete();
 		redirect302();
 	}
 	
@@ -36,11 +36,11 @@ class plugins
 		$_POST['status'] = 'active';
 		if(!$plugin_hook)
 		{
-			orm::q('lf_plugins')->insertArray($_POST);
+			\lf\orm::q('lf_plugins')->insertArray($_POST);
 		}
 		else
 		{
-			orm::q('lf_plugins')->updateById($plugin_hook['id'], $_POST);
+			\lf\orm::q('lf_plugins')->updateById($plugin_hook['id'], $_POST);
 		}
 		
 		redirect302();
