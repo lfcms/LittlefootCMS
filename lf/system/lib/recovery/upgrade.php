@@ -5,9 +5,12 @@ $db = db::init();
 // 1.13.5-r129
 $index = <<<'EOF'
 <?php
-require_once('lf/system/bootstrap.php'); // include lf library
-$lf = new LittleFoot(); // initialize $lf with $db connection
-$lf->cms(); // execute littlefoot as cms() and render() output
+
+namespace lf;
+
+require_once('lf/system/bootstrap.php');	// Bootstrap the littlefoot PHP suite.
+$cms = new cms(); 						// Could have just done (new cms)->run();,
+$cms->run();								// but I like to be able to catch if you are `PHP 5.3`.
 EOF;
 file_put_contents(ROOT.'../index.php', $index);
 

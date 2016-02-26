@@ -20,7 +20,7 @@ class install
 
 	public function test()
 	{
-		if( (new \LfPages)->first() == NULL )
+		if( (new \LfSettings)->first() == NULL )
 		{
 			if(count($_POST) > 0)
 				$this->post();
@@ -71,13 +71,14 @@ class install
 	{
 		$this->postValidate();
 
-		if(count($this->errors) > 0) return $this->printInstallForm();
+		if(count($this->errors) > 0) 
+			return $this->printInstallForm();
 		
 		// Take config.php template, replace credentials with $_POST data
 		$dbConfigFile = file_get_contents(LF.'config-dist.php');
 		$dbCredentials = array(
-			'localhost' 			=> $_POST['host'],
-			'mysql_user'		 	=> $_POST['user'],
+			'localhost' 		=> $_POST['host'],
+			'mysql_user'		=> $_POST['user'],
 			'mysql_passwd' 		=> $_POST['pass'],
 			'mysql_database' 	=> $_POST['dbname'],
 		);

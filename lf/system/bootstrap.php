@@ -34,7 +34,7 @@ require 'system/lib/helpers.php'; 		// Helpful functions
 require 'system/lib/orm.php'; 			// Object Relation Model base
 require 'system/lib/lfcss.php';			// Littlefoot css builder class
 require 'system/lib/user.php'; 			// user stuff
-require 'system/lib/recovery/install.php'; // I want to move this out of recovery/, but will keep everything else in there.
+require 'system/lib/install.php';		// test the install
 require 'system/lib/auth.php'; 			// auth stuff
 require 'system/lib/littlefoot.php'; 	// LEGACY Request, Auth, Nav, Content, Render
 
