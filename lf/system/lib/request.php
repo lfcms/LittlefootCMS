@@ -21,7 +21,14 @@ function resolveAppUrl($html)
 	return str_replace('%appurl%', requestGet('ActionUrl'), $html);
 }
 
-// Parses $_SERVER['REQUEST_URI'] into usable parts, generates a fake REQUEST_URI, etc if it is not set.
+/**
+ * Parses $_SERVER['REQUEST_URI'] into usable parts, generates a fake REQUEST_URI, etc if it is not set.
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 class request
 {
 	// store the resulting peices, default to localhost

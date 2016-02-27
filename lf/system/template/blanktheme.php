@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title><?=(new \lf\request)->get('pageTitle');?></title>
+		<title><?=$this->getTitle();?></title>
 		<link rel="stylesheet" type="text/css" href="<?=$this->getSkinBase();?>/css/styles.css" />
 	</head>
 	<body>
