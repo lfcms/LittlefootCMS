@@ -23,7 +23,7 @@ if(count($_GET))
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Login Page | <?php echo $_SERVER['HTTP_HOST']; ?></title>
 		<link href="<?=\lf\requestGet('LfUrl');?>system/lib/lf.css" rel="stylesheet">
-		<link rel="stylesheet" href="<?=(new \lf\cms)->getSkinBase();?>css/custom.css" type="text/css" />
+		<link rel="stylesheet" href="<?=(new \lf\template)->getSkinBase();?>css/custom.css" type="text/css" />
 	</head>
 
 	<body class="blue">
@@ -33,7 +33,7 @@ if(count($_GET))
 				<div class="col-4 ">
 					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/" target="_blank"><img src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-banner.png"/></a></h1>
 					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
-					<form id="login" action="<?=\lf\www('Index');?>_auth/login" method="post">
+					<form id="login" action="<?=\lf\requestGet('IndexUrl');?>_auth/login" method="post">
 						<ul class="vlist">
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
 							<li><input type="password" id="password" name="pass" placeholder="Password" /></li>

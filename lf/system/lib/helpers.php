@@ -345,10 +345,20 @@ function strdump($str)
 		echo '# '.$i.': "'.$str[$i].'" "'.ord($str[$i]).'<br />';
 }
 
+function textarea($str)
+{
+	//same deal as pre
+	echo '<h4>Text Area</h4>';	
+	
+	echo '<textarea name="" id="" cols="30" rows="10">';
+	$func($str);
+	echo '</textarea>';
+}
+
 function pre($str, $func = 'print_r')
 {
 	echo '<pre>';
-	echo '<h4>PRE</h4>';
+	echo '<h4>PRE</h4>';	
 	
 	$func($str);
 	

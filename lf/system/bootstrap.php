@@ -62,6 +62,7 @@ require 'system/lib/plugin.php'; // Provides hooks, plugins, page request to app
 require 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
 require 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
 require 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
+require 'system/lib/template.php'; // Template
 
 // Add local lib paths to include_path
 if(is_dir(LF.'lib'))
