@@ -7,16 +7,16 @@ if($user->getId() != 0)
 {
         $link = '';
         if($user->hasAccess('admin'))
-                $link .= ' <a href="'.$this->base.'admin/">admin</a>';
-        $link .= '<a href="'.$this->base.'_auth/logout">logout</a>';
+                $link .= ' <a href="'.\lf\requestGet('IndexUrl').'admin/">admin</a>';
+        $link .= '<a href="'.\lf\requestGet('IndexUrl').'_auth/logout">logout</a>';
 
-        ?><div class="auth_welcome">Hello, <a href="%baseurl%_auth/profile"><?=$user->getDisplay_name();?></a>. <?=$link;?></div>
+        ?><div class="auth_welcome">Hello, <a href="<?=\lf\requestGet('IndexUrl');?>_auth/profile"><?=$user->getDisplay_name();?></a>. <?=$link;?></div>
 
 <?php } else {
 
 ?>
 	<div class="auth_login">
-		<form id="auth_login_form" action="<?=\lf\www('Index');?>_auth/login" method="post">
+		<form id="auth_login_form" action="<?=\lf\requestGet('IndexUrl');?>_auth/login" method="post">
 				<ul class="vlist">
 					<input type="hidden" name="dest" value="<?php $_SERVER['REQUEST_URI']; ?>" />
 					<li class="auth_user"><input type="text" name="user" placeholder="username" /></li>

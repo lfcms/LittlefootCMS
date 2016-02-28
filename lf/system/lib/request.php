@@ -26,6 +26,13 @@ function resolveAppUrl($html)
  * 
  * 
  * 
+ * * Action is between Cwd and Param. 
+ * * Action takes/gives from/to Cwd and takes/gives from/to Param. 
+ * * Action is the only one that needs to be moving stuff around.
+ * 
+ * Check it out:
+ * 
+ * `<?php pre( (new \lf\request)->load()->actionPush() ); ?>`
  * 
  * 
  */
@@ -159,6 +166,10 @@ class request
 		return $this;
 	}
 	
+	
+	/**
+	 * Save pieces to session for later `load()`
+	 */
 	public function save()
 	{
 		// save pieces to SESSION
@@ -168,15 +179,8 @@ class request
 	}
 	
 	/**
-	 * Give 
-	 * 
-	 * @param integer $keepCount 
+	 * Load pieces from session, parse if null then save to session, return $this
 	 */
-	public function paramFromActionKeep( $keepCount )
-	{
-		
-	}
-	
 	public function load()
 	{
 		// load pieces from session
@@ -190,54 +194,96 @@ class request
 		return $this;
 	}
 	
-	/* URL Generators */
+	/**
+	 * Return private `pieces`, but you should avoid relying on this.
+	 */
 	public function getPieces()
 	{
 		return $this->pieces;
 	}
 	
+	/**
+	 * Return `cwd` array piece
+	 */
 	public function getCwd()
 	{
 		return $this->pieces['cwd'];
 	}
 	
+	/**
+	 * Return `action` array piece
+	 */
 	public function getAction()
 	{
 		return $this->pieces['action'];
 	}
 	
+	/**
+	 * Return `param` array piece
+	 */
 	public function getParam()
 	{
 		return $this->pieces['param'];
 	}
-	
+		
+		
+		
+		
+	/**
+	 * Return `domain` string. eg, `www.domain.com`
+	 */
 	public function getDomain()
 	{
 		return $this->pieces['domain'];
 	}
 	
+	/**
+	 * Return string of full URL to subdir `lf/` is installed under.
+	 * 
+	 * eg, `http://www.domain.com/littlefoot/`
+	 */
 	public function getSubdirUrl()
 	{
 		extract($this->pieces);
 		return $protocol.$domain.$port.'/'.$subdir;
 	}
 	
+	/**
+	 * Return string of full public URL to the `lf/` folder
+	 * 
+	 * eg, `http://www.domain.com/littlefoot/lf/`
+	 */
 	public function getLfUrl()
 	{
 		extract($this->pieces);
 		return $this->getSubdirUrl().'lf/';
 	}
 	
+	/**
+	 * Return string of `subdir/(index.php/)?` depending on if rewrite setting is enabled
+	 * 
+	 * eg, `http://www.domain.com/littlefoot/index.php/`
+	 */
 	public function getIndexUrl()
 	{
 		return $this->getSubdirUrl().$this->pieces['index'];
 	}
 	
+	/**
+	 * Return string of `subdir/(index.php/)?admin/`
+	 * 
+	 * eg, `http://www.domain.com/littlefoot/index.php/admin/`
+	 */
 	public function getAdminUrl()
 	{
 		return $this->getIndexUrl().'admin/';
 	}
-
+	
+	/**
+	 * Return string of `subdir/(index.php/)?action[0]/action[1]/.../action[n]/`
+	 * 
+	 * eg, `http://www.domain.com/littlefoot/index.php/blog/`
+	 */
 	public function getActionUrl()
 	{
 		// make an array without surrounding / delimiter
@@ -288,16 +334,6 @@ class request
 			// }
 		// }
 	// }
-	
-	/*
-	 * * Action is between Cwd and Param. 
-	 * * Action takes/gives from/to Cwd and takes/gives from/to Param. 
-	 * * Action is the only one that needs to be moving stuff around.
-	 * 
-	 * Check it out:
-	 * 
-	 * `<?php pre( (new \lf\request)->load()->actionPush() ); ?>`
-	 */
 	
 	// take first param, set as last action, repeat $count times
 	public function paramShift($count = 1)

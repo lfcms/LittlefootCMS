@@ -890,9 +890,7 @@ class cms
 			$this->select['template'] = getSetting('default_skin');
 		
 		// need to fix this from XV template
-		//$template = (new template)->setSkin($this->select['template']);
-		
-		//pre( (new template) );
+		$template = (new template)->setSkin($this->select['template']);
 		
 		return $this;
 	}

@@ -22,13 +22,18 @@ class template
 		// array of JS URLs
 			'js' => [],
 		// template (skin) to load upon ->render()
-			'skin' => 'XV',
+			'skin' => 'default',
 		// AJAX
 			'ajax' => false,
 		// use skin home.php
 			'home' => false
 	];
 	
+	/**
+	 * At construct time, load elements from session
+	 * 
+	 * Detect if Ajax request
+	 */
 	public function __construct()
 	{
 		// i dont see a reason not to auto load from session if its there
@@ -43,37 +48,62 @@ class template
 	    }
 	}
 	
+	/**
+	 * Try to get elements from session, otherwise, push default ones to session
+	 */
 	public function load()
 	{
 		$elements = get('templateElements');
 		
 		// if we already have something saved, load it
 		if( !is_null( $elements ) )
+		{
 			$this->elements = $elements;
+			$this->save(); // and be sure to publish it to session
+		}
 		
 		return $this;
 	}
 	
-	// save to session
+	/**
+	 * Save current $this->elements to session
+	 */
 	private function save()
 	{
 		set('templateElements', $this->elements);
 		return $this;
 	}
 	
+	/**
+	 * Add $content to the end of the <head /> array 
+	 */
 	public function addHead($content)
 	{
 		$this->elements['head'][] = $content;
 		return $this->save();
 	}
 	
-	// set Title
+	/**
+	 * Set whole title to $newTitle
+	 */
 	public function setTitle($newTitle)
 	{
 		$this->elements['title'] = [$newTitle];
 		return $this->save();
 	}
 	
+	/**
+	 * Add $extraTitle to end of `title` array
+	 */
+	public function appendTitle($extraTitle)
+	{
+		$this->elements['title'][] = $extraTitle;
+		return $this->save();
+	}
+	
+	/**
+	 * Return either the imploded array of the given $key, or an error stating that there was nothing saved at that key.
+	 */
 	public function printContent($key = 'content')
 	{
 		if(isset($this->elements['content'][$key]))
@@ -85,13 +115,9 @@ class template
 				$template = str_replace($key, implode($value), $template);*/
 	}
 	
-	// set Title
-	public function appendTitle($extraTitle)
-	{
-		$this->elements['title'][] = $extraTitle;
-		return $this->save();
-	}
-	
+	/**
+	 * Capture login output, return as string
+	 */
 	public function getLogin()
 	{
 		ob_start();
@@ -99,53 +125,74 @@ class template
 		return ob_get_clean();
 	}
 	
+	/**
+	 * Include login system template
+	 */
 	public function printLogin()
 	{
 		include LF.'system/template/login.php';
 		return $this;
 	}
 	
-	// get Title
+	/**
+	 * Get imploded title array around (' | ')
+	 */
 	public function getTitle()
 	{
 		return implode(' | ', $this->elements['title']);
 	}
 	
+	/**
+	 * Returns http:// URL of the folder root of the current skin
+	 */
 	public function getSkinBase()
 	{
 		return requestGet('LfUrl').'skins/'.$this->getTemplateName().'/';
 	}
 	
-	/* Content operations */
-	
-	// addContent
+	/**
+	 * Add $data to the list of output section array called $namespace ('content' by default)
+	 * 
+	 * This is used by the template system to later print easily into the skin.
+	 */
 	public function addContent($data, $namespace = 'content')
 	{
 		$this->elements['content'][$namespace][] = $data;
 		return $this->save();
 	}
 	
+	/**
+	 * Return an implode of the array saved at $namespace. We put things in there with `$this->addContent($string, 'content');`
+	 */
 	public function getContent($namespace = 'content')
 	{
-		if( ! isset( $this->elements[$namespace] ) )
+		if( ! isset( $this->elements['content'][$namespace] ) )
 			return null;
 		
-		return implode($this->elements[$namespace]);
+		return implode($this->elements['content'][$namespace]);
 	}
 	
+	/**
+	 * Add a CSS URL to the css array. We handle the HTML for it separately in `renderCss()`
+	 */
 	public function addCss($url)
 	{
 		$this->elements['css'][] = $url;
 		return $this->save();
 	}
 	
+	/**
+	 * Add a JS URL to the js array. We handle this HTML for it separately in `renderJs()`
+	 */
 	public function addJs($url)
 	{
 		$this->elements['js'][] = $url;
 		return $this->save();
 	}
 	
-	// should do this instead of the regex
+	/**
+	 * Kyle wrote this. I like the idea of splitting the URI with `/`, but would need some reworking. I dont currently use this method.
+	 */
 	public function getUriAsArray(){
 		$uri = $_SERVER['REDIRECT_URL'];
 		//set the uriPath as string.
@@ -156,7 +203,11 @@ class template
 		return $this->uri = $uri;
 	}
 	
-	// you can render from a different LF folder. Just chdir to it before render, and it will not know you moved somewhere. this works in the index.php as well
+	/**
+	 * Render the stored content results and render anything in css, js, head after we exec the template
+	 * 
+	 * You can render from a different LF folder. Just chdir to it before render, and it will not know you moved somewhere. this works in the index.php as well
+	 */
 	public function render()
 	{
 		(new \lf\plugin)->run('pre template render');
@@ -173,7 +224,10 @@ class template
 		return $template;
 	}
 	
-	// Load skin data
+	
+	/**
+	 * Load skin data
+	 */
 	public function execTemplate()
 	{
 		// can we use home.php for this request?
@@ -195,6 +249,9 @@ class template
 		return ob_get_clean();
 	}
 	
+	/**
+	 * Replace the `renderHead()` result into the bottom of `</head>` with a string replace.
+	 */
 	public function replaceHead($template)
 	{
 		// apply head. needs to be first
@@ -207,6 +264,9 @@ class template
 		return $template;
 	}
 	
+	/**
+	 * Combines js, css, and anything wrong in head
+	 */
 	public function renderHead()
 	{
 		return implode("\n", [
@@ -216,6 +276,9 @@ class template
 			]);
 	}
 	
+	/**
+	 * For each js URL, render into HTML `<script />` include, and implode results over "\n"
+	 */
 	public function renderJs()
 	{
 		$parts = [];
@@ -226,6 +289,9 @@ class template
 		return implode("\n", $parts);
 	}
 	
+	/**
+	 * For each css URL, render into HTML `<link />` include, and implode results over "\n"
+	 */
 	public function renderCss()
 	{
 		$parts = [];
@@ -234,12 +300,18 @@ class template
 		return implode("\n", $parts);
 	}
 	
+	/**
+	 * Set the home boolean. If enabled, home.php would be preferred over index.php, but will fall back to index.php if not there.
+	 */
 	public function setHome($bool)
 	{
 		$this->elements['home'] = $bool;
 		return $this->save();
 	}
 	
+	/**
+	 * Return string of path to currently selected skin
+	 */
 	public function getTemplatePath()
 	{
 		$skinDir = isAdmin() 
@@ -249,11 +321,17 @@ class template
 		return LF.$skinDir.$this->getTemplateName().'/';
 	}
 	
+	/**
+	 * Return name of currently selected skin
+	 */
 	public function getTemplateName()
 	{
 		return $this->elements['skin'];
 	}
 	
+	/**
+	 * Set skin with `$skinName` to load upon `render()`
+	 */
 	public function setSkin($skinName)
 	{
 		$this->elements['skin'] = $skinName;
