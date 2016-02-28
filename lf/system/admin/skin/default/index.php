@@ -7,11 +7,9 @@
 		<title><?php echo $_SERVER['HTTP_HOST']; ?> | Littlefoot CMS Admin</title>
 		<meta name="description" content="Littlefoot CMS was deigned to help webmasters create websites and integrate custom apps easily and efficiently."/>
 		<meta name="keywords" content="cms, content management system, website, web development, web design, littlefoot, littlefoot cms" />
-		<!-- Le styles -->
-		<link href="%relbase%lf/system/lib/lf.css" rel="stylesheet">
-		<link href="%relbase%lf/system/lib/3rdparty/icons.css" rel="stylesheet">
-		<link href="%skinbase%css/custom.css" rel="stylesheet">
-		<!-- <link href="%skinbase%css/styles.css" rel="stylesheet"> -->
+		
+		<link href="<?=$this->getSkinBase();?>css/custom.css" rel="stylesheet">
+		<!-- <link href="<?=$this->getSkinBase();?>css/styles.css" rel="stylesheet"> -->
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet' type='text/css'>
 
 		<!-- Load in jQuery for handy hover function | Removes titles of links on hover-->
@@ -66,13 +64,12 @@
 			<div class="row no_martop">
 				<div class="col-2 dark_gray">
 					<nav>
-						<?php /*pre($this->content); */
-						echo implode($this->content['nav']); ?>
+						<?=$this->printContent('nav');?>
 					</nav>
 				</div>
 				<div class="col-10">
-					<div id="controller-<?php echo $this->lf->action[0]; ?>">
-						<?php echo implode($this->content['content']); ?>
+					<div id="controller-<?php \lf\requestGet('ActionUrl'); ?>">
+						<?=$this->printContent('content');?>
 					</div>
 				</div>
 			</div>

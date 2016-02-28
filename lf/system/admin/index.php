@@ -92,18 +92,22 @@ if($user->hasAccess('admin') )
 			$nav = str_replace($links[0][$match], $replace, $nav);
 		}
 	
-	$this->content['nav'][] = $nav;
 	
 	$this->select['template'] = 'default';
+	// multimvc handles its own 'addcontent', but that maybe should be in template too...
+	$this->multiMVC('dashboard', 'content', '\\lf\\admin\\');
 	
-	$renderResult = $this
-		->multiMVC('dashboard', 'content', '\\lf\\admin\\')
-		->render();
+	$this->loadLfCss();
+	
+	(new \lf\template)
+		->addContent($nav, 'nav')
+		->setSkin('default');
+	
+	echo (new \lf\template)->render();
 	
 	//$renderResult = (new \lf\cms)->legacyTokenReplace($renderResult);
 	
 	//echo $this->addCSRF($renderResult);
-	echo $renderResult;
 }
 else
 {
@@ -119,7 +123,6 @@ else
 
 
 exit;
-
 
 /*
 

@@ -8,6 +8,7 @@ $cms->run();								// but I like to be able to catch if you are `PHP 5.3`.
 
 
 
+
 /* Testing without using `cms` class */
 
 //pre( \lf\www('Action'), 'var_dump' );

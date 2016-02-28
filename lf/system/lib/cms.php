@@ -193,19 +193,35 @@ class cms
 			// Get data for SimpleCMS, or determine requested Nav ID from url $actions
 			->navSelect()					
 			// Deal with SimpleCMS or execute linked apps
-			->getcontent(); 				
+			->getcontent()
+			->setTemplateSkin();
+		
+		$this
+			->appendSiteTitle()
+			->loadLfCSS()
+			->searchEngineBlocker();
 		
 		// Display content in skin, return HTML output result
-		echo $this->render(); 				
+		//echo $this->render(); 				
+		echo (new template)->render();
 	
 		// Stop the 'cms' timer. Store elapsed time for debug.
-		(new cache)->endTimer(__METHOD__);
+		endTimer(__METHOD__);
 		
 		if(getSetting('debug') == 'on') 
 			$this->printDebug();
 		
 		(new \lf\plugin)->run('post cms run');
 		
+		return $this;
+	}
+	
+	public function loadLfCss()
+	{
+		(new template)
+			->addCss( requestGet('LfUrl').'system/lib/lf.css' )
+			->addCss( requestGet('LfUrl').'system/lib/3rdparty/icons.css' );
+			
 		return $this;
 	}
 	
@@ -435,7 +451,7 @@ class cms
 		$fullclass = $namespace.$class;
 		$MVCresult = $this->mvc(new $fullclass);
 		
-		$this->setContent( 
+		(new template)->addContent( 
 			str_replace('%appurl%', \lf\requestGet('ActionUrl'), $MVCresult ), 
 			$section
 		);
@@ -516,9 +532,6 @@ class cms
 		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
 	}
 	
-	
-	
-	
 	// you need to include the class .php file yourself.
 	/**
 	 * Test URL for given alias (default to given class) in action[0]
@@ -529,9 +542,10 @@ class cms
 	 */
 	public function route($class, $alias = NULL, $return = true)
 	{
+		
 		$className = get_class($class);
 		(new plugin)->run('pre '.$className);
-		(new cache)->startTimer(__METHOD__);
+		startTimer(__METHOD__);
 		
 		// use class name as alias by default
 		if(is_null($alias))
@@ -552,14 +566,15 @@ class cms
 			// simulate actionPop for the upcoming MVC operation since we routed on action[0]
 			$tempRequest->actionPop()->save();
 		
-			$this->setContent( $this->renderNavCache(), 'nav' );
-			$this->setContent( $this->mvc($class) );
-			
+			(new template)
+				->addContent( $this->renderNavCache(), 'nav' )
+				->addContent( $this->mvc($class) );
+		
 			if(!$return)
 			{
 				// display in skin
-				(new cache)->endTimer(__METHOD__);
-				echo $this->render();
+				(new template)->render();
+				endTimer(__METHOD__);
 				exit();
 			}
 		}
@@ -567,7 +582,7 @@ class cms
 		// save back original context
 		$originalRequest->save();
 		
-		(new cache)->endTimer(__METHOD__);
+		endTimer(__METHOD__);
 		(new plugin)->run('post '.$className);
 		return $this;
 	}
@@ -586,135 +601,53 @@ class cms
 	{
 		return str_replace('%baseurl%', requestGet('IndexUrl'), $text);
 	}
-	
-	public function printLogin()
+		
+	public function getApps($id = NULL)
 	{
-		include LF.'system/template/login.php';
-		return $this;
-	}
-	
-	public function headAppend($content)
-	{
-		$this->head[] = $content;
-		return $this;
-	}
-	
-	public function loadStylesheet($url)
-	{
-		$this->headAppend('<link rel="stylesheet" href="'.$url.'apps/git/git.css" />');
-		return $this;
-	}
-	
-	public function getLogin()
-	{
-		ob_start();
-		$this->printLogin();
-		return ob_get_clean();
-	}
-	
-	public function getSkinBase()
-	{
-		return requestGet('LfUrl').'skins/'.$this->getTemplateName().'/';
-	}
-	
-	public function setTitle($newTitle)
-	{
-		$this->select['title'] = $newTitle;
-		return $this;
-	}
-	
-	public function getTitle()
-	{
-		return $this->select['title'];
-	}
-	
-	public function fromSession()
-	{
-		return (new cache)->sessGet('cms');
-	}
-	
-	public function toSession()
-	{
-		return (new cache)->sessSet('cms', $this);
-	}
-	
-	public function printContent($key = 'content')
-	{
-		if(isset($this->content[$key]))
-			return implode($this->content[$key]);
+		$this->lf->hook_run('pre template getApps');
+		
+		// if full cms string provided, return all linked apps
+		if($this->lf->simplecms == '_lfcms')
+			$this->links = orm::q('lf_links')->filterByinclude($id)->get();
+		
+		// otherwise, assign only that app
 		else
-			return 'Content not found: No such key "'.$key.'" set';
+			$this->links[0] = array(
+				'id' => 0, 
+				'app' => $this->lf->simple_cms,
+				'ini' => '',
+				'section' => 'content'
+			);
 		
-			/*foreach($this->content as $key => $value)
-				$template = str_replace($key, implode($value), $template);*/
-	}
-	
-	public function loadLfCSS()
-	{
-		$this->head .=  
-			'<link rel="stylesheet" href="'.requestGet('LfUrl').'system/lib/lf.css" />
-			<link rel="stylesheet" href="'.requestGet('LfUrl').'system/lib/3rdparty/icons.css" />';
-			
+		$this->lf->hook_run('post template getApps');
+		
 		return $this;
-	}
-	
-	public function getTemplateName()
-	{
-		if(!isset($this->select['template']))
-			$this->select['template'] = $this->getSettings()['default_skin'];
-		
-		return $this->select['template'];
-	}
-	
-	public function getTemplatePath()
-	{
-		if( (new \lf\request)->load()->isAdmin() )
-			return LF.'system/admin/skin/'.$this->getTemplateName();
-		
-		return LF.'skins/'.$this->getTemplateName();
 	}
 	
 	public function homeTest()
 	{
+		$template = (new template);
+		
 		// Determine if home.php should be loaded
-		$file = 'index';
 		if( isset($this->select['parent']) 
 			&& $this->select['parent'] == -1 
 			&& $this->select['position'] == 1 
-			&& ( is_file($this->getTemplatePath().'/home.php') 
-				|| is_file($this->getTemplatePath().'/home.html')
+			&& ( is_file($template->getTemplatePath().'home.php') 
+				|| is_file($template->getTemplatePath().'home.html')
 			)
 		)
-			$file = 'home';
+			$template->setHome(true);
 			
-		return $file;
+		return $this;
 	}
-	
-	// Load skin data
-	public function readTemplate()
-	{
-		// can we use home.php for this request?
-		// it lets us have a unique home page.
-		$file = $this->homeTest();
-		
-		ob_start();
-		
-		//pre($this->content);
-		if(is_file($this->getTemplatePath()."/$file.php")) // allow php
-			include($this->getTemplatePath()."/$file.php");
-		else if(is_file($this->getTemplatePath()."/$file.html"))
-			readfile($this->getTemplatePath()."/$file.html");
-		else
-			echo 'Template file "'.LF.'skins/'.$skin."/$file.php".'" missing. Log into admin and select a different template with the Skins tool.';
-			
-		return ob_get_clean();
-	}
-	
+	 
 	// to append the 'title' variable set in `lf_settings` to whatever title is already in place.
 	public function appendSiteTitle()
 	{
-		if(isset($this->settings['title']) && $this->settings['title'] != '')
-			$this->select['title'] .= ' | '.$this->settings['title'];
+		$addTitle = getSetting('title');
+		
+		//if( ! is_null( $addTitle ) )
+		//	(new template)->appendTitle($addTitle);
 		
 		return $this;
 	}
@@ -722,34 +655,13 @@ class cms
 	public function searchEngineBlocker()
 	{
 		// Search engine blocker
-		if(isset($this->settings['bots']) && $this->settings['bots'] == 'on')
-			$this->head .= '<meta name="robots" content="noindex, nofollow">';
+		if( getSetting('bots') == 'on' )
+			(new template)->addHead('<meta name="robots" content="noindex, nofollow">');
 		
 		return $this;
 	}
 	
-	// you can render from a different LF folder. Just chdir to it before render, and it will not know you moved somewhere. this works in the index.php as well
-	public function render()
-	{
-		(new \lf\plugin)->run('pre cms render');
-		
-		(new \lf\cache)->startTimer(__METHOD__);
-		
-		$this
-			->loadLfCSS()
-			->appendSiteTitle()
-			->searchEngineBlocker();
-		
-		$template = $this->readTemplate();
-		
-		$template = str_replace('<head>', '<head>'.$this->head, $template);
-		
-		(new \lf\cache)->endTimer(__METHOD__);
-		
-		(new \lf\plugin)->run('post cms render');
-		
-		return $template;
-	}
+	
 	
 	/**
 	 * Initializes the 'active plugin list' from `lf_plugins` table
@@ -838,7 +750,7 @@ class cms
 	*/
 	public function navSelect()
 	{
-		(new cache)->startTimer(__METHOD__);
+		startTimer(__METHOD__);
 		if(getSetting('simple_cms') != '_lfcms')
 			$this->simpleSelect();
 		
@@ -846,8 +758,6 @@ class cms
 		
 		// by default, not found. needed to detect request for / when action at -1, 1 doesnt have an empty alias
 		$this->select['alias'] = '404'; 
-		
-		
 		
 		/* Determine requested nav item from lf_actions */
 		// get all possible matches for current request, 
@@ -877,10 +787,14 @@ class cms
 		// loop through action to determine selected nav
 		// trace down to last child
 		
-		$parent = -1; // start at the root nav items
-		$selected = array(); // nothing selected to start with
-		for($i = 0; $i < count(requestGet('Action')); $i++) // loop through action array
-			if(isset($test_select[$parent])) // if our compiled parent->position matrix has this parent set
+		// start at the root nav items
+		$parent = -1; 
+		// nothing selected to start with
+		$selected = array(); 
+		// loop through action array
+		for($i = 0; $i < count(requestGet('Action')); $i++) 
+			// if our compiled parent->position matrix has this parent set
+			if(isset($test_select[$parent])) 
 				foreach($test_select[$parent] as $position => $nav)	// loop through child items 
 					if($nav['alias'] == requestGet('Action')[$i]) // to find each navigation item in the hierarchy
 					{
@@ -900,7 +814,9 @@ class cms
 			// separate action into vars and action base, 
 			// pull select nav from inner most child
 			// eg, given `someparent/blog/23-test`, pop twice
-			(new request)->load()->actionKeep( count($selected) )->save();
+			(new request)->load()
+				->actionKeep( count($selected) )
+				->save();
 			
 			// This is where we find which navigation item we are visiting
 			$this->select = end($selected);
@@ -911,7 +827,7 @@ class cms
 		// set current page as /
 		if($this->select['alias'] == '404' && $base_save != NULL)
 		{		
-			(new request)->load()->fullActionPop(); // pop all actions into param
+			(new request)->load()->fullActionPop()->save(); // pop all actions into param, we are loading the first nav item
 			$this->select = $base_save;
 		}
 		
@@ -942,13 +858,12 @@ class cms
 				$nav_cache);
 		}
 		
-		$this->resolveDefaultSkin();
-		
 		// set nav ul class if set
 		// Apply class to root <ul> if it is set
-		$nav_cache = isset($this->settings['nav_class']) 
-			? preg_replace('/^<ul>/', '<ul class="'.$this->settings['nav_class'].'">', $nav_cache )
-			: $nav_cache;
+		
+		// $nav_cache = isset($this->settings['nav_class']) 
+			// ? preg_replace('/^<ul>/', '<ul class="'.$this->settings['nav_class'].'">', $nav_cache )
+			// : $nav_cache;
 		
 		// if no items match the request, return 404
 		if($this->select['alias'] == '404')
@@ -958,17 +873,26 @@ class cms
 			return 0;
 		}
 		
-		$this->content['nav'][] = $this->renderBaseUrl($nav_cache); // replace the %baseurl% placeholders
+		// replace the %baseurl% placeholders
+		(new \lf\template)->addContent( 
+			$this->renderBaseUrl($nav_cache),
+			'nav'
+		);
 		
-		(new cache)->endTimer(__METHOD__);
+		endTimer(__METHOD__);
 		return $this;
 	}
 	
-	public function resolveDefaultSkin()
+	public function setTemplateSkin()
 	{
 		// If template has not be changed from 'default', set as configured default_skin.
 		if($this->select['template'] == 'default')
-			$this->select['template'] = $this->settings['default_skin'];
+			$this->select['template'] = getSetting('default_skin');
+		
+		// need to fix this from XV template
+		//$template = (new template)->setSkin($this->select['template']);
+		
+		//pre( (new template) );
 		
 		return $this;
 	}
@@ -1014,21 +938,21 @@ class cms
 		return $links;
 	}
 	
-	public function setContent($data, $namespace = 'content')
-	{
-		$this->content[$namespace][] = $data;
-		return $this;
-	}
-	
 	public function getcontent()
 	{
-		startTimer(__METHOD__);
-		$funcstart = microtime(true);
 		(new plugin)->run('pre '.__METHOD__);
+		startTimer(__METHOD__);
 		
-		if( ! (new acl)->load()->test( implode('/', requestGet('Action') ) ) )
-		{
-			$this->setContent( "401 Unauthorized at ".wwwIndexAction().$this->getLogin() );
+		$template = (new template)->load();
+		
+		if( ! (new acl)->load()
+				->test( implode( '/', requestGet('Action') ) ) 
+		){
+			$template->addContent( 
+				"401 Unauthorized at ".
+				wwwIndexAction().
+				$template->getLogin() 
+			);
 			return $this;
 		}
 		
@@ -1037,7 +961,7 @@ class cms
 		{
 			$apps[0] = array(
 				'id' => 0, 
-				'app' => $this->settings['simple_cms'],
+				'app' => getSetting('simple_cms'),
 				'ini' => '',
 				'section' => 'content'
 			);
@@ -1056,12 +980,6 @@ class cms
 			$apps = (new orm)->fetchall($sql);
 		}
 		
-		// run them and save the output
-		if(isset($this->content))
-			$content = $this->content;
-		else
-			$content = array();
-		
 		$vars = requestGet('Param');
 		foreach($apps as $_app)
 		{
@@ -1072,24 +990,25 @@ class cms
 					&& get('acl')->test(implode('/', requestGet('Action')).'|'.$_app['app'].'/'.$vars[0])
 			))
 			{
-				$this->setContent("403 Access Denied ".$this->getLogin(), $_app['section']);
+				(new template)->addContent("403 Access Denied ".$this->getLogin(), $_app['section']);
 				continue;
 			}*/
 			
 			// set app target path
 			$path = ROOT.'apps/'.$_app['app'];
-			if(!is_file($path.'/index.php')) continue;
+			if(!is_file($path.'/index.php')) 
+				continue;
 			
 			// collect app output
 			ob_start();
 			chdir($path); // set current working dir to app base path
 			$start = microtime(true); // timer for app
 			
-			
-			$apptimer = __METHOD__.' / Link Id: '.$_app['id']
-			.', App: '.$_app['app']
-			.', Position: '.$_app['section']
-			.', Config: '.$_app['ini'];
+			$apptimer = __METHOD__.
+				' / Link Id: '.$_app['id'].
+				', App: '.$_app['app'].
+				', Position: '.$_app['section'].
+				', Config: '.$_app['ini'];
 			
 			startTimer($apptimer);
 			include 'index.php'; // execute app
@@ -1101,24 +1020,24 @@ class cms
 				'</div>';
 			
 			// and save
-			$content[$_app['section']][] = \lf\resolveAppUrl($output);
-			
-			// reset for next go around
-			$this->appurl = '';
-		
+			$template->addContent(
+				resolveAppUrl($output),
+				$_app['section']
+			);
 		}
 		
-		chdir(LF); // cd back to LF root for the rest of the execution
-		
-		$this->content = $content;
+		// cd back to LF root for the rest of the execution
+		chdir(LF); 
 		
 		(new plugin)->run('post lf getcontent');
 		
 		if($this->settings['simple_cms'] == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
-			$this->content['nav'][] = $this->nav_cache;
+			$template->addContent(
+				$this->nav_cache,
+				'nav'
+			);
 		
-		
-		(new cache)->endTimer(__METHOD__);
+		endTimer(__METHOD__);
 		
 		return $this;
 	}
