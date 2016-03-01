@@ -6,8 +6,6 @@ namespace lf;
  * Template ssyttem
  * 
  * Littlefoot->select will go here. so will render
- * 
- * 
  */
 class template
 {

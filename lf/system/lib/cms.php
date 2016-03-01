@@ -82,19 +82,13 @@ function getSetting($name)
  * ~~~
  * <?php
  *
- * class myapp extends app {
- *		function main($args) {
+ * class myapp {
+ *		public function main() {
  *			echo '<a href="%appurl%otherfunction/1">otherfunction</a>';
- * 			//echo '<pre>';
- *			//var_dump($args, $this);
- *			//echo '</pre>';
  * 		}
  *
- *		function otherfunction($args) {
+ *		public function otherfunction() {
  *			echo '<a href="%appurl%">back to main</a>';
- *			echo '<pre>';
- *			var_dump($args);
- *			echo '</pre>';
  * 		}
  * }
  * ~~~
@@ -158,7 +152,7 @@ class cms
 	/**
 	 * Originally `(new littlefoot)->cms()`
 	 * 
-	 * Executes the Littlefoot CMS frontend (possibly loading /admin, if requested)
+	 * Executes the Littlefoot CMS frontend (loading /admin, if requested)
 	 * 
 	 * @return $this The resulting $this object
 	 */
@@ -190,19 +184,20 @@ class cms
 		
 		// If /admin was requested, load it and stop here
 		$this->routeAdmin()					
-			// Get data for SimpleCMS, or determine requested Nav ID from url $actions
+			// Get data for SimpleCMS, or determine requested Nav ID from request $actions
 			->navSelect()					
-			// Deal with SimpleCMS or execute linked apps
+			// exec SimpleCMS or exec linked apps, save output to template content array
 			->getcontent()
-			->setTemplateSkin();
-		
-		$this
+			// apply template skin based on `default_skin` setting
+			->setTemplateSkin()
+			// add configured title setting to template title array
 			->appendSiteTitle()
+			// add 3rdparty/icons.css for font awesome and lf.css
 			->loadLfCSS()
+			// Add stuff to <head> based on if search engine blocker is enabled in lf_settings
 			->searchEngineBlocker();
 		
 		// Display content in skin, return HTML output result
-		//echo $this->render(); 				
 		echo (new template)->render();
 	
 		// Stop the 'cms' timer. Store elapsed time for debug.
@@ -216,6 +211,21 @@ class cms
 		return $this;
 	}
 	
+	/**
+	 * print HTML comment at the bottom of the source
+	 * 
+	 * display cool stats and list of required files
+	 */
+	public function printDebug()
+	{
+		$exectime = round((new \lf\cache)->getTimerResult('cms'), 6)*(1000);
+		$memusage = round(memory_get_peak_usage()/1024/1024,2);
+		include LF.'system/template/debug.php';
+	}
+	
+	/**
+	 * use template to add lfcss and icon css to top of <head> on render
+	 */
 	public function loadLfCss()
 	{
 		(new template)
@@ -225,21 +235,18 @@ class cms
 		return $this;
 	}
 	
-	// print HTML comment at the bottom of the source
-	// display cool stats and list of required files
-	public function printDebug()
-	{
-		$exectime = round((new \lf\cache)->getTimerResult('cms'), 6)*(1000);
-		$memusage = round(memory_get_peak_usage()/1024/1024,2);
-		include LF.'system/template/debug.php';
-	}
-	
+	/**
+	 * load release version. used mostly for upgrade at the moment. may add to debug output
+	 */
 	public function loadVersion()
 	{
 		$this->version = file_get_contents(LF.'system/version');
 		return $this;
 	}
 	
+	/**
+	 * return string of loaded lf release version
+	 */
 	public function getVersion()
 	{
 		if( is_null( $this->version ) )
@@ -248,11 +255,19 @@ class cms
 		return $this->version;
 	}
 	
+	/**
+	 * enable SimpleCMS for $app. It will treat $app as alias `/` and as if no other nav items exist
+	 * 
+	 * UI: admin navigation page is replaced with $app admin. other apps are hidden. full site navigation cannot be modified while this is on.
+	 */
 	public function simpleCms($app)
 	{
 		$this->exec = $app;
 	}
 	
+	/**
+	 * If user asks for 'admin/' in their request_uri, run admin
+	 */
 	public function routeAdmin()
 	{
 		// if request is detected as an 'admin' request...
@@ -266,6 +281,9 @@ class cms
 		return $this;
 	}
 	
+	/**
+	 * load CMS settings into session from `lf_settings`
+	 */
 	public function loadSettings()
 	{
 		(new plugin)->run('pre settings');
@@ -281,6 +299,9 @@ class cms
 		return $this;
 	}
 	
+	/**
+	 * Return all loaded settings in an array
+	 */
 	public function getSettings()
 	{
 		$settings = get('settings'); // try to get from session
@@ -293,6 +314,10 @@ class cms
 		return $settings;
 	}
 	
+	
+	/**
+	 * Return loaded CMS setting called $name
+	 */
 	public function getSetting($name)
 	{
 		$settings = $this->getSettings();
@@ -300,23 +325,18 @@ class cms
 	}
 	
 	/**
-	 * Instant MVC: Routing URL request to class methods. Auto load given class name in controller/ folder as Littlefoot app. 
-	 *
+	 * Instant MVC: Routing URL request to class methods.
+	 * 
+	 * request param is used to route to class methods. 
+	 * 
+	 * Given class `pages_admin` and `param = ['edit', '5']`, mvc would execute the `edit()` method and that method would know to ask request for param[1]
 	 * 
 	 * ## Usage
 	 *
 	 * ~~~
-	 * echo $this->mvc($controllerName); 
-	 * ~~~
-	 * 
-	 * ## Backend operation
-	 * 
-	 * ~~~
 	 * include "controller/$controllerName.php";
-	 * $class = new $controllerName($this[, $ini[, $vars]])
+	 * echo (new \lf\cms)->mvc( (new $controllerName) ); 
 	 * ~~~
-	 *
-	 *
 	 *
 	 * @param string $controller Executes $controller->$vars[0]\(\) defined at ./controller/$controller.php
 	 * 
@@ -400,18 +420,9 @@ class cms
 	}
 	
 	/** 
-	 * cd to a folder containing another folder called controller/ with controller class files in it. 
+	 * Routes `action[0]` to local files at `controller/$action[0].php` to let a folder of controller names handle the request action rather than `navSelect()`
 	 * 
-	 * This routes the first (left to right) URL /variable/ into controller/$variable.php, then does mvc on (new $variable)
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 * Runs `(new \lf\cms)->mvc( (new $action[0]) );` after including the file found above.
 	 */
 	public function multiMVC($default = NULL, $section = 'content', $namespace = '\\')
 	{	
@@ -463,6 +474,8 @@ class cms
 	}
 	
 	/** 
+	 * I haven't used this recently and will update the docs if I run into it again.
+	 * 
 	 * used to route based on args[0] as instance
 	 *
 	 * ### How to use _router
@@ -532,18 +545,16 @@ class cms
 		return str_replace('%insturl%', $this->instbase, ob_get_clean()); 
 	}
 	
-	// you need to include the class .php file yourself.
 	/**
 	 * Test URL for given alias (default to given class) in action[0]
 	 * 
-	 * @param $class Instantiated object with public methods intended to execute based on `wwwIndexAction();`
-	 * @param $alias Defaults to $class. This only routes if we find $alias in $action[0].
-	 * @param $return bool "The output of this should be returned as a string rather than immediately rendering and exiting".
+	 * @param $class Instantiated object with public methods intended to execute based on `getRequest('Action')[0]`
+	 * @param $alias Defaults to $class. This only routes if we find $alias in `getRequest('Action')[0]`.
+	 * @param $return bool "The output of this should be returned as a captured string rather than immediately rendering and exiting".
 	 */
-	public function route($class, $alias = NULL, $return = true)
+	public function route($instance, $alias = NULL, $return = true)
 	{
-		
-		$className = get_class($class);
+		$className = get_class($instance);
 		(new plugin)->run('pre '.$className);
 		startTimer(__METHOD__);
 		
@@ -568,7 +579,7 @@ class cms
 		
 			(new template)
 				->addContent( $this->renderNavCache(), 'nav' )
-				->addContent( $this->mvc($class) );
+				->addContent( $this->mvc($instance) );
 		
 			if(!$return)
 			{
@@ -601,7 +612,7 @@ class cms
 	{
 		return str_replace('%baseurl%', requestGet('IndexUrl'), $text);
 	}
-		
+	
 	public function getApps($id = NULL)
 	{
 		$this->lf->hook_run('pre template getApps');
