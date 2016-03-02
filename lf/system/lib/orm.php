@@ -193,7 +193,7 @@ class orm implements \IteratorAggregate
 			include LF.'config.php'; // load $db config
 
 		$database_config = $db;
-		$this->conf = $db;
+		$this->conf = $db; // probably should have this. need to move to loading from config every time we need to run something that needs it...
 
 		$this->mysqli = new \mysqli(
 			$database_config['host'],
@@ -1077,6 +1077,9 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  * 
  * If you were to call `(new BlogThreads)`, the autoload function would quickly define a class called `BlogThreads` extended from the `orm` on the fly with a table set as `blog_threads`.
  * 
+ * ### Dev Note
+ * 
+ * Just noticed that this will catch things like `(new User)` when people meant `(new \lf\user)` or anything else they meant to type instead. Its a convenient way to call, but needs fixed. Maybe a namespace?
  */
 spl_autoload_register( function ($class_name) {
 	
@@ -1093,6 +1096,36 @@ spl_autoload_register( function ($class_name) {
 		'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
 		$class_name
 	));    
+});
+
+/**
+ * Made another one that catches stuff like `\table\lf_settings` rather than autoloading in the global namespace
+ */
+spl_autoload_register( function ($class_name) {
+	
+	// lmk if you think this is too strict of a pattern. also idk how 3 backslashes makes this work... but it works
+	if( ! preg_match('/^db\\\([a-zA-Z0-9_\-]+)$/', $class_name, $match) )
+		return;
+
+	$guts['table'] = 'public $table = "'.strtolower($match[1]).'";';
+
+	//$guts['method'] = 'public function test() { echo "Hey there"; }';
+	
+	// using HEREDOC because backslashes are tedious to escape
+	$classDefinition = <<<HEREDOC
+	namespace db;
+
+	class lf_settings extends \lf\orm
+	{
+		%guts%
+	}
+HEREDOC;
+	
+	eval(str_replace(
+		'%guts%', 
+		implode(' ', $guts), 
+		$classDefinition
+	));		
 });
 
 //backward compatible after db methods were taken by orm

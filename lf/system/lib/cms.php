@@ -184,18 +184,21 @@ class cms
 		
 		// If /admin was requested, load it and stop here
 		$this->routeAdmin()					
+			// add configured title setting to template title array
+			->setSiteTitle()
 			// Get data for SimpleCMS, or determine requested Nav ID from request $actions
 			->navSelect()					
 			// exec SimpleCMS or exec linked apps, save output to template content array
-			->getcontent()
+			->getcontent() //; pre( (new \lf\template)->getTitle() ); $this
 			// apply template skin based on `default_skin` setting
 			->setTemplateSkin()
-			// add configured title setting to template title array
-			->appendSiteTitle()
 			// add 3rdparty/icons.css for font awesome and lf.css
 			->loadLfCSS()
 			// Add stuff to <head> based on if search engine blocker is enabled in lf_settings
 			->searchEngineBlocker();
+		
+		
+		
 		
 		// Display content in skin, return HTML output result
 		echo (new template)->render();
@@ -653,12 +656,12 @@ class cms
 	}
 	 
 	// to append the 'title' variable set in `lf_settings` to whatever title is already in place.
-	public function appendSiteTitle()
+	public function setSiteTitle()
 	{
-		$addTitle = getSetting('title');
+		$siteTitle = getSetting('title');
 		
-		//if( ! is_null( $addTitle ) )
-		//	(new template)->appendTitle($addTitle);
+		if( ! is_null( $siteTitle ) )
+			(new template)->setTitle($siteTitle);
 		
 		return $this;
 	}
@@ -952,16 +955,18 @@ class cms
 		(new plugin)->run('pre '.__METHOD__);
 		startTimer(__METHOD__);
 		
-		$template = (new template)->load();
 		
 		if( ! (new acl)->load()
 				->test( implode( '/', requestGet('Action') ) ) 
 		){
+			$template = (new template)->load();
+			
 			$template->addContent( 
 				"401 Unauthorized at ".
-				wwwIndexAction().
+				requestGet('IndexUrl').
 				$template->getLogin() 
 			);
+			
 			return $this;
 		}
 		
@@ -1022,14 +1027,13 @@ class cms
 			startTimer($apptimer);
 			include 'index.php'; // execute app
 			endTimer($apptimer);
-			
 			$output = '
 				<div id="'.$_app['app'].'-'.$_app['id'].'" class="app-'.$_app['app'].'">'.
 					ob_get_clean().
 				'</div>';
 			
 			// and save
-			$template->addContent(
+			(new template)->addContent(
 				resolveAppUrl($output),
 				$_app['section']
 			);
@@ -1040,8 +1044,8 @@ class cms
 		
 		(new plugin)->run('post lf getcontent');
 		
-		if($this->settings['simple_cms'] == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
-			$template->addContent(
+		if(getSetting('simple_cms') == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
+			(new template)->addContent(
 				$this->nav_cache,
 				'nav'
 			);

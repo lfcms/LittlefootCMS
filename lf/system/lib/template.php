@@ -6,6 +6,15 @@ namespace lf;
  * Template ssyttem
  * 
  * Littlefoot->select will go here. so will render
+ * 
+ * ### Dev note
+ * 
+ * I have found a problem with calling template asynchronously:
+ * 
+ * If you store it in a variable: `$template = (new template)`, and make changes to the variable, it keeps its original values. So if you append to title somewhere else, save this will revert back to the original title that hasnt been changed in this local instance. Maybe a statis internal variable would have fixed that, but I still like session better until someone talks me out of it.
+ * 
+ * 
+ * 
  */
 class template
 {
@@ -51,14 +60,16 @@ class template
 	 */
 	public function load()
 	{
+		// attempt to load elements already published to session
 		$elements = get('templateElements');
 		
-		// if we already have something saved, load it
-		if( !is_null( $elements ) )
-		{
+		// if we find something,
+		if( ! is_null( $elements ) )
+			// save session elements back into local elements
 			$this->elements = $elements;
-			$this->save(); // and be sure to publish it to session
-		}
+		else
+			// publish defaults to session, no changes needed before returning as the defaults are already set in the object
+			$this->save();
 		
 		return $this;
 	}
