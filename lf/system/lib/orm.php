@@ -174,46 +174,71 @@ class orm implements \IteratorAggregate
 	public function initDb()
 	{
 		// leave mysqli object in session, but close it once the script finishes via ___LastSay
-		if(isset($_SESSION['db']))
-		{
 			// for when we bork the db session
 			//$var instanceof mysqli_result;
-			if(is_a($_SESSION['db'], 'mysqli_result'))
-			{
-				$this->mysqli = $_SESSION['db'];
-				return $this;
-			}
+		if(isset($_SESSION['db']) && is_a($_SESSION['db'], 'mysqli_result'))
+		{
+			$this->mysqli = $_SESSION['db'];
+			return $this;
 		}
-
-		// check to make sure configuration file is there
-		// config.php contains database credentials
-		if(!is_file(LF.'config.php'))
-			(new install)->noconfig();
-		else
+		
+		// does a config exist?
+		if( is_file( LF.'config.php' ) )
+		{
 			include LF.'config.php'; // load $db config
-
+			notice('<div class="notice"><i class="fa fa-check"></i> Found config.php</div>');
+		}
+		else
+		{
+			notice('<div class="error">First time installation? Ignore this message. Otherwise: config.php not found.</div>');
+			(new install)->printInstallForm();
+		}
+		
+		
+		// create new mysqli object, save as $this->mysqli
 		$database_config = $db;
-		$this->conf = $db; // probably should have this. need to move to loading from config every time we need to run something that needs it...
-
-		$this->mysqli = new \mysqli(
-			$database_config['host'],
-			$database_config['user'],
-			$database_config['pass']
-		);
-
-		if($this->mysqli->connect_errno)
-			$this->error[] = "Connection failed (".$this->mysqli->connect_errno."): " .$this->mysqli->connect_error;
-		else if(!$this->mysqli->select_db( $database_config['name']))
-			$this->error[] = $this->mysqli->error;
-
+		$this->conf = $database_config; // probably should have this. need to move to loading from config every time we need to run something that needs it...
+		$this->mysqli = $this->newMysqli($database_config);
+		$this->verifyMysqli($this->mysqli);
 		$this->query_count = 0; // i think mysqli takes care of thsi
-
 		$this->tblprefix = $database_config['prefix'];
 
 		$_SESSION['db'] = $this->mysqli;
 
 		return $this;
     }
+	
+	public function newMysqli($database_config)
+	{
+		return @new \mysqli(
+			$database_config['host'],
+			$database_config['user'],
+			$database_config['pass']
+		);
+	}
+	
+	public function verifyMysqli($mysqli = NULL)
+	{
+		if( is_null( $mysqli ) )
+			$mysqli = $this->mysqli;
+		
+		// Did we have trouble connecting to the database?
+		if($mysqli->connect_errno)
+		{
+			// Record the reason locally
+			notice('<div class="error">Connection failed ('.$mysqli->connect_errno.'): '.$mysqli->connect_error.'</div>');
+			(new install)->printInstallForm();
+		}
+		
+		// do we fail to select our database?
+		if( ! $mysqli->select_db( $this->conf['name']))
+		{
+			notice('<div class="error">'.$mysqli->error.'</div>');
+			(new install)->printInstallForm();
+		}
+		
+		return true;
+	}
 
 	/**
 	 * Free last database result

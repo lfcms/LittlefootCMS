@@ -1,43 +1,5 @@
 <?php
 
-//check for crucial php settings
-if(version_compare(phpversion(), '5.4.0', '<')
-&& get_magic_quotes_gpc()) // magic quotes (only affects <5.4)
-        $warnings[] = '[<a target="_blank" href="https://www.google.com/search?q=how+to+disable+magic+quotes">Fix it</a>] Magic quotes is ENABLED';
-
-if(version_compare(phpversion(), '5.4.0', '<')
-&& ini_get('short_open_tag') == false) // php short tags (only affects <5.4)
-        $warnings[] = '[<a target="_blank" href="https://www.google.com/search?q=how+to+enable+php+short+tags">Fix it</a>] Short tags is DISABLED ';
-
-if(is_file('config.php'))
-{
-	//include 'config.php';
-	$dbconn = (new \lf\orm)->initDb();
-	
-	if($dbconn->error != '') $errors = $dbconn->error;
-	else
-	{
-		if(!$dbconn->fetch("select * from lf_settings limit 1"))
-			$msg .= 'I found a config file, but can\'t seem to connect to your database. Please verify the contents of lf/config.php or try and reconfigure the credentials.';
-		else
-			$msg .= 'The config file exists, but the database seems to be missing crucial data in at least lf_settings.';
-	}
-}
-
-$host = isset($_POST['host']) ? $_POST['host'] : 'localhost';
-$user = isset($_POST['user']) ? $_POST['user'] : get_current_user();
-$dbname = isset($_POST['dbname']) ? $_POST['dbname'] : get_current_user().'_lf';
-
-if(isset($msg))
-	$msg = '<div class="warning marbot rounded">'.$msg.'</div>';
-else
-	$msg = '';
-
-$error_msg = '';
-if(count($this->errors) > 0)
-	foreach($this->errors as $error)
-		$error_msg .= '<div class="marbot error rounded">'.$error.'</div>';
-
 ?>
 <html class="lf">
 	<head>
@@ -49,15 +11,14 @@ if(count($this->errors) > 0)
 		</style>
 	</head>
 	<body>
-		<h1 class="banner dark_gray light text-center">Littlefoot Setup</h1>
+		<h1 class="banner blue light text-center">Littlefoot Setup</h1>
 		<div class="wide_container">
 			<form action="?" method="post">
 				<div class="row">
 					<div class="col-3">
 					</div>
 					<div class="col-6">
-						<?=isset($msg) ? $msg : '';?>
-						<?=isset($error_msg) ? $error_msg : '';?>					
+						<?=notice();?>					
 						<p>Enter your database credentials and preferred admin password, then click Install.</p>
 						<ul class="fvlist">
 							<li>
@@ -83,11 +44,11 @@ if(count($this->errors) > 0)
 									</li>
 									<li>
 										<?php if(is_file('config.php')): ?>
-										<label for="">Overwrite Config File:</label> <input class="check" type="checkbox" name="overwrite" checked="checked" />
-										
-										<label for="">Re-install Base Data:</label> <input class="check" type="checkbox" name="data" />
+										<label for="">Overwrite Config File: <input class="check" type="checkbox" name="overwrite" checked="checked" /></label>
+										</li><li>
+										<label for="">Re-install Base Data: <input class="check" type="checkbox" name="data" /></label>
 										<?php else: ?>
-										<label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (uncheck this if you are just remaking a lost config)</label>
+										<label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (not needed if recovering a config)</label>
 										<?php endif; ?>
 									</li>
 								</ul>
