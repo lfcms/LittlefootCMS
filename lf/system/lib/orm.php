@@ -179,9 +179,6 @@ class orm implements \IteratorAggregate
 		// run through the checks of getting a usable mysqli instance
 		$this->verifyMysqli();
 		
-		// probably should have this. need to move to loading from config every time we need to run something that needs it...
-		$this->conf = $db; 
-		
 		// I think mysqli takes care of this
 		$this->query_count = 0; 
 		
@@ -236,6 +233,9 @@ class orm implements \IteratorAggregate
 			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> Connection failed ('.$mysqli->connect_errno.'): '.$mysqli->connect_error.'</div>';
 			$this->runInstaller();
 		}
+		
+		// probably should have this. need to move to loading from config every time we need to run something that needs it...
+		$this->conf = $db; 
 		
 		// do we fail to select our database?
 		if( ! $mysqli->select_db( $this->conf['name']))

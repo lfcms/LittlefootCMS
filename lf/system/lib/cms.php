@@ -288,10 +288,7 @@ class cms
 	 * load CMS settings into session from `lf_settings`
 	 */
 	public function loadSettings()
-	{
-		lfbacktrace();
-		exit;
-		
+	{	
 		(new plugin)->run('pre settings');
 		
 		foreach( (new \LfSettings)->getAll() as $setting )
