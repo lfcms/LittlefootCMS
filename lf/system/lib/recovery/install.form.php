@@ -1,14 +1,10 @@
-<?php
-
-?>
 <html class="lf">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-		<style type="text/css">
-			<?php readfile(ROOT.'system/lib/lf.css'); ?>
-		</style>
+		<link rel="stylesheet" href="<?=\lf\requestGet('LfUrl');?>system/lib/lf.css" />
+		<link rel="stylesheet" href="<?=\lf\requestGet('LfUrl');?>system/lib/3rdparty/icons.css" />
 	</head>
 	<body>
 		<h1 class="banner blue light text-center">Littlefoot Setup</h1>
@@ -18,7 +14,7 @@
 					<div class="col-3">
 					</div>
 					<div class="col-6">
-						<?=notice();?>					
+						<?=implode($this->error);?>					
 						<p>Enter your database credentials and preferred admin password, then click Install.</p>
 						<ul class="fvlist">
 							<li>

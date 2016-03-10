@@ -289,6 +289,9 @@ class cms
 	 */
 	public function loadSettings()
 	{
+		lfbacktrace();
+		exit;
+		
 		(new plugin)->run('pre settings');
 		
 		foreach( (new \LfSettings)->getAll() as $setting )
@@ -420,6 +423,21 @@ class cms
 		$appPlugin->run('post app');
 		
 		return ob_get_clean();
+	}
+	
+	/**
+	 * fun note: getSetting was causing a loop when the orm installer tried to ask request for the LF URL. so I moved it into CMS. now request has no ties to ORM
+	 * 
+	 * 
+	 * 
+	 **/
+	public function handleUrlRewrite()
+	{
+		// Add in 302 to fix rewrite and prevent duplicate content
+		if(getSetting('rewrite') == 'on' && requestGet('Index') == 'index.php/') 
+			redirect302( (new request)->load()->rewriteOn()->getActionUrl() );
+		else if(requestGet('Index') == '')
+			redirect302( (new request)->load()->rewriteOff()->getActionUrl() );
 	}
 	
 	/** 

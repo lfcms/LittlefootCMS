@@ -79,6 +79,9 @@ class orm implements \IteratorAggregate
 	/** @var string $crud Chosen CRUD operation (select, insert, update, delete) */
 	private $crud = 'select';
 
+	/** @var array $conf Database config, in case you need to do things with that information. */
+	private $conf = NULL;
+
 	/** @var string $distinctCol Add DISTINCT limitation to SQL query */
 	private $distinctCol = false;
 
@@ -132,6 +135,8 @@ class orm implements \IteratorAggregate
 	 */
 	public function __construct($table = '', $db = NULL)
 	{
+		// when creating a new orm instance, pull mysqli from session, or try to connect.
+		// prints install form when config is missing or your connection is broken.
 		$this->initDb();
 
 		if($table != '')
@@ -145,6 +150,109 @@ class orm implements \IteratorAggregate
 	{
 		if($this->debug)
 			echo $this->sql;
+	}
+
+	/**
+	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
+	 * 
+	 * leave mysqli object in session, but close it once the script finishes via ___LastSay
+	 * 
+	 * 
+	 */
+	public function initDb()
+	{
+		// Request the mysqli object from session
+		$mysqli = NULL;
+		if( isset( $_SESSION['db'] ) )
+			$mysqli = $_SESSION['db'];
+		
+		// If we got back an actual mysqli_request,
+		if( is_a($mysqli, 'mysqli_result') )
+		{
+			// Save this value as the internal mysqli value
+			$this->mysqli = $mysqli;
+			
+			// And move on with life
+			return $this;
+		} // else, just continue below:
+		
+		// run through the checks of getting a usable mysqli instance
+		$this->verifyMysqli();
+		
+		// probably should have this. need to move to loading from config every time we need to run something that needs it...
+		$this->conf = $db; 
+		
+		// I think mysqli takes care of this
+		$this->query_count = 0; 
+		
+		// I dont use this (yet?)
+		$this->tblprefix = $database_config['prefix'];
+
+		$_SESSION['db'] = $this->mysqli;
+
+		return $this;
+    }
+	
+	public function newMysqli($database_config)
+	{
+		return @new \mysqli(
+			$database_config['host'],
+			$database_config['user'],
+			$database_config['pass']
+		);
+	}
+	
+	public function verifyMysqli($mysqli = NULL)
+	{
+		// If the config file does not exist, 
+		if( ! is_file( LF.'config.php' ) )
+		{
+			// Record this problem
+			$this->error[] = '<div class="error">First time installation? Ignore this message. Otherwise, <i class="fa fa-exclamation-triangle"></i> Missing: '.LF.'config.php</div>';
+			$this->runInstaller();
+		} // else, just continue below (->runInstaller() exit()s before returning):
+		
+		// Include that file we tested for earlier
+		include LF.'config.php';
+		
+		// idk if I want to make a whole separate thing for non-errors... ill fix this later
+		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> config.php found</div>';
+		
+		// if we didnt find any $db set in the config file
+		if( !isset( $db ) )
+		{
+			$this->error[] = '<div class="error">$db not set in config</div>';
+			$this->runInstaller();
+		} // else, again with the ->runInstaller()
+		
+		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> $db value found</div>';
+		
+		// create a new mysqli instance
+		$mysqli = $this->newMysqli($db);
+		
+		// Did we have trouble connecting to the database?
+		if($mysqli->connect_errno)
+		{
+			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> Connection failed ('.$mysqli->connect_errno.'): '.$mysqli->connect_error.'</div>';
+			$this->runInstaller();
+		}
+		
+		// do we fail to select our database?
+		if( ! $mysqli->select_db( $this->conf['name']))
+		{
+			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> '.$mysqli->error.'</div>';
+			$this->runInstaller();
+		}
+		
+		$this->mysqli = $mysqli;
+		
+		return true;
+	}
+	
+	public function runInstaller()
+	{
+		include LF.'system/lib/recovery/install.form.php';
+		exit;
 	}
 
 	/**
@@ -167,79 +275,7 @@ class orm implements \IteratorAggregate
 
 		return new ArrayIterator( $return );
 	}
-
-	/**
-	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
-	 */
-	public function initDb()
-	{
-		// leave mysqli object in session, but close it once the script finishes via ___LastSay
-			// for when we bork the db session
-			//$var instanceof mysqli_result;
-		if(isset($_SESSION['db']) && is_a($_SESSION['db'], 'mysqli_result'))
-		{
-			$this->mysqli = $_SESSION['db'];
-			return $this;
-		}
-		
-		// does a config exist?
-		if( is_file( LF.'config.php' ) )
-		{
-			include LF.'config.php'; // load $db config
-			notice('<div class="notice"><i class="fa fa-check"></i> Found config.php</div>');
-		}
-		else
-		{
-			notice('<div class="error">First time installation? Ignore this message. Otherwise: config.php not found.</div>');
-			(new install)->printInstallForm();
-		}
-		
-		
-		// create new mysqli object, save as $this->mysqli
-		$database_config = $db;
-		$this->conf = $database_config; // probably should have this. need to move to loading from config every time we need to run something that needs it...
-		$this->mysqli = $this->newMysqli($database_config);
-		$this->verifyMysqli($this->mysqli);
-		$this->query_count = 0; // i think mysqli takes care of thsi
-		$this->tblprefix = $database_config['prefix'];
-
-		$_SESSION['db'] = $this->mysqli;
-
-		return $this;
-    }
 	
-	public function newMysqli($database_config)
-	{
-		return @new \mysqli(
-			$database_config['host'],
-			$database_config['user'],
-			$database_config['pass']
-		);
-	}
-	
-	public function verifyMysqli($mysqli = NULL)
-	{
-		if( is_null( $mysqli ) )
-			$mysqli = $this->mysqli;
-		
-		// Did we have trouble connecting to the database?
-		if($mysqli->connect_errno)
-		{
-			// Record the reason locally
-			notice('<div class="error">Connection failed ('.$mysqli->connect_errno.'): '.$mysqli->connect_error.'</div>');
-			(new install)->printInstallForm();
-		}
-		
-		// do we fail to select our database?
-		if( ! $mysqli->select_db( $this->conf['name']))
-		{
-			notice('<div class="error">'.$mysqli->error.'</div>');
-			(new install)->printInstallForm();
-		}
-		
-		return true;
-	}
-
 	/**
 	 * Free last database result
 	 */
