@@ -146,8 +146,8 @@
 									foreach($backups as $backup => $bkversion): ?>
 									<li>
 										<?=$bkversion;?> - 
-										<a href="<?=\lf\requestGet('AdminUrl');?>restore/<?=$backup;?>/">restore</a> -
-										<a href="<?=\lf\requestGet('AdminUrl');?>rm/<?=$backup;?>/" class="x">delete</a>
+										<a href="<?=\lf\requestGet('ActionUrl');?>restore/<?=$backup;?>/">restore</a> -
+										<a href="<?=\lf\requestGet('ActionUrl');?>rm/<?=$backup;?>/" class="x">delete</a>
 									</li>
 								<?php endforeach; else: ?>
 									<li>No system restore points are available.</li>
