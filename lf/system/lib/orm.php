@@ -79,6 +79,9 @@ class orm implements \IteratorAggregate
 	/** @var string $crud Chosen CRUD operation (select, insert, update, delete) */
 	private $crud = 'select';
 
+	/** @var array $conf Database config, in case you need to do things with that information. */
+	private $conf = NULL;
+
 	/** @var string $distinctCol Add DISTINCT limitation to SQL query */
 	private $distinctCol = false;
 
@@ -132,6 +135,8 @@ class orm implements \IteratorAggregate
 	 */
 	public function __construct($table = '', $db = NULL)
 	{
+		// when creating a new orm instance, pull mysqli from session, or try to connect.
+		// prints install form when config is missing or your connection is broken.
 		$this->initDb();
 
 		if($table != '')
@@ -145,6 +150,250 @@ class orm implements \IteratorAggregate
 	{
 		if($this->debug)
 			echo $this->sql;
+	}
+
+	/**
+	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
+	 * 
+	 * leave mysqli object in session, but close it once the script finishes via ___LastSay
+	 * 
+	 * 
+	 */
+	public function initDb()
+	{
+		// Request the mysqli object from session
+		$mysqli = $this->fromSession();
+		
+		// If we got back an actual mysqli_request,
+		if( is_a($mysqli, 'mysqli_result') )
+		{
+			// Save this value as the internal mysqli value
+			$this->mysqli = $mysqli;
+			
+			// And return, tho this __METHOD__ only called from __construct
+			return $this;
+		} // else, just continue below:
+		
+		$this
+			// load Config,
+			->loadConfig()
+			// and connect to MySQLi
+			->connectMysqli()
+			->toSession();
+		
+		// I dont use this :\
+		// I dont even save this to session... idk if I want to use it
+		//$this->tblprefix = $database_config['prefix'];
+
+		return $this;
+    }
+	
+	private function fromSession()
+	{
+		$mysqli = NULL;
+		if( isset( $_SESSION['db'] ) )
+			$mysqli = $_SESSION['db'];
+		
+		$this->mysqli = $mysqli;
+		
+		return $this;
+	}
+	
+	private function toSession()
+	{
+		// save database object to session
+		$_SESSION['db'] = $this->mysqli;
+		
+		return $this;
+	}
+	
+	private function loadConfig()
+	{
+		// If the config file does not exist, 
+		if( ! is_file( LF.'config.php' ) )
+		{
+			// Record this problem
+			$this->error[] = '<div class="error">No config file found, please configure MySQL Access</div>';
+			$this->runInstaller();
+		} // else, just continue below (->runInstaller() exit()s before returning):
+		
+		// Include that file we tested for earlier
+		include LF.'config.php';
+		
+		// idk if I want to make a whole separate thing for non-errors... ill fix this later
+		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> config.php found</div>';
+		
+		// if we didnt find any $db set in the config file
+		if( !isset( $db ) )
+		{
+			$this->error[] = '<div class="error">$db not set in config</div>';
+			$this->runInstaller();
+		} // else, continue:
+		
+		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> $db value found</div>';
+		
+		$this->conf = $db;
+		
+		return $this;
+	}
+	
+	private function connectMysqli()
+	{
+		// create a new mysqli instance
+		$mysqli = $this->newMysqli($this->conf);
+		
+		// Did we have trouble connecting to the database?
+		if($mysqli->connect_errno)
+		{
+			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> Connection failed ('.$mysqli->connect_errno.'): '.$mysqli->connect_error.'</div>';
+			$this->runInstaller();
+		}
+		
+		// do we fail to select our database?
+		if( ! $mysqli->select_db( $this->conf['name']))
+		{
+			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> '.$mysqli->error.'</div>';
+			$this->runInstaller();
+		}
+		
+		$this->mysqli = $mysqli;
+		
+		return $this;
+	}
+	
+	public function postValidate()
+	{
+		if($_POST['db']['host'] == '')   $this->errors[] = "Missing 'Database Hostname' information";
+		if($_POST['db']['user'] == '')   $this->errors[] = "Missing 'Database Username' information";
+		//if($_POST['pass'] == '')   $this->errors[] = "Missing 'Database Password' information";
+		if($_POST['db']['dbname'] == '') $this->errors[] = "Missing 'Database Name' information";
+		if($_POST['admin']['user'] == '')  $this->errors[] = "Missing 'Admin Username' information";
+		if($_POST['admin']['pass'] == '')  $this->errors[] = "Missing 'Admin Password' information";
+		
+		if(count($this->errors) > 0)
+		{
+			$_POST = array();
+			return $this->runInstaller();
+		}
+		
+		return $this;
+	}
+	
+	public function newMysqli($database_config)
+	{
+		return @new \mysqli(
+			$database_config['host'],
+			$database_config['user'],
+			$database_config['pass']
+		);
+	}
+	
+	public function runInstaller()
+	{
+		if( count( $_POST ) )
+		{
+			$this->post();
+		}
+		
+		$host = 'localhost';
+		$dbname = get_current_user().'_lf';
+		$user = get_current_user();
+		
+		include LF.'system/lib/recovery/install.form.php';
+		exit;
+	}
+	
+	private function writeConfig()
+	{
+		$this->postValidate();
+		
+		// Take config.php template, replace credentials with $_POST data
+		$dbConfigFile = file_get_contents(LF.'config-dist.php');
+		$dbCredentials = array(
+			'localhost' 		=> $_POST['db']['host'],
+			'mysql_user'		=> $_POST['db']['user'],
+			'mysql_passwd' 		=> $_POST['db']['pass'],
+			'mysql_database' 	=> $_POST['db']['dbname'],
+		);
+		
+		// Replace keys with values
+		$dbConfigFile = str_replace(
+			array_keys($dbCredentials), 
+			array_values($dbCredentials), 
+			$dbConfigFile);
+		
+		// If the config.php is not already there, write it
+		if( !is_file(LF.'config.php') || ( isset($_POST['overwrite']) && $_POST['overwrite'] == 'on' ) )
+		{
+			if(!file_put_contents(LF.'config.php', $dbConfigFile))
+			{
+				$this->errors[] = 'Unable to write to "'.LF.'config.php"';
+				
+				// Get permissions and owner of LF folder
+				$perms = substr(sprintf('%o', fileperms(LF)), -4);
+				$ownerUID = fileowner(LF);
+				
+				// Print current ownership
+				$this->errors[] = '"'.LF.'" Owner: "'.$ownerUID.'", Perms: '.$perms;
+				
+				// Print how to fix
+				if(extension_loaded('posix'))
+				{
+					$processUser = posix_getpwuid(posix_geteuid());
+					$processUserName = $processUser['name'];
+					$this->errors[] = "POSIX detected user '$processUserName' needs write access to the lf/ folder.";
+				}
+				else
+				{
+					$this->errors[] = "PHP module 'POSIX' is not loaded, so I can't auto-detect which user needs write permissions<br />"
+						.'"'.LF.'" needs to be writable by the user running this PHP script. Check the system processes to see who owns the process as it runs or find a System Administrator.';
+				}
+			}
+		}	
+		
+		// Verify that we wound up with a config.php
+		if(!is_file(LF.'config.php'))
+			$this->errors[] = 'Config file missing after write attempt.';
+		
+		if(count($this->errors) > 0) 
+		{
+			$_POST = array(); // this is so bad... but its all private, so no one should depend on this feature
+			return $this->runInstaller();
+		}
+	}
+	
+	private function post()
+	{
+		$this->writeConfig();
+		
+		if( isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php') )
+			$this->importRecoveryData();
+		
+		redirect302( requestGet('AdminUrl') );
+	}
+	
+	/**
+	 * If we are to import the MySQL data...
+	 */
+	private function importRecoveryData()
+	{
+		$_POST = array(); // doing this because in ->runInstaller, there is a ->post() that will loop if this is enabled since I am using ORM again. BAAAAD :C
+		// the (new orm) will try to do an import, if it is unable to, the installform will trigger
+		
+		// Run the default lf.sql
+		(new orm)->import(ROOT.'system/lib/recovery/lf.sql', false);
+			
+		// Add admin user
+		(new User)
+			->setAccess('admin')
+			->setUser($_POST['admin']['user'])
+			->setDisplay_name(ucfirst($_POST['admin']['user']))
+			->setPass($_POST['admin']['pass'])
+			->setStatus('valid')
+			->save()
+			->toSession(); // and auto login as that user
+		
+		return $this;
 	}
 
 	/**
@@ -167,54 +416,7 @@ class orm implements \IteratorAggregate
 
 		return new ArrayIterator( $return );
 	}
-
-	/**
-	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
-	 */
-	public function initDb()
-	{
-		// leave mysqli object in session, but close it once the script finishes via ___LastSay
-		if(isset($_SESSION['db']))
-		{
-			// for when we bork the db session
-			//$var instanceof mysqli_result;
-			if(is_a($_SESSION['db'], 'mysqli_result'))
-			{
-				$this->mysqli = $_SESSION['db'];
-				return $this;
-			}
-		}
-
-		// check to make sure configuration file is there
-		// config.php contains database credentials
-		if(!is_file(LF.'config.php'))
-			(new install)->noconfig();
-		else
-			include LF.'config.php'; // load $db config
-
-		$database_config = $db;
-		$this->conf = $db; // probably should have this. need to move to loading from config every time we need to run something that needs it...
-
-		$this->mysqli = new \mysqli(
-			$database_config['host'],
-			$database_config['user'],
-			$database_config['pass']
-		);
-
-		if($this->mysqli->connect_errno)
-			$this->error[] = "Connection failed (".$this->mysqli->connect_errno."): " .$this->mysqli->connect_error;
-		else if(!$this->mysqli->select_db( $database_config['name']))
-			$this->error[] = $this->mysqli->error;
-
-		$this->query_count = 0; // i think mysqli takes care of thsi
-
-		$this->tblprefix = $database_config['prefix'];
-
-		$_SESSION['db'] = $this->mysqli;
-
-		return $this;
-    }
-
+	
 	/**
 	 * Free last database result
 	 */

@@ -165,7 +165,7 @@ class cms
 		(new cache)->startTimer(__METHOD__);
 		
 		// test the installation. can we connect to MySQL, etc?
-		(new install)->test();
+		//(new install)->test();
 		
 		// initialize request into session. 
 		// this can technically be done JIT with `->load()`, 
@@ -243,7 +243,7 @@ class cms
 	 */
 	public function loadVersion()
 	{
-		$this->version = file_get_contents(LF.'system/version');
+		$this->version = trim(file_get_contents(LF.'system/version'));
 		return $this;
 	}
 	
@@ -288,7 +288,7 @@ class cms
 	 * load CMS settings into session from `lf_settings`
 	 */
 	public function loadSettings()
-	{
+	{	
 		(new plugin)->run('pre settings');
 		
 		foreach( (new \LfSettings)->getAll() as $setting )
@@ -420,6 +420,21 @@ class cms
 		$appPlugin->run('post app');
 		
 		return ob_get_clean();
+	}
+	
+	/**
+	 * fun note: getSetting was causing a loop when the orm installer tried to ask request for the LF URL. so I moved it into CMS. now request has no ties to ORM
+	 * 
+	 * 
+	 * 
+	 **/
+	public function handleUrlRewrite()
+	{
+		// Add in 302 to fix rewrite and prevent duplicate content
+		if(getSetting('rewrite') == 'on' && requestGet('Index') == 'index.php/') 
+			redirect302( (new request)->load()->rewriteOn()->getActionUrl() );
+		else if(requestGet('Index') == '')
+			redirect302( (new request)->load()->rewriteOff()->getActionUrl() );
 	}
 	
 	/** 

@@ -231,6 +231,7 @@ function lfbacktrace()
 {
 	$bt = debug_backtrace(); 
 
+	echo "<table cellspacing='5'>";
 	foreach($bt as $t)
 	{
 		$class = '';
@@ -244,9 +245,12 @@ function lfbacktrace()
 			$args = substr($args, 0, -2);
 		}
 		
+		echo '<tr>';
 		if(isset($t['file']))
-			echo '<br />'.$t['file'].' line '.$t['line'].' '.$class.$t['function'].'('.$args.')';
+			echo '<td>line '.$t['line'].' </td><td>'.$t['file'].' </td><td>'.$class.$t['function'].'('.$args.')</td>';
+		echo '</tr>';
 	}
+	echo "</table>";
 }
 
 /**

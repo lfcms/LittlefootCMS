@@ -10,9 +10,9 @@ if(!extension_loaded('mysqli'))
 }
 
 /**
- * @ignore
+ * provide installform
  */
-class install
+class installOLD
 {
 	private $errors = array();
 	
@@ -33,10 +33,7 @@ class install
 	
 	public function noconfig()
 	{
-		if(count($_POST) > 0)
-			$this->post();
 		
-		$msg = 'No configuration file found at lf/config.php (ignore this if installing for the first time)';
 		include LF.'system/lib/recovery/install.form.php';
 		
 		exit();
@@ -45,7 +42,7 @@ class install
 	// we tried to db, but couldn't... so nodb
 	private function nodb()
 	{
-		$this->errors[] = 'Unable to query database.';
+		notice('<div class="error">Unable to query database.</div>');
 		$this->printInstallForm();
 	}
 	
@@ -61,8 +58,33 @@ class install
 		return $this;
 	}
 	
+	public function configCheck()
+	{
+		// does a config exist?
+		if( is_file( LF.'config.php' ) )
+		{
+			include LF.'config.php'; // load $db config
+			notice('<div class="notice"><i class="fa fa-check"></i> Found config.php</div>');
+		}
+		else
+		{
+			notice('<div class="error">First time installation? Ignore this message. Otherwise: config.php not found.</div>');
+			(new install)->printInstallForm();
+		}
+		
+		return $this;
+	}
+	
 	public function printInstallForm()
 	{
+		$host = isset($_POST['host']) ? $_POST['host'] : 'localhost';
+		$user = isset($_POST['user']) ? $_POST['user'] : get_current_user();
+		$dbname = isset($_POST['dbname']) ? $_POST['dbname'] : get_current_user().'_lf';
+
+		// manage it within the call to install form.
+		if(count($_POST) > 0)
+			$this->post();
+
 		include LF.'system/lib/recovery/install.form.php';
 		return $this;
 	}
@@ -92,7 +114,8 @@ class install
 			$dbConfigFile = str_replace($variable, $value, $dbConfigFile);
 		}
 		
-		if(count($this->errors) > 0) return $this->printInstallForm();
+		if(count($this->errors) > 0) 
+			redirect302();//return $this->printInstallForm();
 		
 		// If the config.php is not already there, write it
 		if(!is_file(LF.'config.php') || (isset($_POST['overwrite']) && $_POST['overwrite'] == 'on'))
