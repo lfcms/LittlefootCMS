@@ -45,6 +45,19 @@ class request
 		'action' => []
 	];
 	
+	public function rewriteOn()
+	{
+		$this->pieces['index'] = '';
+		return $this;
+	}
+	
+	public function rewriteOff()
+	{
+		$this->pieces['index'] = 'index.php/';
+		return $this;
+	}
+	
+	
 	/** Parse REQUEST_URI into `$pieces` */
 	public function parse($uri = null)
 	{
@@ -109,23 +122,6 @@ class request
 			// Set first action as alias '' (empty string)
 			$action[] = '';
 		
-		// Add in 302 to fix rewrite and prevent duplicate content
-		$fixrewrite = false;
-		if(getSetting('rewrite') == 'on')
-		{
-			if($index == 'index.php/') 
-				$fixrewrite = true;
-			
-			$index = '';
-		}
-		else
-		{
-			if($index == '') 
-				$fixrewrite = true;
-			
-			$index = $filename.'/';
-		}
-		
 		// set port if non-standard 80 and 443
 		if($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443)
 			$port = ':'.$_SERVER['SERVER_PORT']; 
@@ -154,10 +150,6 @@ class request
 			'get'		=> $_GET,
 			'post'		=> $_POST
 		];
-		
-		// If rewrite needed fixed, this will redirect and keep the URL intact.
-		if($fixrewrite) 
-			redirect302( $this->getActionUrl() );
 		
 		//$this->hook_run('post lf request');
 		
@@ -255,7 +247,6 @@ class request
 	 */
 	public function getLfUrl()
 	{
-		extract($this->pieces);
 		return $this->getSubdirUrl().'lf/';
 	}
 	
