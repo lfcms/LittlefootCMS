@@ -127,12 +127,9 @@
 						<?php else: ?>
 							<p>You are up to date!</p>
 						<?php endif; ?>
-
-						<?php if( $lfVersion == '1-DEV'): ?> 
-							<p><a href="%appurl%upgradedev">Run lf/system/upgrade.dev.php</a></p>
-						<?php else: ?> 
-							<p><a href="%appurl%applyUpgrade">Run lf/system/lib/recovery/upgrade.php</a></p>
-						<?php endif; ?>
+						
+						<p><a class="green button" href="%appurl%applyUpgrade">Check Database</a> (run this after upgrading if something isnt working)</p>
+							
 					</div>
 				</div>
 				<hr /> 
