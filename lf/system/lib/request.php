@@ -6,11 +6,6 @@ namespace lf;
 // eg, `\lf\www("Index");` returns 'http://www.domain.com/littlefoot/index.php/'
 function requestGet($methodSuffix)
 {
-	if( $methodSuffix == 'IndexUlr')
-	{
-		lfbacktrace();
-		exit();
-	}
 	$method = 'get'.$methodSuffix;
 	return (new \lf\request)->load()->$method();
 }
