@@ -52,9 +52,9 @@ if($user->hasAccess('admin') )
 	// get latest version
 	if(!isset($_SESSION['upgrade']))
 	{
-		$newversion = curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version');
+		$newversion = trim(curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version'));
 		
-		if($this->version != $newversion && $this->version != 'DEV')
+		if( (new \lf\cms)->getVersion() != $newversion && $this->version != 'DEV')
 			$_SESSION['upgrade'] = $newversion;
 		else
 			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV

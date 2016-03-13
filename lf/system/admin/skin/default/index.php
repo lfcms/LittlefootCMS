@@ -54,7 +54,7 @@
 							</span>
 							<span id="admin_greeting" class="pull-right">
 							<?php if($_SESSION['upgrade']): ?>
-							<a class="blue button" href="<?=\lf\requestGet('IndexUrl');?>settings/">Upgrade Now!</a>
+							<a class="blue button" href="<?=\lf\requestGet('AdminUrl');?>settings/">Upgrade Now!</a>
 							<?php endif; ?>
 							</span>
 							
