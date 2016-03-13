@@ -135,18 +135,19 @@
 						<?php endif; ?>
 					</div>
 				</div>
-				<hr />
+				<hr /> 
 				
 				<div class="row">
 					<div class="col-12">
 						<h4><i class="fa fa-history"></i> Restore Old Version</h4>
 						<div class="old-version-info">
 							<ul class="efvlist rounded">
-								<?php if(count($backups)): foreach($backups as $backup => $version): ?>
+								<?php if(count($backups)): 
+									foreach($backups as $backup => $bkversion): ?>
 									<li>
-										<?=$version;?> - 
-										<a href="%baseurl%restore/<?=$backup;?>/">restore</a> -
-										<a href="%baseurl%rm/<?=$backup;?>/" class="x">delete</a>
+										<?=$bkversion;?> - 
+										<a href="<?=\lf\requestGet('AdminUrl');?>restore/<?=$backup;?>/">restore</a> -
+										<a href="<?=\lf\requestGet('AdminUrl');?>rm/<?=$backup;?>/" class="x">delete</a>
 									</li>
 								<?php endforeach; else: ?>
 									<li>No system restore points are available.</li>

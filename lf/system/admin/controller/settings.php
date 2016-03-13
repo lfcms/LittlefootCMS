@@ -1,4 +1,5 @@
-<?php 
+<?php // Littlefoot CMS - Copyright (c) 2016, EFLIP LLC. All rights reserved. See license.txt for product license information.
+ 
 
 namespace lf\admin;
 
@@ -66,7 +67,7 @@ class settings
 		$nav_class = '';
 		if(!is_null(\lf\getSetting('nav_class')))
 			$nav_class = \lf\getSetting('nav_class');
-			
+			 
 		// Backup list
 		$backups = array();
 		if(is_dir(LF.'backup')) { // this really needs to get moved to a model
@@ -76,7 +77,7 @@ class settings
 				if($backup == '.' || $backup == '..') continue;
 				
 				if(is_file(LF.'backup/'.$backup.'/version'))
-					$backups[$backup] = curl_get_contents(LF.'backup/'.$backup.'/version');
+					$backups[$backup] = file_get_contents(LF.'backup/'.$backup.'/version');
 				else
 					continue;
 			}
