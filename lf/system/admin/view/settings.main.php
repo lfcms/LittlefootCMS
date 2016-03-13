@@ -100,7 +100,7 @@
 				<?php 
 				
 				// modify LF/version to prevent this
-				if( $version == 'DEV' && !$devShowUpgrade): 
+				if( $version == 'DEV'): 
 				
 				?>
 				<p>You are running a development environment. Your version is managed by Git.</p>

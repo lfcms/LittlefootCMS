@@ -243,7 +243,7 @@ class cms
 	 */
 	public function loadVersion()
 	{
-		$this->version = file_get_contents(LF.'system/version');
+		$this->version = trim(file_get_contents(LF.'system/version'));
 		return $this;
 	}
 	
