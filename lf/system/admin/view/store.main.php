@@ -51,7 +51,7 @@
 					<input type="text" name="url" placeholder="Install .zip from URL" />
 				</li>
 				<li>
-					<input type="text" name="app" placeholder="App Name" />
+					<input type="text" name="app" placeholder="Skin Name" />
 				</li>
 				<li>
 					<input type="submit" name="download[skin]" value="Download" class="blue" />
@@ -86,7 +86,7 @@
 					<input type="text" name="url" placeholder="Install .zip from URL" />
 				</li>
 				<li>
-					<input type="text" name="app" placeholder="App Name" />
+					<input type="text" name="app" placeholder="Plugin Name" />
 				</li>
 				<li>
 					<input type="submit" name="download[plugin]" value="Download" class="blue" />
