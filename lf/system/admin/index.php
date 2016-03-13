@@ -49,16 +49,20 @@ if($user->hasAccess('admin') )
 
 	//$this->base .= 'admin/'; // backward compatible
 
-	// get latest version
+	$currentVersion = (new \lf\cms)->getVersion();
+	
 	if(!isset($_SESSION['upgrade']))
-	{
-		$newversion = trim(curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version'));
-		
-		if( (new \lf\cms)->getVersion() != $newversion && $this->version != 'DEV')
-			$_SESSION['upgrade'] = $newversion;
+		if( $currentVersion == 'DEV' )
+			$_SESSION['upgrade'] = false;
 		else
-			$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
-	}
+		{
+			$newversion = trim(curl_get_contents('http://littlefootcms.com/files/build-release/littlefoot/lf/system/version'));
+		
+			if( $currentVersion != $newversion)
+				$_SESSION['upgrade'] = $newversion;
+			else
+				$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
+		}
 	
 	if(\lf\requestGet('Action')[0] == '')
 		\lf\requestGet('Action')[0] = 'dashboard';
