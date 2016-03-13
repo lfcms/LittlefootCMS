@@ -35,6 +35,20 @@
 								<p><i class="fa fa-info-circle"></i> Enter your database credentials</p>
 								<ul class="vlist">
 									<li>
+										<?php if(is_file('config.php')): 
+											include 'config.php';
+											$host = $db['host'];
+											$user = $db['user'];
+											$dbname = $db['name'];
+											?>
+										<label for="">Overwrite Config File: <input class="check" type="checkbox" name="overwrite" checked="checked" /></label>
+										</li><li>
+										<label for="">Re-install Base Data: <input class="check" checked="checked" type="checkbox" name="data" /></label>
+										<?php else: ?>
+										<label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (not needed if recovering a config)</label>
+										<?php endif; ?>
+									</li>
+									<li>
 										Host: <input type="text" value="<?=$host;?>" name="db[host]" value="localhost" />
 									</li>
 										Database Name: <input type="text" value="<?=$dbname;?>" name="db[dbname]" placeholder="eg. cpusername_littlefootdb" />
@@ -43,15 +57,6 @@
 									</li>
 									<li>
 										Password: <input type="password" name="db[pass]" placeholder="Database User's Password" />
-									</li>
-									<li>
-										<?php if(is_file('config.php')): ?>
-										<label for="">Overwrite Config File: <input class="check" type="checkbox" name="overwrite" checked="checked" /></label>
-										</li><li>
-										<label for="">Re-install Base Data: <input class="check" type="checkbox" name="data" /></label>
-										<?php else: ?>
-										<label for=""><input class="check" type="checkbox" name="data" checked="checked" /> Install Base Data (not needed if recovering a config)</label>
-										<?php endif; ?>
 									</li>
 								</ul>
 							</div>
