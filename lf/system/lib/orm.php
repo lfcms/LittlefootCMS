@@ -403,6 +403,8 @@ class orm implements \IteratorAggregate
 			->save()
 			->toSession(); // and auto login as that user
 		
+		$_SESSION['upgrade'] = false;
+		
 		return $this;
 	}
 
