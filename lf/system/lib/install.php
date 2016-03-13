@@ -12,7 +12,7 @@ if(!extension_loaded('mysqli'))
 /**
  * provide installform
  */
-class install
+class installOLD
 {
 	private $errors = array();
 	

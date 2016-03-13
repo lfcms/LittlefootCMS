@@ -7,16 +7,21 @@
 		<link rel="stylesheet" href="<?=\lf\requestGet('LfUrl');?>system/lib/3rdparty/icons.css" />
 	</head>
 	<body>
-		<h1 class="banner blue light text-center">Littlefoot Setup</h1>
+		<h1 class="banner blue light text-center">Setup</h1>
 		<div class="wide_container">
 			<form action="?" method="post">
 				<div class="row">
 					<div class="col-3">
 					</div>
 					<div class="col-6">
-						<?=implode($this->error);?>					
-						<h3>Help</h3>
-						<ul class="vlist">
+						<?php
+							$this->error[] = '';
+							echo implode($this->error);
+						?>					
+						<h3>What?</h3>
+						<p>Littlefoot uses an ORM to communicate with the database. It relies on a configuration file at <code><?=LF;?>config.php</code>. If this file is missing, or it does not have valid configuration information, this Setup page will pop up and allow you to set a new config. This is normal for new installations.</p>
+						<h4>Frequently Asked Questions</h4>
+						<ul class="efvlist">
 							<li>
 								How do I <a target="_blank" href="https://www.google.com/#q=how+to+create+user+and+database+in+mysql">create a user and database in mysql?</a>
 							</li>

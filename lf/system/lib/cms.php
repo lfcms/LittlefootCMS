@@ -165,7 +165,7 @@ class cms
 		(new cache)->startTimer(__METHOD__);
 		
 		// test the installation. can we connect to MySQL, etc?
-		(new install)->test();
+		//(new install)->test();
 		
 		// initialize request into session. 
 		// this can technically be done JIT with `->load()`, 
