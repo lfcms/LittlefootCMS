@@ -121,7 +121,7 @@ class orm implements \IteratorAggregate
 
 	/** $var string $pkIndex default column to update on. */
 	public $pkIndex = 'id';
-
+	
 	/**
 	 * Initialize `$this->mysqli_result` with `initDb()`. Pulls from $_SESSION if a previous connection already exists.
 	 *
@@ -205,6 +205,14 @@ class orm implements \IteratorAggregate
 		$_SESSION['db'] = $this->mysqli;
 		
 		return $this;
+	}
+	
+	/**
+	 * Retrieve the number of queries made during this page load. 
+	 */
+	public function getNumQueries()
+	{
+		
 	}
 	
 	private function loadConfig()

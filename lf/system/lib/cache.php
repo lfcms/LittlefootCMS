@@ -9,7 +9,7 @@ namespace lf;
  */
 function startTimer($key, $namespace = 'default')
 {
-	return (new \lf\cache)->startTimer(__METHOD__);
+	return (new \lf\cache)->startTimer($key);
 }
 
 /**
@@ -19,7 +19,7 @@ function startTimer($key, $namespace = 'default')
  */
 function endTimer($key, $namespace = 'default')
 {
-	return (new \lf\cache)->endTimer(__METHOD__);
+	return (new \lf\cache)->endTimer($key);
 }
 
 /**
@@ -158,12 +158,25 @@ class cache
 		return $this;
 	}
 	
+	public function sessGetNamespace($namespace)
+	{
+		return $_SESSION['lf_cache'][$namespace];
+	}
+	
 	/**
 	 * Return $key from timer_result
 	 */
 	public function getTimerResult($key)
 	{
 		return $this->sessGet($key, 'timer_result');
+	}
+	
+	/**
+	 * Return timer_results in order
+	 */
+	public function getTimerResults()
+	{
+		return array_merge($this->sessGetNamespace('timer_start'), $this->sessGetNamespace('timer_result'));
 	}
 }
 

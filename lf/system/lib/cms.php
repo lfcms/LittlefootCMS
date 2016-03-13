@@ -161,8 +161,8 @@ class cms
 		// load plugins from `lf_plugins` table, execute plugins hooked to 'pre cms run'
 		(new \lf\plugin)->run('pre cms run');
 		
-		// Start the 'cms' timer
-		(new cache)->startTimer(__METHOD__);
+		// Start the '->run()' timer
+		startTimer(__METHOD__);
 		
 		// test the installation. can we connect to MySQL, etc?
 		//(new install)->test();
@@ -221,7 +221,7 @@ class cms
 	 */
 	public function printDebug()
 	{
-		$exectime = round((new \lf\cache)->getTimerResult('cms'), 6)*(1000);
+		$exectime = round((new \lf\cache)->getTimerResult('lf\\cms::run'), 6)*(1000);
 		$memusage = round(memory_get_peak_usage()/1024/1024,2);
 		include LF.'system/template/debug.php';
 	}
@@ -573,12 +573,14 @@ class cms
 	public function route($instance, $alias = NULL, $return = true)
 	{
 		$className = get_class($instance);
-		(new plugin)->run('pre '.$className);
-		startTimer(__METHOD__);
-		
 		// use class name as alias by default
 		if(is_null($alias))
 			$alias = str_replace('\\', '_', $className);
+		
+		$timerName = __METHOD__.' '.$className.', '.$alias;
+		
+		(new plugin)->run('pre '.$className);
+		startTimer($timerName);
 		
 		// store request state before upcoming alteration
 		$originalRequest = (new \lf\request)->load();
@@ -603,7 +605,7 @@ class cms
 			{
 				// display in skin
 				(new template)->render();
-				endTimer(__METHOD__);
+				endTimer($timerName);
 				exit();
 			}
 		}
@@ -611,7 +613,7 @@ class cms
 		// save back original context
 		$originalRequest->save();
 		
-		endTimer(__METHOD__);
+		endTimer($timerName);
 		(new plugin)->run('post '.$className);
 		return $this;
 	}
