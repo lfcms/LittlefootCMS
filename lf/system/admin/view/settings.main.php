@@ -99,9 +99,7 @@
 			<div class="tile-content">
 				<?php 
 				
-				// change this to true to show the production upgrade button
-				$devShowUpgrade = true; 
-				
+				// modify LF/version to prevent this
 				if( $version == 'DEV' && !$devShowUpgrade): 
 				
 				?>
