@@ -385,6 +385,7 @@ class orm implements \IteratorAggregate
 	 */
 	private function importRecoveryData()
 	{
+		$admin = $_POST['admin'];
 		$_POST = array(); // doing this because in ->runInstaller, there is a ->post() that will loop if this is enabled since I am using ORM again. BAAAAD :C
 		// the (new orm) will try to do an import, if it is unable to, the installform will trigger
 		
@@ -394,9 +395,9 @@ class orm implements \IteratorAggregate
 		// Add admin user
 		(new User)
 			->setAccess('admin')
-			->setUser($_POST['admin']['user'])
-			->setDisplay_name(ucfirst($_POST['admin']['user']))
-			->setPass($_POST['admin']['pass'])
+			->setUser($admin['user'])
+			->setDisplay_name(ucfirst($admin['user']))
+			->setPass($admin['pass'])
 			->setStatus('valid')
 			->save()
 			->toSession(); // and auto login as that user
