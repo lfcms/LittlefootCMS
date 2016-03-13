@@ -72,15 +72,6 @@
 					<hr />
 					<div class="row">
 						<div class="col-4">
-							<label for="setting[release]">LF Release:</label>
-							
-							<?php foreach($release['options'] as $option):
-								$checked = $release['value']==$option?'checked':'';
-							?>
-							<input id="signup" type="radio" <?=$checked;?> name="setting[release]" value="<?=$option;?>" /> <?=ucfirst($option);?>
-							<?php endforeach; ?>
-						</div>
-						<div class="col-4">
 							<label for="setting[bots]">Block Search Engines:</label>
 							
 							<?php foreach($bots['options'] as $option):
@@ -106,12 +97,23 @@
 				<h3><i class="fa fa-leaf"></i> Version</h3>
 			</div>
 			<div class="tile-content">
+				<?php 
+				
+				// change this to true to show the production upgrade button
+				$devShowUpgrade = true; 
+				
+				if( $version == 'DEV' && !$devShowUpgrade): 
+				
+				?>
+				<p>You are running a development environment. Your version is managed by Git.</p>
+				<?php else: ?>
 				<div class="row">
 					<div class="col-12">
 						<a class="blue button martop marbot" href="%appurl%lfup/"><i class="fa fa-arrow-up"></i> Upgrade Littlefoot</a>
 					</div>
 				</div>
 				<hr />
+				
 				<div class="row">
 					<div class="col-12">
 						<?php $lfVersion = (new \lf\cms)->getVersion(); ?>
@@ -136,6 +138,7 @@
 					</div>
 				</div>
 				<hr />
+				
 				<div class="row">
 					<div class="col-12">
 						<h4><i class="fa fa-history"></i> Restore Old Version</h4>
@@ -155,6 +158,9 @@
 					</div>
 				</div>
 				<hr />
+				<?php endif; ?>
+				
+				
 				<div class="row">
 					<div class="col-12">
 						<h4><i class="fa fa-refresh"></i> Reinstall Apps</h4>
@@ -170,6 +176,7 @@
 					</div>
 				</div>
 				<hr />
+				
 				<div class="row">
 					<div class="col-12">
 						<h4>
