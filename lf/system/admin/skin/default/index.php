@@ -44,7 +44,7 @@
 							<a id="site_preview" class="pull-left" href="<?=\lf\requestGet('IndexUrl');?>" target="blank_"><?=\lf\requestGet('IndexUrl');?></a>
 						<?php if($_SESSION['upgrade']): ?>
 							<span id="upgrade" class="pull-left">
-								<a class="blue button" href="<?=\lf\www('Index');?>settings/">Upgrade Now!</a>
+								<a class="blue button" href="<?=\lf\requestGet('IndexUlr');?>settings/">Upgrade Now!</a>
 							</span>
 						<?php endif; ?>
 							<span id="logout_button" class="pull-right">
