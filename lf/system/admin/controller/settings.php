@@ -24,16 +24,19 @@ class settings
 		$debug['value'] = 'on';
 		if(\lf\getSetting('debug') == 'off') 
 			$debug['value'] = 'off';
-			
+		
+		// Load Version
+		$version = (new \lf\cms)->getVersion();
+		
 		$bots['options'] = array('on', 'off');
 		$bots['value'] = 'on';
 		if(\lf\getSetting('bots') == 'off') 
 			$bots['value'] = 'off';
 			
-		$release['options'] = array('DEV', 'STABLE');
-		$release['value'] = 'DEV';
-		if(\lf\getSetting('release') == 'STABLE') 
-			$release['value'] = 'STABLE';
+		// $release['options'] = array('DEV', 'STABLE');
+		// $release['value'] = 'DEV';
+		// if(\lf\getSetting('release') == 'STABLE') 
+		$release['value'] = 'STABLE';
 		
 		$newest = $release['value']=='DEV'?$dev:$master;
 			
