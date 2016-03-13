@@ -73,6 +73,10 @@
 										<input type="password" name="admin[pass]" id="apass" placeholder="Sup3rSecr3tP@$$word" required/>
 									</li>
 									<li>
+										<label for="aemail">Email</label>
+										<input type="email" name="admin[email]" id="aemail" placeholder="(optional) Used for password recovery"/>
+									</li>
+									<li>
 										<p><i class="fa fa-info-circle"></i> then click Install.</p>
 										<button class="green" style="">Install</button>
 									</li>

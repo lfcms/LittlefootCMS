@@ -397,6 +397,7 @@ class orm implements \IteratorAggregate
 			->setAccess('admin')
 			->setUser($admin['user'])
 			->setDisplay_name(ucfirst($admin['user']))
+			->setEmail($admin['email'])
 			->setPass($admin['pass'])
 			->setStatus('valid')
 			->save()
