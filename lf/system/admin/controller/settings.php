@@ -120,7 +120,7 @@ class settings
 		
 		foreach($newSettings as $var => $val)
 		{
-			(new LfSettings)
+			(new \LfSettings)
 				->add()
 				->setVar($var)
 				->setVal($val)
