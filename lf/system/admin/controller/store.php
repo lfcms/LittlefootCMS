@@ -165,6 +165,98 @@ class store
 		redirect302();
 	}
 	
+	/**
+	 * Used to install .zips from URL in store
+	 */
+	public function dlFromZipUrl()
+	{
+		if( !isset( $_POST['download'] ) )
+		{
+			notice('Missing post data');
+			redirect302();
+		}
+		
+		$url = $_POST['download']['url'];
+		$type = $_POST['download']['type'];
+		
+		if( ! preg_match('/^(apps|skins|plugins)$/', $type, $match) )
+		{
+			notice('Invalid type used: '.$type);
+			redirect302();
+		}
+		
+		$type = $match[0]; // or [1], whatever
+		
+		// get just the end part: domain.com/folder/theendpart.zip
+		$fileName = end(explode('/', $url));
+		$fileParts = explode('.', $fileName);
+		
+		// if loading a .git https address (maybe github?)
+		if(end($fileParts) == 'git')
+		{
+			// ill do this later
+		}
+		
+		// build download location
+		$dest = LF.$type.'/'.$fileName;
+		
+		// download .zip into LF/type/.
+		downloadFile($url, $dest);
+		
+		// unzip into LF/$type/
+		Unzip( LF.$type.'/', $fileName );
+		
+		// delete .zip file
+		unlink($dest);
+		
+		// install .sql if app
+		if($type == 'apps')
+			$this->installsql($rename);
+	}
+	
+	/**
+	 * offer download from littlefootcms.com repo, or your own
+	 */
+	public function fromRepo()
+	{
+		if($_POST['app'] == '')
+			redirect302();
+		
+		$url = $_POST['url'];
+		$item = $_POST['app'];
+		$type = key($_POST['download']);
+		
+		//echo $this->repobase."/${type}/${type}.txt";
+		$list = curl_get_contents($this->repobase."/$type/$type.txt");
+		$list = array_flip(explode("\n",$list,-1));
+		
+		//pre($list);
+		
+		if(isset($list[$item]))
+		{
+			$files = array_flip(scandir(ROOT.$type));
+			
+			if(isset($files[$vars[1]]))
+				return 'App already downloaded: '.$item;
+			
+			$file = $this->repobase."/${type}/${item}.zip";
+			$dest = LF.$type.'/'.$item.'.zip';
+			//echo $file.'<br />';
+			//echo $dest.'<br />';
+			
+			// download and unzip into apps/
+			downloadFile($file, $dest);
+			Unzip( LF.$type.'/', $item.'.zip' );
+			unlink($dest);
+			
+			if($type == 'apps')
+				$this->installsql($item);
+			
+		} else echo "$type not found: ".$item;
+		
+		redirect302();
+	}
+	
 	public function zipfromurl()
 	{
 		if($_POST['app'] == '')

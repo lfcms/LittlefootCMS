@@ -6,6 +6,28 @@
 
 <?=notice();?>
 
+
+
+<h3 class="no_martop">Apps</h3>
+<form action="%appurl%dlFromZipUrl/" method="post">
+	<ul class="vlist">
+		<li>
+			<input type="text" name="download[url]" placeholder="Install .zip from URL" />
+		</li>
+		<li>
+			Type: 
+			<input type="radio" name="download[type]" value="apps" /> App 
+			<input type="radio" name="download[type]" value="skins" /> Skin
+			<input type="radio" name="download[type]" value="plugins" /> Plugin 
+		</li>
+		<li>
+			<input type="submit" value="Download" class="blue" />
+		</li>
+	</ul>
+</form>
+
+
+
 <div class="row">
 	<div class="col-4">
 		<h3 class="no_martop">Apps</h3>
