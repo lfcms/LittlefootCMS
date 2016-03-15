@@ -1,6 +1,6 @@
 <?php
 
-$db = db::init();
+$db = \lf\db::init();
 
 // 1.13.5-r129
 $index = <<<'EOF'
