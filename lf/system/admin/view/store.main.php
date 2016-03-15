@@ -8,7 +8,7 @@
 
 
 
-<h3 class="no_martop">Apps</h3>
+<h3 class="no_martop">Download</h3>
 <form action="%appurl%dlFromZipUrl/" method="post">
 	<ul class="vlist">
 		<li>
@@ -27,11 +27,11 @@
 </form>
 
 
-
+<h3>From Repo</h3>
+<p><?=$this->repobase;?></p>
 <div class="row">
 	<div class="col-4">
-		<h3 class="no_martop">Apps</h3>
-		<form action="%appurl%zipfromurl/" method="post">
+		<!-- <form action="%appurl%zipfromurl/" method="post">
 			<ul class="vlist">
 				<li>
 					<input type="text" name="url" placeholder="Install .zip from URL" />
@@ -43,7 +43,7 @@
 					<input type="submit" name="download[app]" value="Download" class="blue" />
 				</li>
 			</ul>
-		</form>
+		</form> -->
 		<!--<h4>Upload</h4>
 		<form id="upload_app_form" enctype="multipart/form-data" action="%appurl%install/app/" method="post">
 			 <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
@@ -66,8 +66,7 @@
 		</ul>
 	</div>
 	<div class="col-4">
-		<h3 class="no_martop">Skins</h3>
-		<form action="%appurl%zipfromurl/" method="post">
+		<!-- <form action="%appurl%zipfromurl/" method="post">
 			<ul class="vlist">
 				<li>
 					<input type="text" name="url" placeholder="Install .zip from URL" />
@@ -79,7 +78,7 @@
 					<input type="submit" name="download[skin]" value="Download" class="blue" />
 				</li>
 			</ul>
-		</form>
+		</form> -->
 		<!--<h4>Upload</h4>
 		<form id="upload_skin_form" enctype="multipart/form-data" action="%appurl%install/skin/" method="post">
 			 <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
@@ -101,8 +100,7 @@
 		</ul>
 	</div>
 	<div class="col-4">
-		<h3 class="no_martop">Plugins</h3>
-		<form action="%appurl%zipfromurl/" method="post">
+		<!-- <form action="%appurl%zipfromurl/" method="post">
 			<ul class="vlist">
 				<li>
 					<input type="text" name="url" placeholder="Install .zip from URL" />
@@ -114,7 +112,7 @@
 					<input type="submit" name="download[plugin]" value="Download" class="blue" />
 				</li>
 			</ul>
-		</form>
+		</form> -->
 		<!--<h4>Upload</h4>
 		<form id="upload_plugin_form" enctype="multipart/form-data" action="%appurl%install/plugin/" method="post">
 			 <input type="hidden" name="MAX_FILE_SIZE" value="55000000" />
