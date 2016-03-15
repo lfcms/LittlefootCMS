@@ -209,9 +209,13 @@ class store
 		// delete .zip file
 		unlink($dest);
 		
-		// install .sql if app
-		if($type == 'apps')
-			$this->installsql($rename);
+		// disabled cuz you can reinstall in settings
+		// // install .sql if app
+		// if($type == 'apps')
+			// $this->installsql($rename);
+		
+		notice('<div class="notice">Installed successfully</div>');
+		redirect302();
 	}
 	
 	/**
