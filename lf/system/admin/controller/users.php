@@ -69,7 +69,7 @@ class users
 		else unset($_POST['pass']);
 		
 		unset($_POST['pass2']);
-		orm::q('lf_users')->debug()->updateById($args[1], $_POST);
+		\lf\orm::q('lf_users')->debug()->updateById($args[1], $_POST);
 		
 		notice('User Saved');
 		

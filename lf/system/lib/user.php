@@ -290,10 +290,10 @@ class user
 		unset($this->details['id']);
 
 		if($id == 0)
-			$this->details['id'] = (new orm)->qUsers('lf')->insertArray($this->details);
+			$this->details['id'] = (new \lf\orm)->qUsers('lf')->insertArray($this->details);
 		else
 		{
-			(new orm)->qUsers('lf')->updateByid($id, $this->details);
+			(new \lf\orm)->qUsers('lf')->updateByid($id, $this->details);
 			$this->details['id'] = $id;
 		}
 
@@ -305,7 +305,7 @@ class user
 	// not feelin this. may drop it
 	public function q()
 	{
-		return (new orm)->q('lf_users');
+		return (new \lf\orm)->q('lf_users');
 	}
 
 	/**
