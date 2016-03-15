@@ -1,11 +1,3 @@
-<?php
-
-$admin_apps = str_replace(
-	array(ROOT.'apps/', '/admin.php'), '', 
-	glob(ROOT.'apps/*/admin.php')
-);
-
-?>
 <span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row">
 	<div class="col-12 no_pad">
@@ -37,11 +29,18 @@ $admin_apps = str_replace(
 
 <?php if( \lf\getSetting('simple_cms') == '_lfcms'): ?>
 
-<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> Apps <i class="fa fa-caret-down pull-right gray_fg"></i></span>
+<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> App Admin <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row no_marbot">
 	<div class="col-12 no_pad">
 		<ul class="efvlist flarge light_a">
 			<?php
+			
+			$admin_apps = str_replace(
+				array(ROOT.'apps/', '/admin.php'), '', 
+				glob(ROOT.'apps/*/admin.php')
+			);
+			
+			
 			foreach($admin_apps as $shortcut):
 				
 				if(\lf\requestGet('Action')[0] = 'apps' && $shortcut == \lf\requestGet('Action')[1]) 
@@ -50,7 +49,7 @@ $admin_apps = str_replace(
 					$highlight = '';
 				
 			?>
-				<li<?=$highlight;?>><a class="elements" href="<?=\lf\requestGet('IndexUrl');?>admin/apps/<?php echo $shortcut; ?>/">
+				<li<?=$highlight;?>><a class="elements" href="<?=\lf\requestGet('AdminUrl');?>apps/<?php echo $shortcut; ?>/">
 						<span><?php echo ucfirst($shortcut); ?></span>
 				</a></li>
 			<?php endforeach; ?>
