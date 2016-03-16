@@ -325,10 +325,11 @@ class user
 
 	private function getMagic($var, $args)
 	{
+		$var = strtolower($var);
+		
 		if( $var == 'uid' )
 			$var = 'id';
 		
-		$var = strtolower($var);
 		return $this->details[$var];
 	}
 
