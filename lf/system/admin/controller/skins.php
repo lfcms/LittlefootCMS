@@ -17,7 +17,7 @@ class skins
 		$vars = \lf\requestGet('Param'); // backward compatibility
 		
 		$pwd = $this->pwd;
-		$request = $this->request;
+		//$request = $this->request;
 		$install = extension_loaded('zip') ? '<input type="submit" value="Install" />' : "Error: Zip Extension missing.";
 		
 		$skins = array();

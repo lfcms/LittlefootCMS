@@ -902,9 +902,10 @@ class cms
 			header('HTTP/1.1 404 Not Found');
 			echo '<p>LF 404: No menu items match your request</p>';
 			return 0;
-		}
-		
-		// replace the %baseurl% placeholders
+		}	
+			
+		// If simple CMS is not set, add 'nav' to final output content array.
+		if(getSetting('simple_cms') == '_lfcms') 		
 		(new \lf\template)->addContent( 
 			$this->renderBaseUrl($nav_cache),
 			'nav'
@@ -1060,12 +1061,6 @@ class cms
 		chdir(LF); 
 		
 		(new plugin)->run('post lf getcontent');
-		
-		if(getSetting('simple_cms') == '_lfcms') 		// If simple CMS is not set, add 'nav' to final output content array.
-			(new template)->addContent(
-				$this->nav_cache,
-				'nav'
-			);
 		
 		endTimer(__METHOD__);
 		
