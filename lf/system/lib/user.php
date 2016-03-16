@@ -19,6 +19,7 @@ class user
 
 	protected $details = array(
 		'id' => 0,
+		'uid' => 0,
 		'access' => 'none',
 		'status' => 'pending',
 		'user' => '',
