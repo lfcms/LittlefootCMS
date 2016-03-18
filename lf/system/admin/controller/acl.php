@@ -7,7 +7,7 @@ namespace lf\admin;
  */
 class acl
 {
-	public $default_method = 'user';
+	public $default_method = 'acl_global';
 	
 	public function user()
 	{
@@ -69,6 +69,9 @@ class acl
 		include 'view/acl.inherit.php';
 	}
 	
+	/**
+	 * Needs the prefix because `global()` by itself is a reserved word.
+	 */
 	public function acl_global()
 	{
 		$vars = \lf\requestGet('Param'); // backward compatibility
