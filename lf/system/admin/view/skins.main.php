@@ -72,6 +72,11 @@
 							</div>
 						</div>
 						<div class="row">
+							<div class="col-12">
+								<a href="%appurl%fork/<?=$skin;?>" class="button dark_blue"><i class="fa fa-code-fork"></i> Fork (Duplicate)</a>
+							</div>
+						</div>
+						<div class="row">
 							<div class="col-5">
 								<a href="%appurl%setdefault/<?=$skin;?>" class="button green"><i class="fa fa-power-off"></i> Default</a>
 							</div>
