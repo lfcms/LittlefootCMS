@@ -73,7 +73,7 @@
 						</div>
 						<div class="row">
 							<div class="col-12">
-								<a href="%appurl%fork/<?=$skin;?>" class="button dark_blue"><i class="fa fa-code-fork"></i> Fork (Duplicate)</a>
+								<a href="%appurl%fork/<?=$skin;?>" class="button dark_blue"><i class="fa fa-copy"></i> Clone</a>
 							</div>
 						</div>
 						<div class="row">
