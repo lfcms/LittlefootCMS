@@ -43,7 +43,11 @@
 			
 			foreach($admin_apps as $shortcut):
 				
-				if(\lf\requestGet('Action')[0] = 'apps' && $shortcut == \lf\requestGet('Action')[1]) 
+				if(\lf\requestGet('Action')[0] = 'apps' 
+					&& ( isset(\lf\requestGet('Action')[1]) 
+						&& $shortcut == \lf\requestGet('Action')[1] 
+					)
+				)
 					$highlight = ' class="active blue light_a"';
 				else 
 					$highlight = '';

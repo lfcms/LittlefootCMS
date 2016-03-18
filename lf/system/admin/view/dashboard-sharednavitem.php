@@ -36,7 +36,7 @@
 		</div>
 	</div>
 	
-	<?php if(\lf\requestGet('Param')[1] == $action['id']): /* Load form if selected */ ?>
+	<?php if(isset(\lf\requestGet('Param')[1]) && \lf\requestGet('Param')[1] == $action['id']): /* Load form if selected */ ?>
 	<div class="tile-content">
 		<?=(new \lf\cms)
 			->partial(
