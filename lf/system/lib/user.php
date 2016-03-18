@@ -19,6 +19,7 @@ class user
 
 	protected $details = array(
 		'id' => 0,
+		'uid' => 0,
 		'access' => 'none',
 		'status' => 'pending',
 		'user' => '',
@@ -325,6 +326,10 @@ class user
 	private function getMagic($var, $args)
 	{
 		$var = strtolower($var);
+		
+		if( $var == 'uid' )
+			$var = 'id';
+		
 		return $this->details[$var];
 	}
 

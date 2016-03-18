@@ -92,16 +92,11 @@ class acl
 	public function test($action)
 	{	// action = 'action/app|var1/var2'
 		
-		$sessAcl = (new \lf\cache)->sessGet('acl');
-		if( is_null($sessAcl) )
-		{
-			$this->load();
-			$sessAcl = $this;
-		}
+		$this->load();
 		
 		// pull both ACLs for upcoming comparison
-		$baseacl = $sessAcl->base;
-		$useracl = $sessAcl->user;
+		$baseacl = $this->base;
+		$useracl = $this->user;
 		
 		//foreach($actions // TODO: recursive permission search
 		
