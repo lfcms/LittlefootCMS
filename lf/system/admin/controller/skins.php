@@ -331,6 +331,33 @@ class skins
 			return true;
 		}
 	}
+	
+	/**
+	 * make copy of skin. like a fork.
+	 * 
+	 * Really happy with how this code turned out :3
+	 */
+	public function fork()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( !isset( $param[1] ) )
+		{
+			notice('No skin provided in URL');
+			redirect302();
+		}
+		
+		$pwd = LF.'skins/';
+		$oldFolderName = $param[1];		
+		$newFolderName = uniqid($param[1]);		
+		
+		$src = $pwd.$oldFolderName;
+		$dest = $pwd.$newFolderName;
+		recurse_copy($src, $dest);
+		
+		notice('Finished copying "'.$src.'" to "'.$dest.'"');
+		redirect302( \lf\requestGet('ActionUrl').'edit/'.$newFolderName );
+	}
 }
 
 ?>

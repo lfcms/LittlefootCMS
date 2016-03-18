@@ -385,6 +385,7 @@ function curl_get_contents($url) {
 
     return $data;
 }
+
 // This is way better outside of the app class. Doesnt even use it...
 function notice($msg = '', $namespace = 'lf')
 {
@@ -399,6 +400,7 @@ function notice($msg = '', $namespace = 'lf')
 		return implode(', ', $temp);
 	}
 }
+
 // same thing
 function hasnotice($namespace = 'lf')
 {
@@ -424,7 +426,7 @@ function since($timestamp)
 	return $ret;
 }
 
-// ty http://stackoverflow.com/a/2050909
+// ty Felix Kling http://stackoverflow.com/a/2050909
 function recurse_copy($src,$dst) { 
     $dir = opendir($src); 
     @mkdir($dst); 
