@@ -397,6 +397,42 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .h700 { height:700px !important; }
 .lf .h750 { height:750px !important; }
 
+.lf .d50,
+.lf .d75,
+.lf .d100,
+.lf .d150,
+.lf .d200,
+.lf .d250,
+.lf .d300,
+.lf .d350,
+.lf .d400,
+.lf .d450,
+.lf .d500,
+.lf .d550,
+.lf .d600,
+.lf .d650,
+.lf .d700,
+.lf .d750 {
+	position: relative;
+}
+
+.lf .d50 { top:50px !important; }
+.lf .d75 { top:75px !important; }
+.lf .d100 { top:100px !important; }
+.lf .d150 { top:150px !important; }
+.lf .d200 { top:200px !important; }
+.lf .d250 { top:250px !important; }
+.lf .d300 { top:300px !important; }
+.lf .d350 { top:350px !important; }
+.lf .d400 { top:400px !important; }
+.lf .d450 { top:450px !important; }
+.lf .d500 { top:500px !important; }
+.lf .d550 { top:550px !important; }
+.lf .d600 { top:600px !important; }
+.lf .d650 { top:650px !important; }
+.lf .d700 { top:700px !important; }
+.lf .d750 { top:750px !important; }
+
 .lf .f9, .lf .fxxsmall { font-size: 9px !important; }
 .lf .f10, .lf .fxsmall { font-size: 10px !important;  }
 .lf .f12, .lf .fsmall { font-size: 12px  !important; }
@@ -774,7 +810,10 @@ html.lf, .lf body {
 
 /*Userbar*/
 .userbar {
-    font-size: 1.3rem;
+	font-size: 1.3rem;
+	position: fixed;
+	width: 100%;
+	z-index: 999;
 }
 
 .userbar a {

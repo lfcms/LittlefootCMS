@@ -39,7 +39,7 @@
 			<div class="wide_container">
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
-						<div class="userbar">
+						<div>
 							<img class="fit-font icon pull-left martop" src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-icon-white-transparent.png"/> 
 							<a id="site_preview" class="pull-left" href="<?=\lf\requestGet('IndexUrl');?>" target="blank_"><?=\lf\requestGet('IndexUrl');?></a>
 						
@@ -64,7 +64,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="wide_container">
+		<div class="wide_container d50">
 			<div class="row no_martop">
 				<div class="col-2 dark_gray">
 					<nav>
