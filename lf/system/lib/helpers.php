@@ -405,7 +405,7 @@ function hasnotice($namespace = 'lf')
 	return isset($_SESSION['notice_'.$namespace]);
 }
 
-// idk if I wrote this. I think it was Kyle S
+// I think Kyle S wrote this.
 function since($timestamp)
 {
 	$timestamp = time() - $timestamp;
@@ -423,3 +423,20 @@ function since($timestamp)
 	$ret .= " ago";
 	return $ret;
 }
+
+// ty http://stackoverflow.com/a/2050909
+function recurse_copy($src,$dst) { 
+    $dir = opendir($src); 
+    @mkdir($dst); 
+    while(false !== ( $file = readdir($dir)) ) { 
+        if (( $file != '.' ) && ( $file != '..' )) { 
+            if ( is_dir($src . '/' . $file) ) { 
+                recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+            } 
+            else { 
+                copy($src . '/' . $file,$dst . '/' . $file); 
+            } 
+        } 
+    } 
+    closedir($dir); 
+} 
