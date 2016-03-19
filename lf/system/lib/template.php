@@ -241,7 +241,7 @@ class template
 	{
 		// can we use home.php for this request?
 		// it lets us have a unique home page.
-		$file = $this->elements['home']
+		$file = $this->elements['home'] && (is_file($this->getTemplatePath().'home.php') || is_file($this->getTemplatePath().'home.html'))
 			? 'home'
 			: 'index';
 		

@@ -809,8 +809,10 @@ class cms
 			// save item in first spot of base menu if it is an app, 
 			// just in case nothing matches
 			if($row['position'] == 1 && $row['parent'] == -1)
+			{
 				// save row in case "domain.com/" is requested
 				$base_save = $row;
+			}
 				
 			$test_select[$row['parent']][$row['position']] = $row;
 		}
@@ -862,6 +864,8 @@ class cms
 			$this->select = $base_save;
 		}
 		
+		$this->testHome();
+		
 		// in case the file doesn't exist
 		
 		if(!is_file(ROOT.'cache/nav.cache.html')) 
@@ -912,6 +916,14 @@ class cms
 		);
 		
 		endTimer(__METHOD__);
+		return $this;
+	}
+	
+	public function testHome()
+	{
+		if($this->select['position'] == 1 && $this->select['parent'] == -1)
+			(new template)->setHome(true);
+		
 		return $this;
 	}
 	
