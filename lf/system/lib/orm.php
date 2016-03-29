@@ -656,40 +656,40 @@ class orm implements \IteratorAggregate
 	// wildcard catchall for shortcut requests (filter, set, etc)
 	public function __call($method, $args)
 	{
-		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?join)(.+)/';
+		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:[irlf]?)join)(.+)/';
 		if(!preg_match($methodRegex, $method, $method_parse))
 			return $this->throwException('Invalid method called');
 
 		// $m = The first part of the above match. eg, deleteBy
 		$m = $method_parse[1];
+		$after = $method_parse[2];
 
 		// handle joinMagic()
-		if($m == 'join')
-			return $this
-				->joinMagic($m, $args);
-
+		if(preg_match('/^([lfri]?)join$/', $m))
+			return $this->joinMagic($m[0], $after, $args);
+		
 		// Run a find after the by()
 		if($m == 'findBy') 
 			return $this
-				->filterBy($method_parse[2], $args)
+				->filterBy($after, $args)
 				->find();
 
 		// Run a delete after the by()
 		if($m == 'deleteBy') 
 			return $this
-				->filterBy($method_parse[2], $args)
+				->filterBy($after, $args)
 				->delete();
 
 		// Run a get after the by()
 		if($m == 'getBy') 
 			return $this
-				->filterBy($method_parse[2], $args)
+				->filterBy($after, $args)
 				->get();
 
 		// Get all rows found after the by()
 		if($m == 'getAllBy')
 			return $this
-				->filterBy($method_parse[2], $args)
+				->filterBy($after, $args)
 				->getAll();
 		
 		// I really should keep returning like above, but this is less code
@@ -707,7 +707,7 @@ class orm implements \IteratorAggregate
 			$m = 'queryMagic';
 
 		// if we get this far, we are just running a single method from the above match and passing the arguments
-		return $this->$m($method_parse[2], $args);
+		return $this->$m($after, $args);
     }
 
 	private function throwException($msg = '')
@@ -831,7 +831,11 @@ class orm implements \IteratorAggregate
 		
 		if(isset($select))
 		{
-			$this->columns[] = $this->table.".*";
+			// make sure we also select from the other table (in case they didnt provide columns yet
+			if($this->columns == array())
+				$this->columns[] = $this->table.".*";
+			
+			// add the select columns to the list as this table's field
 			foreach($select as $column)
 				$this->columns[] = "$table.$column";
 		}
@@ -855,20 +859,34 @@ class orm implements \IteratorAggregate
 	 * @param string $foreignKey The local column to use with a join
 	 *
 	 * @param string $args `$args[0]` is the table.column string (ideally generated with `$this->withFk`).
-	 *
+	 * 
+	 * ~~~
+	 * $posts = (new \ForumPosts)
+	 * 				->joinAuthorOnId('lf_users', ['display_name', 'email'])
+	 * 				->getAll();
+	 * ~~~
 	 */
-	private function joinMagic($method, $args)
+	private function joinMagic($prefix, $after, $args)
 	{
-		pre($method);
-		pre($args);
+		// will be [irlf] or j, join() handles the prefix if its not J
+		$joinData['prefix'] = $prefix;
 		
-		$this->join([
-			'prefix' => '',
-			'table' => 'lf_users',
-			'localkey' => 'author',
-			'foreignkey' => 'id',
-			'select' => ['display_name', 'email']
-		]);
+		// table set from arg0
+		$joinData['table'] = $args[0];
+		
+		// cols set from arg1
+		if(isset($args[1]))
+			$joinData['select'] = $args[1];
+		
+		//ljoin(AuthorOnId)
+		
+		if(preg_match('/^([A-Z][a-z_]*)On([A-Z][a-z_]*)$/', $after, $keys))
+		{
+			$joinData['localkey'] = $keys[1];
+			$joinData['foreignkey'] = $keys[2];
+		}
+		
+		$this->join($joinData);
 		
 		// TODO: Add functionality to handle objects passed as $args[0]
 
