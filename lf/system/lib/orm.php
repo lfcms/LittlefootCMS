@@ -72,6 +72,10 @@ class orm implements \IteratorAggregate
 
 	/** @var Database $db Database wrapper object. $this->db */
 	private $db;
+	
+	/** @var String $cols Should make this an array of columns for easier manipulation */
+	//private $cols = '';
+	private $columns = [];
 
 	/** @var string $table Stores the table specified at orm::q('my_table') */
 	protected $table = NULL;
@@ -643,58 +647,66 @@ class orm implements \IteratorAggregate
 	}
 
 	/**
-	 * ## Regex
+	 * magic method to allow for a variable method call grammar that describes an operation
 	 *
 	 * This allows you to call functions like `->getAllByCategory('Cats')` and `joinOnId...`
 	 *
-	 *
-	 *
-	 *
-	 *
+	 * $methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)(.+)/';
 	 */
 	// wildcard catchall for shortcut requests (filter, set, etc)
 	public function __call($method, $args)
 	{
-		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)(.+)/';
+		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?join)(.+)/';
 		if(!preg_match($methodRegex, $method, $method_parse))
 			return $this->throwException('Invalid method called');
 
+		// $m = The first part of the above match. eg, deleteBy
 		$m = $method_parse[1];
 
-		if(preg_match('/^(l|f|r|i)joinOn$/', $m, $match))
-		{
-			$args[] = $match[1];
-			return $this->joinOn($method_parse[2], $args);
-		}
+		// handle joinMagic()
+		if($m == 'join')
+			return $this
+				->joinMagic($m, $args);
 
-		if($m == 'findBy') // 'by' is an alias to filterBy()
+		// Run a find after the by()
+		if($m == 'findBy') 
 			return $this
 				->filterBy($method_parse[2], $args)
 				->find();
 
-		if($m == 'deleteBy') // 'by' is an alias to filterBy()
+		// Run a delete after the by()
+		if($m == 'deleteBy') 
 			return $this
 				->filterBy($method_parse[2], $args)
 				->delete();
 
-		if($m == 'getBy') // 'by' is an alias to filterBy()
+		// Run a get after the by()
+		if($m == 'getBy') 
 			return $this
 				->filterBy($method_parse[2], $args)
 				->get();
 
-		if($m == 'getAllBy') // 'by' is an alias to filterBy()
+		// Get all rows found after the by()
+		if($m == 'getAllBy')
 			return $this
 				->filterBy($method_parse[2], $args)
 				->getAll();
-
-		// parse out method and column reference
-		if($m == 'by') // 'by' is an alias to filterBy()
+		
+		// I really should keep returning like above, but this is less code
+		
+		// 'by' is an alias to filterBy()
+		if($m == 'by') 
 			$m = 'filterBy';
+		
+		// if we match a "find" prefix to the magic method, we have to pass it through the magic funciton handler
 		if($m == 'find')
 			$m = 'findMagic';
-		if($m == 'query' || $m == 'q') // 'q' is an alias to query()
+		
+		// This is really old. Lets you set a table. 'q' is an alias
+		if($m == 'query' || $m == 'q') 
 			$m = 'queryMagic';
 
+		// if we get this far, we are just running a single method from the above match and passing the arguments
 		return $this->$m($method_parse[2], $args);
     }
 
@@ -802,6 +814,33 @@ class orm implements \IteratorAggregate
 		return $this->table.'.'.$foriegn_key;
 	}
 
+	public function join($cmd)
+	{
+		// easier than a 10 variable method argument list
+		extract($cmd);
+		
+		// define join command
+		$join = 'JOIN';
+		if(isset($prefix))
+		{
+			if($prefix == 'r') $join = 'RIGHT JOIN';
+			if($prefix == 'i') $join = 'INNER JOIN';
+			if($prefix == 'l') $join = 'LEFT JOIN';
+			if($prefix == 'f') $join = 'FULL JOIN';
+		}
+		
+		if(isset($select))
+		{
+			$this->columns[] = $this->table.".*";
+			foreach($select as $column)
+				$this->columns[] = "$table.$column";
+		}
+
+		$this->joins[] = $join.' '.$table.' ON '.$table.'.'.$foreignkey.' = '.$this->table.'.'.$localkey;
+		
+		return $this;
+	}
+	
 	/**
 	 * ## Example
 	 *
@@ -818,8 +857,19 @@ class orm implements \IteratorAggregate
 	 * @param string $args `$args[0]` is the table.column string (ideally generated with `$this->withFk`).
 	 *
 	 */
-	private function joinOn($foreignKey, $args)
+	private function joinMagic($method, $args)
 	{
+		pre($method);
+		pre($args);
+		
+		$this->join([
+			'prefix' => '',
+			'table' => 'lf_users',
+			'localkey' => 'author',
+			'foreignkey' => 'id',
+			'select' => ['display_name', 'email']
+		]);
+		
 		// TODO: Add functionality to handle objects passed as $args[0]
 
 		/*if(preg_match('/^'.$table.'On(.+)/', $table, $match))
@@ -833,23 +883,6 @@ class orm implements \IteratorAggregate
 
 			$this->joins[] = 'LEFT JOIN '.$table.' ON '.$table.'.id = '.$this->table.'.id';
 		}*/
-
-		// break up on first '.'
-		$parts = explode('.', $args[0], 2);
-
-		$table = $parts[0];
-		$column = $parts[1];
-
-		$join = 'JOIN';
-		if(isset($args[1]))
-		{
-			if($args[1] == 'r') $join = 'RIGHT JOIN';
-			if($args[1] == 'i') $join = 'INNER JOIN';
-			if($args[1] == 'l') $join = 'LEFT JOIN';
-			if($args[1] == 'f') $join = 'FULL JOIN';
-		}
-
-		$this->joins[] = $join.' '.$table.' ON '.$table.'.'.$column.' = '.$this->table.'.'.$foreignKey;
 
 		return $this;
 	}
@@ -903,6 +936,24 @@ class orm implements \IteratorAggregate
 
 		return $this;
 	}
+
+	// public function addCols($cols, $table = NULL)
+	// {
+		// if( is_null($table) )
+			// $table = $this->table;
+		
+		// $this->columns = array();
+		// if(is_array($cols))
+		// {
+			// foreach( $cols as $col )
+				// array_push($this->columns, $table.'.'.$col);
+		// }
+		// else
+			// foreach( explode(',', $cols) as $col )
+				// array_merge($this->columns, [$table.'.'.$col]);
+
+		// return $this;
+	// }
 
 	public function resultCount()
 	{

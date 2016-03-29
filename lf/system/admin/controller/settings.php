@@ -154,7 +154,7 @@ class settings
 				->save();
 		}
 		
-		notice('<div class="notice">Options saved</div>');
+		notice('<div class="success">Options saved</div>');
 		redirect302();
 		
 		/* gotta find a way to do this in ORM 
@@ -266,7 +266,9 @@ class settings
 		
 		chdir(LF.'apps/'.$match[0]);
 		
-		(new orm)->import('install.sql');
+		(new \lf\orm)->import('install.sql');
+		
+		notice('<div class="success"><code>install.sql</code> applied</div>');
 		
 		redirect302();
 	}

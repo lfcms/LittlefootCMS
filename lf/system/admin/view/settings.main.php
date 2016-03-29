@@ -163,7 +163,7 @@
 						<?php if(count($installs)): ?>
 						<ul class="efvlist rounded">
 							<?php foreach($installs as $install): ?>	
-								<li>[<a href="%baseurl%reinstall/<?=$install;?>">reinstall</a>] <?=$install;?><br /></li>
+								<li>[<a href="<?=\lf\requestGet('ActionUrl');?>reinstall/<?=$install;?>">reinstall</a>] <?=$install;?><br /></li>
 							<?php endforeach; ?>
 						</ul>					
 						<?php else: ?>
