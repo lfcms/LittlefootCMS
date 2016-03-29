@@ -3,7 +3,25 @@
 namespace lf\admin;
 
 /**
- * @ignore
+ * # ACL Manager
+ * 
+ * **Action**: The navigation item
+ * 
+ * **Permission**: The access rule (allow or deny)
+ * 
+ * **Affects**: The user or group that is affected by this rule
+ * 
+ * ### Global
+ * 
+ * Global ACL rules are applied first. They affect all users (including anonymous). 
+ * 
+ * ### Inherit
+ * 
+ * You can have one group's or user's ACL ruleset apply to another through inheritance. This allows multilevel permission to be set more efficiently.
+ * 
+ * ### User
+ * 
+ * These rules are run last and can override the global ruling. If a page is denied for all users, and I make a rule so `myuser` is granted access to that page, `myuser` will be able to view it without a problem, while the rest remain blocked.
  */
 class acl
 {
@@ -21,7 +39,10 @@ class acl
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
 	
 		// List all Users/Groups
-		$result = \lf\orm::q('lf_users')->cols('id, display_name, access')->order('display_name, access')->getAll();
+		$result = (new \db\lf_users)
+			->cols('id, display_name, access')
+			->order('display_name, access')
+			->getAll();
 		
 		$users = array(0 => 'Anonymous');
 		$groups = array();

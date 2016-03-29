@@ -10,9 +10,9 @@ $get = array();
 $action = '&';
 if(count($_GET))
 {
-        foreach($_GET as $var => $val)
-                $get[] = $var.'='.$val;
-        $action .= implode('&', $get);
+	foreach($_GET as $var => $val)
+		$get[] = $var.'='.$val;
+	$action .= implode('&', $get);
 }
 
 ?>
@@ -32,7 +32,7 @@ if(count($_GET))
 				<div class="col-4"></div>
 				<div class="col-4 ">
 					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/" target="_blank"><img src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-banner.png"/></a></h1>
-					<?php if($this->error != '') echo '<p class="error light text-center">'.$this->error.'</p>'; ?>
+					<?php echo notice(); ?>
 					<form id="login" action="<?=\lf\requestGet('IndexUrl');?>_auth/login" method="post">
 						<ul class="vlist">
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>

@@ -3,7 +3,25 @@
 namespace lf\admin;
 
 /**
- * Plugin manager controller
+ * # Plugin manager controller
+ * 
+ * ## Definitions
+ * 
+ * **Hooks**: When a hook is executed it looks like this:
+ * 
+ * `$this->hook_run('pre lf render');`
+ * 
+ * Anything assigned to this hook, will execute at that part of the code before anything else happens.
+ * 
+ * **Plugin**: Name of plugin (installed to `lf/plugins/myplugin`).
+ * 
+ * **Config**: All plugins are provided with a $config variable to set up whatever data is needed to customize the plugin. For example, the Google Analytics plugin uses your Google Analytics ID. Same thing with the DisQus app.
+ * 
+ * **Hook it Up!**: Add the hook
+ * 
+ * ### Hooks
+ * 
+ * A (so far incomplete) list of the available hooks that are called at page load. Many more can be inferred, but I hope to update this list in future releases. 
  */
 class plugins
 {

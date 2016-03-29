@@ -4,7 +4,33 @@
 namespace lf\admin;
 
 /**
- * LF Admin Settings class
+ * # LF Admin Settings class
+ * 
+ * ### Options
+ * 
+ * **URL Rewrite**: *Off* will use `/index.php/` in the title and avoid the use of mod_rewrite. *On* will utilize mod_rewrite to work without the `/index.php/` at the start of all requests making the URL much prettier.
+ * 
+ * **Debug**: Display run times of all systems at the bottom of the source HTML output.
+ * 
+ * **Sign Up**: Enable Sign Up through a "Sign Up" button to the right of the login form. By default, email confirmation is required for signups.
+ * 
+ * **SimpleCMS**: By default, the full CMS is loaded as described in [[Dashboard]] Navigation. However, if a specific app is selected, the Navigation Bar will not be displayed and the selected app will load as if it had an alias of `/`. The Admin Dashboard would be nothing but the admin for that app and the other apps admin would become unavaiable and no longer display in the admin nav menu.
+ * 
+ * **Force URL**: If a URL is specified, it will be forced as the preferred base URL of your littlefoot installation. Ideal for forcing `https://` and `www`.
+ * 
+ * **Navigation CSS Class**: This will give the root `<ul>` of your Navigation Bar a class as specified here.
+ * 
+ * ### Version
+ * 
+ * **Upgrade Littlefoot**: This will download the latest published version of Littlefoot from http://littlefootcms.com/files/upgrade/system-latest.zip
+ * 
+ * #### Restore Old Version
+ * 
+ * When you upgrade Littlefoot, the old `lf/system` folder is moved to `lf/backup`.
+ * 
+ * ### Reinstall
+ * 
+ * Each app comes with an `install.sql` that is run when it is first installed. If your database runs into any problems, or you pulled the app from git, you can run it via this tool.
  */
 class settings
 {

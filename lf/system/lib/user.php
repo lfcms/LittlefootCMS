@@ -224,16 +224,16 @@ class user
 		// return with error if post fails
 		if(!$login)
 		{
-			$this->error[] = "Incorrect Username or Password";
+			notice('<div class="error">Incorrect Username or Password</div>');
 			return $this;
 		}
 
 		if(isset($login['status']) && $login['status'] != 'valid')
 		{
 			if($login['status'] == 'banned')
-				$this->error = "You are banned.";
+				notice('<div class="error">You are banned.</div>');
 			else
-				$this->error = "You need to validate your account first.";
+				notice('<div class="error">You need to validate your account first.</div>');
 
 			return $this;
 		}
@@ -245,9 +245,7 @@ class user
 			// like recaptcha...
 		}
 
-		if($this->error != array())
-			$_SESSION['_lf_login_error'] = implode(', ', $this->error);
-		else
+		if($this->error == array())
 			$this->setDetails($login);
 
 		/*pre($_SESSION);

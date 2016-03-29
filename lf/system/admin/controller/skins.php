@@ -3,7 +3,39 @@
 namespace lf\admin;
 
 /**
- * LF Admin Skins Manager controller
+ * # LF Admin > Skin Manager
+ * 
+ * Skins are displayed in 2 columns on the left side. Each skin displays its Title, Screenshot, Readme, and edit buttons:
+ * 
+ * **x**: Delete this skin
+ * 
+ * **default**: Set this skin as the default
+ * 
+ * **edit**: Edit this skin
+ * 
+ * **zip**: Archive this skin and download it
+ * 
+ * ### New Skin
+ * 
+ * There are a few ways to add skins to LittlefootCMS
+ * 
+ * #### Upload
+ * 
+ * You can upload a .zip of a template. It must be in the following format:
+ * 
+ * ```
+ * ./myskin
+ * ./myskin/screenshot.png
+ * ./myskin/index.html
+ * ./myskin/css
+ * ./myskin/css/style.css
+ * ```
+ * 
+ * The folder will be unzipped to `ROOT.'lf/skins'`.
+ * 
+ * #### Create Skin
+ * 
+ * A blank bare-bones HTML template will be added as the name provided.
  */
 class skins
 {

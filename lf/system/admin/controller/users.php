@@ -3,7 +3,15 @@
 namespace lf\admin;
 
 /**
- * LF Admin Users Manager controller
+ * # LF Admin Users Manager controller
+ * 
+ *  **Username**: The name you log in with
+ * 
+ * **Display Name**: The name that is displayed on things you post.
+ * 
+ * **Access**: The group your user is part of. The group `admin` grants access to /admin. The default group is otherwise `users`. The group can be arbitrarily defined for use in your apps.
+ * 
+ * **Status**: "valid" is when the user is enabled. "pending" is when we are waiting on them to respond to a reset or new account verification email. (when a hash is set in `lf_users`)
  */
 class users
 {	

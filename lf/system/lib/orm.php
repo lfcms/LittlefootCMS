@@ -1261,7 +1261,7 @@ class ___LastSay
 {
 	public function __destruct()
 	{
-		if(isset($_SESSION['db']))
+		if(isset($_SESSION['db']) && is_a($_SESSION['db'],'mysqli') )
 		{ 
 			$_SESSION['db']->close();
 			unset($_SESSION['db']);

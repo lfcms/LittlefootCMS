@@ -3,7 +3,46 @@
 namespace lf\admin;
 
 /**
- * @ignore
+ * ### Navigation
+ * 
+ * This is an index of your website. On your home page, you will see the list of Navigation items in the Navigation Bar below your site header and above your site content.
+ * 
+ * Navigation items may also be assigned as children of others. In the case of a Navigation item with alias of "ourteam" under another with an alias of "about", each tool could be accessed like:
+ * 
+ * * `mywebsite.com/about`
+ * * `mywebsite.com/about/ourteam`
+ * 
+ * #### Hidden Navigation
+ * 
+ * You can hide navigation items from the Navigation Bar by setting their position to 0 (zero). They are still accessible at mywebsite.com/$alias, but now they will not show on the Navigation Bar. This is ideal for tools like "profile" that you want to rather assign to an arbitrary button in the header rather than just another item in the Navigation Bar.
+ * 
+ * #### Navigation Edit Form
+ * 
+ * **Position**: The position of the navigation item in the Navigation Bar. Adjusting this position will propagate position adjustments for each items between it and its destination.
+ * 
+ * **Label**: Text shown on the Navigation Bar.
+ * 
+ * **Title**: Information displayed in browser `<title />` bar when the page loads.
+ * 
+ * **Parent**: Parent of current Navigation item. Can be set to any other item and its child items will follow.
+ * 
+ * **Alias**: Each Navigation item has an alias that is accessible via: mywebsite.com/`alias`
+ * 
+ * **Config**: Configuration variable provided to the associated app when that navigation item is loaded. Ideal for defining something like what "page" to display. Apps can override this form element with an [[args.php]]
+ * 
+ * **Template**: Which Skin is used when this Navigation Item is visited.
+ * 
+ * **Location**: What `%{marker}%` will be replaced with the contents of the attached app (usually)
+ * 
+ * **Capture URL variables?**: I don't remember what this was supposed to do :\
+ * 
+ * ### App Gallery 
+ * 
+ * All of your installed apps are listed under App Gallery. Clicking on an app's name will add it on the end of Navigation with the edit form open for the new item. By default, this new item will have a title and alias set it the name of the app.
+ * 
+ * #### App Upload 
+ * 
+ * App upload is currently disabled. There was some inconsistency between app and skin upload, and I just haven't gotten around to fixing it yet. If you download the [LF Git app](https://github.com/eflip/Git), you can use Git to pull apps and skins from git.
  */
 class dashboard
 {
