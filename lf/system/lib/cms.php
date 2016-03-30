@@ -175,7 +175,9 @@ class cms
 		// load version from LF/system/version file
 		$this->loadVersion()		
 			// load settings from `lf_settings` table
-			->loadSettings()						
+			->loadSettings()	
+			// apply template skin based on `default_skin` setting
+			->setTemplateSkin()					
 			// Route auth() class per $wwwIndex/_auth/$method
 			->route( (new auth), '_auth', false ); 
 		
@@ -190,8 +192,6 @@ class cms
 			->navSelect()					
 			// exec SimpleCMS or exec linked apps, save output to template content array
 			->getcontent() //; pre( (new \lf\template)->getTitle() ); $this
-			// apply template skin based on `default_skin` setting
-			->setTemplateSkin()
 			// add 3rdparty/icons.css for font awesome and lf.css
 			->loadLfCSS()
 			// Add stuff to <head> based on if search engine blocker is enabled in lf_settings
@@ -595,16 +595,20 @@ class cms
 			$tempRequest = $originalRequest;
 			
 			// simulate actionPop for the upcoming MVC operation since we routed on action[0]
-			$tempRequest->actionPop()->save();
+			$tempRequest->actionKeep(1)->save();
 		
-			(new template)
+		
+		
+			$template = (new template)
 				->addContent( $this->renderNavCache(), 'nav' )
 				->addContent( $this->mvc($instance) );
+				
 		
 			if(!$return)
 			{
 				// display in skin
-				(new template)->render();
+				$this->loadLfCss();
+				echo (new template)->render();
 				endTimer($timerName);
 				exit();
 			}
@@ -930,8 +934,12 @@ class cms
 	public function setTemplateSkin()
 	{
 		// If template has not be changed from 'default', set as configured default_skin.
-		if($this->select['template'] == 'default')
+		if(!isset($this->select['template']))
 			$this->select['template'] = getSetting('default_skin');
+		else if($this->select['template'] == 'default')
+			$this->select['template'] = getSetting('default_skin');
+		else
+			$this->select['template'] = 'default';
 		
 		// need to fix this from XV template
 		$template = (new template)->setSkin($this->select['template']);

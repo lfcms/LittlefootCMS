@@ -17,9 +17,6 @@ class auth
 		return false;
 		$user = (new User)->fromSession();
 		
-		pre($user);
-		pre($_SESSION['login']);
-		
 		// Handle timeout
 		if($user->timedOut() && false) //timeout disabled for now
 		{
@@ -67,7 +64,7 @@ class auth
 		
 		$update = array_intersect_key($_POST, $filter);
 		
-		(new LfUsers)
+		(new \LfUsers)
 			->byId($id)
 			->setArray($update)
 			->debug()
@@ -106,23 +103,10 @@ class auth
 	//default
 	public function signup()
 	{
-		if($this->lf->api('getuid') != 0) // logged in
-		{
-			if(isset($_SESSION['dest_url']))
-			{
-				$dest = $_SESSION['dest_url'];
-				unset($_SESSION['dest_url']);
-				redirect302($dest);
-			}
-			else
-				redirect302($this->lf->base);
-		}
-		
-		// Aaron G made me do this
-		if(is_file(LF.'system/template/signup.local'))
-			include LF.'system/template/signup.local';
-		else
+		if( (new \lf\user)->idFromSession() == 0 && \lf\getSetting('signup') == 'on') // logged in
 			include LF.'system/template/signup.php';
+		else
+			redirect302(\lf\requestGet('SubdirUrl'));
 	}
 	
 	public function create()
@@ -130,15 +114,15 @@ class auth
 		$sql = "
 			SELECT email, user 
 			FROM lf_users 
-			WHERE user = '".$this->db->escape($_POST['user'])."' 
-				OR email = '".$this->db->escape($_POST['email'])."'
+			WHERE user = '".(new \lf\orm)->escape($_POST['user'])."' 
+				OR email = '".(new \lf\orm)->escape($_POST['email'])."'
 		";
 		
-		$result = $this->db->query($sql);
+		$result = (new \lf\orm)->fetchAll($sql);
 		
 		$email = false; $user = false;
 		if($result)
-			while($row = $this->db->fetch())
+			foreach( $result as $row )
 			{
 				if($row['email'] == $_POST['email']) 
 					$email = true;
@@ -181,24 +165,24 @@ class auth
 					INSERT INTO lf_users (`id`, `user`, `pass`, `email`, `display_name`, `hash`, `last_request`, `status`, `access`)
 					VALUES ( 
 						NULL, 
-						'".$this->db->escape($_POST['user'])."',  
+						'".(new \lf\orm)->escape($_POST['user'])."',  
 						'".sha1($_POST['pass'])."', 
-						'".$this->db->escape($_POST['email'])."',  
-						'".$user[0]."',
+						'".(new \lf\orm)->escape($_POST['email'])."',  
+						'".(new \lf\orm)->escape($_POST['user'])."',
 						'".$hash."',
 						NOW(),
 						'pending',
 						'user'
 					)
 				";
-				$result = $this->db->query($sql);
+				$result = (new \lf\orm)->query($sql);
 				
 				$msg = '
 Hello,
 
 Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you account by visiting the following link:
 
-'.$this->lf->base.'_auth/validate/'.$hash;
+'.\lf\requestGet('ActionUrl').'validate/'.$hash;
 
 				if(mail($_POST['email'], 'Validate your account at '.$_SERVER['SERVER_NAME'], $msg, 'From: signup@'.$_SERVER['SERVER_NAME']))
 					echo 'Account Created. Check your email to validate your account. Be sure to check your spam folder too!';
@@ -210,16 +194,19 @@ Thank you for signing up at '.$_SERVER['SERVER_NAME'].'. Please validate you acc
 	
 	public function validate()
 	{
+		$vars = \lf\requestGet('param');
+		
 		if(!isset($vars[1]) || strlen($vars[1]) != 40 || !preg_match('/^[a-f0-9]+$/', $vars[1], $match)) return 'Wrong validation code.';
 		
+		
 		$hash = $match[0];
-		$result = $this->db->fetch("SELECT id FROM lf_users WHERE hash = '".$hash."' AND status = 'pending'");
+		$result = (new \lf\orm)->fetch("SELECT id FROM lf_users WHERE hash = '".$hash."' AND status = 'pending'");
 		if(!$result) return 'Wrong validation code.';
 		
 		$id = $result['id'];
-		$result = $this->db->query("UPDATE lf_users SET status = 'valid', hash = '' WHERE id = ".$id);
+		$result = (new \lf\orm)->query("UPDATE lf_users SET status = 'valid', hash = '' WHERE id = ".$id);
 		
-		echo 'Account validated. Please <a href="%baseurl%profile/">log in</a>';
+		echo '<div class="success">Account validated. Please <a href="'.\lf\requestGet('ActionUrl').'profile/">log in</a></div>';
 	}
 	
 	public function forgotform()

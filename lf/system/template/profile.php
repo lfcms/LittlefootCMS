@@ -1,9 +1,10 @@
 <?php
 
-$myId = (new User)->idFromSession();
+$myId = (new \lf\user)->idFromSession();
 if($myId == 0)
 {
 	echo 'Anonymous users don\'t have profiles.';	
+	(new \lf\template)->printLogin();
 	return;
 }
 
@@ -17,7 +18,7 @@ $user = (new LfUsers)->findById($myId);
 
 <?=notice();?>
 
-<form action="%appurl%updateprofile/" method="post">
+<form action="<?=\lf\requestGet('ActionUrl');?>updateprofile/" method="post">
 	<ul class="vlist">
 		<li>Display Name <input type="text" name="display_name" value="<?=$user->display_name;?>" placeholder="Display Name" /></li>
 		<li>User Name <input type="text" name="user" value="<?=$user->user;?>" placeholder="User Name" /></li>

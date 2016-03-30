@@ -1,7 +1,7 @@
 <div id="auth_lf">
 <?php
 
-$user = (new User)->fromSession();
+$user = (new \lf\user)->fromSession();
 
 if($user->getId() != 0)
 {
@@ -23,12 +23,12 @@ if($user->getId() != 0)
 					<li class="auth_pass"><input type="password" name="pass" placeholder="password" /></li>
 					<li class="auth_submit"><input class="light_gray button" type="submit" value="Log In" /></li>
 					<li class="auth_links">
-						<a href="%baseurl%_auth/forgotform">Forgot?</a>
+						<a href="<?=\lf\requestGet('IndexUrl');?>_auth/forgotform">Forgot?</a>
 					</li>
 					<li class="auth_links">
-						<?php if($this->settings['signup'] == 'on') { ?>
-						<a href="%baseurl%_auth/signup">Sign Up</a>
-						<?php } ?>
+					<?php if(\lf\getSetting('signup') == 'on') { ?>
+						<a href="<?=\lf\requestGet('IndexUrl');?>_auth/signup">Sign Up</a>
+					<?php } ?>
 					</li>
 				</ul>
 		</form> 

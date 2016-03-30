@@ -153,7 +153,7 @@ class orm implements \IteratorAggregate
 	public function __destruct()
 	{
 		if($this->debug)
-			echo $this->sql;
+			pre( $this->sql );
 	}
 
 	/**
@@ -938,7 +938,7 @@ class orm implements \IteratorAggregate
 		else if(!is_numeric($value))
 			$value = "'".$this->escape($value)."'";
 
-		$this->conditions[] = $column.' '.$condition.' '.$value;
+		$this->conditions[] = $this->table.'.'.$column.' '.$condition.' '.$value;
 
 		return $this;
 	}

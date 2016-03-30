@@ -1,4 +1,4 @@
-<?php if($this->lf->settings['signup'] != 'on') die('Signup is disabled.');
+<?php if(\lf\getSetting('signup') != 'on') die('Signup is disabled.');
 		
 		if(isset($_GET['dest']))
 			$_SESSION['dest_url'] = urldecode($_GET['dest']);
@@ -7,7 +7,7 @@
 		<div class="row">
 			<div id="signup-login" class="col-6">
 				<h2>Login</h2>
-				<form action="%baseurl%_auth/login" method="post">
+				<form action="<?=\lf\requestGet('ActionUrl');?>login" method="post">
 					<ul class="vlist">
 						<li><input type="text" name="user" placeholder="Username" /></li>
 						<li><input type="password" name="pass" placeholder="Password" /></li>
@@ -25,7 +25,7 @@
 						if($('#signup-form form input[name=user]').val() == '') { error = 'Please provide a username.'; }
 						else if($('#signup-form form input[name=pass]').val() == '') { error = 'Please provide a password.'; } 
 						else if($('#signup-form form input[name=email]').val() == '') { error = 'Please provide an email.'; } 
-						else if(!$('#signup-form form input[name=terms]').is(':checked')) { error = 'Please accept the terms and conditions.'; } 
+						//else if(!$('#signup-form form input[name=terms]').is(':checked')) { error = 'Please accept the terms and conditions.'; } 
 						
 						if(error == '') { return true; }
 						
@@ -38,12 +38,12 @@
 		
 			<div id="signup-form" class="col-6">
 				<h2>Sign up!</h2>
-				<form action="%appurl%create/" method="post">
+				<form action="<?=\lf\requestGet('ActionUrl');?>create/" method="post">
 					<ul class="vlist">
 						<li><input type="text" name="user" placeholder="Username"/></li>
 						<li><input type="password" name="pass" placeholder="Password"/></li>
 						<li><input type="text" name="email" placeholder="Email Address"/></li>
-						<!-- <li><input type="checkbox" name="terms" /> I accept the <a href="%baseurl%terms/" target="_blank">terms and conditions</a>.</li> -->
+						<!-- <li><input type="checkbox" name="terms" /> I accept the <a href="<?=\lf\requestGet('ActionUrl');?>terms/" target="_blank">terms and conditions</a>.</li> -->
 						<li><input class="light_gray button" type="submit" value="Sign Up!"/></li>
 					</ul>
 				</form>
