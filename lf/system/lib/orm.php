@@ -427,10 +427,12 @@ class orm implements \IteratorAggregate
 	 */
 	public function getIterator() {
 		//return new ArrayIterator( $this->result );
+		
+		$return = [];
 		foreach($this->getAll() as $row)
 			$return[] = (new orm($this->table))->setArray($row);
 
-		return new ArrayIterator( $return );
+		return new \ArrayIterator( $return );
 	}
 	
 	/**
@@ -651,22 +653,45 @@ class orm implements \IteratorAggregate
 	 *
 	 * This allows you to call functions like `->getAllByCategory('Cats')` and `joinOnId...`
 	 *
-	 * $methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:l|f|r|i)?joinOn)(.+)/';
+	 * $methodRegex = '/^(set|by|filterBy|deleteBy|getBy|getAllBy|findByAll|findBy|find|query|q|(?:l|f|r|i)?joinOn)(.+)/';
+	 * // wildcard catchall for shortcut requests (filter, set, etc)
+	 * old `$magicRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:lo?J|ro?J|fo?J|io?J|o?j)oin)(.+)/';`
 	 */
-	// wildcard catchall for shortcut requests (filter, set, etc)
-	public function __call($method, $args)
+	public function __call($methodCalled, $args)
 	{
-		$methodRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:[irlf]?)join)(.+)/';
-		if(!preg_match($methodRegex, $method, $method_parse))
+		// given a method call with any of these from the beginning,
+		$magicPrefix = [
+			'filterBy',
+			// 'findAllBy', no such thing... find() gets it all by default to $this->results
+			'getAllBy',
+			'deleteBy',
+			'findBy',
+			'getBy',
+			'query',
+			'find',
+			'set',
+			'by',
+			'q',
+			'(?:lo?J|ro?J|fo?J|io?J|o?j)oin'
+		];
+		
+		// grab the prefix used as capture group 1, 
+		// grab whatever else the user said in capture group 2
+		$magicRegex = '/^('.implode('|', $magicPrefix).')(.+)/';
+		
+		// test the pattern, 
+		if(!preg_match($magicRegex, $methodCalled, $captures))
+			// return on fail, 
 			return $this->throwException('Invalid method called');
-
-		// $m = The first part of the above match. eg, deleteBy
-		$m = $method_parse[1];
-		$after = $method_parse[2];
+		// but proceed with match otherwise
+		
+		// method to be called 
+		$m = $captures[1];
+		$after = $captures[2];
 
 		// handle joinMagic()
-		if(preg_match('/^([lfri]?)join$/', $m))
-			return $this->joinMagic($m[0], $after, $args);
+		if(preg_match('/^(lo?J|ro?J|fo?J|io?J|o?j)oin$/', $m, $match))
+			return $this->joinMagic($match[1], $after, $args);
 		
 		// Run a find after the by()
 		if($m == 'findBy') 
@@ -709,6 +734,62 @@ class orm implements \IteratorAggregate
 		// if we get this far, we are just running a single method from the above match and passing the arguments
 		return $this->$m($after, $args);
     }
+	
+	/**
+	 * Generate a matrix by organizing query result set based on key hierarchy
+	 * 
+	 * Instead of doing
+	 * 
+	 * ~~~
+	 * $comments = (new \MyComment)->getAll();
+	 * $recursedComments = [];
+	 * foreach($comments as $comment)
+	 * 		$recursedComments[$comment['reply']][$comment['id']] = $comment;
+	 * ~~~
+	 * 
+	 * Just do `$recursedComments = (new \MyComment)->matrix(['reply','id']);`
+	 */
+	public function matrix($keys)
+	{
+		if( ! is_array($keys) )
+		{
+			$this->errors[] = 'matrix() $keys should be an array';
+			return NULL;
+		}
+		
+		if( count($keys) == 0 )
+		{
+			$this->errors[] = 'matrix() $keys has no elements';
+			return NULL;
+		}
+		
+		$results = $this->getAll();
+		
+		// grab the last key name so we can use it to store the whole row data
+		$lastKey = array_pop($keys);
+		
+		$matrix = [];
+		foreach($results as $row)
+		{
+			// reset pointer back to matrix root
+			$matrixPointer =& $matrix;
+			
+			// build the initial hierarchy: $matrix[reply][id] = $comment;
+			foreach($keys as $key)
+			{
+				// gotta have something to point to
+				if( ! isset( $matrixPointer[$row[$key]] ) )
+					$matrixPointer[$row[$key]] = [];
+				
+				// set pointer as last child for next iteration
+				$matrixPointer =& $matrixPointer[$row[$key]];
+			}
+			
+			$matrixPointer[$row[$lastKey]] = $row;
+		}
+		
+		return $matrix;
+	}
 
 	private function throwException($msg = '')
 	{
@@ -783,6 +864,8 @@ class orm implements \IteratorAggregate
 		return $this;
 	}
 
+	//private function findByMagic($key, 
+	
 	private function findMagic($columns, $args)
 	{
 		if(preg_match_all('/[A-Z][a-z]*/', $columns, $match))
@@ -823,10 +906,14 @@ class orm implements \IteratorAggregate
 		$join = 'JOIN';
 		if(isset($prefix))
 		{
-			if($prefix == 'r') $join = 'RIGHT JOIN';
-			if($prefix == 'i') $join = 'INNER JOIN';
-			if($prefix == 'l') $join = 'LEFT JOIN';
-			if($prefix == 'f') $join = 'FULL JOIN';
+			if($prefix == 'rJ') $join = 'RIGHT JOIN';
+			if($prefix == 'roJ') $join = 'RIGHT OUTER JOIN';
+			if($prefix == 'iJ') $join = 'INNER JOIN';
+			if($prefix == 'ioJ') $join = 'INNER OUTER JOIN';
+			if($prefix == 'lJ') $join = 'LEFT JOIN';
+			if($prefix == 'loJ') $join = 'LEFT OUTER JOIN';
+			if($prefix == 'fJ') $join = 'FULL JOIN';
+			if($prefix == 'foJ') $join = 'FULL OUTER JOIN';
 		}
 		
 		if(isset($select))
@@ -1111,10 +1198,11 @@ class orm implements \IteratorAggregate
 		return $this->mysqli->insert_id;
 	}
 
-	// CRUD functions.
+	// Low level CRUD functions.
 	private function insert() //create
 	{
-		if(!count($this->data)) return null;
+		if(!count($this->data)) 
+			return null;
 
 		$cols = '`'.implode('`, `', array_keys($this->data)).'`';
 		$values = implode(', ', array_values($this->data));
@@ -1231,8 +1319,11 @@ class orm implements \IteratorAggregate
 	private function currentRow()
 	{
 		if($this->row >= count($this->result))
-			return false;
-
+		{
+			//$this->errors[] = 'Row counter out of bounds';
+			return null; // should be returning null when there isnt something
+		}
+		
 		return $this->result[$this->row];
 	}
 
@@ -1366,20 +1457,30 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  */
 spl_autoload_register( function ($class_name) {
 	
+	// to let other autoload registers load things from namespaced things.
+	if( strpos($class_name, '\\') !== false )
+		return;
+	
 	// This is whats filtering it.
-	if(!preg_match_all('/[A-Z][^A-Z]+/', $class_name, $matches))
+	if(!preg_match_all('/^([A-Z][^A-Z]+)+$/', $class_name, $matches))
 		return;
 
-	$guts['table'] = 'public $table = "'.strtolower(implode('_',$matches[0])).'";';
+	//pre($matches);
+	
+	$guts['table'] = 'public $table = "'.strtolower(preg_replace('/([a-z])([A-Z])/', '\1_\2', $matches[0][0])).'";';
 
 	//$guts['method'] = 'public function test() { echo "Hey there"; }';
 
+	//pre('class %s extends \\lf\\orm { '.implode(' ', $guts).' }');
+	
 	// ty chelmertz http://stackoverflow.com/a/13504972
 	eval(sprintf(
 		'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
 		$class_name
 	));    
 });
+
+(new \TestingTestingButtz);
 
 /**
  * Made another one that catches stuff like `\table\lf_settings` rather than autoloading in the global namespace
