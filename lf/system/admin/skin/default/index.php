@@ -35,8 +35,8 @@
 	</head>
 
 	<body class="off-white">
-		<div class="wrapper userbar h50 dark_gray light light_bb">
-			<div class="wide_container">
+		<div class="wrapper userbar dark_gray light light_bb">
+			<div class="wide_container h50">
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
 						<div>
