@@ -57,7 +57,8 @@ $cms->run();
 
  		
 
-require 'system/lib/cache.php'; // Quick memcache style key-value pair storage
+require 'system/lib/mem.php'; // Quick memcache style key-value pair storage.
+require 'system/lib/cache.php'; // old mem, also does toFile()
 require 'system/lib/plugin.php'; // Provides hooks, plugins, page request to app execution
 require 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
 require 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules

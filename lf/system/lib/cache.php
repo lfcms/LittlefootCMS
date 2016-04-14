@@ -86,7 +86,7 @@ class cache
 	 */
 	public function sessSet($key, $value, $namespace = 'default')
 	{
-		$_SESSION['lf_cache'][$namespace][$key] = $value;
+		mem::set($key, $value, $namespace);
 		return $this;
 	}
 	
@@ -95,9 +95,7 @@ class cache
 	 */
 	public function sessGet($key, $namespace = 'default')
 	{
-		if(isset($_SESSION['lf_cache'][$namespace][$key]))
-			return $_SESSION['lf_cache'][$namespace][$key];
-		return NULL;
+		return mem::get($key, $namespace);
 	}
 	
 	/**
