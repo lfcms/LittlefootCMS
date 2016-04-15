@@ -1007,13 +1007,14 @@ html.lf, .lf body {
 
 .lf input[type=checkbox].dropdown + label {
 	border-radius: 0;
+	padding: 0;
 }
 
 .lf input[type=checkbox].dropdown + label div.drop-content {
 	display: none;
 }
 
-.lf input[type=checkbox].dropdown + label span.close-content {
+.lf input[type=checkbox].dropdown + label .close-content {
 	display: none;
 }
 
@@ -1021,11 +1022,11 @@ html.lf, .lf body {
 	display: block;
 }
 
-.lf input[type=checkbox].dropdown:checked + label span.open-content {
+.lf input[type=checkbox].dropdown:checked + label .open-content {
 	display: none;
 }
 
-.lf input[type=checkbox].dropdown:checked + label span.close-content {
+.lf input[type=checkbox].dropdown:checked + label .close-content {
 	display: block;
 }
 

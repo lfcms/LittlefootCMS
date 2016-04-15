@@ -39,11 +39,13 @@
 		<?php foreach($skins as $skin):
 					
 			$highlight = '';
-			$icon = '';
+			$iconColor = 'light_gray_fg';
+			$title = 'Activate Skin';
 			
 			if( $skin == \lf\getSetting('default_skin') ){
 				$highlight = 'selected';
-				$icon = 'fa fa-check';
+				$iconColor = 'green_fg';
+				$title = 'This Skin is Active';
 			}
 			if(is_file(ROOT.'skins/'.$skin.'/screenshot.png'))
 				$screenshot = \lf\requestGet('LfUrl').'skins/'.$skin.'/screenshot.png';
@@ -58,35 +60,45 @@
 				<div class="tile white <?=$highlight;?>">
 					<!-- Skin Title -->
 					<div class="tile-header">
-						<h4><?=$skin;?> <i class="<?=$icon;?> green_fg" title="This skin is set as DEFAULT."></i> <a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right"><i class="fa fa-trash-o"></i></a></h4>
+						<h4>
+							<?=$skin;?>
+							<a href="%appurl%setdefault/<?=$skin;?>" class="pull-right"><i class="<?=$iconColor;?> fa fa-power-off" title="<?=$title;?>"></i></a>
+						</h4>
 					</div>
 					
-					<div class="h250 fit">
+					<!-- <div class="h250 fit">
 						<a href="<?=$screenshot;?>"><img class="fit" src="<?=$screenshot;?>"  /></a>
-					</div>
-					
-					<div class="tile-content">
-						<div class="row">
-							<div class="col-12">
-								<p class="h100 scroll no_mar"><?=$readme;?></p>
+					</div> -->
+					<div class="">
+						<input type="checkbox" id="<?=$skin;?>-details" name="<?=$skin;?>-details" class="dropdown" />
+						<label for="<?=$skin;?>-details">
+							<div class="open-content h200 fit">
+								<a href="<?=$screenshot;?>" class="block"><img class="fit" src="<?=$screenshot;?>"  /></a>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-12">
-								<a href="%appurl%fork/<?=$skin;?>" class="button dark_blue"><i class="fa fa-copy"></i> Clone</a>
+							<div class="drop-content h200">
+								<p class="scroll no_mar close-content pad"><?=$readme;?></p>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-5">
-								<a href="%appurl%setdefault/<?=$skin;?>" class="button green"><i class="fa fa-power-off"></i> Default</a>
+							<div class="tile-content">
+								<div class="row fxlarge">
+									<div class="col-4">
+										<span class="open-content pull-left blue_fg"><i class="fa fa-list"></i> Details</span>
+										<span class="close-content pull-left blue_fg"><i class="fa fa-eye"></i> Preview</span>
+									</div>
+									<div class="col-2">
+										<a href="%appurl%edit/<?=$skin;?>/" class="pull-right" title="Edit Skin"><i class="fa fa-pencil-square-o"></i></a>
+									</div>
+									<div class="col-2">
+										<a href="%appurl%zip/<?=$skin;?>/" class="pull-right" title="Zip Skin"><i class="fa fa-file-archive-o"></i></a>
+									</div>
+									<div class="col-2">
+										<a href="%appurl%fork/<?=$skin;?>" class="pull-right" title="Clone Skin"><i class="fa fa-copy"></i></a>
+									</div>
+									<div class="col-2">
+										<a onclick="return confirm('Do you really want to delete this?');" href="%appurl%rm/<?=$skin;?>/" class="x pull-right" title="Delete Skin"><i class="fa fa-trash-o"></i></a>
+									</div>
+								</div>
 							</div>
-							<div class="col-4">
-								<a href="%appurl%edit/<?=$skin;?>/" class="button blue"><i class="fa fa-pencil-square-o"></i> Edit</a>
-							</div>
-							<div class="col-3">
-								<a href="%appurl%zip/<?=$skin;?>/" class="button"><i class="fa fa-file-archive-o"></i> Zip</a>
-							</div>
-						</div>
+						</label>
 					</div>
 				</div>
 			</div>
