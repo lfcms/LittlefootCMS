@@ -22,7 +22,7 @@ $(document).ready(function() {
 
 <div class="row">
 	<div class="col-12">
-<h2 class="no_marbot" title="Setting the position to 0 will hide a navigation item."><i class="fa fa-compass"></i> Navigation Editor</h2>
+		<h2 class="no_marbot" title="Setting the position to 0 will hide a navigation item."><i class="fa fa-compass"></i> Navigation Editor</h2>
 	</div>
 </div>
 <div class="row">
