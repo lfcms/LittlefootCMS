@@ -27,9 +27,9 @@ $(document).ready(function() {
 </div>
 <div class="row">
 	<div class="col-9">
-        <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
-        <div class="row no_martop">
-        	<div class="col-12 spaced">
+    <!-- <p>Manage your website's nav menu. Click on the nav item title to edit it, click [x] to delete it, and click (Admin) to manage the associated app.</p> -->
+    <div class="row no_martop">
+      <div class="col-12 spaced">
 				<?=$this->printNav();?>
 			</div>
 		</div>
