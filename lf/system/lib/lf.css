@@ -714,20 +714,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
     padding: 0 1rem;
 }
 
-.lf .active > .tile-content {
-	border-left: 1px solid #AAA;
-	border-right: 1px solid #AAA;
-	background: rgba(150, 150, 150, 0.1);
-}
-
 .lf .selected  > .tile-header {
 	border-left: 3px solid #00AA63;
-}
-
-
-
-.lf small, .lf .font_small {
-	font-size: 0.618rem;
 }
 
 /*Notices*/
@@ -981,8 +969,8 @@ html.lf, .lf body {
 	width: 100%;
 	background-color: rgba(100, 100, 100, 0.5);
 	opacity: 0.95;
-	transition: background-color 0.5s;
-	-webkit-transition: background-color 0.5s;
+	transition: background-color 0.25s, opacity 0.25s, color 0.25s;
+	-webkit-transition: background-color 0.25s, opacity 0.25s, color 0.25s;
 }
 
 .lf button:hover,
@@ -993,11 +981,15 @@ html.lf, .lf body {
 
 .lf button:active,
 .lf .button:active,
-.lf input[type=submit]:active,
+.lf input[type=submit]:active {
+	opacity: 0.6;
+}
+
 .lf button.active,
 .lf a.active,
 .lf input[type=submit].active {
-	opacity: 1;
+	box-shadow: inset 0px 0px 2px #777;
+	color: rgba(50, 50, 50, 0.8);
 }
 
 /*Dropdowns*/
