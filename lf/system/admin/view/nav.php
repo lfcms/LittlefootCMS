@@ -5,10 +5,13 @@
 			<?php (new \lf\plugin)->run('pre admin nav'); ?>
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
-			
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/dashboard/"><i class="fa fa-compass"></i><span><?=
+			<?php if(true || $_SESSION['upgrade']): ?>
+			<li><a class="green" href="<?=\lf\requestGet('AdminUrl');?>settings/" title="Upgrade Your Littlefoot Installation">
+<i class="fa fa-arrow-circle-up"></i> Upgrade Now!</a></li>
+			<?php endif; ?>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/dashboard/"><i class="fa fa-dashboard"></i><span><?=
 				\lf\getSetting('simple_cms')=='_lfcms'
-					?' Navigation'
+					?' Dashboard'
 					:ucfirst(\lf\getSetting('simple_cms')).' Admin';
 				?></span></a></li>
 			<!--<li><a class="media" href="<?=\lf\requestGet('IndexUrl');?>admin/media/"><span>Media</span></a></li>-->

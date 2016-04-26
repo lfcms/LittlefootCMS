@@ -293,6 +293,14 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	margin-bottom: 1.414rem !important;
 }
 
+.lf .right_space {
+	margin-right: 15px;
+}
+
+.lf .left_space {
+	margin-left: 15px;
+}
+
 .lf .no_mar {
 	margin: 0 !important;
 }
@@ -800,9 +808,9 @@ html.lf, .lf body {
 	color: #fff;
 }
 
-#admin_greeting {
-	margin-top: 15px;
-	margin-right: 15px;
+#admin_greeting,
+#admin_greeting_mobile {
+	padding: 15px 0;
 }
 
 /* Login */
@@ -1038,7 +1046,8 @@ html.lf, .lf body {
 /*Mobile*/
 
 /*.lf select.menu,*/
-.lf nav.mobile_nav {
+.lf nav.mobile_nav,
+.lf #admin_greeting_mobile {
 	display: none;
 }
 
@@ -1061,11 +1070,13 @@ and (max-width : 850px) {
 	
 	/*Mobile - Nav*/
 	.lf nav.main_nav,
-	.lf nav.admin_main_nav {
+	.lf nav.admin_main_nav,
+	.lf #admin_greeting {
 		display: none;
 	}
 	
-	.lf nav.mobile_nav {
+	.lf nav.mobile_nav,
+	.lf #admin_greeting_mobile {
 		display: block;
 	}
 	
