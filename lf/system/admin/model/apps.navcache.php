@@ -16,8 +16,12 @@ function build_nav_cache($menu, $parent = -1, $prefix = '')
 		if(strlen($link) != 0) 
 			$link .= '/';
 		
+		$icon = '';
+		if(isset($menu[$item['id']]))
+			$icon = '<i class="fa fa-caret-down fsmall"></i>';
+		
 		// and generate the <li></li> element content
-		$html .= '<li><a href="%baseurl%'.$link.'" title="'.$item['title'].'">'.$item['label'].'</a>';
+		$html .= '<li><a href="%baseurl%'.$link.'" title="'.$item['title'].'">'.$item['label'].' '.$icon.'</a>';
 		
 		// Process any submenus before closing <li>
 		if(isset($menu[$item['id']]))
