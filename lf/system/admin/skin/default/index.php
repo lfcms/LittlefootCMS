@@ -35,7 +35,24 @@
 	</head>
 
 	<body class="off-white contain">
-		<div class="wrapper userbar dark_gray light light_bb">
+		<div class="wrapper userbar dark_gray light light_bb scroll-y">
+			<nav class="mobile_nav">
+				<input type="checkbox" id="mobile-nav" name="mobile-nav" class="dropdown marbot" />
+				<label for="mobile-nav" class="dark_gray">
+						<span id="admin_greeting_mobile" class="pull-left left_space fxlarge light">
+							Hello, <?=(new \lf\user)
+										->fromSession()
+										->getDisplay_name();?>.
+						</span>
+						<span class="open-content pull-right light pad fxlarge"><i class="fa fa-bars"></i></i></span>
+						<span class="close-content pull-right red_fg pad fxlarge"><i class="fa fa-bars"></i></span>
+						<div class="drop-content clear">
+								<nav class="vlist dark_gray">
+									<?=$this->printContent('nav');?>
+								</nav>
+						</div>
+				</label>
+			</nav>
 			<div class="wide_container h50">
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
@@ -62,23 +79,6 @@
 					<nav class="admin_main_nav">
 						<?=$this->printContent('nav');?>
 					</nav>
-					<nav class="mobile_nav">
-							<input type="checkbox" id="mobile-nav" name="mobile-nav" class="dropdown marbot" />
-							<label for="mobile-nav" class="dark_gray">
-									<span id="admin_greeting_mobile" class="pull-left left_space fxlarge light">
-										Hello, <?=(new \lf\user)
-													->fromSession()
-													->getDisplay_name();?>.
-									</span>
-									<span class="open-content pull-right light pad fxlarge"><i class="fa fa-bars"></i></i></span>
-									<span class="close-content pull-right red_fg pad fxlarge"><i class="fa fa-bars"></i></span>
-									<div class="drop-content clear">
-											<nav class="vlist dark_gray">
-												<?=$this->printContent('nav');?>
-											</nav>
-									</div>
-							</label>
-            </nav>
 				</div>
 				<div class="col-10">
 					<div id="controller-<?php \lf\requestGet('ActionUrl'); ?>">
