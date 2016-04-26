@@ -79,6 +79,11 @@
 				<div class="col-2 dark_gray no_pad marbot">
 					<nav class="admin_main_nav">
 						<?=$this->printContent('nav');?>
+						<footer>
+							<span class="gray_a">
+								<a href="http://littlefootcms.com">Powered by &copy; Littlefoot</a>
+							</span>
+						</footer>
 					</nav>
 				</div>
 				<div class="col-10">
@@ -88,10 +93,5 @@
 				</div>
 			</div>
 		</div>
-		<footer>
-			<div class="wide_container">
-				powered by &copy; <a href="http://littlefootcms.com">littlefoot</a>
-			</div>
-		</footer>
 	</body>
 </html>
