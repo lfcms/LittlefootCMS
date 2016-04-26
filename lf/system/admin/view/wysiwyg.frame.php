@@ -1,32 +1,53 @@
 <h2>WYSIWYG Dashboard</h2>
-<h3>Action</h3>
 
 <?php
-// print action editor form
-include 'view/wysiwyg.action.php';
+
+// load in nav cache
+$previewNav = (new \lf\cms)->getNavCache();
+$replace = [
+	 '%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/'
+	// '<a ' => '<a target="_parent"'
+ ];
+$previewNav = str_replace(array_keys($replace), array_values($replace), $previewNav);
 
 ?>
+
+
 <div class="row">
-	<div class="col-2">
+	<div class="col-9">
+		<nav class="light_b main_nav white"><?=$previewNav;?></nav>
+		<?php include 'view/wysiwyg.action.php'; ?>
+	</div>
+	<div class="col-3">
+		<?php include 'view/wysiwyg.addlink.php'; ?>
+	</div>
+</div>
+
+
+<h3>Linked Apps</h3>
 <?php
+
 // loop through linked apps
 $links = (new \LfLinks)->getAllByInclude($action['id']);
+echo '<div class="row">';
 foreach($links as $link)
 {
-	echo '<h3>Links</h3>';
+	echo '<div class="col-9">';
 	// print editor form for each
 	include 'view/wysiwyg.link.php';
+	echo '</div>';
 }
-
-// print "add link" form
-include 'view/wysiwyg.addlink.php';
+	
+echo '</div>';
 
 ?>
-	</div>
-	<div class="col-10">
-		<h3>Preview</h3>
+
+<div class="row">
+	<div class="col-9">
+		<h3>Preview <a href="<?=\lf\requestGet('AdminUrl');?>wysiwyg/preview/<?=$action['id'];?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-arrows-alt"></i></a></h3>
 		<iframe src="<?=\lf\requestGet('AdminUrl');?>wysiwyg/preview/<?=$action['id'];?>"
-			class="light_b" width="100%" height="800px" frameborder="0">
+			class="white light_b" width="100%" height="100%" frameborder="0">
 		</iframe>
+	
 	</div>
 </div>

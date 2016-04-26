@@ -76,23 +76,42 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 
 <form id="nav_form" action="%appurl%updatelink/<?=$link['id'];?>" method="post">
 	<div class="tile white">
+		<div class="tile-header">
+			<h4>
+				<?=$link['app'];?> 
+				<span class="pull-right"><i class="fa fa-trash-o" aria-hidden="true"></i></span>
+				<i class="fa fa-arrow-right" aria-hidden="true"></i>
+			</h4>
+		</div>
 		<div class="tile-content">
-			<h4><?=$link['app'];?> - <?=isset($link['section'])?$link['section']:'content';?></h4>
-			<ul class="vlist">
-				<li>
-					App: 
-					<input type="text" name="app" value="<?=$link['app'];?>" />
-				</li>
-				<li>
+			<div class="row">
+				<div class="col-2">
+					App: <input type="text" name="app" value="<?=$link['app'];?>" />
+				</div>
+				<div class="col-2">
 					Config: <?=$args;?>
-				</li>
-				<li>
+				</div>
+				<div class="col-4">
 					Location (unsure? put "content"): <input type="text" name="section" placeholder="content" value="<?=isset($link['section'])?$link['section']:'';?>" />
-				</li>
+				</div>
+				<div class="col-2">
+					&nbsp;
 					<button class="green">Update</button>
+				</div>
+				<div class="col-2">
+					&nbsp;
+					<a class="button" href="%appurl%">Cancel</a>
+				</div>
+			</div>
+			<ul class="hlist">
+				<li>
 				</li>
 				<li>
-					<a class="button" href="%appurl%">Cancel</a>
+				</li>
+				<li>
+				</li>
+				</li>
+				<li>
 				</li>
 			</ul>
 		</div>
