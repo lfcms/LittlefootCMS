@@ -31,43 +31,53 @@
 					}
 				);
 			});
-		</script (http://december.com/html/4/element/script.html)>
+		</script>
 	</head>
 
-	<body class="off-white">
-		<div class="wrapper userbar dark_gray light light_bb">
+	<body class="off-white contain">
+		<div class="wrapper userbar dark_gray light light_bb scroll-y">
+			<nav class="mobile_nav">
+				<input type="checkbox" id="mobile-nav" name="mobile-nav" class="dropdown marbot" />
+				<label for="mobile-nav" class="dark_gray">
+						<span id="admin_title_mobile pull-left">
+							<img class="fit-font icon pull-left left_space martop" src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-icon-white-transparent.png"/> 
+							<a id="site_preview" class="pull-left" href="<?=\lf\requestGet('IndexUrl');?>" target="blank_"><?=\lf\requestGet('IndexUrl');?></a>
+						</span>
+						<span class="open-content pull-right light pad fxlarge"><i class="fa fa-bars"></i></i></span>
+						<span class="close-content pull-right red_fg pad fxlarge"><i class="fa fa-bars"></i></span>
+						<div class="drop-content clear">
+								<nav class="vlist dark_gray">
+									<?=$this->printContent('nav');?>
+								</nav>
+						</div>
+				</label>
+			</nav>
 			<div class="wide_container h50">
 				<div class="row no_martop no_marbot">
 					<div class="col-12">
 						<div>
-							<img class="fit-font icon pull-left martop" src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-icon-white-transparent.png"/> 
-							<a id="site_preview" class="pull-left" href="<?=\lf\requestGet('IndexUrl');?>" target="blank_"><?=\lf\requestGet('IndexUrl');?></a>
+							<span id="admin_title">
+								<img class="fit-font icon pull-left martop" src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-icon-white-transparent.png"/> 
+								<a id="site_preview" class="pull-left left_space" href="<?=\lf\requestGet('IndexUrl');?>" target="blank_"><?=\lf\requestGet('IndexUrl');?></a>
+							</span>
 						
 							<span id="logout_button" class="pull-right">
-								
 								<a class="x" href="<?=\lf\requestGet('IndexUrl');?>_auth/logout" title="Sign Out"><i class="fa fa-sign-out"></i></a>
 							</span>
-							<span id="admin_greeting" class="pull-right">
-								Hello <?=(new \lf\user)
+							<span id="admin_greeting" class="pull-right right_space">
+								Hello, <?=(new \lf\user)
 											->fromSession()
 											->getDisplay_name();?>.
 							</span>
-							<span id="admin_greeting" class="pull-right">
-							<?php if($_SESSION['upgrade']): ?>
-							<a class="blue button" href="<?=\lf\requestGet('AdminUrl');?>settings/">Upgrade Now!</a>
-							<?php endif; ?>
-							</span>
-							
-							
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="wide_container d50">
+		<div class="wide_container admin_drop">
 			<div class="row no_martop">
-				<div class="col-2 dark_gray">
-					<nav>
+				<div class="col-2 dark_gray no_pad marbot">
+					<nav class="admin_main_nav">
 						<?=$this->printContent('nav');?>
 					</nav>
 				</div>
