@@ -19,7 +19,16 @@ class wysiwyg
 		// if alias/ is present,
 		else
 		{
-			echo 'not ready for more alias just yet...';
+			echo 'not really ready for more alias just yet...';
+			
+			$action = (new \LfActions)
+				->byParent(-1)
+				->byPosition(2)
+				->get();
+				
+			// and run with that specific action
+			$this->printEditForm($action);
+			
 			// do navSelect() process to determine nav item selected
 			/// need to update navSelect() into its own `nav` class resource (new \lf\nav)->select(['alias', 'list'])->getNavHTML()
 			// wysiwyg on the selected nav item
@@ -46,8 +55,12 @@ class wysiwyg
 		
 		$param = \lf\requestGet('Param');
 		
+		// load home page if none provided
 		if( is_null( $action ) )
-			$action = (new \LfActions)->byParent(-1)->byPosition(1)->get();
+			$action = (new \LfActions)
+				->byParent(-1)
+				->byPosition(1)
+				->get();
 		
 		include 'view/wysiwyg.frame.php';
 	}
@@ -60,19 +73,26 @@ class wysiwyg
 		(new \lf\cms)->loadLfCss();
 		
 		// load in nav cache
-		$navCache = (new \lf\cms)->getNavCache();
+		$previewNav = (new \lf\cms)->getNavCache();
+		//$replace = [
+			// '%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
+			// '<a ' => '<a target="_parent"'
+		// ];
+		//$previewNav = str_replace(array_keys($replace), array_values($replace), $navCache);
+		
+		(new \lf\cms)->getContent($param[1]);
+		$rendered = (new \lf\template)
+			->addContent($previewNav, 'nav')
+			->setAdmin(false)
+			->render();
+			
 		$replace = [
 			'%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
 			'<a ' => '<a target="_parent"'
 		];
-		$previewNav = str_replace(array_keys($replace), array_values($replace), $navCache);
-		
-		(new \lf\cms)->getContent($param[1]);
-		echo (new \lf\template)
-			->addContent($previewNav, 'nav')
-			->setAdmin(false)
-			->render();
-
+		$rendered = str_replace(array_keys($replace), array_values($replace), $rendered);
+		echo $rendered;
+			
 		
 	//	pre(new \lf\template, 'var_dump');
 		

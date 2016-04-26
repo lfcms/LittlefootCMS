@@ -77,6 +77,7 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 <form id="nav_form" action="%appurl%updatelink/<?=$link['id'];?>" method="post">
 	<div class="tile white">
 		<div class="tile-content">
+			<h4><?=$link['app'];?> - <?=isset($link['section'])?$link['section']:'content';?></h4>
 			<ul class="vlist">
 				<li>
 					App: 
@@ -88,15 +89,10 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 				<li>
 					Location (unsure? put "content"): <input type="text" name="section" placeholder="content" value="<?=isset($link['section'])?$link['section']:'';?>" />
 				</li>
+					<button class="green">Update</button>
+				</li>
 				<li>
-					<div class="row">
-						<div class="col-8">
-							<button class="green">Update</button>
-						</div>
-						<div class="col-4">
-							<a class="button" href="%appurl%">Cancel</a>
-						</div>
-					</div>
+					<a class="button" href="%appurl%">Cancel</a>
 				</li>
 			</ul>
 		</div>

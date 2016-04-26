@@ -22,7 +22,7 @@ include 'view/wysiwyg.action.php';
 
 ?>
 <div class="row">
-	<div class="col-3">
+	<div class="col-2">
 <?php
 // loop through linked apps
 $links = (new \LfLinks)->getAllByInclude($action['id']);
@@ -38,7 +38,8 @@ include 'view/wysiwyg.addlink.php';
 
 ?>
 	</div>
-	<div class="col-9">
+	<div class="col-10">
+		<h3>Preview</h3>
 		<iframe src="<?=\lf\requestGet('AdminUrl');?>wysiwyg/preview/<?=$action['id'];?>"
 			class="light_b" width="100%" height="800px" frameborder="0">
 		</iframe>
