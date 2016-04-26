@@ -5,7 +5,7 @@
 			<?php (new \lf\plugin)->run('pre admin nav'); ?>
 
 			<!-- needs to start with `<li><a class="controls"` so it will match during replacement at index.php -->
-			<?php if(true || $_SESSION['upgrade']): ?>
+			<?php if($_SESSION['upgrade']): ?>
 			<li><a class="green" href="<?=\lf\requestGet('AdminUrl');?>settings/" title="Upgrade Your Littlefoot Installation">
 <i class="fa fa-arrow-circle-up"></i> Upgrade Now!</a></li>
 			<?php endif; ?>
