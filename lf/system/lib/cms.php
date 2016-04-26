@@ -804,8 +804,6 @@ class cms
 			ORDER BY  ABS(parent), ABS(position) ASC
 		");
 		
-		
-		
 		// Assign as parent,position => array()
 		$base_save = NULL;
 		foreach($matches as $row)
@@ -868,6 +866,7 @@ class cms
 			$this->select = $base_save;
 		}
 		
+		// set template to mode = home, if home page is selected
 		$this->testHome();
 		
 		// in case the file doesn't exist

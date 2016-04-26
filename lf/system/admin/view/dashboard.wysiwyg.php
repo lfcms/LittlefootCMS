@@ -1,12 +1,12 @@
 <div class="row">
 	<div class="col-1">
-		Position: <input type="number" name="position" value="<?=$save['position'];?>" />
+		Position: <input type="number" name="position" value="<?=$action['position'];?>" />
 	</div>
 	<div class="col-2">
-		Label: <input type="text" name="label" value="<?=$save['label'];?>" />	
+		Label: <input type="text" name="label" value="<?=$action['label'];?>" />	
 	</div>
 	<div class="col-3">
-		Title: <input type="text" name="title" value="<?php if(isset($save['title'])) echo $save['title']; ?>" />
+		Title: <input type="text" name="title" value="<?php if(isset($action['title'])) echo $action['title']; ?>" />
 	</div>
 	<div class="col-4">
 		Parent:
@@ -19,7 +19,7 @@
 	</div>
 	<div class="col-2">
 		Alias:
-		<input type="text" name="alias" value="<?php if(isset($save['alias'])) echo $save['alias']; ?>" />
+		<input type="text" name="alias" value="<?php if(isset($action['alias'])) echo $action['alias']; ?>" />
 	</div>
 </div>
 <div class="row">
@@ -48,7 +48,7 @@
 		<?php include 'view/dashboard-partial-editform.php'; ?>
 	</div>
 	<div class="col-9">
-		<iframe src="<?=$this->lf->wwwAdmin;?>dashboard/preview/<?=$vars[1];?>"
+		<iframe src="<?=\lf\requestGet('AdminUrl');?>dashboard/preview/<?=$vars[1];?>"
 			class="light_b" width="100%" height="800px" frameborder="0">
 		</iframe>';
 	</div>
