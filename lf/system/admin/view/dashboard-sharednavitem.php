@@ -22,7 +22,7 @@
 				</span>
 			</div>
 			<div class="col-1">
-				<a class="pull-right" href="%appurl%wysiwyg/<?=$action['id'];?>" title="WYSIWYG Editor"><i class="fa fa-pencil-square-o"></i></a>
+				<a class="pull-right" href="<?=\lf\requestGet('AdminUrl');?>wysiwyg/id/<?=$action['id'];?>" title="WYSIWYG Editor"><i class="fa fa-pencil-square-o"></i></a>
 				</span>
 			</div>
 			<div class="col-1">

@@ -16,7 +16,13 @@ class wysiwyg
 			$this->printEditForm();
 			return;
 		}
-		// if alias/ is present,
+		// if we provided an action ID (likely from old dashboard)
+		else if ( $param[0] == 'id' && isset($param[1]) )
+		{
+			$action = (new \LfActions)->getById($param[1]);
+			$this->printEditForm($action);
+		}
+		// if alias/ is used in param,
 		else
 		{
 			$action = $this->actionFromParam();
