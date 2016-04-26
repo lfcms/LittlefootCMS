@@ -8,7 +8,7 @@ if(!isset($prefix)) $prefix="";
 if(isset($actions[$parent])):
 	foreach($actions[$parent] as $action): 
 	
-		$apps = (new \lf\cms)->getLinks($action['id']);
+		//$apps = (new \lf\cms)->getLinks($action['id']);
 		//$theapp = $apps[0]['app']; // support multi app linking... not in use atm
 		
 		/*if(\lf\get('edit') == $action['id'])

@@ -3,8 +3,9 @@
 if(count($actions)):
 	foreach($actions as $action): 
 	
-		$apps = $this->links[$action['id']];
-		$theapp = $apps[0]['app']; // support multi app linking... not in use atm
+		//$apps = (new \lf\cms)->getLinks($action['id']);
+		//pre($apps);
+		//$theapp = $apps[0]['app']; // support multi app linking... not in use atm
 	
 		include 'view/dashboard-sharednavitem.php';
 	/* ?>
