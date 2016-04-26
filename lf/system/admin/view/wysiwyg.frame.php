@@ -14,9 +14,13 @@
 </div>
 
 */
+?>
 
-echo '<h3>Action</h3>';
-	
+<p>Return to <a href="%baseurl%dashboard/main/">dashboard</a></p>
+<h2>WYSIWYG</h2>
+<h3>Action</h3>
+
+<?php
 // print action editor form
 include 'view/wysiwyg.action.php';
 

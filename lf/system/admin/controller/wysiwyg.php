@@ -50,9 +50,6 @@ class wysiwyg
 	
 	private function printEditForm($action = NULL)
 	{
-		echo '<p>Return to <a href="%baseurl%dashboard/main/">dashboard</a></p>';
-		echo '<h2>WYSIWYG</h2>';
-		
 		$param = \lf\requestGet('Param');
 		
 		// load home page if none provided
