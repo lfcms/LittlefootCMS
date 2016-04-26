@@ -37,9 +37,9 @@ class acl
 		
 		// Extract action list
 		preg_match_all('/href="([^"]+)\/"/', $nav, $actions);
-	
+		
 		// List all Users/Groups
-		$result = (new \db\lf_users)
+		$result = (new \LfUsers)
 			->cols('id, display_name, access')
 			->order('display_name, access')
 			->getAll();
