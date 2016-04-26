@@ -19,6 +19,7 @@ class wysiwyg
 		// if alias/ is present,
 		else
 		{
+			echo 'not ready for more alias just yet...';
 			// do navSelect() process to determine nav item selected
 			/// need to update navSelect() into its own `nav` class resource (new \lf\nav)->select(['alias', 'list'])->getNavHTML()
 			// wysiwyg on the selected nav item
@@ -43,14 +44,59 @@ class wysiwyg
 		echo '<p>Return to <a href="%baseurl%dashboard/main/">dashboard</a></p>';
 		echo '<h2>WYSIWYG</h2>';
 		
+		$param = \lf\requestGet('Param');
+		
 		if( is_null( $action ) )
-		{
-			pre( (new \LfActions)->byParent(-1)->byPosition(1)->find() );
-		}
+			$action = (new \LfActions)->byParent(-1)->byPosition(1)->get();
+		
+		include 'view/wysiwyg.frame.php';
 	}
 
 	public function preview()
 	{
+		$param = \lf\requestGet('param');
+		// generate normal frontend
+		
+		(new \lf\cms)->loadLfCss();
+		
+		// load in nav cache
+		$navCache = (new \lf\cms)->getNavCache();
+		$replace = [
+			'%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
+			'<a ' => '<a target="_parent"'
+		];
+		$previewNav = str_replace(array_keys($replace), array_values($replace), $navCache);
+		
+		(new \lf\cms)->getContent($param[1]);
+		echo (new \lf\template)
+			->addContent($previewNav, 'nav')
+			->setAdmin(false)
+			->render();
+
+		
+	//	pre(new \lf\template, 'var_dump');
+		
+			// replace /admin/wysiwyg/preview/ into template nav output
+		// set request to frontend mode and execute apps (getcontent?)
+		
+		
+		// print template
+		
+		
+		
+		exit;
+		return;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		$vars =  \lf\requestGet('Param');
 		
 		$action = (new \LfActions)->findById($vars[1]);
@@ -59,15 +105,20 @@ class wysiwyg
 		
 		$skin = $action->template;
 		if($skin == 'default')
-			$skin = \lf\get('default_skin');
+			$skin = \lf\getSetting('default_skin');
 		
-		ob_start();
-		readfile(LF.'skins/'.$skin.'/index.php');
-		$template = ob_get_clean();
+		
+		//(new \lf\cms)->getContent();
 		
 		ob_start();
 		include LF.'cache/nav.cache.html';
 		$nav = ob_get_clean();
+		
+		(new \lf\template)->addContent('nav', $nav);
+		
+		ob_start();
+		include LF.'skins/'.$skin.'/index.php';
+		$template = ob_get_clean();
 		
 		$content = '<h2>%content%</h2>';
 		
@@ -111,10 +162,10 @@ class wysiwyg
 			),
 			array(
 				$content,
-				$this->lf->wwwInstall.'lf/skins/'.$skin,
+				\lf\requestGet('LfUrl').'skins/'.$skin,
 				$nav,
-				$this->lf->wwwAdmin.'dashboard/preview/'.$vars[1].'/',
-				'<link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/lf.css" /><link rel="stylesheet" href="'.$this->lf->relbase.'lf/system/lib/3rdparty/icons.css" /></head>'
+				\lf\requestGet('AdminUrl').'dashboard/preview/'.$vars[1].'/',
+				'<link rel="stylesheet" href="'.\lf\requestGet('LfUrl').'system/lib/lf.css" /><link rel="stylesheet" href="'.\lf\requestGet('LfUrl').'system/lib/3rdparty/icons.css" /></head>'
 			),
 			$template
 		);

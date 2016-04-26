@@ -189,9 +189,11 @@ class cms
 			// add configured title setting to template title array
 			->setSiteTitle()
 			// Get data for SimpleCMS, or determine requested Nav ID from request $actions
-			->navSelect()					
+			->navSelect();
+			
+		$this
 			// exec SimpleCMS or exec linked apps, save output to template content array
-			->getcontent() //; pre( (new \lf\template)->getTitle() ); $this
+			->getcontent($this->select['id']) //; pre( (new \lf\template)->getTitle() ); $this
 			// add 3rdparty/icons.css for font awesome and lf.css
 			->loadLfCSS()
 			// Add stuff to <head> based on if search engine blocker is enabled in lf_settings
@@ -987,7 +989,7 @@ class cms
 		return $links;
 	}
 	
-	public function getcontent()
+	public function getcontent($includeId)
 	{
 		(new plugin)->run('pre '.__METHOD__);
 		startTimer(__METHOD__);
@@ -1022,7 +1024,7 @@ class cms
 			$sql = "
 				SELECT id, app, ini, section 
 				FROM lf_links
-				WHERE include = '".$this->select['id']."'
+				WHERE include = '".$includeId."'
 					OR include = '%'
 				ORDER BY id
 			";
