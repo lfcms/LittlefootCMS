@@ -1,23 +1,4 @@
-<?php
-
-/**
-
-<div class="row">
-	<div class="col-3">
-		<?php include 'view/dashboard-partial-editform.php'; ?>
-	</div>
-	<div class="col-9">
-		<iframe src="<?=\lf\requestGet('AdminUrl');?>dashboard/preview/<?=$vars[1];?>"
-			class="light_b" width="100%" height="800px" frameborder="0">
-		</iframe>';
-	</div>
-</div>
-
-*/
-?>
-
-<p>Return to <a href="%baseurl%dashboard/main/">dashboard</a></p>
-<h2>WYSIWYG</h2>
+<h2>WYSIWYG Dashboard</h2>
 <h3>Action</h3>
 
 <?php
