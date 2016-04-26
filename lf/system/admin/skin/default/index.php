@@ -31,10 +31,10 @@
 					}
 				);
 			});
-		</script (http://december.com/html/4/element/script.html)>
+		</script>
 	</head>
 
-	<body class="off-white">
+	<body class="off-white contain">
 		<div class="wrapper userbar dark_gray light light_bb">
 			<div class="wide_container h50">
 				<div class="row no_martop no_marbot">
@@ -57,8 +57,6 @@
 							<a class="blue button" href="<?=\lf\requestGet('AdminUrl');?>settings/">Upgrade Now!</a>
 							<?php endif; ?>
 							</span>
-							
-							
 						</div>
 					</div>
 				</div>
@@ -66,10 +64,22 @@
 		</div>
 		<div class="wide_container d50">
 			<div class="row no_martop">
-				<div class="col-2 dark_gray">
-					<nav>
+				<div class="col-2 dark_gray no_pad">
+					<nav class="admin_main_nav">
 						<?=$this->printContent('nav');?>
 					</nav>
+					<nav class="mobile_nav">
+							<input type="checkbox" id="mobile-nav" name="mobile-nav" class="dropdown marbot" />
+							<label for="mobile-nav" class="dark_gray">
+									<span class="open-content pull-right light pad fxlarge"><i class="fa fa-bars"></i></i></span>
+									<span class="close-content pull-right red_fg pad fxlarge"><i class="fa fa-bars"></i></span>
+									<div class="drop-content clear">
+											<nav class="vlist dark_gray">
+												<?=$this->printContent('nav');?>
+											</nav>
+									</div>
+							</label>
+            </nav>
 				</div>
 				<div class="col-10">
 					<div id="controller-<?php \lf\requestGet('ActionUrl'); ?>">

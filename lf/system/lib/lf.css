@@ -318,7 +318,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .pad {
-	padding: 0.618rem !important;
+	padding: 15px !important;
 }
 
 .lf .rounded {
@@ -650,23 +650,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .main_nav > ul > li:hover > ul li ul li {
-	/*border-left: 1px dashed rgba(100, 100, 100, 0.5);*/
 	padding-left: 5px;
 	font-size: 0.9rem;
-}
-
-/*.lf .main_nav > ul > li:hover > ul li ul li:first-child {
-	border-top: 1px dashed rgba(100, 100, 100, 0.5);
-	padding-left: 5px;
-}
-
-.lf .main_nav > ul > li:hover > ul li ul li:last-child {
-	border-bottom: 1px dashed rgba(100, 100, 100, 0.5);
-	padding-left: 5px;
-}*/
-
-.lf .main_nav > ul > li > ul li:hover a {
-    /*opacity: 0.8;*/
 }
 
 .lf nav.vlist li,
@@ -788,7 +773,7 @@ html.lf {
 	color: #1195AA;
 }
 html.lf, .lf body {
-	height: 100%;
+	/*height: 100%;*/
 	width: 100%;
 }
 
@@ -1075,7 +1060,8 @@ and (max-width : 850px) {
 	}
 	
 	/*Mobile - Nav*/
-	.lf nav.main_nav {
+	.lf nav.main_nav,
+	.lf nav.admin_main_nav {
 		display: none;
 	}
 	

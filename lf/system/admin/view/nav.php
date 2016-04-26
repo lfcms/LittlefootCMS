@@ -1,6 +1,6 @@
-<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right gray_fg"></i></span>
+<span class="block light_gray_fg martop marbot pad fxlarge"><i class="fa fa-sliders"></i> Control <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row">
-	<div class="col-12 no_pad">
+	<div class="col-12">
 		<ul class="efvlist flarge light_a">
 			<?php (new \lf\plugin)->run('pre admin nav'); ?>
 
@@ -29,9 +29,9 @@
 
 <?php if( \lf\getSetting('simple_cms') == '_lfcms'): ?>
 
-<span class="light_gray_fg martop marbot block fxlarge"><i class="fa fa-th"></i> App Admin <i class="fa fa-caret-down pull-right gray_fg"></i></span>
+<span class="block light_gray_fg martop marbot pad fxlarge"><i class="fa fa-th"></i> App Admin <i class="fa fa-caret-down pull-right gray_fg"></i></span>
 <div class="row no_marbot">
-	<div class="col-12 no_pad">
+	<div class="col-12">
 		<ul class="efvlist flarge light_a">
 			<?php
 			
