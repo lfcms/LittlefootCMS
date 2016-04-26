@@ -405,6 +405,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .h700 { height:700px !important; }
 .lf .h750 { height:750px !important; }
 
+.admin_drop,
 .lf .d50,
 .lf .d75,
 .lf .d100,
@@ -424,6 +425,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	position: relative;
 }
 
+.lf .admin_drop,
 .lf .d50 { top:50px !important; }
 .lf .d75 { top:75px !important; }
 .lf .d100 { top:100px !important; }
@@ -612,7 +614,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf nav a {
 	display: block;
 	text-decoration: none;
-	padding: 0.618rem;
+	padding: 15px;
 }
 
 .lf .main_nav {
@@ -791,7 +793,7 @@ html.lf, .lf body {
 
 /*Userbar*/
 .userbar {
-	font-size: 1.3rem;
+	font-size: 20px;
 	position: fixed;
 	width: 100%;
 	z-index: 999;
@@ -803,6 +805,7 @@ html.lf, .lf body {
 	padding: 15px 0;
 	color: #AAA;
 	transition: color 0.25s;
+	font-size: 20px;
 }
 
 .userbar a:hover {
@@ -810,7 +813,7 @@ html.lf, .lf body {
 }
 
 #admin_greeting,
-#admin_greeting_mobile {
+#admin_title_mobile {
 	padding: 15px 0;
 }
 
@@ -1048,7 +1051,7 @@ html.lf, .lf body {
 
 /*.lf select.menu,*/
 .lf nav.mobile_nav,
-.lf #admin_greeting_mobile {
+.lf #admin_title_mobile {
 	display: none;
 }
 
@@ -1072,14 +1075,16 @@ and (max-width : 850px) {
 	/*Mobile - Nav*/
 	.lf nav.main_nav,
 	.lf nav.admin_main_nav,
-	.lf #admin_greeting {
+	.lf #admin_title {
 		display: none;
 	}
 	
 	.lf nav.mobile_nav,
-	.lf #admin_greeting_mobile {
+	.lf #admin_title_mobile {
 		display: block;
 	}
+	
+	.lf .admin_drop { top:100px !important; }
 	
 	/*Mobile - Basics */
 	.lf {
