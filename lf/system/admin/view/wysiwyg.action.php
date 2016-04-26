@@ -72,7 +72,7 @@ foreach(scandir($pwd) as $file)
 ?>
 <div class="white tile">
 	<div class="tile-header">
-		<h3>Edit Navigation Item</h3>
+		<h3 title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit Navigation Item</h3>
 	</div>
 	<div class="tile-content">
 		<div class="row">
