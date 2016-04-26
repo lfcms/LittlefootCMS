@@ -1235,9 +1235,9 @@ class orm implements \IteratorAggregate
 			$sql['joins'] = implode(' ', $this->joins);
 
 		if($this->where != '')
-			$sql[] = 'WHERE '.$this->where;
+			$sql['where'] = 'WHERE '.$this->where;
 		else if(count($this->conditions))
-			$sql[] = 'WHERE '.implode(' AND ', $this->conditions);
+			$sql['where'] = 'WHERE '.implode(' AND ', $this->conditions);
 
 		$sql['order'] = $this->order;
 		$sql['limit'] = $this->limit;
