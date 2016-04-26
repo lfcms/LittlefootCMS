@@ -293,6 +293,14 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	margin-bottom: 1.414rem !important;
 }
 
+.lf .right_space {
+	margin-right: 15px;
+}
+
+.lf .left_space {
+	margin-left: 15px;
+}
+
 .lf .no_mar {
 	margin: 0 !important;
 }
@@ -318,7 +326,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .pad {
-	padding: 0.618rem !important;
+	padding: 15px !important;
 }
 
 .lf .rounded {
@@ -397,6 +405,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf .h700 { height:700px !important; }
 .lf .h750 { height:750px !important; }
 
+.admin_drop,
 .lf .d50,
 .lf .d75,
 .lf .d100,
@@ -416,6 +425,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 	position: relative;
 }
 
+.lf .admin_drop,
 .lf .d50 { top:50px !important; }
 .lf .d75 { top:75px !important; }
 .lf .d100 { top:100px !important; }
@@ -604,7 +614,7 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 .lf nav a {
 	display: block;
 	text-decoration: none;
-	padding: 0.618rem;
+	padding: 15px;
 }
 
 .lf .main_nav {
@@ -650,23 +660,8 @@ footer, .lf header, .lf main, .lf hgroup, .lf menu, .lf nav, .lf section {
 }
 
 .lf .main_nav > ul > li:hover > ul li ul li {
-	/*border-left: 1px dashed rgba(100, 100, 100, 0.5);*/
 	padding-left: 5px;
 	font-size: 0.9rem;
-}
-
-/*.lf .main_nav > ul > li:hover > ul li ul li:first-child {
-	border-top: 1px dashed rgba(100, 100, 100, 0.5);
-	padding-left: 5px;
-}
-
-.lf .main_nav > ul > li:hover > ul li ul li:last-child {
-	border-bottom: 1px dashed rgba(100, 100, 100, 0.5);
-	padding-left: 5px;
-}*/
-
-.lf .main_nav > ul > li > ul li:hover a {
-    /*opacity: 0.8;*/
 }
 
 .lf nav.vlist li,
@@ -788,7 +783,7 @@ html.lf {
 	color: #1195AA;
 }
 html.lf, .lf body {
-	height: 100%;
+	/*height: 100%;*/
 	width: 100%;
 }
 
@@ -798,10 +793,11 @@ html.lf, .lf body {
 
 /*Userbar*/
 .userbar {
-	font-size: 1.3rem;
+	font-size: 20px;
 	position: fixed;
 	width: 100%;
 	z-index: 999;
+	max-height:100%;
 }
 
 .userbar a {
@@ -809,15 +805,16 @@ html.lf, .lf body {
 	padding: 15px 0;
 	color: #AAA;
 	transition: color 0.25s;
+	font-size: 20px;
 }
 
 .userbar a:hover {
 	color: #fff;
 }
 
-#admin_greeting {
-	margin-top: 15px;
-	margin-right: 15px;
+#admin_greeting,
+#admin_title_mobile {
+	padding: 15px 0;
 }
 
 /* Login */
@@ -1053,7 +1050,8 @@ html.lf, .lf body {
 /*Mobile*/
 
 /*.lf select.menu,*/
-.lf nav.mobile_nav {
+.lf nav.mobile_nav,
+.lf #admin_title_mobile {
 	display: none;
 }
 
@@ -1075,13 +1073,18 @@ and (max-width : 850px) {
 	}
 	
 	/*Mobile - Nav*/
-	.lf nav.main_nav {
+	.lf nav.main_nav,
+	.lf nav.admin_main_nav,
+	.lf #admin_title {
 		display: none;
 	}
 	
-	.lf nav.mobile_nav {
+	.lf nav.mobile_nav,
+	.lf #admin_title_mobile {
 		display: block;
 	}
+	
+	.lf .admin_drop { top:100px !important; }
 	
 	/*Mobile - Basics */
 	.lf {
