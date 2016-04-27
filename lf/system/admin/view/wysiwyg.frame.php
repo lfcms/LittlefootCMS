@@ -1,4 +1,4 @@
-<h2 title="WYSIWYG Website Editor"><i class="fa fa-dashboard"></i> Dashboard</h2>
+<h2>WYSIWYG Dashboard</h2>
 
 <?php
 
@@ -15,11 +15,7 @@ $previewNav = str_replace(array_keys($replace), array_values($replace), $preview
 
 <div class="row">
 	<div class="col-9">
-		<div class="row no_martop">
-			<div class="col-12">
-				<nav class="light_b main_nav white"><?=$previewNav;?></nav>
-			</div>
-		</div>
+		<nav class="light_b main_nav white"><?=$previewNav;?></nav>
 		<?php include 'view/wysiwyg.action.php'; ?>
 	</div>
 	<div class="col-3">
@@ -27,7 +23,8 @@ $previewNav = str_replace(array_keys($replace), array_values($replace), $preview
 	</div>
 </div>
 
-<h3 title="Apps Linked to This Nav Item"><i class="fa fa-link"></i> Linked Apps</h3>
+
+<h3>Linked Apps</h3>
 <?php
 
 // loop through linked apps
@@ -43,13 +40,15 @@ foreach($links as $link)
 	
 echo '</div>';
 
+$iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.implode('/', $param);
+
 ?>
 
 <div class="row">
 	<div class="col-9">
-		<h3 title="Preview Your Site and Make Updates in Realtime"><i class="fa fa-eye"></i> Preview <a href="<?=\lf\requestGet('AdminUrl');?>wysiwyg/preview/<?=$action['id'];?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-arrows-alt"></i></a></h3>
-		<iframe src="<?=\lf\requestGet('AdminUrl');?>wysiwyg/preview/<?=$action['id'];?>"
-			class="white light_b" width="100%" height="700px" frameborder="0">
+		<h3>Preview <a href="<?=$iframeUrl?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-arrows-alt"></i></a></h3>
+		<iframe src="<?=$iframeUrl?>"
+			class="white light_b" width="100%" height="100%" frameborder="0">
 		</iframe>
 	
 	</div>
