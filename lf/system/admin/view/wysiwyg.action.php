@@ -72,14 +72,14 @@ foreach(scandir($pwd) as $file)
 ?>
 <div class="white tile">
 	<div class="tile-header">
-		<h3 title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit Navigation Item</h3>
+		<h5 class="fxlarge" title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit : <?=$action['label'];?> <a href="" class="x pull-right" title="Delete Nav Item"><i class="fa fa-trash-o"></i></a></h5>
 	</div>
 	<div class="tile-content">
 		<div class="row">
-			<div class="col-1">
+			<div class="col-2">
 				Position: <input type="number" name="position" value="<?=$action['position'];?>" />
 			</div>
-			<div class="col-8">
+			<div class="col-7">
 				Title: <input type="text" name="title" value="<?php if(isset($action['title'])) echo $action['title']; ?>" />
 			</div>
 			<div class="col-3">
@@ -108,13 +108,13 @@ foreach(scandir($pwd) as $file)
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-2">
-				&nbsp;
+			<div class="col-4">
 				<button class="green">Update</button>
 			</div>
-			<div class="col-2">
-				&nbsp;
+			<div class="col-4">
 				<a class="button" href="%appurl%">Cancel</a>
+			</div>
+			<div class="col-4">
 			</div>
 		</div>
 	</div>
