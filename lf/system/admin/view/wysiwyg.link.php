@@ -77,11 +77,11 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 <form id="nav_form" action="%appurl%updatelink/<?=$link['id'];?>" method="post">
 	<div class="tile white">
 		<div class="tile-header">
-			<h4>
-				<?=$link['app'];?> 
-				<span class="pull-right"><i class="fa fa-trash-o" aria-hidden="true"></i></span>
+			<h5 class="fxlarge">
 				<i class="fa fa-arrow-right" aria-hidden="true"></i>
-			</h4>
+				<?=$link['app'];?> 
+				<a href="" class="pull-right x"><i class="fa fa-trash-o"></i></a>
+			</h5>
 		</div>
 		<div class="tile-content">
 			<div class="row">

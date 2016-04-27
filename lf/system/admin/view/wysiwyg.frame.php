@@ -12,7 +12,9 @@ $previewNav = str_replace(array_keys($replace), array_values($replace), $preview
 
 ?>
 
-
+<h3>
+	<i class="fa fa-compass"></i> Navigation
+</h3>
 <div class="row">
 	<div class="col-9">
 		<nav class="light_b main_nav white"><?=$previewNav;?></nav>
@@ -23,8 +25,8 @@ $previewNav = str_replace(array_keys($replace), array_values($replace), $preview
 	</div>
 </div>
 
+<h4 title="Apps Linked to This Nav Item"><i class="fa fa-link"></i> Linked Apps</h4>
 
-<h3>Linked Apps</h3>
 <?php
 
 // loop through linked apps
@@ -46,9 +48,9 @@ $iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.imp
 
 <div class="row">
 	<div class="col-9">
-		<h3>Preview <a href="<?=$iframeUrl?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-arrows-alt"></i></a></h3>
+		<h4 title="Preview Your Site and Make Updates in Realtime"><i class="fa fa-eye"></i> Preview <a href="<?=$iframeUrl?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-arrows-alt"></i></a></h4>
 		<iframe src="<?=$iframeUrl?>"
-			class="white light_b" width="100%" height="100%" frameborder="0">
+			class="white light_b" width="100%" height="700px" frameborder="0">
 		</iframe>
 	
 	</div>
