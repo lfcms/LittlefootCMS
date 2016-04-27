@@ -11,10 +11,11 @@
 			<?php endif; ?>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/dashboard/"><i class="fa fa-dashboard"></i><span><?=
 				\lf\getSetting('simple_cms')=='_lfcms'
-					?' Dashboard'
+					?' Dashboard_Old'
 					:ucfirst(\lf\getSetting('simple_cms')).' Admin';
 				?></span></a></li>
 			<!--<li><a class="media" href="<?=\lf\requestGet('IndexUrl');?>admin/media/"><span>Media</span></a></li>-->
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/wysiwyg/"><i class="fa fa-dashboard"></i><span> Dashboard</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/users/"><i class="fa fa-users"></i><span> Users</span></a></li>
