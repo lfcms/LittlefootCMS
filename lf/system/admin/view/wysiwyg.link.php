@@ -80,7 +80,7 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 			<h5 class="fxlarge">
 				<i class="fa fa-arrow-right" aria-hidden="true"></i>
 				<?=$link['app'];?> 
-				<a href="" class="pull-right x"><i class="fa fa-trash-o"></i></a>
+				<a href="" class="pull-right x light_gray_fg"><i class="fa fa-trash-o"></i></a>
 			</h5>
 		</div>
 		<div class="tile-content">

@@ -72,7 +72,7 @@ foreach(scandir($pwd) as $file)
 ?>
 <div class="white tile">
 	<div class="tile-header">
-		<h5 class="fxlarge" title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit : <?=$action['label'];?> <a href="" class="x pull-right" title="Delete Nav Item"><i class="fa fa-trash-o"></i></a></h5>
+		<h5 class="fxlarge" title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit : <?=$action['label'];?> <a href="" class="x pull-right light_gray_fg" title="Delete Nav Item"><i class="fa fa-trash-o"></i></a></h5>
 	</div>
 	<div class="tile-content">
 		<div class="row">
