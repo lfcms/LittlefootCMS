@@ -147,17 +147,35 @@ class wysiwyg
 		// ];
 		//$previewNav = str_replace(array_keys($replace), array_values($replace), $navCache);
 		
+		
+		
+		$replace = [
+			'%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
+			'<a ' => '<a target="_parent"'
+		];
+		
+		$previewNav = str_replace(array_keys($replace), array_values($replace), $previewNav);
+		
+		
+		
+		// new request
+		$request = (new \lf\request)->load()
+			// Drop wysiwyg into Cwd (doesnt affect anything really...)
+			->actionDrop()
+			// set param as what $this controller method received
+			->paramShift(2)
+			//->setAction([])
+			->save();
+		
 		(new \lf\cms)->getContent($param[1]);
+		
 		$rendered = (new \lf\template)
 			->addContent($previewNav, 'nav')
 			->setAdmin(false)
 			->render();
 			
-		$replace = [
-			'%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
-			'<a ' => '<a target="_parent"'
-		];
-		$rendered = str_replace(array_keys($replace), array_values($replace), $rendered);
+		
+		//$rendered = str_replace(array_keys($replace), array_values($replace), $rendered);
 		echo $rendered;
 			
 		

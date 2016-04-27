@@ -186,6 +186,24 @@ class request
 		return $this;
 	}
 	
+	public function setCwd($newCwd)
+	{
+		$this->pieces['cwd'] = $newCwd;
+		return $this;
+	}
+	
+	public function setAction($newAction)
+	{
+		$this->pieces['action'] = $newAction;
+		return $this;
+	}
+	
+	public function setParam($newParam)
+	{
+		$this->pieces['param'] = $newParam;
+		return $this;
+	}
+	
 	/**
 	 * Return private `pieces`, but you should avoid relying on this.
 	 */
