@@ -17,7 +17,11 @@ $previewNav = str_replace(array_keys($replace), array_values($replace), $preview
 </h3>
 <div class="row">
 	<div class="col-9">
-		<nav class="light_b main_nav white"><?=$previewNav;?></nav>
+		<div class="row no_martop">
+			<div class="col-12">
+				<nav class="light_b main_nav white"><?=$previewNav;?></nav>
+			</div>
+		</div>
 		<?php include 'view/wysiwyg.action.php'; ?>
 	</div>
 	<div class="col-3">
