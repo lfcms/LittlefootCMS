@@ -38,10 +38,17 @@ class wysiwyg
 	
 	public function postNavEdit()
 	{
-		echo '<h3>Nav Edit</h3>';
-		pre($_POST);
+		$param = \lf\requestGet('Param');
 		
-		// 
+		if( ! isset( $param[1] ) )
+		{
+			notice('<div class="error">No ID specified in param[1]</div>');
+			redirect302();
+		}
+		
+		(new \lf\nav)->updateAction($param[1], $_POST);
+		notice('<div class="success">Action updated</div>');
+		redirect302( \lf\requestGet('ActionUrl').'id/'.$param[1] ); 
 	}
 	
 	public function postLinkEdit()

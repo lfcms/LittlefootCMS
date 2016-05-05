@@ -60,6 +60,8 @@ require_once 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usa
 require_once 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
 require_once 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
 require_once 'system/lib/template.php'; // Template
+require_once 'system/lib/nav.php'; // Navigation management
+
 require_once 'system/lib/littlefoot.php'; 	// LEGACY Request, Auth, Nav, Content, Render
 
 // Add local lib paths to include_path

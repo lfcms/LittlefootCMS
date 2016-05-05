@@ -1,5 +1,7 @@
 <h2>WYSIWYG Dashboard</h2>
 
+<?=notice();?>
+
 <?php
 
 // load in nav cache

@@ -75,7 +75,7 @@ foreach(scandir($pwd) as $file)
 		<h5 class="fxlarge" title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit : <?=$action['label'];?> <a href="" class="x pull-right light_gray_fg" title="Delete Nav Item"><i class="fa fa-trash-o"></i></a></h5>
 	</div>
 	<div class="tile-content">
-		<form action="<?=\lf\requestGet('ActionUrl');?>postNavEdit" method="post">
+		<form action="<?=\lf\requestGet('ActionUrl');?>postNavEdit/<?=$action['id'];?>" method="post">
 			<div class="row">
 				<div class="col-2">
 					Position: <input type="number" name="position" value="<?=$action['position'];?>" />
@@ -96,14 +96,13 @@ foreach(scandir($pwd) as $file)
 					<select name="parent">
 						<option value="-1"><?=\lf\requestGet('SubdirUrl');?></option>
 						<optgroup label="Select Parent">
-							%subalias% <!-- this is on the nav partial at the top -->
+							<?=(new \lf\nav)->parentOptions();?>
 						</optgroup>
 					</select>
 				</div>
 				<div class="col-2">
 					Alias:
 					<input type="text" name="alias" value="<?php if(isset($action['alias'])) echo $action['alias']; ?>" />
-					<input type="hidden" name="id" value="<?=$action['id'];?>" />
 				</div>
 				<div class="col-4">
 					Template: 

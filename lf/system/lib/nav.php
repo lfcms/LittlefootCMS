@@ -2,65 +2,82 @@
 
 namespace lf;
 
+/**
+ * Navigation management
+ */
 class nav
 {
-	public function refreshCache()
+	public function createLink($data)
 	{
-		// Grab all possible actions
-		$actions = (new \lf\orm)->fetchall("
-			SELECT * FROM lf_actions 
-			WHERE position != 0 
-			ORDER BY ABS(parent), ABS(position) ASC");
-		// $actions = (new \LfActions)
-			// ->order('ABS(parent), ABS(position)', 'ASC')
-			// ->findByPosition('!=', 0)
-			// ->matrix(['parent', 'position']);
+		(new \LfLinks)->insertArray($data);
+		return $this;
+	}
+	
+	public function updateLink($id, $data)
+	{
+		(new \LfLinks)->updateById($id, $data);
+		return $this;
+	}
+	
+	public function createAction($data)
+	{
+		$originalData = $data;
+		$data['parent'] = -1;
+		$data['position'] = 0; // set hidden upon insert. let the updateAction() function add it where it really goes
+		$newId = (new \LfActions)->insertArray($data);
+		$this->updateAction($newId, $originalData);
+		return $this;
+	}
+	
+	// take a REST approach
+	// http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
+	public function updateAction($id, $data)
+	{
+		// if position and parent is specified
+		if( isset( $data['position'], $data['parent']) )
+		{
+			// apply position update
+			$this->setPosition($id, $data['position'], $data['parent']);
+		}
 		
-		// Make a matrix sorted by parent and position
-		$menu = array();
-		foreach($actions as $action)
-			$menu[$action['parent']][$action['position']] = $action;
+		// parse out positional update
+		unset($data['position'], $data['parent']);
 		
-		$nav = $this->buildHtml($menu);
-		if(!is_dir(LF.'cache')) 
-			mkdir(LF.'cache', 0755, true); // make if not exists
-		file_put_contents(ROOT.'cache/nav.cache.html', $nav);
+		// update the nav item
+		(new \LfActions)->updateById($id, $data);
+		
+		// update nav.cache.html after making the update
+		$this->refreshCache();
 		
 		return $this;
 	}
 	
-	private function buildHtml($menu, $parent = -1, $prefix = '')
+	public function parentOptions()
 	{
-		$items = $menu[$parent];
-		
-		$html = '<ul>';
-		if($items)
-		foreach($items as $item) // loop through the items
+		$actions = (new \LfActions)
+			->byPosition('!=', 0)
+			->order('parent, position', 'ASC')
+			->find()
+			->matrix(['parent','position']);
+			
+		return $this->recurseParentOptions($actions);
+	}
+	
+	private function recurseParentOptions($actions, $parent = -1, $prefix = '')
+	{
+		$html = '';
+		foreach( $actions[$parent] as $position => $action )
 		{
-			$newprefix = $prefix;
-			$newprefix[] = $item['alias'];
-			
-			// Generate printable request in/this/form
-			$link = implode('/',$newprefix);
-			if(strlen($link) != 0) 
-				$link .= '/';
-			
-			$icon = '';
-			if(isset($menu[$item['id']]))
-				$icon = '<i class="fa fa-caret-down fsmall"></i>';
-			
-			// and generate the <li></li> element content
-			$html .= '<li><a href="%baseurl%'.$link.'" title="'.$item['title'].'">'.$item['label'].' '.$icon.'</a>';
-			
-			// Process any submenus before closing <li>
-			if(isset($menu[$item['id']]))
-				$html .= $this->buildHtml($menu, $item['id'], $newprefix);
-				
-			$html .= '</li>';
+			$html .= '<option value="'.$action['id'].'">'.$prefix.$action['position'].'. '.$action['label'].'</option>';
+			if( isset( $actions[ $action['id'] ] ) )
+				$html .= $this->recurseParentOptions($actions, $action['id'], $prefix.$action['position'].'.');
 		}
-		$html .= '</ul>';
-		
 		return $html;
+	}
+	
+	public function getCache()
+	{
+		return file_get_contents( LF.'cache/nav.cache.html');
 	}
 	
 	public function setPosition($id, $destPosition, $destParent)
@@ -157,39 +174,62 @@ class nav
 		return $this;
 	}
 	
-	// take a REST approach
-	// http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
-	public function updateAction($id, $data)
+	public function refreshCache()
 	{
-		// if position and parent is specified
-		if( isset( $data['position'], $data['parent']) )
+		// Grab all possible actions
+		$actions = (new \lf\orm)->fetchall("
+			SELECT * FROM lf_actions 
+			WHERE position != 0 
+			ORDER BY ABS(parent), ABS(position) ASC");
+		// $actions = (new \LfActions)
+			// ->order('ABS(parent), ABS(position)', 'ASC')
+			// ->findByPosition('!=', 0)
+			// ->matrix(['parent', 'position']);
+		
+		// Make a matrix sorted by parent and position
+		$menu = array();
+		foreach($actions as $action)
+			$menu[$action['parent']][$action['position']] = $action;
+		
+		$nav = $this->buildHtml($menu);
+		if(!is_dir(LF.'cache')) 
+			mkdir(LF.'cache', 0755, true); // make if not exists
+		file_put_contents(ROOT.'cache/nav.cache.html', $nav);
+		
+		return $this;
+	}
+	
+	private function buildHtml($menu, $parent = -1, $prefix = '')
+	{
+		$items = $menu[$parent];
+		
+		$html = '<ul>';
+		if($items)
+		foreach($items as $item) // loop through the items
 		{
-			// apply position update
-			$this->setPosition($id, $data['position'], $data['parent']);
+			$newprefix = $prefix;
+			$newprefix[] = $item['alias'];
+			
+			// Generate printable request in/this/form
+			$link = implode('/',$newprefix);
+			if(strlen($link) != 0) 
+				$link .= '/';
+			
+			$icon = '';
+			if(isset($menu[$item['id']]))
+				$icon = '<i class="fa fa-caret-down fsmall"></i>';
+			
+			// and generate the <li></li> element content
+			$html .= '<li><a href="%baseurl%'.$link.'" title="'.$item['title'].'">'.$item['label'].' '.$icon.'</a>';
+			
+			// Process any submenus before closing <li>
+			if(isset($menu[$item['id']]))
+				$html .= $this->buildHtml($menu, $item['id'], $newprefix);
+				
+			$html .= '</li>';
 		}
+		$html .= '</ul>';
 		
-		// parse out positional update
-		unset($data['position'], $data['parent']);
-		
-		// update the nav item
-		(new \LfActions)->updateById($id, $data);
-		$this->updatenavcache();
-		return $this;
-	}
-	
-	public function createAction($data)
-	{
-		$originalData = $data;
-		$data['parent'] = -1;
-		$data['position'] = 0; // set hidden at first, this is a lazy approach to inserting a new navigation item 
-		$newId = (new \LfActions)->insertArray($data);
-		$this->updateAction($newId, $originalData);
-		return $this;
-	}
-	
-	public function updateLink($id, $data)
-	{
-		(new \LfLinks)->updateById($id, $data);
-		return $this;
+		return $html;
 	}
 }
