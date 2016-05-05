@@ -194,11 +194,11 @@ class orm implements \IteratorAggregate
 	
 	private function fromSession()
 	{
-		$mysqli = NULL;
-		if( isset( $_SESSION['db'] ) )
-			$mysqli = $_SESSION['db'];
+		// $mysqli = NULL;
+		// if( isset( $_SESSION['db'] ) )
+			// $mysqli = $_SESSION['db'];
 		
-		$this->mysqli = $mysqli;
+		$this->mysqli = mem::get('db');
 		
 		return $this;
 	}
@@ -206,7 +206,8 @@ class orm implements \IteratorAggregate
 	private function toSession()
 	{
 		// save database object to session
-		$_SESSION['db'] = $this->mysqli;
+		//$_SESSION['db'] = $this->mysqli;
+		mem::set('db', $this->mysqli);
 		
 		return $this;
 	}
@@ -1415,17 +1416,14 @@ class orm implements \IteratorAggregate
 	}
 }
 
-// My nasty solution to ensuring $_SESSION['db'] is cleared
-// while allowing the orm class to use it without
+/** My nasty solution to closing the db connection after page execution is completed */
 class ___LastSay
 {
 	public function __destruct()
 	{
-		if(isset($_SESSION['db']) && is_a($_SESSION['db'],'mysqli') )
-		{ 
-			$_SESSION['db']->close();
-			unset($_SESSION['db']);
-		}
+		$db = mem::get('db');
+		if( ! is_null( $db ) )
+			$db->close();
 	}
 }
 $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();

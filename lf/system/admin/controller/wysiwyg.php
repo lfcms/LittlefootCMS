@@ -36,6 +36,38 @@ class wysiwyg
 		}
 	}
 	
+	public function postNavEdit()
+	{
+		echo '<h3>Nav Edit</h3>';
+		pre($_POST);
+		
+		// 
+	}
+	
+	public function postLinkEdit()
+	{
+		pre($_POST);
+	}
+	
+	public function postAddNew()
+	{
+		pre($_POST);
+	}
+	
+	private function printEditForm($action = NULL)
+	{
+		$param = \lf\requestGet('Param');
+		
+		// load home page if none provided
+		if( is_null( $action ) )
+			$action = (new \LfActions)
+				->byParent(-1)
+				->byPosition(1)
+				->get();
+		
+		include 'view/wysiwyg.frame.php';
+	}
+	
 	private function actionFromParam()
 	{
 		// determines current action request
@@ -116,20 +148,6 @@ class wysiwyg
 		}
 		
 		return $select;
-	}
-	
-	private function printEditForm($action = NULL)
-	{
-		$param = \lf\requestGet('Param');
-		
-		// load home page if none provided
-		if( is_null( $action ) )
-			$action = (new \LfActions)
-				->byParent(-1)
-				->byPosition(1)
-				->get();
-		
-		include 'view/wysiwyg.frame.php';
 	}
 
 	public function preview()

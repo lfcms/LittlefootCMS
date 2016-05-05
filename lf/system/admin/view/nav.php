@@ -49,6 +49,7 @@
 				
 				if(\lf\requestGet('Action')[0] = 'apps' 
 					&& ( isset(\lf\requestGet('Action')[1]) 
+						&& 'apps' == \lf\requestGet('Action')[0] 
 						&& $shortcut == \lf\requestGet('Action')[1] 
 					)
 				)

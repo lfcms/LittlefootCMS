@@ -50,6 +50,7 @@ $iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.imp
 
 ?>
 
+<a id="preview"></a>
 <div class="row">
 	<div class="col-9">
 		<h4 title="Preview Your Site and Make Updates in Realtime" class="no_martop"><i class="fa fa-eye"></i> Preview <a href="<?=$iframeUrl?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-arrows-alt"></i></a></h4>

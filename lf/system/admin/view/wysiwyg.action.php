@@ -75,47 +75,53 @@ foreach(scandir($pwd) as $file)
 		<h5 class="fxlarge" title="Edit the Selected Nav Item"><i class="fa fa-edit"></i> Edit : <?=$action['label'];?> <a href="" class="x pull-right light_gray_fg" title="Delete Nav Item"><i class="fa fa-trash-o"></i></a></h5>
 	</div>
 	<div class="tile-content">
-		<div class="row">
-			<div class="col-2">
-				Position: <input type="number" name="position" value="<?=$action['position'];?>" />
+		<form action="<?=\lf\requestGet('ActionUrl');?>postNavEdit" method="post">
+			<div class="row">
+				<div class="col-2">
+					Position: <input type="number" name="position" value="<?=$action['position'];?>" />
+				</div>
+				<div class="col-7">
+					Title: <input type="text" name="title" value="<?php 
+						if(isset($action['title'])) 
+							echo $action['title']; 
+						?>" />
+				</div>
+				<div class="col-3">
+					Label: <input type="text" name="label" value="<?=$action['label'];?>" />	
+				</div>
 			</div>
-			<div class="col-7">
-				Title: <input type="text" name="title" value="<?php if(isset($action['title'])) echo $action['title']; ?>" />
+			<div class="row">
+				<div class="col-6">
+					Parent:
+					<select name="parent">
+						<option value="-1"><?=\lf\requestGet('SubdirUrl');?></option>
+						<optgroup label="Select Parent">
+							%subalias% <!-- this is on the nav partial at the top -->
+						</optgroup>
+					</select>
+				</div>
+				<div class="col-2">
+					Alias:
+					<input type="text" name="alias" value="<?php if(isset($action['alias'])) echo $action['alias']; ?>" />
+					<input type="hidden" name="id" value="<?=$action['id'];?>" />
+				</div>
+				<div class="col-4">
+					Template: 
+					<select name="template">
+						<?=$template_select;?>
+					</select>
+				</div>
 			</div>
-			<div class="col-3">
-				Label: <input type="text" name="label" value="<?=$action['label'];?>" />	
+			<div class="row">
+				<div class="col-4">
+					<button class="green">Update</button>
+				</div>
+				<div class="col-4">
+					<a class="button" href="%appurl%">Cancel</a>
+				</div>
+				<div class="col-4">
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-6">
-				Parent:
-				<select name="parent">
-					<option value="-1"><?=\lf\requestGet('SubdirUrl');?></option>
-					<optgroup label="Select Parent">
-						%subalias% <!-- this is on the nav partial at the top -->
-					</optgroup>
-				</select>
-			</div>
-			<div class="col-2">
-				Alias:
-				<input type="text" name="alias" value="<?php if(isset($action['alias'])) echo $action['alias']; ?>" />
-			</div>
-			<div class="col-4">
-				Template: 
-				<select name="template">
-					<?=$template_select;?>
-				</select>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-4">
-				<button class="green">Update</button>
-			</div>
-			<div class="col-4">
-				<a class="button" href="%appurl%">Cancel</a>
-			</div>
-			<div class="col-4">
-			</div>
-		</div>
+		</form>
 	</div>
 </div>
