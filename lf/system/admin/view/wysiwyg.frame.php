@@ -2,18 +2,6 @@
 
 <?=notice();?>
 
-<?php
-
-// load in nav cache
-$previewNav = (new \lf\cms)->getNavCache();
-$replace = [
-	 '%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/'
-	// '<a ' => '<a target="_parent"'
- ];
-$previewNav = str_replace(array_keys($replace), array_values($replace), $previewNav);
-
-?>
-
 <h3>
 	<i class="fa fa-compass"></i> Navigation
 </h3>
@@ -21,7 +9,14 @@ $previewNav = str_replace(array_keys($replace), array_values($replace), $preview
 	<div class="col-9">
 		<div class="row no_martop">
 			<div class="col-12">
-				<nav class="light_b main_nav white"><?=$previewNav;?></nav>
+				<h4>Public</h4>
+				<nav class="light_b main_nav white"><?=(new \lf\cms)->renderNavCache( \lf\requestGet('AdminUrl').'wysiwyg/' );?></nav>
+			</div>
+		</div>
+		<div class="row no_martop">
+			<div class="col-12">
+				<h4>Hidden</h4>
+				<nav class="light_b main_nav white"><?=(new \lf\cms)->hiddenList();?></nav>
 			</div>
 		</div>
 		<?php include 'view/wysiwyg.action.php'; ?>

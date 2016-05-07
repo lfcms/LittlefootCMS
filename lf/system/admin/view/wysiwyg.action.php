@@ -96,7 +96,7 @@ foreach(scandir($pwd) as $file)
 					<select name="parent">
 						<option value="-1"><?=\lf\requestGet('SubdirUrl');?></option>
 						<optgroup label="Select Parent">
-							<?=(new \lf\nav)->parentOptions();?>
+							<?=(new \lf\nav)->parentOptions($action['parent']);?>
 						</optgroup>
 					</select>
 				</div>

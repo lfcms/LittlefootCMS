@@ -52,15 +52,17 @@ class nav
 		return $this;
 	}
 	
-	public function parentOptions()
+	public function parentOptions($selected = 0)
 	{
 		$actions = (new \LfActions)
 			->byPosition('!=', 0)
 			->order('parent, position', 'ASC')
 			->find()
 			->matrix(['parent','position']);
-			
-		return $this->recurseParentOptions($actions);
+
+		$options = $this->recurseParentOptions($actions);
+		
+		return str_replace('value="'.$selected.'"', 'selected="selected" value="'.$selected.'"', $options);
 	}
 	
 	private function recurseParentOptions($actions, $parent = -1, $prefix = '')

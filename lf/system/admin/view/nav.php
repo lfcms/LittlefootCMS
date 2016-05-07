@@ -11,7 +11,7 @@
 			<?php endif; ?>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/dashboard/"><i class="fa fa-dashboard"></i><span><?=
 				\lf\getSetting('simple_cms')=='_lfcms'
-					?' Dashboard_Old'
+					?' Legacy Dash'
 					:ucfirst(\lf\getSetting('simple_cms')).' Admin';
 				?></span></a></li>
 			<!--<li><a class="media" href="<?=\lf\requestGet('IndexUrl');?>admin/media/"><span>Media</span></a></li>-->

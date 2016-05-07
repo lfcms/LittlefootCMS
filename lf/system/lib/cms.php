@@ -216,6 +216,23 @@ class cms
 		return $this;
 	}
 	
+	public function hiddenList()
+	{
+		$hiddenActions = (new \LfActions)->getAllByPosition(0);
+		
+		$html = '<ul>';
+		foreach( $hiddenActions as $action )
+		{
+			$html .= '<li>';
+			//$html .= $action['label'];
+			$html .= '<a href="'.\lf\requestGet('ActionUrl').'id/'.$action['id'].'">'.$action['label'].'</a>';
+			$html .= '</li>';
+		}
+		$html .= '</ul>';
+		
+		return $html;
+	}
+	
 	/**
 	 * print HTML comment at the bottom of the source
 	 * 
@@ -629,11 +646,16 @@ class cms
 		return (new cache)->readFile('nav.cache.html');
 	}
 	
-	public function renderNavCache()
+	/** Render baseurl with given arg */
+	public function renderNavCache( $baseurl = NULL )
 	{
-		return $this->renderBaseUrl( $this->getNavCache() );
+		if( is_null( $baseurl ) )
+			$baseurl = requestGet('IndexUrl');
+		
+		return str_replace('%baseurl%', $baseurl, $this->getNavCache());
 	}
 	
+	/** deprecated */
 	public function renderBaseUrl($text)
 	{
 		return str_replace('%baseurl%', requestGet('IndexUrl'), $text);
