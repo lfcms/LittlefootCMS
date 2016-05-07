@@ -1,4 +1,4 @@
-<h2>WYSIWYG Dashboard</h2>
+<h2>Dashboard 2.0 (wysiwyg)</h2>
 
 <?=notice();?>
 
