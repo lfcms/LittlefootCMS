@@ -34,18 +34,21 @@
 $links = (new \LfLinks)
 			->order('id')
 			->getAllByInclude($action['id']);
-foreach($links as $link)
-{
-echo '<div class="row">';
-	echo '<div class="col-9">';
-	// print editor form for each
-	//include 'view/wysiwyg.link.php';
-	echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link]);
-	
-	echo '</div>';
-echo '</div>';
-}
-	
+
+if( $links )
+	foreach($links as $link)
+	{
+		echo '<div class="row">';
+		echo '<div class="col-9">';
+		// print editor form for each
+		//include 'view/wysiwyg.link.php';
+		echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link]);
+		
+		echo '</div>';
+		echo '</div>';
+	}
+else
+	echo '<p>Nothing linked. Link an app with the form at the top right of this page.</p>';
 
 $iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.implode('/', $param);
 

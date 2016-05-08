@@ -36,6 +36,32 @@ class wysiwyg
 		}
 	}
 	
+	public function rmaction()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( ! isset( $param[1] ) )
+			return;
+		
+		(new \LfActions)->deleteById($param[1]);
+		(new \LfLinks)->deleteByInclude($param[1]);
+		(new \lf\nav)->refreshCache();
+		notice('<div class="success">Action and links deleted</div>');
+		redirect302( \lf\requestGet('ActionUrl') );
+	}
+	
+	public function rmlink()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( ! isset( $param[1] ) )
+			return;
+		
+		(new \LfLinks)->deleteById($param[1]);
+		notice('<div class="success">Link deleted</div>');
+		redirect302();
+	}
+	
 	/** Tried to build this like REST */
 	public function links()
 	{
