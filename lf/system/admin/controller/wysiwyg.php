@@ -36,29 +36,57 @@ class wysiwyg
 		}
 	}
 	
-	/** build like REST */
+	/** Tried to build this like REST */
 	public function links()
 	{
 		$param = \lf\requestGet('Param');
 		
+		// if no link ID is specified
 		if( ! isset( $param[1] ) )
 		{
-			echo '<pre>'.json_encode( (new \LfLinks)->getAll(), JSON_PRETTY_PRINT ).'</pre>';
-			exit;
+			// if a $_POST is provided
+			if( count( $_POST ) )
+			{
+				
+				if( isset( $_POST['newnav'] ) && $_POST['newnav'] == 'on' )
+				{
+					unset($_POST['newnav']);
+					$newAction = [
+						'parent' => -1,
+						'position' => 9999, // idk, something high, the createAction() function will set it to the last position
+						'alias' => $_POST['app'],
+						'title' => $_POST['app'],
+						'label' => $_POST['app'],
+						'app' => 0,
+						'template' => 'default'
+					];
+					
+					// overwrite post include so the following app link hits this new nav item
+					$_POST['include'] = (new \lf\nav)->createAction($newAction);
+				}
+				
+				(new \LfLinks)->insertArray($_POST);
+				notice('<div class="success">Link Added Successfully</div>');
+				redirect302( \lf\requestGet('ActionUrl').'id/'.$_POST['include'] );
+			}
+			// if they just want a list of links (this is not used by the lf admin yet)
+			else
+			{
+				echo '<pre>'.json_encode( (new \LfLinks)->getAll(), JSON_PRETTY_PRINT ).'</pre>';
+				exit;
+			}
 		}
 		
+		// if they did provide a link ID and a post,
 		if( count( $_POST ) )
 		{
-			pre( $_POST );
 			$id = $param[1];
 			
 			if( isset( $_POST['id'] ) )
 				return "Don't post an id";
 			
 			(new \LfLinks)->updateById($id, $_POST);
-			
 			notice('<div class="success">Link Updated Successfully</div>');
-			
 			redirect302();
 		}
 	}

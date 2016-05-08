@@ -26,7 +26,7 @@ class nav
 		$data['position'] = 0; // set hidden upon insert. let the updateAction() function add it where it really goes
 		$newId = (new \LfActions)->insertArray($data);
 		$this->updateAction($newId, $originalData);
-		return $this;
+		return $newId;
 	}
 	
 	// take a REST approach

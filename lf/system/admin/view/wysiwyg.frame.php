@@ -22,7 +22,8 @@
 		<?php include 'view/wysiwyg.action.php'; ?>
 	</div>
 	<div class="col-3">
-		<?php include 'view/wysiwyg.addlink.php'; ?>
+		<?php //$include = include 'view/wysiwyg.addlink.php';
+		echo (new \lf\cms)->partial('wysiwyg.addlink', ['include' => $action['id']]); ?>
 	</div>
 </div>
 
@@ -30,19 +31,21 @@
 <?php
 
 // loop through linked apps
-$links = (new \LfLinks)->getAllByInclude($action['id']);
-echo '<div class="row">';
+$links = (new \LfLinks)
+			->order('id')
+			->getAllByInclude($action['id']);
 foreach($links as $link)
 {
+echo '<div class="row">';
 	echo '<div class="col-9">';
 	// print editor form for each
 	//include 'view/wysiwyg.link.php';
 	echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link]);
 	
 	echo '</div>';
+echo '</div>';
 }
 	
-echo '</div>';
 
 $iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.implode('/', $param);
 
