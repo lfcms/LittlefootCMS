@@ -36,6 +36,126 @@ class wysiwyg
 		}
 	}
 	
+	public function rmaction()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( ! isset( $param[1] ) )
+			return;
+		
+		(new \LfActions)->deleteById($param[1]);
+		(new \LfLinks)->deleteByInclude($param[1]);
+		(new \lf\nav)->refreshCache();
+		notice('<div class="success">Action and links deleted</div>');
+		redirect302( \lf\requestGet('ActionUrl') );
+	}
+	
+	public function rmlink()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( ! isset( $param[1] ) )
+			return;
+		
+		(new \LfLinks)->deleteById($param[1]);
+		notice('<div class="success">Link deleted</div>');
+		redirect302();
+	}
+	
+	/** Tried to build this like REST */
+	public function links()
+	{
+		$param = \lf\requestGet('Param');
+		
+		// if no link ID is specified
+		if( ! isset( $param[1] ) )
+		{
+			// if a $_POST is provided
+			if( count( $_POST ) )
+			{
+				
+				if( isset( $_POST['newnav'] ) && $_POST['newnav'] == 'on' )
+				{
+					unset($_POST['newnav']);
+					$newAction = [
+						'parent' => -1,
+						'position' => 9999, // idk, something high, the createAction() function will set it to the last position
+						'alias' => $_POST['app'],
+						'title' => $_POST['app'],
+						'label' => $_POST['app'],
+						'app' => 0,
+						'template' => 'default'
+					];
+					
+					// overwrite post include so the following app link hits this new nav item
+					$_POST['include'] = (new \lf\nav)->createAction($newAction);
+				}
+				
+				(new \LfLinks)->insertArray($_POST);
+				notice('<div class="success">Link Added Successfully</div>');
+				redirect302( \lf\requestGet('ActionUrl').'id/'.$_POST['include'] );
+			}
+			// if they just want a list of links (this is not used by the lf admin yet)
+			else
+			{
+				echo '<pre>'.json_encode( (new \LfLinks)->getAll(), JSON_PRETTY_PRINT ).'</pre>';
+				exit;
+			}
+		}
+		
+		// if they did provide a link ID and a post,
+		if( count( $_POST ) )
+		{
+			$id = $param[1];
+			
+			if( isset( $_POST['id'] ) )
+				return "Don't post an id";
+			
+			(new \LfLinks)->updateById($id, $_POST);
+			notice('<div class="success">Link Updated Successfully</div>');
+			redirect302();
+		}
+	}
+	
+	public function postNavEdit()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( ! isset( $param[1] ) )
+		{
+			notice('<div class="error">No ID specified in param[1]</div>');
+			redirect302();
+		}
+		
+		(new \lf\nav)->updateAction($param[1], $_POST);
+		notice('<div class="success">Action updated</div>');
+		redirect302( \lf\requestGet('ActionUrl').'id/'.$param[1] ); 
+	}
+	
+	public function postLinkEdit()
+	{
+		pre($_POST);
+	}
+	
+	public function postAddNew()
+	{
+		pre($_POST);
+	}
+	
+	private function printEditForm($action = NULL)
+	{
+		$param = \lf\requestGet('Param');
+		
+		// load home page if none provided
+		if( is_null( $action ) )
+			$action = (new \LfActions)
+				->byParent(-1)
+				->byPosition(1)
+				->get();
+		
+		include 'view/wysiwyg.frame.php';
+	}
+	
 	private function actionFromParam()
 	{
 		// determines current action request
@@ -116,20 +236,6 @@ class wysiwyg
 		}
 		
 		return $select;
-	}
-	
-	private function printEditForm($action = NULL)
-	{
-		$param = \lf\requestGet('Param');
-		
-		// load home page if none provided
-		if( is_null( $action ) )
-			$action = (new \LfActions)
-				->byParent(-1)
-				->byPosition(1)
-				->get();
-		
-		include 'view/wysiwyg.frame.php';
 	}
 
 	public function preview()

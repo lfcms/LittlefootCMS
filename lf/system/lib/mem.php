@@ -18,4 +18,9 @@ class mem
 		else
 			return NULL;
 	}
+	
+	public static function dump($namespace = 'default')
+	{
+		return self::$memory[$namespace];
+	}
 }
