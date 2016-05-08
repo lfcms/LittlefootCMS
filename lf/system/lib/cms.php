@@ -1169,13 +1169,16 @@ class cms
 	/**
 	 * Used for loading partial views given an argument
 	 * 
+	 * Note: Remember to echo the returned output, otherwise it will not print
+	 * 
 	 * @param string $file The name of the view. Loaded from view/$file.php
 	 * @param array $args Associative array of $var => $val passed to the partial.
 	 */
 	public function partial($partial, $args = array())
 	{
-		foreach($args as $var => $val)
-			$$var = $val;
+		//foreach($args as $var => $val)
+		//	$$var = $val;
+		extract($args);
 			
 		ob_start();
 		include 'view/'.$partial.'.php';

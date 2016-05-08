@@ -1,4 +1,4 @@
-<h2>Dashboard 2.0 (wysiwyg)</h2>
+<h2>Dashboard 2.0</h2>
 
 <?=notice();?>
 
@@ -27,7 +27,6 @@
 </div>
 
 <h4 title="Apps Linked to This Nav Item"><i class="fa fa-link"></i> Linked Apps</h4>
-
 <?php
 
 // loop through linked apps
@@ -37,7 +36,9 @@ foreach($links as $link)
 {
 	echo '<div class="col-9">';
 	// print editor form for each
-	include 'view/wysiwyg.link.php';
+	//include 'view/wysiwyg.link.php';
+	echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link]);
+	
 	echo '</div>';
 }
 	

@@ -36,6 +36,33 @@ class wysiwyg
 		}
 	}
 	
+	/** build like REST */
+	public function links()
+	{
+		$param = \lf\requestGet('Param');
+		
+		if( ! isset( $param[1] ) )
+		{
+			echo '<pre>'.json_encode( (new \LfLinks)->getAll(), JSON_PRETTY_PRINT ).'</pre>';
+			exit;
+		}
+		
+		if( count( $_POST ) )
+		{
+			pre( $_POST );
+			$id = $param[1];
+			
+			if( isset( $_POST['id'] ) )
+				return "Don't post an id";
+			
+			(new \LfLinks)->updateById($id, $_POST);
+			
+			notice('<div class="success">Link Updated Successfully</div>');
+			
+			redirect302();
+		}
+	}
+	
 	public function postNavEdit()
 	{
 		$param = \lf\requestGet('Param');
