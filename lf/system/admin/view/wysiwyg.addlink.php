@@ -5,7 +5,11 @@
 	<div class="tile-content">
 		<form method="post" action="<?=\lf\requestGet('ActionUrl');?>links">
 			<ul class="vlist">
-				<li>App Name: <input type="text" name="app" placeholder="App Name" /></li>
+				<li>App Name: 
+					<select name="app" id="">
+						<option disabled="disabled" selected="selected" value="">-- Select an App --</option>
+						<?=(new \lf\cms)->appSelect();?>
+					</select></li>
 				<li>Config: <input type="text" name="ini" placeholder="Config" /></li>
 				<li>Location: <input type="text" name="section" placeholder="Location" /></li>
 				<li>Create New Nav Item? <input name="newnav" type="checkbox" /></li>

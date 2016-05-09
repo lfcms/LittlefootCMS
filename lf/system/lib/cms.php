@@ -216,6 +216,28 @@ class cms
 		return $this;
 	}
 	
+	public function appSelect($app = NULL)
+	{
+		
+		$apps = scandir( LF.'apps' );
+		
+		foreach($apps as $app)
+		{
+			// skip ., .., and .hidden files
+			if($app[0] == '.') continue;
+			
+			// we can only link apps that have an index, otherwise they are admin only
+			if( ! is_file( LF.'apps/'.$app.'/index.php' ) )
+				$html .= '<option disabled="disabled" value="">'.$app.' (admin only)</option>';
+			else
+				$html .= '<option value="'.$app.'">'.$app.'</option>';
+				
+			
+		}
+		
+		return $html;
+	}
+	
 	public function templateSelect($template = NULL)
 	{
 		$match_file = 'default';
