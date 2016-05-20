@@ -64,8 +64,8 @@ if($user->hasAccess('admin') )
 				$_SESSION['upgrade'] = false; // dont alert to upgrade for 1-DEV
 		}
 	
-	if(\lf\requestGet('Action')[0] == '')
-		\lf\requestGet('Action')[0] = 'dashboard';
+	//if(\lf\requestGet('Action')[0] == '')
+	//	\lf\requestGet('Action')[0] = 'wysiwyg';
 	
 	// Nav item
 	ob_start();
@@ -99,7 +99,7 @@ if($user->hasAccess('admin') )
 	
 	$this->select['template'] = 'default';
 	// multimvc handles its own 'addcontent', but that maybe should be in template too...
-	$this->multiMVC('dashboard', 'content', '\\lf\\admin\\');
+	$this->multiMVC('wysiwyg', 'content', '\\lf\\admin\\');
 	
 	$this->loadLfCss();
 	

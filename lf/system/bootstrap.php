@@ -29,15 +29,8 @@ define('LF', getcwd().'/'); // The absolute path to the lf/ directory is the ROO
 
 define('ROOT', LF); // backward compatibility.
 
-// Littlefoot 1.0
-require 'system/lib/helpers.php'; 		// Helpful functions
-require 'system/lib/orm.php'; 			// Object Relation Model base
-require 'system/lib/lfcss.php';			// Littlefoot css builder class
-require 'system/lib/user.php'; 			// user stuff
-require 'system/lib/install.php';		// test the install
-require 'system/lib/auth.php'; 			// auth stuff
-require 'system/lib/littlefoot.php'; 	// LEGACY Request, Auth, Nav, Content, Render
 
+/*
 // LF 2.0 - Dawn of the namespaces and session cache
 
 // relies on 1.0 minus the littlefoot class which has been broken into smaller systems
@@ -52,18 +45,24 @@ require_once('lf/system/bootstrap.php');
 $cms = new \lf\cms();
 $cms->run();
 ~~~
-
 */
 
- 		
+require_once 'system/lib/mem.php'; // Quick memcache style key-value pair storage.
+require_once 'system/lib/helpers.php'; 		// Helpful functions
+require_once 'system/lib/orm.php'; 			// Object Relation Model base
+require_once 'system/lib/lfcss.php';			// Littlefoot css builder class
+require_once 'system/lib/user.php'; 			// user stuff
+require_once 'system/lib/install.php';		// test the install
+require_once 'system/lib/auth.php'; 			// auth stuff
+require_once 'system/lib/cache.php'; // old mem, also does toFile()
+require_once 'system/lib/plugin.php'; // Provides hooks, plugins, page request to app execution
+require_once 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
+require_once 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
+require_once 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
+require_once 'system/lib/template.php'; // Template
+require_once 'system/lib/nav.php'; // Navigation management
 
-require 'system/lib/mem.php'; // Quick memcache style key-value pair storage.
-require 'system/lib/cache.php'; // old mem, also does toFile()
-require 'system/lib/plugin.php'; // Provides hooks, plugins, page request to app execution
-require 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
-require 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
-require 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
-require 'system/lib/template.php'; // Template
+require_once 'system/lib/littlefoot.php'; 	// LEGACY Request, Auth, Nav, Content, Render
 
 // Add local lib paths to include_path
 if(is_dir(LF.'lib'))

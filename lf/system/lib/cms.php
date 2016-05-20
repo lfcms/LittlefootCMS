@@ -189,9 +189,11 @@ class cms
 			// add configured title setting to template title array
 			->setSiteTitle()
 			// Get data for SimpleCMS, or determine requested Nav ID from request $actions
-			->navSelect()					
+			->navSelect();
+			
+		$this
 			// exec SimpleCMS or exec linked apps, save output to template content array
-			->getcontent() //; pre( (new \lf\template)->getTitle() ); $this
+			->getcontent($this->select['id']) //; pre( (new \lf\template)->getTitle() ); $this
 			// add 3rdparty/icons.css for font awesome and lf.css
 			->loadLfCSS()
 			// Add stuff to <head> based on if search engine blocker is enabled in lf_settings
@@ -212,6 +214,101 @@ class cms
 		(new \lf\plugin)->run('post cms run');
 		
 		return $this;
+	}
+	
+	public function appSelect($app = NULL)
+	{
+		
+		$apps = scandir( LF.'apps' );
+		
+		foreach($apps as $app)
+		{
+			// skip ., .., and .hidden files
+			if($app[0] == '.') continue;
+			
+			// we can only link apps that have an index, otherwise they are admin only
+			if( ! is_file( LF.'apps/'.$app.'/index.php' ) )
+				$html .= '<option disabled="disabled" value="">'.$app.' (admin only)</option>';
+			else
+				$html .= '<option value="'.$app.'">'.$app.'</option>';
+				
+			
+		}
+		
+		return $html;
+	}
+	
+	public function templateSelect($template = NULL)
+	{
+		$match_file = 'default';
+		if( ! is_null( $template ) )
+			$match_file = $template;
+			
+		$pwd = ROOT.'skins';
+
+		// Build template option
+		$template_select = '<option';
+				
+		if($match_file == 'default')
+		{
+			$template_select .= ' selected="selected"';
+			
+			$skin = LF.'skins/'.\lf\getSetting('default_skin').'/index.php';
+			
+			// Get all %replace% keywords for selected template (remove system variables)
+			if(!is_file($skin))
+			{
+				echo 'Currently selected skin does not exist. Please see the Skins tab to correct this.';
+				$section_list = array('none');
+			}
+			else
+			{
+				$template = file_get_contents($skin);
+				preg_match_all("/%([a-z]+)%/", str_replace(array('%baseurl%', '%skinbase%', '%nav%', '%title%'), '', $template), $tokens);
+				$section_list = $tokens[1];
+			}
+		}
+
+		$template_select .= ' value="default">-- Default Skin ('.\lf\getSetting('default_skin').') --</option>';
+
+		foreach(scandir($pwd) as $file)
+		{
+			if($file == '.' || $file == '..') continue;
+
+			$skin = $pwd.'/'.$file.'/index.php';
+			if(is_file($skin))
+			{
+				$template_select .= '<option';
+				
+				if($match_file == $file)
+				{
+					$template_select .= ' selected="selected"';
+				}
+				
+				$template_name = /*$conf['skin'] == $file ? "Default" :*/ ucfirst($file);
+				
+				$template_select .= ' value="'.$file.'">'.$template_name.'</option>';
+			}
+		}
+		
+		return $template_select;
+	}
+	
+	public function hiddenList()
+	{
+		$hiddenActions = (new \LfActions)->getAllByPosition(0);
+		
+		$html = '<ul>';
+		foreach( $hiddenActions as $action )
+		{
+			$html .= '<li>';
+			//$html .= $action['label'];
+			$html .= '<a href="'.\lf\requestGet('ActionUrl').'id/'.$action['id'].'">'.$action['label'].'</a>';
+			$html .= '</li>';
+		}
+		$html .= '</ul>';
+		
+		return $html;
 	}
 	
 	/**
@@ -627,11 +724,16 @@ class cms
 		return (new cache)->readFile('nav.cache.html');
 	}
 	
-	public function renderNavCache()
+	/** Render baseurl with given arg */
+	public function renderNavCache( $baseurl = NULL )
 	{
-		return $this->renderBaseUrl( $this->getNavCache() );
+		if( is_null( $baseurl ) )
+			$baseurl = requestGet('IndexUrl');
+		
+		return str_replace('%baseurl%', $baseurl, $this->getNavCache());
 	}
 	
+	/** deprecated */
 	public function renderBaseUrl($text)
 	{
 		return str_replace('%baseurl%', requestGet('IndexUrl'), $text);
@@ -804,8 +906,6 @@ class cms
 			ORDER BY  ABS(parent), ABS(position) ASC
 		");
 		
-		
-		
 		// Assign as parent,position => array()
 		$base_save = NULL;
 		foreach($matches as $row)
@@ -868,6 +968,7 @@ class cms
 			$this->select = $base_save;
 		}
 		
+		// set template to mode = home, if home page is selected
 		$this->testHome();
 		
 		// in case the file doesn't exist
@@ -988,7 +1089,7 @@ class cms
 		return $links;
 	}
 	
-	public function getcontent()
+	public function getcontent($includeId)
 	{
 		(new plugin)->run('pre '.__METHOD__);
 		startTimer(__METHOD__);
@@ -1023,7 +1124,7 @@ class cms
 			$sql = "
 				SELECT id, app, ini, section 
 				FROM lf_links
-				WHERE include = '".$this->select['id']."'
+				WHERE include = '".$includeId."'
 					OR include = '%'
 				ORDER BY id
 			";
@@ -1090,13 +1191,16 @@ class cms
 	/**
 	 * Used for loading partial views given an argument
 	 * 
+	 * Note: Remember to echo the returned output, otherwise it will not print
+	 * 
 	 * @param string $file The name of the view. Loaded from view/$file.php
 	 * @param array $args Associative array of $var => $val passed to the partial.
 	 */
 	public function partial($partial, $args = array())
 	{
-		foreach($args as $var => $val)
-			$$var = $val;
+		//foreach($args as $var => $val)
+		//	$$var = $val;
+		extract($args);
 			
 		ob_start();
 		include 'view/'.$partial.'.php';

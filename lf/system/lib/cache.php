@@ -158,7 +158,8 @@ class cache
 	
 	public function sessGetNamespace($namespace)
 	{
-		return $_SESSION['lf_cache'][$namespace];
+		//return $_SESSION['lf_cache'][$namespace];
+		return mem::dump($namespace);//$_SESSION['lf_cache'][$namespace];
 	}
 	
 	/**

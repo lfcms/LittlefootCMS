@@ -22,7 +22,7 @@ class template
 	private $elements = [
 		// page <title />, array gets imploded on ->getTitle()
 			'title' => ['LittlefootCMS'],
-		// to let others give some extra <head />	
+		// to let others give some extra <head />
 			'head' => [],
 		// array of CSS URLs to include
 			'css' => [],
@@ -323,11 +323,23 @@ class template
 	 */
 	public function getTemplatePath()
 	{
-		$skinDir = isAdmin() 
+		if( ! isset( $this->elements['admin'] ) )
+			$this->setAdmin( isAdmin() );
+		
+		$skinDir = $this->elements['admin']
 			? 'system/admin/skin/' 
 			: 'skins/';
 			
 		return LF.$skinDir.$this->getTemplateName().'/';
+	}
+	
+	/**
+	 * Set whether or not to load from admin skins or from public skins
+	 */
+	public function setAdmin($as = true)
+	{
+		$this->elements['admin'] = (bool) $as; // php 5.5+ has boolval()
+		return $this->save();
 	}
 	
 	/**
