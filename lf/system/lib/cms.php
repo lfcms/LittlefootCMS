@@ -496,6 +496,7 @@ class cms
 			$appPlugin->run('pre app '.$className.' '.implode(' ', $varstr));
 		}
 		
+		// LEGACY: __construct could not be conveniently overwritten before 2.0
 		// auto-run init() function if its there
 		if(is_callable(array($controller, 'init')))
 			echo $controller->init();
