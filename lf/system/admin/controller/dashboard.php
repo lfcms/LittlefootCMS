@@ -163,10 +163,8 @@ class dashboard
 		echo '<p>Return to <a href="%baseurl%dashboard/main/'.$vars[1].'/#nav_'.$vars[1].'">dashboard</a></p>';
 		echo '<h2>WYSIWYG</h2>';
 		
-		$save = (new \LfActions)->getById($vars[1]);
-		
-		//$thelink = $this->links[$save['id']][0];
-		$thelink = (new \LfLinks)->getById($vars[1]);
+		$action = (new \LfActions)->getById($vars[1]);
+		$link = (new \LfLinks)->getById($vars[1]);
 		
 		include 'view/dashboard.wysiwyg.php';
 	}
