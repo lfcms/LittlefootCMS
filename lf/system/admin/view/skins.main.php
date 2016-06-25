@@ -1,9 +1,5 @@
-<div class="row">
-	<div class="col-12">
-		<h2 class="no_marbot"><i class="fa fa-paint-brush"></i> Skins Manager</h2>
-	</div>
-</div>
-
+<h2 class="no_marbot"><i class="fa fa-paint-brush"></i> Skins Manager</h2>
+	
 <div class="row">
 	<!-- New Skin -->
 	<div class="col-3 pull-right">
