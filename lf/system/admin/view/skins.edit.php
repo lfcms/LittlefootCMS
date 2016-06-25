@@ -10,8 +10,8 @@
 </style>
 
 <h2>Edit Skin: <a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a></h2>
-
 <span><a href="%appurl%" title="Back to Skins Manager"><i class="fa fa-arrow-left" aria-hidden="true"></i> Skins Manager</a></span>
+
 <form action="%appurl%update/<?=$vars[1];?>/" method="post" id="skinform">
 	<div class="row">
 		<!-- New Skin -->
