@@ -307,8 +307,15 @@ class request
 		if( $this->pieces['action'] != [] )
 			$parts[] = implode('/', $this->pieces['action'] );
 		
+		// account for root of request URI
+		$collapsedParts = implode('/', $parts );
+		if($collapsedParts != '')
+			$collapsedParts .= '/';
+		
+		$actionUrl = $this->getIndexUrl().$collapsedParts;
+		
 		// implode everything with / delimiter
-		return $this->getIndexUrl().implode('/', $parts ).'/';
+		return $this->getIndexUrl().$collapsedParts;
 	}
 	
 	public function fakeServerGlobal($requestUri = '/')
