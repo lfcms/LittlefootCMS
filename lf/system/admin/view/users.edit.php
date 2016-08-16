@@ -1,8 +1,9 @@
-<h2><a href="%appurl%">Users</a> Edit</h2>
+<h2>Edit User</h2>
+<span><a href="%appurl%" title="Back to Users Manager"><i class="fa fa-arrow-left" aria-hidden="true"></i> Users Manager</a></span>
 <?=notice();?>
 <div class="row">
 	<div class="col-6">
-		<form class="dashboard_manage" action="<?=\lf\requestGet('AdminUrl');?>users/update/<?=$user['id'];?>" method="post">
+		<form action="<?=\lf\requestGet('AdminUrl');?>users/update/<?=$user['id'];?>" method="post">
 			<ul class="vlist">
 				<li><input type="text" name="user" value="<?=$user['user'];?>" placeholder="Username" required></li>
 				<li><input type="password" name="pass" placeholder="Password"></li>
@@ -16,6 +17,5 @@
 		</form>
 	</div>
 	<div class="col-6">
-	
 	</div>
 </div>

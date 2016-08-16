@@ -1,8 +1,5 @@
-<div class="row">
-	<div class="col-12">
-		<h2 class="no_marbot"><i class="fa fa-cog"></i> Settings</h2>
-	</div>
-</div>
+<h2><i class="fa fa-cog"></i> Settings</h2>
+
 <?=notice();?>
 <div class="row">
 	<div class="col-7">

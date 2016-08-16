@@ -1,12 +1,6 @@
-<div class="row">
-	<div class="col-12">
-		<h2 class="no_marbot" title="Store: Click an app to install it. Update links will download the latest."><i class="fa fa-shopping-cart"></i> Store</h2>
-	</div>
-</div>
+<h2 title="Store: Click an app to install it. Update links will download the latest."><i class="fa fa-shopping-cart"></i> Store</h2>
 
 <?=notice();?>
-
-
 
 <h3 class="no_martop">Download</h3>
 <form action="%appurl%dlFromZipUrl/" method="post">
