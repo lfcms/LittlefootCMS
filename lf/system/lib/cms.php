@@ -978,7 +978,11 @@ class cms
 		{
 			$pwd = getcwd();
 			chdir(ROOT.'system/admin/');
-			$this->mvc('dashboard', NULL, array('updatenavcache')); // run the nav HTML generation script
+			include 'controller/dashboard.php';
+			$dashboard = (new \lf\admin\dashboard)->updatenavcache();
+			// run the nav HTML generation script
+			//$this->mvc(, NULL, array('updatenavcache')); 
+			//shouldl be $this->mvc($dashboard, NULL, array('updatenavcache')); 
 			chdir($pwd);
 		}
 		

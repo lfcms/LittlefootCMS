@@ -157,6 +157,15 @@ class orm implements \IteratorAggregate
 	}
 
 	/**
+	 * to JSON
+	 */
+	public function json()
+	{
+		return json_encode($this->result);
+	}
+		
+	
+	/**
 	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
 	 * 
 	 * leave mysqli object in session, but close it once the script finishes via ___LastSay
@@ -398,13 +407,13 @@ class orm implements \IteratorAggregate
 		(new orm)->import(ROOT.'system/lib/recovery/lf.sql', false);
 			
 		// Add admin user
-		(new User)
-			->setAccess('admin')
-			->setUser($admin['user'])
+		(new user)
 			->setDisplay_name(ucfirst($admin['user']))
 			->setEmail($admin['email'])
+			->setUser($admin['user'])
 			->setPass($admin['pass'])
 			->setStatus('valid')
+			->setAccess('admin')
 			->save()
 			->toSession(); // and auto login as that user
 		
