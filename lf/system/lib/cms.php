@@ -421,7 +421,10 @@ class cms
 	public function getSetting($name)
 	{
 		$settings = $this->getSettings();
-		return $settings[$name];
+		if(isset($settings[$name]))
+			return $settings[$name];
+		else 
+			return null;
 	}
 	
 	/**
