@@ -47,10 +47,14 @@ class plugin
 		
 		foreach($this->active[$hook] as $plugin => $config)
 		{
-			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
+			$plugin_path = include LF.'plugins/'.$plugin.'/index.php';
 			
+			if( ! file_exists( $plugin_path ) )
+				continue;
+			
+			$hookDetails = ' / '.$plugin.' @ '.$hook.' / Config: '.$config;
 			startTimer(__METHOD__.$hookDetails);
-			include LF.'plugins/'.$plugin.'/index.php';
+			include $plugin_path;
 			endTimer(__METHOD__.$hookDetails);
 		}
 		

@@ -253,7 +253,7 @@ class template
 		else if(is_file($this->getTemplatePath()."$file.html"))
 			readfile($this->getTemplatePath()."$file.html");
 		else
-			echo 'Template file "'.$this->getTemplatePath().$file.'.php" missing. Log into '.\lf\requestGet('AdminUrl').' and select a different template with the Skins tool.';
+			echo 'Template file "'.$this->getTemplatePath().$file.'.php" missing. Log into <a href="'.\lf\requestGet('AdminUrl').'">Admin</a> and select a different template with the Skins tool.';
 			
 		return ob_get_clean();
 	}
