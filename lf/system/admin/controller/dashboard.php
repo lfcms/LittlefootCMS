@@ -182,6 +182,8 @@ class dashboard
 			$skin = \lf\get('default_skin');
 		
 		ob_start();
+		if( ! is_file(LF.'skins/'.$skin.'/index.php') )
+			$this->updatenavcache();
 		readfile(LF.'skins/'.$skin.'/index.php');
 		$template = ob_get_clean();
 		
