@@ -23,4 +23,14 @@ class mem
 	{
 		return self::$memory[$namespace];
 	}
+	
+	public static function save($key, $namespace = 'default')
+	{
+		// TODO save to memcache, or whatever is plugged in as a key/value provider
+	}
+	
+	public static function load($key, $namespace = 'default')
+	{
+		// TODO load $namespace_$key from memcache, or whatever is plugged in as a key/value provider
+	}
 }

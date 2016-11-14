@@ -51,15 +51,6 @@ namespace lf;
  * pre($blogComments);
  * ~~~
  *
- *
- *
- * Potential Names
- *
- * SQLQuery
- * qquery
- * qq
- * SQLQS
- *
  */
 class orm implements \IteratorAggregate
 {

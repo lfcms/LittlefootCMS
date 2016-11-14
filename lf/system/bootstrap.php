@@ -47,8 +47,8 @@ $cms->run();
 ~~~
 */
 
-require_once 'system/lib/mem.php'; // Quick memcache style key-value pair storage.
-require_once 'system/lib/cache.php'; // old mem, also does toFile()
+require_once 'system/lib/mem.php'; // Quick memcache style key-value pair storage. (should be used by cache)
+require_once 'system/lib/cache.php'; // largely deprecated by mem.php
 require_once 'system/lib/helpers.php'; 		// Helpful functions
 require_once 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
 require_once 'system/lib/user.php'; 			// user stuff

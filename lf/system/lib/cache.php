@@ -128,6 +128,28 @@ class cache
 		return ob_get_clean();
 	}
 	
+	public function getNavCache()
+	{
+		$navcache = LF.'cache/nav.cache.html';
+		if( ! is_file($navcache) )
+		{
+			include LF.'system/admin/model/apps.navcache.php';
+		
+			// Grab all possible actions
+			$actions = (new \lf\orm)->fetchall("SELECT * FROM lf_actions WHERE position != 0 ORDER BY ABS(parent), ABS(position) ASC");
+			
+			// Make a matrix sorted by parent and position
+			$menu = array();
+			foreach($actions as $action)
+				$menu[$action['parent']][$action['position']] = $action;
+			
+			$nav = build_nav_cache($menu);
+			if(!is_dir(ROOT.'cache')) mkdir(ROOT.'cache', 0755, true); // make if not exists
+			file_put_contents(ROOT.'cache/nav.cache.html', $nav);
+		}
+		return readFile($navcache);
+	}
+	
 	/**
 	 * Save $data to $filename
 	 */
