@@ -408,6 +408,7 @@ class orm implements \IteratorAggregate
 			->save()
 			->toSession(); // and auto login as that user
 		
+		
 		$_SESSION['upgrade'] = false;
 		
 		return $this;
@@ -908,12 +909,12 @@ class orm implements \IteratorAggregate
 		if(isset($prefix))
 		{
 			if($prefix == 'rJ') $join = 'RIGHT JOIN';
-			if($prefix == 'roJ') $join = 'RIGHT OUTER JOIN';
 			if($prefix == 'iJ') $join = 'INNER JOIN';
-			if($prefix == 'ioJ') $join = 'INNER OUTER JOIN';
 			if($prefix == 'lJ') $join = 'LEFT JOIN';
-			if($prefix == 'loJ') $join = 'LEFT OUTER JOIN';
 			if($prefix == 'fJ') $join = 'FULL JOIN';
+			if($prefix == 'roJ') $join = 'RIGHT OUTER JOIN';
+			if($prefix == 'ioJ') $join = 'INNER OUTER JOIN';
+			if($prefix == 'loJ') $join = 'LEFT OUTER JOIN';
 			if($prefix == 'foJ') $join = 'FULL OUTER JOIN';
 		}
 		

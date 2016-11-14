@@ -19,7 +19,6 @@ class user
 
 	protected $details = array(
 		'id' => 0,
-		'uid' => 0,
 		'access' => 'none',
 		'status' => 'pending',
 		'user' => '',
@@ -94,7 +93,7 @@ class user
 		// else new instance is Anonymous by default
     }
 
-	public function selectBox($uid = 0)
+	public function selectBox($id = 0)
 	{
 	   $users = (new LfUsers)
 		   ->cols('id, display_name')
@@ -106,7 +105,7 @@ class user
 	   foreach($users->getAll() as $user)
 	   {
 		   $selected = '';
-		   if($user['id'] == $uid)
+		   if($user['id'] == $id)
 				$selected = 'selected="selected"';
 
 		   $select .= '<option '.$selected.' value="'.$user['id'].'">
@@ -289,10 +288,10 @@ class user
 		unset($this->details['id']);
 
 		if($id == 0)
-			$this->details['id'] = (new \lf\orm)->qUsers('lf')->insertArray($this->details);
+			$this->details['id'] = (new \LfUsers)->insertArray($this->details);
 		else
 		{
-			(new \lf\orm)->qUsers('lf')->updateByid($id, $this->details);
+			(new \LfUsers)->updateByid($id, $this->details);
 			$this->details['id'] = $id;
 		}
 
@@ -325,6 +324,7 @@ class user
 	{
 		$var = strtolower($var);
 		
+		// idk if I need this :\
 		if( $var == 'uid' )
 			$var = 'id';
 		
