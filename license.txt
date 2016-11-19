@@ -1,8 +1,6 @@
 Thank you for using Littlefoot CMS.
 
-./index.php and anything in ./lf/system is covered by the following license:
-
-Copyright (c) 2015, EFLIP LLC
+Copyright (c) 2016, LFCMS
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -13,12 +11,12 @@ modification, are permitted provided that the following conditions are met:
    documentation and/or other materials provided with the distribution.
 3. All advertising materials mentioning features or use of this software
    must display the following acknowledgement:
-   This product includes software developed by EFLIP LLC
-4. Neither the name of EFLIP LLC nor the
+   This product includes software developed by LFCMS
+4. Neither the name of LFCMS nor the
    names of its contributors may be used to endorse or promote products
    derived from this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY EFLIP LLC ''AS IS'' AND ANY
+THIS SOFTWARE IS PROVIDED BY LFCMS ''AS IS'' AND ANY
 EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL JOSEPH STILL  BE LIABLE FOR ANY
