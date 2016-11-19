@@ -723,7 +723,7 @@ class cms
 	
 	public function getNavCache()
 	{
-		return (new cache)->readFile('nav.cache.html');
+		return (new cache)->getNavCache();
 	}
 	
 	/** Render baseurl with given arg */
@@ -732,7 +732,7 @@ class cms
 		if( is_null( $baseurl ) )
 			$baseurl = requestGet('IndexUrl');
 		
-		return str_replace('%baseurl%', $baseurl, $this->getNavCache());
+		return str_replace('%baseurl%', $baseurl, (new cache)->getNavCache());
 	}
 	
 	/** deprecated */
