@@ -120,6 +120,7 @@ class cache
 	
 	/**
 	 * Return given $filename content as string
+	 * This is a terrible name for a function that does this. how confusing!
 	 */
 	public function readFile($filename)
 	{
@@ -147,7 +148,7 @@ class cache
 			if(!is_dir(ROOT.'cache')) mkdir(ROOT.'cache', 0755, true); // make if not exists
 			file_put_contents(ROOT.'cache/nav.cache.html', $nav);
 		}
-		return readFile($navcache);
+		return $this->readFile($navcache);
 	}
 	
 	/**
