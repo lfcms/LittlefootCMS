@@ -128,14 +128,11 @@ class orm implements \IteratorAggregate
 	 *
 	 * @param Database $db Database wrapper
 	 */
-	public function __construct($table = '', $db = NULL)
+	public function __construct()
 	{
 		// when creating a new orm instance, pull mysqli from session, or try to connect.
 		// prints install form when config is missing or your connection is broken.
 		$this->initDb();
-
-		if($table != '')
-			$this->table = $table;
 	}
 
 	/**
@@ -153,15 +150,14 @@ class orm implements \IteratorAggregate
 	public function json()
 	{
 		return json_encode($this->result);
-	}
-		
+	}		
 	
 	/**
 	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
 	 * 
 	 * leave mysqli object in session, but close it once the script finishes via ___LastSay
 	 * 
-	 * 
+	 *  should be a private function for __construct
 	 */
 	public function initDb()
 	{
@@ -227,13 +223,15 @@ class orm implements \IteratorAggregate
 		{
 			// Record this problem
 			$this->error[] = '<div class="error">No config file found, please configure MySQL Access</div>';
+			
+			// `->runInstaller()` will `exit()` before returning
 			$this->runInstaller();
-		} // else, just continue below (->runInstaller() exit()s before returning):
+		} // else, just continue below:
 		
 		// Include that file we tested for earlier
 		include LF.'config.php';
 		
-		// idk if I want to make a whole separate thing for non-errors... ill fix this later
+		// idk if I want to make a whole separate thing for non-errors... ill fix this later. It is now 'later'. Regretting not just fixing this initially.
 		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> config.php found</div>';
 		
 		// if we didnt find any $db set in the config file
@@ -301,13 +299,14 @@ class orm implements \IteratorAggregate
 		);
 	}
 	
-	public function runInstaller()
+	private function runInstaller()
 	{
 		if( count( $_POST ) )
 		{
-			$this->post();
+			$this->postInstaller();
 		}
 		
+		// guess form field contents
 		$host = 'localhost';
 		$dbname = get_current_user().'_lf';
 		$user = get_current_user();
@@ -375,11 +374,13 @@ class orm implements \IteratorAggregate
 		}
 	}
 	
-	private function post()
+	private function postInstaller()
 	{
 		$this->writeConfig();
 		
-		if( isset($_POST['data']) && $_POST['data'] == 'on' && is_file('config.php') )
+		if( isset($_POST['data']) 
+				&& $_POST['data'] == 'on' 
+				&& is_file('config.php') )
 			$this->importRecoveryData();
 		
 		redirect302( requestGet('AdminUrl') );
@@ -406,7 +407,7 @@ class orm implements \IteratorAggregate
 			->setStatus('valid')
 			->setAccess('admin')
 			->save()
-			->toSession(); // and auto login as that user
+			->toSession(); // and auto login as that new user
 		
 		
 		$_SESSION['upgrade'] = false;

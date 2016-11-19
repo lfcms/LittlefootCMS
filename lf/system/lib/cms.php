@@ -150,11 +150,9 @@ class cms
 	private $version = NULL;
 	
 	/**
-	 * Originally `(new littlefoot)->cms()`
-	 * 
 	 * Executes the Littlefoot CMS frontend (loading /admin, if requested)
 	 * 
-	 * @return $this The resulting $this object
+	 * @return $this The resulting state of $this
 	 */
 	public function run()
 	{
@@ -166,10 +164,10 @@ class cms
 		
 		// test the installation. can we connect to MySQL, etc?
 		//(new install)->test();
+		(new orm)->init();
 		
 		// initialize request into session. 
-		// this can technically be done JIT with `->load()`, 
-		// but I prefer to do it myself.
+		// this can also be done JIT with `->load()`.
 		(new request)->parse()->save();
 		
 		// load version from LF/system/version file
