@@ -146,9 +146,9 @@ class cache
 			
 			$nav = build_nav_cache($menu);
 			if(!is_dir(ROOT.'cache')) mkdir(ROOT.'cache', 0755, true); // make if not exists
-			file_put_contents(ROOT.'cache/nav.cache.html', $nav);
+			file_put_contents($navcache, $nav);
 		}
-		return $this->readFile($navcache);
+		return file_get_contents($navcache);
 	}
 	
 	/**
