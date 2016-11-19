@@ -397,7 +397,7 @@ class orm implements \IteratorAggregate
 		
 		// Run the default lf.sql
 		(new orm)->import(ROOT.'system/lib/recovery/lf.sql', false);
-			
+		
 		// Add admin user
 		(new user)
 			->setDisplay_name(ucfirst($admin['user']))
@@ -1457,30 +1457,74 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  */
 spl_autoload_register( function ($class_name) {
 	
+	// orm\blog_threads format
+	if(preg_match('/^orm\\\(.+)/', $class_name, $match))
+	{
+		// no support for more than just table yet
+		$rawuri = $match[1];
+		
+		preg_match_all('/([^\\\]+)\\\?/', $rawuri, $match);
+		$args = $match[1];
+		$table = $args[0]; 
+		
+		
+		$guts['table'] = 'public $table = "'.$table.'";';
+		$guts['method'] = 'public function debug() { 
+			echo "This was made from the extender thing"; }';
+			
+		$namespace = '';
+		// $namespace = '\\orm\\first_table\\on\\next_table
+		
+		// ty chelmertz http://stackoverflow.com/a/13504972
+		$jitClassDefinition = sprintf(
+			'namespace orm; class %s extends \\lf\\orm { '.implode(' ', $guts).' }'
+			, $table 
+		);
+			
+		#strdump($jitClassDefinition);
+		eval($jitClassDefinition);  
+		
+		return;
+	}
+	
+	
+	
+	
+	
+	
+	
 	// to let other autoload registers load things from namespaced things.
 	if( strpos($class_name, '\\') !== false )
 		return;
 	
-	// This is whats filtering it.
-	if(!preg_match_all('/^([A-Z][^A-Z]+)+$/', $class_name, $matches))
-		return;
+	// BlogThreads will use the table 'blog_threads'
+	if(preg_match_all('/^([A-Z][^A-Z]+)+$/', $class_name, $matches))
+	{
+		//pre($matches);
+		
+		
+		$capitalFollowing = '/([a-z])([A-Z])/';
+		$separate = '\1_\2';
+		$camelCaseTable = $matches[0][0];
+		$table = strtolower(
+			preg_replace($capitalFollowing, $separate, $camelCaseTable)
+		);
+		
+		$guts['table'] = 'public $table = "'.$table.'";';
+		$guts['method'] = 'public function debug() { 
+			echo "This was made from the extender thing"; }';
 
-	//pre($matches);
-	
-	$guts['table'] = 'public $table = "'.strtolower(preg_replace('/([a-z])([A-Z])/', '\1_\2', $matches[0][0])).'";';
-
-	//$guts['method'] = 'public function test() { echo "Hey there"; }';
-
-	//pre('class %s extends \\lf\\orm { '.implode(' ', $guts).' }');
-	
-	// ty chelmertz http://stackoverflow.com/a/13504972
-	eval(sprintf(
-		'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
-		$class_name
-	));    
+		//pre('class %s extends \\lf\\orm { '.implode(' ', $guts).' }');
+		
+		// ty chelmertz http://stackoverflow.com/a/13504972
+		eval(sprintf(
+			'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
+			$class_name
+		));    
+	}
 });
 
-(new \TestingTestingButtz);
+//echo (new \orm\lf_users);
 
 /**
  * Made another one that catches stuff like `\table\lf_settings` rather than autoloading in the global namespace
