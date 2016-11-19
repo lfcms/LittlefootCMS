@@ -64,7 +64,7 @@
 	</div>
 </form>
 
-<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
 $(document).ready(function(){
 	var editor = ace.edit("editor");
