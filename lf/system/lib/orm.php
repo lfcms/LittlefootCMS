@@ -826,7 +826,7 @@ class orm implements \IteratorAggregate
 		return $this;
 	}
 
-	// i kinda want to call this function load()
+	// find() is a good function name
 	public function find($args = null)
 	{
 		if(isset($args[0]))
@@ -1185,7 +1185,7 @@ class orm implements \IteratorAggregate
 		return $this->$crudFunction();
 	}
 
-	public function debugSQL()
+	public function _getSQL()
 	{
 		return $this->sql;
 	}
@@ -1424,6 +1424,13 @@ class ___LastSay
 	public function __destruct()
 	{
 		$db = mem::get('db');
+		/*
+		ob_start();
+		pre($db, 'var_dump');
+		$pre = ob_get_clean();
+		
+		stderr($pre);*/
+		
 		if( ! is_null( $db ) )
 			$db->close();
 	}

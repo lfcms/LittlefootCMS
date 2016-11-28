@@ -11,8 +11,8 @@
 						<?=(new \lf\cms)->appSelect();?>
 					</select></li>
 				<li>Config: <input type="text" name="ini" placeholder="Config" /></li>
-				<li>Location: <input type="text" name="section" placeholder="Location" /></li>
-				<li>Create New Nav Item? <input name="newnav" type="checkbox" /></li>
+				<li>Location: <input type="text" name="section" value="content" placeholder="Location" /></li>
+				<li>Create New Nav Item? <input checked="checked" name="newnav" type="checkbox" /></li>
 				<li><input type="hidden" name="include" value="<?=$include;?>" /><button class="green">Create</button></li>
 			</ul>
 		</form>

@@ -442,3 +442,11 @@ function recurse_copy($src,$dst) {
     } 
     closedir($dir); 
 } 
+
+function stderr($string)
+{
+	fwrite(STDERR, print_r("\nSTDERR\n\n", TRUE));
+	fwrite(STDERR, print_r("---\n", TRUE));
+	fwrite(STDERR, $string);
+	fwrite(STDERR, print_r("\n---\n\n", TRUE));
+}
