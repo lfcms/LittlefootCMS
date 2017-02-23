@@ -827,12 +827,14 @@ class orm implements \IteratorAggregate
 	}
 
 	// find() is a good function name
-	public function find($args = null)
+	public function find($by = NULL)
 	{
-		if(isset($args[0]))
-			$this->limit($args[0]);
-
-		// temp variable for method call
+		// filter request by mask if provided
+		if( ! is_null($by) )
+			foreach($by as $field => $value)
+				$this->filterBy($field, $value);
+		
+		// temp variable for method call below
 		$crud = $this->crud;
 
 		// run the query
@@ -993,6 +995,35 @@ class orm implements \IteratorAggregate
 		}*/
 
 		return $this;
+	}
+	
+	// RESTful API - may be extended to actually work against HTTP requests...
+	public function api($verb, $resource, $payload = null)
+	{
+		$resource = '\\orm\\'.$resource;
+		
+		switch($verb)
+		{
+			case 'GET':
+				return (new $resource)->find($payload);
+			case 'POST':
+				return (new $resource)->insertArray($payload);
+			case 'PUT':
+				return (new $resource)->updateById($id, $payload);
+			case 'DELETE':
+				return (new $resource)->deleteById($id);
+		}
+	}
+	
+	public function desc($table = null)
+	{
+		if( is_null( $table ) )
+			$table = $this->table;
+		
+		if( !is_null( $table ) )
+			return $this->fetchall('DESC `'.$table.'`');
+		
+		return $table; // this will be null if it gets to here
 	}
 
 	// usage: orm::q('lf_users')->filterByid('>', 20);

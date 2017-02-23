@@ -4,6 +4,19 @@ use PHPUnit\Framework\TestCase;
 
 class OrmTest extends TestCase
 {
+	public function testDescNullTable()
+	{
+		$hopefullyNull = (new \lf\orm)->desc();
+		
+		$this->assertEquals($hopefullyNull, NULL);
+	}	
+	
+	public function testOrmApi()
+	{
+		$blog_threads = (new \lf\orm)->api('GET', 'blog_threads', ['category' => 'REST']);
+		stderr($blog_threads);
+	}
+	
 	/* # Behind the Magic! */
 	
 	/* ## Find */

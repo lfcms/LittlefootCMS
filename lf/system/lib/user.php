@@ -11,6 +11,8 @@ namespace lf;
 
 class user
 {
+	private $table = 'lf_users';
+	
 	public $start; // creation time
 	private $timeout;
 	public $error = array();
@@ -72,7 +74,7 @@ class user
 		else if(is_int($details))
 		{
 			$this->setDetails(
-				(new LfUsers)
+				(new \orm\lf_users)
 					->cols('id, access, user, display_name')
 					->byId($details)
 					->first()
@@ -117,6 +119,7 @@ class user
 	   return $select;
 	}
 
+	// intercept magic setpass() with sha1 hash (really need to change this to md5...)
 	public function setPass($pass)
 	{
 		$this->details['pass'] = sha1($pass);
@@ -281,6 +284,11 @@ class user
         $_SESSION['login'] = $this->refreshTimeout();
         return $this;
 	}
+	
+	public function delete()
+	{
+		return (new \orm\lf_users)->deleteById($this->details['id']);
+	}
 
 	public function save()
 	{
@@ -288,7 +296,7 @@ class user
 		unset($this->details['id']);
 
 		if($id == 0)
-			$this->details['id'] = (new \LfUsers)->insertArray($this->details);
+			$this->details['id'] = (new \orm\lf_users)->insertArray($this->details);
 		else
 		{
 			(new \LfUsers)->updateByid($id, $this->details);
@@ -311,13 +319,16 @@ class user
 	 */
 	public function __call($name, $args)
 	{
-		if(!preg_match('/^(get|set)(.+)$/', $name, $match))
-			return false;
-
-		$method = $match[1].'Magic';
-		$var 	= $match[2];
-
-		return $this->$method($var, $args);
+		if(preg_match('/^(get|set)(.+)$/', $name, $match))
+		{
+			$method = $match[1].'Magic';
+			$var 	= $match[2];
+			return $this->$method($var, $args);
+		}
+		
+		
+		
+		return false;
 	}
 
 	private function getMagic($var, $args)

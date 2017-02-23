@@ -445,8 +445,12 @@ function recurse_copy($src,$dst) {
 
 function stderr($string)
 {
+	ob_start();
+	pre($string);
+	$pre = ob_get_clean();
+	
 	fwrite(STDERR, print_r("\nSTDERR\n\n", TRUE));
 	fwrite(STDERR, print_r("---\n", TRUE));
-	fwrite(STDERR, $string);
+	fwrite(STDERR, $pre);
 	fwrite(STDERR, print_r("\n---\n\n", TRUE));
 }
