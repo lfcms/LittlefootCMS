@@ -1443,7 +1443,7 @@ class orm implements \IteratorAggregate
 
 	public function updateById($id, $data)
 	{
-		$page = $this->filterByid($id);
+		$page = $this->filterById($id);
 		foreach($data as $col => $val)
 		{
 			$col = ucfirst($col);

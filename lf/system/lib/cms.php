@@ -392,36 +392,8 @@ class cms
 		
 		if( $action[0] == 'api' )
 		{
-			array_shift($action);
-			
-			if( count($action) < 2 )
-			{
-				echo '403';
-			}
-			
-			// default process
-			$class = '\\lf\\'.$action[0];
-			$method = $action[1];
-			$id = null;
-			if(isset($action[2]))
-			{
-				$id = $action[2];
-			}
-			
-			// check for app api RESTful routing
-			if($action[0] == 'blog')
-			{
-				chdir(LF.'apps/blog');
-				include 'model/blog.php';
-				$class = '\\blog';
-			}
-			
-			// display result as JSON
-			header('Content-Type: application/json');
-			echo json_encode( 
-					[ "result" => (new $class)->$method($id) ] 
-			);
-			
+			(new \lf\request)->load()->actionDrop()->save();
+			echo (new \lf\api)->rest();
 			exit();
 		}
 		
