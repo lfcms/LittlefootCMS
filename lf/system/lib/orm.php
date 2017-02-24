@@ -660,18 +660,19 @@ class orm implements \IteratorAggregate
 	 * // wildcard catchall for shortcut requests (filter, set, etc)
 	 * old `$magicRegex = '/^(deleteBy|getBy|getAllBy|by|filterBy|set|findBy|find|query|q|(?:lo?J|ro?J|fo?J|io?J|o?j)oin)(.+)/';`
 	 */
-	public function __call($methodCalled, $args)
+	public function __call($magicMethod, $args)
 	{
 		// given a method call with any of these from the beginning,
-		$magicPrefix = [
+		$magicPrefixList = [
 			'filterBy',
-			// 'findAllBy', no such thing... find() gets it all by default to $this->results
+			// 'findAllBy', no such thing. find() gets it all by default to $this->results
 			'getAllBy',
 			'deleteBy',
 			'findBy',
 			'getBy',
 			'query',
 			'find',
+			'setAs',	// for setting fields to NOW() or UUID(). eg `setAsUuid('id')`
 			'set',
 			'by',
 			'q',
@@ -680,62 +681,71 @@ class orm implements \IteratorAggregate
 		
 		// grab the prefix used as capture group 1, 
 		// grab whatever else the user said in capture group 2
-		$magicRegex = '/^('.implode('|', $magicPrefix).')(.+)/';
+		// must be like setAsCamel()
+		$prefixMatchPattern = '/^('.implode('|', $magicPrefixList).')([A-Z].*)/';
 		
 		// test the pattern, 
-		if(!preg_match($magicRegex, $methodCalled, $captures))
+		if(!preg_match($prefixMatchPattern, $magicMethod, $captures))
 			// return on fail, 
 			return $this->throwException('Invalid method called');
 		// but proceed with match otherwise
 		
-		// method to be called 
-		$m = $captures[1];
-		$after = $captures[2];
+		// this choses the magic method to process...
+		$magicPrefix = $captures[1];
+		
+		// the user supplied, captured suffix of the method they used
+		$magicSuffix = $captures[2];
+		
+		// Lets do magic with what we parsed!		
 
 		// handle joinMagic()
-		if(preg_match('/^(lo?J|ro?J|fo?J|io?J|o?j)oin$/', $m, $match))
-			return $this->joinMagic($match[1], $after, $args);
+		if(preg_match('/^(lo?J|ro?J|fo?J|io?J|o?j)oin$/', $magicPrefix, $match))
+			return $this->joinMagic($match[1], $magicSuffix, $args);
+		
+		// SetAs
+		if($magicPrefix == 'setAs')
+			return $this->setAsMagic($magicSuffix, $args);
 		
 		// Run a find after the by()
-		if($m == 'findBy') 
+		if($magicPrefix == 'findBy') 
 			return $this
-				->filterBy($after, $args)
+				->filterBy($magicSuffix, $args)
 				->find();
 
 		// Run a delete after the by()
-		if($m == 'deleteBy') 
+		if($magicPrefix == 'deleteBy') 
 			return $this
-				->filterBy($after, $args)
+				->filterBy($magicSuffix, $args)
 				->delete();
 
 		// Run a get after the by()
-		if($m == 'getBy') 
+		if($magicPrefix == 'getBy') 
 			return $this
-				->filterBy($after, $args)
+				->filterBy($magicSuffix, $args)
 				->get();
 
 		// Get all rows found after the by()
-		if($m == 'getAllBy')
+		if($magicPrefix == 'getAllBy')
 			return $this
-				->filterBy($after, $args)
+				->filterBy($magicSuffix, $args)
 				->getAll();
 		
 		// I really should keep returning like above, but this is less code
 		
 		// 'by' is an alias to filterBy()
-		if($m == 'by') 
-			$m = 'filterBy';
+		if($magicPrefix == 'by') 
+			$magicPrefix = 'filterBy';
 		
 		// if we match a "find" prefix to the magic method, we have to pass it through the magic funciton handler
-		if($m == 'find')
-			$m = 'findMagic';
+		if($magicPrefix == 'find')
+			$magicPrefix = 'findMagic';
 		
 		// This is really old. Lets you set a table. 'q' is an alias
-		if($m == 'query' || $m == 'q') 
-			$m = 'queryMagic';
+		if($magicPrefix == 'query' || $magicSuffix == 'q') 
+			$magicPrefix = 'queryMagic';
 
 		// if we get this far, we are just running a single method from the above match and passing the arguments
-		return $this->$m($after, $args);
+		return $this->$magicPrefix($magicSuffix, $args);
     }
 	
 	/**
@@ -1142,11 +1152,20 @@ class orm implements \IteratorAggregate
 
 		return $this;
 	}
-
+/* deprecated by setAsMagic()
 	// set given column as NOW()
 	public function setAsNow($column)
 	{
 		$this->data[$column] = 'NOW()';
+		return $this;
+	}*/
+	
+	public function setAsMagic($suffix, $args)
+	{		
+		$column = $args[0]; // eg, `id`
+		$sqlFunction = $suffix; //eg, `NOW()`
+		$this->data[$column] = $sqlFunction.'()';
+		
 		return $this;
 	}
 
@@ -1415,6 +1434,7 @@ class orm implements \IteratorAggregate
 		$insert = $this->add();
 		foreach($data as $col => $val)
 		{
+			$col = ucfirst($col);
 			$setcol = "set$col";
 			$insert->$setcol($val);
 		}
@@ -1426,6 +1446,7 @@ class orm implements \IteratorAggregate
 		$page = $this->filterByid($id);
 		foreach($data as $col => $val)
 		{
+			$col = ucfirst($col);
 			$setcol = "set$col";
 			$page->$setcol($val);
 
@@ -1507,8 +1528,6 @@ spl_autoload_register( function ($class_name) {
 		
 		
 		$guts['table'] = 'public $table = "'.$table.'";';
-		$guts['method'] = 'public function debug() { 
-			echo "This was made from the extender thing"; }';
 			
 		$namespace = '';
 		// $namespace = '\\orm\\first_table\\on\\next_table

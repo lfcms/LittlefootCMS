@@ -59,6 +59,7 @@ require_once 'system/lib/auth.php'; 			// auth stuff
 require_once 'system/lib/plugin.php'; // Provides hooks, plugins, page request to app execution
 require_once 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
 require_once 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
+require_once 'system/lib/api.php'; // Provides hooks, plugins, page request to app execution
 require_once 'system/lib/template.php'; // Template
 require_once 'system/lib/nav.php'; // Navigation management
 

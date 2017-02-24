@@ -97,7 +97,7 @@ class user
 
 	public function selectBox($id = 0)
 	{
-	   $users = (new LfUsers)
+	   $users = (new \LfUsers)
 		   ->cols('id, display_name')
 		   ->order('display_name')
 		   ->find();

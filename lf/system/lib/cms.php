@@ -183,7 +183,9 @@ class cms
 		(new acl)->compile()->save();
 		
 		// If /admin was requested, load it and stop here
-		$this->routeAdmin()					
+		$this->routeAdmin()
+			// route here if /api.* was requested and stop execution
+			->routeApi()
 			// add configured title setting to template title array
 			->setSiteTitle()
 			// Get data for SimpleCMS, or determine requested Nav ID from request $actions
@@ -207,7 +209,7 @@ class cms
 		endTimer(__METHOD__);
 		
 		if(getSetting('debug') == 'on') 
-			$this->printDebug();
+			echo $this->printDebug();
 		
 		(new \lf\plugin)->run('post cms run');
 		
@@ -316,9 +318,11 @@ class cms
 	 */
 	public function printDebug()
 	{
+		ob_start();
 		$exectime = round((new \lf\cache)->getTimerResult('lf\\cms::run'), 6)*(1000);
 		$memusage = round(memory_get_peak_usage()/1024/1024,2);
 		include LF.'system/template/debug.php';
+		return ob_get_clean();
 	}
 	
 	/**
@@ -373,9 +377,54 @@ class cms
 		{
 			chdir(LF.'system/admin');
 			include 'index.php';
-			exit;
+			exit; // stop execution here. this app is the last thing that runs
 		}
 		// otherwise, return self
+		return $this;
+	}
+	
+	/**
+	 * If user asks for 'api/' in their request_uri, run admin
+	 */
+	public function routeApi()
+	{
+		$action = \lf\requestGet('Action');
+		
+		if( $action[0] == 'api' )
+		{
+			array_shift($action);
+			
+			if( count($action) < 2 )
+			{
+				echo '403';
+			}
+			
+			// default process
+			$class = '\\lf\\'.$action[0];
+			$method = $action[1];
+			$id = null;
+			if(isset($action[2]))
+			{
+				$id = $action[2];
+			}
+			
+			// check for app api RESTful routing
+			if($action[0] == 'blog')
+			{
+				chdir(LF.'apps/blog');
+				include 'model/blog.php';
+				$class = '\\blog';
+			}
+			
+			// display result as JSON
+			header('Content-Type: application/json');
+			echo json_encode( 
+					[ "result" => (new $class)->$method($id) ] 
+			);
+			
+			exit();
+		}
+		
 		return $this;
 	}
 	
