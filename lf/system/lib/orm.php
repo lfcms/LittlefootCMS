@@ -437,6 +437,16 @@ class orm implements \IteratorAggregate
 
 		return new \ArrayIterator( $return );
 	}
+
+	/**
+	 * 
+	 */
+	public function getSchema() {
+		$schema = array();
+		foreach( $this->fetchall('desc '.$this->table) as $row )
+			$schema[$row['Field']] = $row;
+		return $schema;
+	}
 	
 	/**
 	 * Free last database result
@@ -564,17 +574,20 @@ class orm implements \IteratorAggregate
 	 * Run query, return SQL result, increment SQL counter
 	 * 
 	 * `$sqlResult = (new orm)->query('SELECT * FROM lf_users');`
-	 *
+	 * 
 	 * @param string $q MySQL Query
 	 * @param bool $big If the request is big
 	 */
 	function query($q, $big = false)
 	{
+		$method_name = __METHOD__.' '.md5($q); // makes the query timer label unique to the query run
+		startTimer($method_name);
 		$this->mysqli_result = $this->mysqli->query($q);
 		$this->query_count++;
 		if($this->mysqli->error)
 			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
-
+		
+		endTimer($method_name);
 		return $this->mysqli_result;
 	}
 
@@ -705,6 +718,7 @@ class orm implements \IteratorAggregate
 		// SetAs
 		if($magicPrefix == 'setAs')
 			return $this->setAsMagic($magicSuffix, $args);
+		
 		
 		// Run a find after the by()
 		if($magicPrefix == 'findBy') 
@@ -855,6 +869,24 @@ class orm implements \IteratorAggregate
 		$this->crud = "update";
 
 		return $this;
+	}
+	
+	public function search($field, $value)
+	{
+		$search_result = array();
+		$index = 1;
+		foreach($this->result as $row)
+		{
+			foreach($row as $testfield => $testvalue)
+			{
+				if($testfield == $field && $testvalue == $value)
+				{
+					$search_result[$index][$testfield] = $testvalue;
+				}
+			}
+			$index++;
+		}
+		return $search_result;
 	}
 
 	/**
@@ -1452,6 +1484,7 @@ class orm implements \IteratorAggregate
 
 		}
 		$page->save();
+		return $this->mysqli->info;
 	}
 
 	public function rawResult()

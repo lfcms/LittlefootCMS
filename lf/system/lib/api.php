@@ -13,7 +13,7 @@ class api
 			
 		// test for API token, expand on this later
 		$api_key = $headers['X-Api-Key'];
-		if($api_key != '612e648bf9594adb50844cad6895f2cf')
+		if(true || 'COMING SOON!')
 			return $this;
 		
 		if( count($action) < 2 )
@@ -42,7 +42,10 @@ class api
 		// display result as JSON
 		header('Content-Type: application/json');
 		return json_encode( 
-				[ "result" => (new $class)->$method($id) ] 
+				[ 
+					"data" => (new $class)->$method($id)
+					, "self" => "?"
+				] 
 		);
 	}
 }

@@ -156,11 +156,11 @@ class cms
 	 */
 	public function run()
 	{
-		// load plugins from `lf_plugins` table, execute plugins hooked to 'pre cms run'
-		(new \lf\plugin)->run('pre cms run');
-		
 		// Start the '->run()' timer
 		startTimer(__METHOD__);
+		
+		// load plugins from `lf_plugins` table, execute plugins hooked to 'pre cms run'
+		(new \lf\plugin)->run('pre cms run');
 		
 		// test the installation. can we connect to MySQL, etc?
 		//(new install)->test();

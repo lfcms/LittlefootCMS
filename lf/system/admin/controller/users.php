@@ -18,7 +18,7 @@ class users
 	public function main()
 	{
 		$args = \lf\requestGet('Param'); // backward compatibility
-		$users = \lf\orm::q('lf_users')->order()->getAll();
+		$users = (new \LfUsers)->order()->getAll();
 		$usercount = count($users); 
 		include 'view/users.main.php';
 	}

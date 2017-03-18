@@ -32,6 +32,13 @@ class user
 		return $this->fromSession()->getId();
 	}
 	
+	// this makes me want to separate session handling into a new `sessions` class
+	// maybe merge with the auth class?
+	public function isLoggedIn()
+	{
+		return ($this->fromSession()->getId() != 0);
+	}
+	
 	// resolve {user:34} to user 34's display_name. {user:0} resolves to "Anonymous".
 	public function resolveIds($out, $wholeLastName = false)
 	{

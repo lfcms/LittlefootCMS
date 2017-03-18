@@ -64,7 +64,7 @@ class auth
 		
 		$update = array_intersect_key($_POST, $filter);
 		
-		(new \LfUsers)
+		(new \LfUsers) // ORM Exmaple: this could be shortened up here to ->updateById($id, $update);
 			->byId($id)
 			->setArray($update)
 			->debug()
