@@ -160,7 +160,6 @@ class wysiwyg
 					->order('id')
 					->getAllByInclude($action['id']);
 		//$links['skin'] = $action['template'];
-		echo $action['template'];
 		if($action['template'] == 'default')
 			$skin = \lf\getSetting('default_skin');
 		else
