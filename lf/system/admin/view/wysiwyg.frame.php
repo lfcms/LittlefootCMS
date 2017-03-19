@@ -1,10 +1,6 @@
-<h2><i class="fa fa-dashboard"></i> Dashboard</h2>
+<h2> <i class="fa fa-compass"></i> Navigation </h2>
 
 <?=notice();?>
-
-<h3>
-	<i class="fa fa-compass"></i> Navigation
-</h3>
 <div class="row">
 	<div class="col-9">
 		<div class="row no_martop">
@@ -29,37 +25,34 @@
 	</div>
 	<div class="col-3">
 		<?php //$include = include 'view/wysiwyg.addlink.php';
-		echo (new \lf\cms)->partial('wysiwyg.addlink', ['include' => $action['id']]); ?>
+		echo (new \lf\cms)->partial('wysiwyg.addlink', ['include' => $action['id'] ]); ?>
 	</div>
 </div>
 
 <h4 title="Apps Linked to This Nav Item"><i class="fa fa-link"></i> Linked Apps</h4>
 <?php
 
-// loop through linked apps
-$links = (new \LfLinks)
-			->order('id')
-			->getAllByInclude($action['id']);
-
-if( $links )
-	foreach($links as $link)
-	{
-		echo '<div class="row">';
-		echo '<div class="col-9">';
+if( $links ):
+	foreach($links as $link): ?>
+	<div class="row">
+		<div class="col-9">
+		<?php
 		// print editor form for each
 		//include 'view/wysiwyg.link.php';
-		echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link]);
-		
-		echo '</div>';
-		echo '</div>';
-	}
-else
-	echo '<p>Nothing linked. Link an app with the form at the top right of this page.</p>';
+		echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link, 'locations' => $locations]);
+		?>
+		</div>
+	</div>
+<?php endforeach;
+else: 
+?>
+	<p>Nothing linked. Link an app with the form at the top right of this page.</p>
+<?php 
+endif; 
 
 $iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.implode('/', $param);
 
 ?>
-
 <div class="row">
 	<div class="col-9">
 		<h4 title="Preview Your Site and Make Updates in Realtime" class="no_martop"><i class="fa fa-eye"></i> Preview <a href="<?=$iframeUrl?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-expand"></i></a></h4>

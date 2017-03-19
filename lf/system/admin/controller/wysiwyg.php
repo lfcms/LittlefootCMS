@@ -153,6 +153,25 @@ class wysiwyg
 				->byPosition(1)
 				->get();
 		
+		/* and stuff for showing links */
+		
+		// loop through linked apps
+		$links = (new \LfLinks)
+					->order('id')
+					->getAllByInclude($action['id']);
+		//$links['skin'] = $action['template'];
+		echo $action['template'];
+		if($action['template'] == 'default')
+			$skin = \lf\getSetting('default_skin');
+		else
+			$skin = $action['template'];
+		
+		$skinSourceCode = file_get_contents(LF.'skins/'.$skin.'/index.php');
+		$locationMatch = '/printContent\(["\']([^)]+)["\']\)/';
+		$locations = [];
+		if(preg_match_all($locationMatch, $skinSourceCode, $match))
+			$locations = array_unique($match[1]);
+		
 		include 'view/wysiwyg.frame.php';
 	}
 	
@@ -296,17 +315,22 @@ class wysiwyg
 		
 		
 		exit;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// never gets here
+		
+		
 		return;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		$vars =  \lf\requestGet('Param');
 		

@@ -13,7 +13,7 @@
 // Default args is an input with the current value. Customizable by app.
 $args = '<input type="text" value="'.$link['ini'].'" name="ini" placeholder="app ini" />';
 
-// backward compat for args.php
+// backward compatibility for args.php
 $save = $link;
 
 // Args for app config ini
@@ -40,7 +40,21 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 					Config: <?=$args;?>
 				</div>
 				<div class="col-4">
-					Location (unsure? put "content"): <input type="text" name="section" placeholder="content" value="<?=isset($link['section'])?$link['section']:'';?>" />
+					Location in Skin:
+					<select name="section" id="">
+						<option disabled="disabled">-- Select a location --</option>
+						<?php foreach($locations as $location): 
+						$selected = '';
+						if($link['section'] == $location)
+						{
+							$selected = 'selected="selected"';
+						}
+						?>
+						<option <?=$selected;?>>
+							<?=$location;?>
+						</option>
+						<?php endforeach; ?>
+					</select>
 				</div>
 				<div class="col-2">
 					&nbsp;
