@@ -1173,7 +1173,6 @@ class cms
 				(new template)->addContent("403 Access Denied ".$this->getLogin(), $_app['section']);
 				continue;
 			}*/
-			
 			// set app target path
 			$path = ROOT.'apps/'.$_app['app'];
 			if(!is_file($path.'/index.php')) 
@@ -1187,7 +1186,7 @@ class cms
 			$apptimer = __METHOD__.
 				' / Link Id: '.$_app['id'].
 				', App: '.$_app['app'].
-				', Position: '.$_app['section'].
+				', Section: '.$_app['section'].
 				', Config: '.$_app['ini'];
 			
 			startTimer($apptimer);
