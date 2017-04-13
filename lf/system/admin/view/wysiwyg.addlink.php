@@ -1,6 +1,6 @@
 <div class="tile white">
 	<div class="tile-header">
-		<h4 title="Link a New Application."><i class="fa fa-plus"></i> Add New</h4>
+		<h4 title="Link a New Application."><i class="fa fa-plus"></i> Link App to Page</h4>
 	</div>
 	<div class="tile-content">
 		<form method="post" action="<?=\lf\requestGet('ActionUrl');?>links">
