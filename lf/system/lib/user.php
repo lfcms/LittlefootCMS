@@ -180,7 +180,6 @@ class user
 	{
 		// Traditional Database lookup
 		return (new \LfUsers)
-			->cols('id, user, email, display_name, access')
 			->byUser($username)
 			->byPass(sha1($password))
 			->first();

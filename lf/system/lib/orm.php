@@ -855,8 +855,12 @@ class orm implements \IteratorAggregate
 	{
 		// filter request by mask if provided
 		if( ! is_null($by) )
+		{
+			pre($by);
+			
 			foreach($by as $field => $value)
 				$this->filterBy($field, $value);
+		}
 		
 		// temp variable for method call below
 		$crud = $this->crud;
@@ -1272,10 +1276,25 @@ class orm implements \IteratorAggregate
 		return $this->sql;
 	}
 
-	// compile SQL and return result of query
-	public function first()
+	/** 
+	 * Return first row
+	 * 
+	 * $andOnly = true (default), adds ->limit(1) to the query before find()
+	 * $andOnly = false, runs find to get full result set, returns first row.
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	public function first($andOnly = true)
 	{
-		return $this->find(1)->get(0);
+		if($andOnly)
+			$this->limit(1);
+		
+		return $this->find()->get(0);
 	}
 
 	public function last()
@@ -1601,8 +1620,7 @@ spl_autoload_register( function ($class_name) {
 		);
 		
 		$guts['table'] = 'public $table = "'.$table.'";';
-		$guts['method'] = 'public function debug() { 
-			echo "This was made from the extender thing"; }';
+		$guts['method'] = 'public function dynamicfunction() { echo "This example function was eval\'d at '.date('Y-M-d h:m:s').'"; }';
 
 		//pre('class %s extends \\lf\\orm { '.implode(' ', $guts).' }');
 		
