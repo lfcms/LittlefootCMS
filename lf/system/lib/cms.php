@@ -1025,12 +1025,19 @@ class cms
 				$nav_cache);
 		}
 		
+		/* idk if I need this. does that class load?
 		// set nav ul class if set
 		// Apply class to root <ul> if it is set
 		
 		// $nav_cache = isset($this->settings['nav_class']) 
 			// ? preg_replace('/^<ul>/', '<ul class="'.$this->settings['nav_class'].'">', $nav_cache )
 			// : $nav_cache;
+		*/
+		
+		// append this navigation item's configured title, invert to put the main site title setting in the back
+		(new template)
+			->appendTitle($this->select['title'])
+			->invertTitle();
 		
 		// if no items match the request, return 404
 		if($this->select['alias'] == '404')
