@@ -2,7 +2,7 @@
 
 namespace lf\admin;//\controllers;
 
-class home
+class dashboard
 {
 	public function main()
 	{
