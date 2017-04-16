@@ -5,6 +5,8 @@ defined('LF') or die('LF undefined');
 /**
  * Admin launchpoint
  *
+ * The LF admin is just another app. Tightly linked with the \lf\cms class.
+ *
  * 1. Set admin url
  *
  * //include('loader.php'); // multiMVC loader
@@ -99,7 +101,10 @@ if($user->hasAccess('admin') )
 	
 	$this->select['template'] = 'default';
 	// multimvc handles its own 'addcontent', but that maybe should be in template too...
-	$this->multiMVC('wysiwyg', 'content', '\\lf\\admin\\');
+	$defaultControllerRoute = 'home';
+	$renderTarget = 'content';
+	$classPrefix = '\\lf\\admin\\';
+	$this->multiMVC($defaultControllerRoute, $renderTarget, $classPrefix);
 	
 	$this->loadLfCss();
 	

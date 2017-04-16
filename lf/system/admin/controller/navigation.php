@@ -2,7 +2,7 @@
 
 namespace lf\admin;
 
-class wysiwyg
+class navigation
 {
 	public function main()
 	{
