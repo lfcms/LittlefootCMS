@@ -110,6 +110,12 @@ class template
 		return $this->save();
 	}
 	
+	public function invertTitle()
+	{
+		$this->elements['title'] = array_reverse($this->elements['title']);
+		return $this->save();
+	}
+	
 	/**
 	 * Return either the imploded array of the given $key, or an error stating that there was nothing saved at that key.
 	 */
@@ -144,11 +150,11 @@ class template
 	}
 	
 	/**
-	 * Get imploded title array around (' | ')
+	 * Get imploded title array around (' - ')
 	 */
 	public function getTitle()
 	{
-		return implode(' | ', $this->elements['title']);
+		return implode(' - ', $this->elements['title']);
 	}
 	
 	/**

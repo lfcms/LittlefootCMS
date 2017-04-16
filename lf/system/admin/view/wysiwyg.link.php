@@ -50,7 +50,7 @@ if(is_file(LF.'apps/'.$link['app'].'/args.php'))
 							$selected = 'selected="selected"';
 						}
 						?>
-						<option <?=$selected;?>>
+						<option value="<?=$location;?>" <?=$selected;?>>
 							<?=$location;?>
 						</option>
 						<?php endforeach; ?>
