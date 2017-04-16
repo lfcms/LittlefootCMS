@@ -26,7 +26,7 @@ class users
 	public function edit()
 	{
 		$args = \lf\requestGet('Param'); // backward compatibility
-		$user = \lf\orm::q('lf_users')->filterByid($args[1])->first();
+		$user = (new \LfUsers)->byId($args[1])->first();
 		include 'view/users.edit.php'; 
 	}
 	
@@ -73,14 +73,14 @@ class users
 			
 			$_POST['pass'] = sha1($_POST['pass']);
 		}
-		// Else, discard
-		else unset($_POST['pass']);
+		// No password?,
+		else 
+			// discard this setting. do not update to a blank password.
+			unset($_POST['pass']);
 		
-		unset($_POST['pass2']);
-		\lf\orm::q('lf_users')->debug()->updateById($args[1], $_POST);
-		
+		unset($_POST['pass2']);		
+		(new \LfUsers)->updateById($args[1], $_POST);
 		notice('User Saved');
-		
 		redirect302($this->lf->appurl);
 	}
 	
