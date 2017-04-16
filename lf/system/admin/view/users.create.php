@@ -13,6 +13,7 @@
 				<li><input type="text" name="nick" placeholder="Display Name" required></li>
 				<li><input type="text" name="group" placeholder=" Group (user, admin, etc)" required></li>		
 		
+				<li><input type="text" name="status" placeholder=" Status (valid, pending)" required></li>
 				<li><input type="checkbox" name="sendmail">Email credentials to user</li>
 				<li><input type="password" name="adminpass" placeholder="Re-enter Admin Password" required></li>
 				
