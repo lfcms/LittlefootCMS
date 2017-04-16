@@ -36,8 +36,6 @@ if(count($_GET))
 					
 					<?php if( !(new \lf\user)->isAdmin() && (new \lf\user)->idFromSession() != 0 ): ?>
 					
-					
-					
 					<div class="row">
 						<div class="col-12 light">
 							<h4 class="no_martop">Logged In</h4>
