@@ -1017,7 +1017,15 @@ class orm implements \IteratorAggregate
 			$joinData['select'] = $args[1];
 		
 		//ljoin(AuthorOnId)
-		
+		/*
+		 * # Usage
+		 * 
+		 * ~~~
+		 * $posts = (new \ForumPosts)
+		 * 				->joinAuthorOnId('lf_users', ['display_name', 'email'])
+		 * 				->getAll();
+		 * ~~~
+		 */
 		if(preg_match('/^([A-Z][a-z_]*)On([A-Z][a-z_]*)$/', $after, $keys))
 		{
 			$joinData['localkey'] = $keys[1];
