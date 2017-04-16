@@ -9,12 +9,16 @@
 			<li><a class="green" href="<?=\lf\requestGet('AdminUrl');?>settings/" title="Upgrade Your Littlefoot Installation">
 <i class="fa fa-arrow-circle-up"></i> Upgrade Now!</a></li>
 			<?php endif; ?>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/wysiwyg/"><i class="fa fa-dashboard"></i><span><?=
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/dashboard/"><i class="fa fa-dashboard"></i>
+				<span><?=
 				\lf\getSetting('simple_cms')=='_lfcms'
 					?' Dashboard'
 					:ucfirst(\lf\getSetting('simple_cms')).' Admin';
-				?></span></a></li>
-			<!--<li><a class="media" href="<?=\lf\requestGet('IndexUrl');?>admin/media/"><span>Media</span></a></li>-->
+				?></span>
+				</a>
+			</li>
+			<li><a class="controls" title="Coming Soon!" href="#"><i class="fa fa-picture-o"></i> <span>Media</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/navigation/"><i class="fa fa-compass"></i> <span>Navigation</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/users/"><i class="fa fa-users"></i><span> Users</span></a></li>

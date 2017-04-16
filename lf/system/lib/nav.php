@@ -148,7 +148,7 @@ class nav
 				(new \lf\orm)->query('
 					UPDATE lf_actions SET position = position - 1 
 					WHERE parent = '.$original['parent'].' 
-						AND position > '.intval($original['position'])); 
+						AND position > '.intval($original['position']));  
 					
 			// moving to lower position
 			else if($destPosition < $original['position']) 

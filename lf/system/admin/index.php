@@ -101,7 +101,7 @@ if($user->hasAccess('admin') )
 	
 	$this->select['template'] = 'default';
 	// multimvc handles its own 'addcontent', but that maybe should be in template too...
-	$defaultControllerRoute = 'home';
+	$defaultControllerRoute = 'dashboard';
 	$renderTarget = 'content';
 	$classPrefix = '\\lf\\admin\\';
 	$this->multiMVC($defaultControllerRoute, $renderTarget, $classPrefix);

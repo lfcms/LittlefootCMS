@@ -4,7 +4,7 @@
 
 <div class="row no_martop">
 	<div class="col-12">
-		<nav class="light_b main_nav white"><?=(new \lf\cms)->renderNavCache( \lf\requestGet('AdminUrl').'wysiwyg/' );?></nav>
+		<nav class="light_b main_nav white"><?=(new \lf\cms)->renderNavCache( \lf\requestGet('AdminUrl').'navigation/' );?></nav>
 	</div>
 </div>
 
@@ -26,7 +26,7 @@
 <div class="row">
 	<div class="col-9">
 		
-		<?php include 'view/wysiwyg.action.php'; ?>
+		<?php include 'view/navigation.action.php'; ?>
 		
 		<h4 title="Apps Linked to This Nav Item"><i class="fa fa-link"></i> Linked Apps</h4>
 		<?php
@@ -37,8 +37,8 @@
 				<div class="col-12">
 				<?php
 				// print editor form for each
-				//include 'view/wysiwyg.link.php';
-				echo (new \lf\cms)->partial('wysiwyg.link', ['link' => $link, 'locations' => $locations]);
+				//include 'view/navigation.link.php';
+				echo (new \lf\cms)->partial('navigation.link', ['link' => $link, 'locations' => $locations]);
 				?>
 				</div>
 			</div>
@@ -49,13 +49,13 @@
 		<?php 
 		endif; 
 
-		$iframeUrl = \lf\requestGet('AdminUrl').'wysiwyg/preview/'.$action['id'].'/'.implode('/', $param);
+		$iframeUrl = \lf\requestGet('AdminUrl').'navigation/preview/'.$action['id'].'/'.implode('/', $param);
 
 ?>
 	</div>
 	<div class="col-3">
-		<?php //$include = include 'view/wysiwyg.addlink.php';
-		echo (new \lf\cms)->partial('wysiwyg.addlink', ['include' => $action['id'] ]); ?>
+		<?php //$include = include 'view/navigation.addlink.php';
+		echo (new \lf\cms)->partial('navigation.addlink', ['include' => $action['id'] ]); ?>
 	</div>
 </div>
 

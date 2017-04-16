@@ -12,7 +12,7 @@ class navigation
 		if( $param == array() )
 		{
 			$debug[] = 'no alias selected';
-			// wysiwyg on first (parent: -1, position: 1) alias nav item
+			// navigation on first (parent: -1, position: 1) alias nav item
 			$this->printEditForm();
 			return;
 		}
@@ -32,7 +32,7 @@ class navigation
 			
 			// do navSelect() process to determine nav item selected
 			/// need to update navSelect() into its own `nav` class resource (new \lf\nav)->select(['alias', 'list'])->getNavHTML()
-			// wysiwyg on the selected nav item
+			// navigation on the selected nav item
 		}
 	}
 	
@@ -171,7 +171,7 @@ class navigation
 		if(preg_match_all($locationMatch, $skinSourceCode, $match))
 			$locations = array_unique($match[1]);
 		
-		include 'view/wysiwyg.frame.php';
+		include 'view/navigation.frame.php';
 	}
 	
 	private function actionFromParam()
@@ -266,7 +266,7 @@ class navigation
 		// load in nav cache
 		$previewNav = (new \lf\cms)->getNavCache();
 		//$replace = [
-			// '%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
+			// '%baseurl%' => \lf\requestGet('AdminUrl').'navigation/',
 			// '<a ' => '<a target="_parent"'
 		// ];
 		//$previewNav = str_replace(array_keys($replace), array_values($replace), $navCache);
@@ -274,7 +274,7 @@ class navigation
 		
 		
 		$replace = [
-			'%baseurl%' => \lf\requestGet('AdminUrl').'wysiwyg/',
+			'%baseurl%' => \lf\requestGet('AdminUrl').'navigation/',
 			'<a ' => '<a target="_parent"'
 		];
 		
@@ -284,7 +284,7 @@ class navigation
 		
 		// new request
 		$request = (new \lf\request)->load()
-			// Drop wysiwyg into Cwd (doesnt affect anything really...)
+			// Drop navigation into Cwd (doesnt affect anything really...)
 			->actionDrop()
 			// set param as what $this controller method received
 			->paramShift(2)
@@ -305,7 +305,7 @@ class navigation
 		
 	//	pre(new \lf\template, 'var_dump');
 		
-			// replace /admin/wysiwyg/preview/ into template nav output
+			// replace /admin/navigation/preview/ into template nav output
 		// set request to frontend mode and execute apps (getcontent?)
 		
 		
