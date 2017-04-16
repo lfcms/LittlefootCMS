@@ -33,6 +33,35 @@ if(count($_GET))
 				<div class="col-4 ">
 					<h1 class="no_mar"><span class="hidden">Littlefoot</span><a href="http://littlefootcms.com/" target="_blank"><img src="<?=\lf\requestGet('LfUrl');?>system/template/images/lf-banner.png"/></a></h1>
 					<?php echo notice(); ?>
+					
+					<?php if( !(new \lf\user)->isAdmin() && (new \lf\user)->idFromSession() != 0 ): ?>
+					
+					
+					
+					<div class="row">
+						<div class="col-12 light">
+							<h4 class="no_martop">Logged In</h4>
+							But this page is for admin access. 
+						</div>
+					</div>
+					<p>
+					<a href="<?=\lf\requestGet('IndexUrl');?>" class="green button">Visit Home Page</a>
+					</p>
+					<p>
+					<a href="<?=\lf\requestGet('IndexUrl');?>/_auth/logout" class="red button">Logout (<?=(new \lf\user)->fromSession()->getDisplay_name();?>)</a>
+					</p>
+					
+					
+					
+					<div class="row">
+						<div class="col-12 light">
+							<h4>Log In to Admin</h4>
+							Login as admin continue to admin interface.
+						</div>
+					</div>
+					
+					<?php endif; ?>
+					
 					<form id="login" action="<?=\lf\requestGet('IndexUrl');?>_auth/login" method="post">
 						<ul class="vlist">
 							<li><input type="text" id="username" name="user" placeholder="Username" /></li>
