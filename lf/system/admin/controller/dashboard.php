@@ -16,9 +16,27 @@ class dashboard
 				$oldwd = getcwd();
 				chdir(LF.'apps/'.$app);
 				include LF.'apps/'.$app.'/widget.php';
-				$widgets[] = ob_get_clean();
+				$widgets[$app] = ob_get_clean();
 				chdir($oldwd);
 			}
+		
+		
+		// get all mentions of the apps
+		$appLinks = (new \LfLinks)
+						->lJoinIncludeOnId( // finally got a chance to use this style of join
+							'lf_actions', // this is the table we are joining on
+							['title', 'alias'] // Selects colums from other table.SELECT ..., ..., othertable.title, othertable.alias WHERE ...
+						)->findByApp($apps);
+						
+		foreach($appLinks->getAll() as $link)
+		{
+			$links[$link['app']][] = $link;
+		}
+				
+		
+		
+		
+		
 		
 		include 'view/home.main.php';
 	}
