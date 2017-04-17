@@ -1,4 +1,4 @@
-<h2>Media</h2>
+<h2><i class="fa fa-picture-o"></i> Media</h2>
 <?=notice();?>
 
 <?php

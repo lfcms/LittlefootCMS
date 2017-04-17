@@ -1,4 +1,4 @@
-<h2>Media > File Viewer</h2>
+<h2><i class="fa fa-picture-o"></i> Media</h2>
 
 <?php
 $parts = $this->getSubdirParts();
@@ -24,6 +24,8 @@ foreach($parts as $part)
 
 		$imgurl = \lf\requestGet('Subdir').'lf/media/'.$this->getSubDir().'/'.$filename;
 ?>
+
+<h3>File Viewer</h3>
 
 <div class="row">
 	<div class="col-12">
