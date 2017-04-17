@@ -248,6 +248,17 @@ class request
 	}
 	
 	/**
+	 * Return string of relative URL to subdir `lf/` is installed under.
+	 * 
+	 * eg, `/littlefoot/`
+	 */
+	public function getSubdir()
+	{
+		extract($this->pieces);
+		return '/'.$subdir;
+	}
+	
+	/**
 	 * Return string of full URL to subdir `lf/` is installed under.
 	 * 
 	 * eg, `http://www.domain.com/littlefoot/`

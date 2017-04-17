@@ -17,7 +17,7 @@
 				?></span>
 				</a>
 			</li>
-			<li><a class="controls" title="Coming Soon!" href="#"><i class="fa fa-picture-o"></i> <span>Media</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/media/"><i class="fa fa-picture-o"></i> <span>Media</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/navigation/"><i class="fa fa-compass"></i> <span>Navigation</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
