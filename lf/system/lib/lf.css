@@ -1,5 +1,5 @@
 /*HTML Reset*/
-.lf, .lf body, .lf div, .lf span, .lf applet, .lf object, .lf iframe, .lf
+.lf, .lf body, .lf span, .lf applet, .lf object, .lf iframe, .lf
 h1, .lf h2, .lf h3, .lf h4, .lf h5, .lf h6, .lf p, .lf blockquote, .lf pre, .lf
 a, .lf abbr, .lf acronym, .lf address, .lf big, .lf cite, .lf code, .lf
 del, .lf dfn, .lf rem, .lf img, .lf ins, .lf kbd, .lf q, .lf s, .lf samp, .lf
@@ -18,6 +18,12 @@ time, .lf mark, .lf audio, .lf video {
 	vertical-align: baseline;
 	/*font: inherit;*/
 	/*font-size: 100%;*/
+}
+
+.lf div {
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
 }
 
 .lf ol, .lf ul {
