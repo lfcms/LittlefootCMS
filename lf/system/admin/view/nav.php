@@ -19,14 +19,14 @@
 			</li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/media/"><i class="fa fa-picture-o"></i> <span>Media</span></a></li>
 			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/navigation/"><i class="fa fa-compass"></i> <span>Navigation</span></a></li>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/skins/"><i class="fa fa-paint-brush"></i><span> Skins</span></a></li>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/plugins/"><i class="fa fa-plug"></i><span> Plugins</span></a></li>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/users/"><i class="fa fa-users"></i><span> Users</span></a></li>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/acl/"><i class="fa fa-key"></i><span> Access</span></a></li>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/settings/"><i class="fa fa-cog"></i><span> Settings</span></a></li>
-			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/store/"><i class="fa fa-shopping-cart"></i><span> Store</span></a></li>
-			<li><a class="controls" target="_blank" href="http://littlefootcms.com/manual/Admin+Documentation" title="Hover over headings for tips!"><i class="fa fa-question"></i><span> Help</span></a></li>
-			<li><a class="controls" target="_blank" href="https://github.com/eflip/littlefootcms/issues/"><i class="fa fa-bug"></i><span> Report Bug</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/skins/"><i class="fa fa-paint-brush"></i> <span>Skins</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/plugins/"><i class="fa fa-plug"></i> <span>Plugins</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/users/"><i class="fa fa-users"></i> <span>Users</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/acl/"><i class="fa fa-key"></i> <span>Access</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/settings/"><i class="fa fa-cog"></i> <span>Settings</span></a></li>
+			<li><a class="controls" href="<?=\lf\requestGet('IndexUrl');?>admin/store/"><i class="fa fa-shopping-cart"></i> <span>Store</span></a></li>
+			<li><a class="controls" target="_blank" href="https://github.com/lfcms/LittlefootCMS/wiki" title="Hover over headings for tips!"><i class="fa fa-question"></i> <span>Help</span></a></li>
+			<li><a class="controls" target="_blank" href="https://github.com/eflip/littlefootcms/issues/"><i class="fa fa-bug"></i> <span>Report Bug</span></a></li>
 			<!--<li><a class="" href="<?=$this->relbase;?>" target="_blank"><span>Preview Site</span></a></li>-->
 			
 			<?php (new \lf\plugin)->run('post admin nav'); ?>
