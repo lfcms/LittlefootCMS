@@ -49,23 +49,11 @@
 		<?php 
 		endif; 
 
-		$iframeUrl = \lf\requestGet('AdminUrl').'navigation/preview/'.$action['id'].'/'.implode('/', $param);
-
+		
 ?>
 	</div>
 	<div class="col-3">
 		<?php //$include = include 'view/navigation.addlink.php';
 		echo (new \lf\cms)->partial('navigation.addlink', ['include' => $action['id'] ]); ?>
-	</div>
-</div>
-
-
-<div class="row">
-	<div class="col-12">
-		<h4 title="Preview Your Site and Make Updates in Realtime" class="no_martop"><i class="fa fa-eye"></i> Preview <a href="<?=$iframeUrl?>" class="pull-right" title="Fullscreen Preview"><i class="fa fa-expand"></i></a></h4>
-		<iframe src="<?=$iframeUrl?>"
-			class="white light_b" width="100%" height="700px" frameborder="0">
-		</iframe>
-	
 	</div>
 </div>
