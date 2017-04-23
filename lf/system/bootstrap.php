@@ -47,23 +47,21 @@ $cms->run();
 ~~~
 */
 
-require_once 'system/lib/mem.php'; // Quick memcache style key-value pair storage. (should be used by cache)
-require_once 'system/lib/cache.php'; // largely deprecated by mem.php
+require_once 'system/lib/mem.php'; 			// Quick memcache style key-value pair storage. (should be used by cache)
+require_once 'system/lib/cache.php'; 		// requires mem, largely deprecated by mem.php
 require_once 'system/lib/helpers.php'; 		// Helpful functions
-require_once 'system/lib/request.php'; // Parse $_SERVER['REQUEST_URI'] into usable parts
-require_once 'system/lib/user.php'; 			// user stuff
+require_once 'system/lib/request.php';		// Parse $_SERVER['REQUEST_URI'] into usable parts
+require_once 'system/lib/user.php'; 		// user stuff
 require_once 'system/lib/orm.php'; 			// Object Relation Model base. requires user (should move the db setup to its own thing :\)
-require_once 'system/lib/lfcss.php';			// Littlefoot css builder class
+require_once 'system/lib/lfcss.php';		// Littlefoot css builder class
 require_once 'system/lib/install.php';		// test the install
-require_once 'system/lib/auth.php'; 			// auth stuff
-require_once 'system/lib/plugin.php'; // Provides hooks, plugins, page request to app execution
-require_once 'system/lib/acl.php'; // Tool to check user access to a request against loaded rules
-require_once 'system/lib/cms.php'; // Provides hooks, plugins, page request to app execution
-require_once 'system/lib/api.php'; // Provides hooks, plugins, page request to app execution
-require_once 'system/lib/template.php'; // Template
-require_once 'system/lib/nav.php'; // Navigation management
-
-require_once 'system/lib/littlefoot.php'; 	// LEGACY Request, Auth, Nav, Content, Render
+require_once 'system/lib/auth.php'; 		// auth stuff
+require_once 'system/lib/plugin.php'; 		// Provides hooks, plugins, page request to app execution
+require_once 'system/lib/acl.php'; 			// Tool to check user access to a request against loaded rules
+require_once 'system/lib/cms.php'; 			// Provides hooks, plugins, page request to app execution
+require_once 'system/lib/api.php'; 			// URL REST
+require_once 'system/lib/template.php'; 	// Template
+require_once 'system/lib/nav.php'; 			// Navigation management
 
 // Add local lib paths to include_path
 if(is_dir(LF.'lib'))
