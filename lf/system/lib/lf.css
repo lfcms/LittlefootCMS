@@ -923,6 +923,11 @@ html.lf, .lf body {
 	outline: 0;
 }
 
+.lf span.finput:focus {
+	-webkit-box-shadow: 0px 0px 10px 0px rgba(17, 149, 170, 0.35);
+  box-shadow: 0px 0px 10px 0px rgba(17, 149, 170, 0.35);
+}
+
 .lf textarea {
 	background: #FFF;
 	background-clip: padding-box;
@@ -946,7 +951,7 @@ html.lf, .lf body {
 	font-size: 1rem;
 	line-height: 20px;
 	margin: 0;  
-	padding: 5px 5px 5px 5px;
+	padding: 0px 5px 5px 5px;
   text-decoration: none;
 	width: 100%;
 }
