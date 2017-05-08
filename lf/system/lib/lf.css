@@ -892,7 +892,7 @@ html.lf, .lf body {
 	background-clip: padding-box;
 	border: #AAA 1px solid;
 	border-top: #777 1px solid;
-	border-radius: 4px;
+	border-radius: 0px;
 	display: block;
 	font-size: 16px;
 	min-height: 40px;
@@ -933,7 +933,7 @@ html.lf, .lf body {
 	background-clip: padding-box;
 	border: #AAA 1px solid;
 	border-top: #777 1px solid;
-	border-radius: 4px;
+	border-radius: 0px;
 	display: block;
 	font-size: 16px;
 	min-height: 40px;
@@ -945,7 +945,7 @@ html.lf, .lf body {
 .lf label, .lf .label {
 	overflow: hidden;
 	border: none;
-  border-radius: 4px;
+  border-radius: 0px;
   color: #222;
 	float: left;
 	font-size: 1rem;
@@ -962,7 +962,7 @@ html.lf, .lf body {
 	display: block;
 	overflow: hidden;
 	border: none;
-    border-radius: 4px;
+    border-radius: 0px;
     color: white;
 	font-size: 1rem;
 	line-height: 20px;
