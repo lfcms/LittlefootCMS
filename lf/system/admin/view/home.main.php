@@ -3,7 +3,7 @@
 	<div class="col-10">
 		<div class="no_martop row">
 			<?php foreach($widgets as $app => $widget): ?>
-			<div class="col-3">
+			<div class="col-6">
 				<div class="tile white">
 				<div class="tile-header">
 					<h3><a href="<?=\lf\requestGet('AdminUrl');?>apps/<?=$app;?>"><?=ucfirst($app);?></a></h3>
