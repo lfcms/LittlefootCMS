@@ -30,7 +30,7 @@ foreach($parts as $part)
 
 <div class="row">
 	<div class="col-9">
-		<h3>Folder contents</h3>
+		<h3 class="no_martop">Folder Contents</h3>
 		<ul class="efvlist">
 		<?php if( $this->getSubdirDepth() > 0 ): ?>
 			<li>
@@ -61,7 +61,7 @@ foreach($parts as $part)
 		</ul>
 	</div>
 	<div class="col-3">
-		<h3>Upload</h3>
+		<h3 class="no_martop">Upload</h3>
 		<form action="<?=\lf\requestGet('ActionUrl');?>upload" method="post" enctype="multipart/form-data">
 			<ul class="vlist">
 				<li>
