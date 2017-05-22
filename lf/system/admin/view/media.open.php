@@ -1,6 +1,10 @@
 <h2><i class="fa fa-picture-o"></i> Media</h2>
 
 <?php
+
+
+echo notice();
+
 $parts = $this->getSubdirParts();
 $breadcount = count($parts);
 $counter = 1;
@@ -43,7 +47,7 @@ foreach($parts as $part)
 				<a href="<?=$imgurl;?>"><img src="<?=$imgurl;?>" alt=""></a>
 			</li>
 			<li>
-				<a href="delete" class="red button"><i class="fa fa-trash-o"></i> Delete</a>
+				<a href="<?=\lf\requestGet('ActionUrl');?>delete/<?=$filename;?>" class="red button"><i class="fa fa-trash-o"></i> Delete</a>
 			</li>
 		</ul>
 		
