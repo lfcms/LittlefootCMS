@@ -1,11 +1,11 @@
-<h2><i class="fa fa-paint-brush"></i> Skins Manager</h2>
+<h2 title="Skins: Create and edit stylish themes for your website."><i class="fa fa-paint-brush"></i> Skins Manager</h2>
 	
 <div class="row">
 	<!-- New Skin -->
 	<div class="col-3 pull-right">
 		<div class="tile white">
 			<div class="tile-header">
-				<h4><i class="fa fa-plus"></i> Add New</h4>
+				<h4 title="Create a new skin."><i class="fa fa-plus"></i> Add New</h4>
 			</div>
 			<div class="tile-content">
 				<div class="row">

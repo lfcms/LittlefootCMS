@@ -1,4 +1,4 @@
-<h2><i class="fa fa-key"></i> Access Control Lists</h2>
+<h2 title="Access Control Lists: Create user groups and manage their permissions."><i class="fa fa-key"></i> Access Control Lists</h2>
 
 <div class="row">
 	<div class="col-2">

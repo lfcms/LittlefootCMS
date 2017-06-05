@@ -1,4 +1,4 @@
-<h2><i class="fa fa-users no_marbot"></i> Users (<?=$usercount;?>)</h2>
+<h2 title="Users: Creaate users and select their access level."><i class="fa fa-users no_marbot"></i> Users (<?=$usercount;?>)</h2>
 
 <div class="row">
 	<div class="col-3 pull-right">
@@ -6,7 +6,7 @@
 			<div class="col-12">
 				<div class="tile white">
 					<div class="tile-header">
-						<h4><i class="fa fa-plus"></i> Add New</h4>
+						<h4 title="Create a new user account."><i class="fa fa-plus"></i> Add New</h4>
 					</div>
 					<div class="tile-content">
 						<? if(hasnotice()): ?>

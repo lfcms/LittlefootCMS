@@ -1,4 +1,4 @@
-<h2><i class="fa fa-cog"></i> Settings</h2>
+<h2 title="Settings: Configure settings and manage your versions."><i class="fa fa-cog"></i> Settings</h2>
 
 <?=notice();?>
 <div class="row">

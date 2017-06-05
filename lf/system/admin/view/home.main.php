@@ -1,4 +1,4 @@
-<h2><i class="fa fa-dashboard"></i> Dashboard</h2>
+<h2 title="Dashboard: Quickly update your content from here."><i class="fa fa-dashboard"></i> Dashboard</h2>
 <div class="row">
 	<div class="col-12">
 		<div class="no_martop row">
