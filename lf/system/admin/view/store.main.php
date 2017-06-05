@@ -1,4 +1,4 @@
-<h2 title="Store: Click an app to install it. Update links will download the latest."><i class="fa fa-shopping-cart"></i> Store</h2>
+<h2 title="Store: Click an app to install it. Update links will download the latest version."><i class="fa fa-shopping-cart"></i> Store</h2>
 
 <?=notice();?>
 
@@ -21,9 +21,8 @@
 </form>
 
 
-<h3>From Repo</h3>
-<p><?=$this->repobase;?></p>
-<div class="row">
+<h3 class="no_marbot" title="Repo located at <?=$this->repobase;?>">From Repo</h3>
+<div class="row no_martop">
 	<div class="col-4">
 		<!-- <form action="%appurl%zipfromurl/" method="post">
 			<ul class="vlist">
@@ -53,7 +52,7 @@
 				<a href="%appurl%dlapp/<?=$app;?>/"><?=$app;?></a>
 			<?php else: ?>
 				<?=$app;?> 
-				[<a href="%appurl%dlapp/<?=$app;?>/update/">Update</a>]
+				<a class="pull-right" href="%appurl%dlapp/<?=$app;?>/update/" title="Update"><i class="fa fa-refresh"></i></a>
 			<?php endif; ?>
 			</li>
 		 <?php endforeach; ?>
@@ -87,7 +86,7 @@
 			<?php if(!isset($skin_files[$skin])): ?>
 				<a href="%appurl%dlskin/<?=$skin;?>/"><?=$skin;?></a>
 			<?php else: ?>
-				<?=$skin;?> [<a href="%appurl%dlskin/<?=$skin;?>/update/">Update</a>]
+				<?=$skin;?> <a class="pull-right" href="%appurl%dlskin/<?=$skin;?>/update/" title="Update"><i class="fa fa-refresh"></i></a>
 			</li>
 			<?php endif; ?>
 		 <?php endforeach; ?>
@@ -121,7 +120,7 @@
 			<?php if(!isset($plugin_files[$plugin])): ?>
 				<a href="%appurl%dlplugin/<?=$plugin;?>/"><?=$plugin;?></a>
 			<?php else: ?>
-				<?=$plugin;?> [<a href="%appurl%dlplugin/<?=$plugin;?>/update/">Update</a>]
+				<?=$plugin;?> <a class="pull-right" href="%appurl%dlplugin/<?=$plugin;?>/update/" title="Update"><i class="fa fa-refresh"></a>
 			</li>
 			<?php endif; ?>
 		 <?php endforeach; ?>

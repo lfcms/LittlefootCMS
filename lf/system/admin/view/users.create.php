@@ -1,4 +1,7 @@
-<h2><a href="%appurl%">Users</a> Create</h2>
+<h2><i class="fa fa-user-plus"></i> Create New User</h2>
+<p>
+<span><a href="%appurl%" title="Back to Users Manager"><i class="fa fa-arrow-left" aria-hidden="true"></i> Users Manager</a></span>
+</p>
 <? if(hasnotice()): ?>
 		<span class="button light_gray"><?=notice();?></span>
 		<? endif; ?>

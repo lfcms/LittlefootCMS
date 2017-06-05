@@ -1,7 +1,7 @@
+<h2><i class="fa fa-edit"></i> Edit User</h2>
 <p>
 <span><a href="%appurl%" title="Back to Users Manager"><i class="fa fa-arrow-left" aria-hidden="true"></i> Users Manager</a></span>
 </p>
-<h2>Edit User</h2>
 
 <?=notice();?>
 <div class="row">
