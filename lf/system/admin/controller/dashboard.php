@@ -32,11 +32,6 @@ class dashboard
 		{
 			$links[$link['app']][] = $link;
 		}
-				
-		
-		
-		
-		
 		
 		include 'view/dashboard.main.php';
 	}
