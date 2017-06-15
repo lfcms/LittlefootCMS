@@ -1,4 +1,4 @@
-<h2><i class="fa fa-plug"></i> Plugins Manager</h2>
+<h2 title="Plugins: Attach plugins to your website."><i class="fa fa-plug"></i> Plugins Manager</h2>
 
 <div class="row">
 	<div class="col-9">

@@ -1,4 +1,4 @@
-<h2><i class="fa fa-picture-o"></i> Media</h2>
+<h2 title="Media: Upload media files and add them to your content."><i class="fa fa-picture-o"></i> Media</h2>
 <?=notice();?>
 
 <?php
@@ -30,7 +30,7 @@ foreach($parts as $part)
 
 <div class="row">
 	<div class="col-9">
-		<h3 class="no_martop">Folder Contents</h3>
+		<h3 class="no_martop" title="Click on a folder to view its contents.">Folder Contents</h3>
 		<ul class="efvlist">
 		<?php if( $this->getSubdirDepth() > 0 ): ?>
 			<li>
@@ -61,7 +61,7 @@ foreach($parts as $part)
 		</ul>
 	</div>
 	<div class="col-3">
-		<h3 class="no_martop">Upload</h3>
+		<h3 class="no_martop" title="Choose a file and click submit to upload it.">Upload</h3>
 		<form action="<?=\lf\requestGet('ActionUrl');?>upload" method="post" enctype="multipart/form-data">
 			<ul class="vlist">
 				<li>

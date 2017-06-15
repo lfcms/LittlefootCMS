@@ -9,7 +9,7 @@
 	}
 </style>
 
-<h2>Edit Skin: <a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a></h2>
+<h2 title="Use the text editor to update your html and css files."><i class="fa fa-edit"></i> Edit Skin: <a href="%appurl%edit/<?=$matches[0];?>/"><?=$matches[0];?></a></h2>
 <span><a href="%appurl%" title="Back to Skins Manager"><i class="fa fa-arrow-left" aria-hidden="true"></i> Skins Manager</a></span>
 
 <form action="%appurl%update/<?=$vars[1];?>/" method="post" id="skinform">
@@ -18,8 +18,8 @@
 		<div class="col-3 pull-right">
 			<div class="tile white">
 				<div class="tile-header">
-					<h3>
-						<i class="fa fa-edit"></i> Files
+					<h3 title="Select the file you wish to edit. You can use home.php to create a custom home page.">
+						<i class="fa fa-file-code-o"></i> Files
 					</h3>
 				</div>
 				<div class="row no_martop no_marbot">
