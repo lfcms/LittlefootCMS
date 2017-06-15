@@ -32,12 +32,7 @@ class dashboard
 		{
 			$links[$link['app']][] = $link;
 		}
-				
 		
-		
-		
-		
-		
-		include 'view/home.main.php';
+		include 'view/dashboard.main.php';
 	}
 }
