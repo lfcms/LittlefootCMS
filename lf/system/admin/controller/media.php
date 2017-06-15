@@ -37,6 +37,25 @@ class media
 		include 'view/media.open.php';
 	}
 	
+	public function delete()
+	{
+		$param = \lf\requestGet('Param');
+		$filename = $param[1];
+		$filter = '/^[^\/]+\.(png|jpg|gif|pdf)$/i';
+		// sanatize delete request
+		if(!preg_match($filter, $filename, $match))
+		{
+			notice('Request did not pass sanitization');
+		}
+		else
+		{
+			$target = LF.'media/'.$this->getSubDir().'/'.$match[0];
+			notice('<div class="success">File '.$target.' deleted</div>');
+		}
+		
+		redirect302( \lf\requestGet('ActionUrl') );
+	}
+	
 	public function chdir()
 	{
 		$args = \lf\requestGet('Param');
