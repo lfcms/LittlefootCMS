@@ -38,6 +38,6 @@ class dashboard
 		
 		
 		
-		include 'view/home.main.php';
+		include 'view/dashboard.main.php';
 	}
 }
