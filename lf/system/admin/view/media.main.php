@@ -1,7 +1,8 @@
 <h2 title="Media: Upload media files and add them to your content."><i class="fa fa-picture-o"></i> Media</h2>
-<?=notice();?>
-
 <?php
+
+echo notice();
+
 $parts = $this->getSubdirParts();
 $breadcount = count($parts);
 $counter = 1;
@@ -19,15 +20,7 @@ foreach($parts as $part)
 	$counter++;
 }
 
-
-// <?=implode(' > ', $this->getSubdirParts());
-
-
-
 ?>
-
-
-
 <div class="row">
 	<div class="col-9">
 		<h3 class="no_martop" title="Click on a folder to view its contents.">Folder Contents</h3>
@@ -50,10 +43,6 @@ foreach($parts as $part)
 					$function = 'open';
 				endif; ?>
 				<a href="<?=\lf\requestGet('AdminUrl').'media/'.$function.'/'.$file;?>">
-					
-					
-					
-					
 					<?=$file;?>
 				</a>
 			</li>
@@ -72,30 +61,6 @@ foreach($parts as $part)
 				</li>
 			</ul>
 		</form>
-	
-	
-	
-	
-	
-	
-	
-	
-		TODO: DRAGON DROP
-		// ty http://tutorialzine.com/2011/09/html5-file-upload-jquery-php/
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	</div>
 </div>
 
