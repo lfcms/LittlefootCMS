@@ -32,7 +32,11 @@
 	<!-- Installed Skins -->
 	<div class="col-9">
 		<div class="row spaced no_martop">
-		<?php foreach($skins as $skin):
+		<?php 
+	if(count($skins) == 0)
+		echo '<div class="col-12">No Skins installed. Download XV from store.</div>';
+	else
+		foreach($skins as $skin):
 					
 			$highlight = '';
 			$iconColor = 'light_gray_fg';

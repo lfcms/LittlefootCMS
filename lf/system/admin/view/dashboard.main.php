@@ -2,7 +2,11 @@
 <div class="row">
 	<div class="col-12">
 		<div class="no_martop row">
-			<?php foreach($widgets as $app => $widget): ?>
+			<?php 
+			if(!isset($widgets))
+				echo '<div class="col-12"><p>No apps with widgets. Download blog from the store.</p></div>';
+			else
+				foreach($widgets as $app => $widget): ?>
 			<div class="col-6">
 				<div class="tile white">
 				<div class="tile-header">

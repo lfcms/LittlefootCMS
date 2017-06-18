@@ -165,7 +165,10 @@ class navigation
 		else
 			$skin = $action['template'];
 		
-		$skinSourceCode = file_get_contents(LF.'skins/'.$skin.'/index.php');
+		if(is_file(LF.'skins/'.$skin.'/index.php'))
+			$skinSourceCode = file_get_contents(LF.'skins/'.$skin.'/index.php');
+		else
+			$skinSourceCode = '';
 		$locationMatch = '/printContent\(["\']([^)]+)["\']\)/';
 		$locations = [];
 		if(preg_match_all($locationMatch, $skinSourceCode, $match))
