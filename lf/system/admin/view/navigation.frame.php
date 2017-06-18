@@ -4,7 +4,13 @@
 
 <div class="row no_martop">
 	<div class="col-12">
-		<nav class="light_b main_nav white"><?=(new \lf\cms)->renderNavCache( \lf\requestGet('AdminUrl').'navigation/' );?></nav>
+		<nav class="light_b main_nav white">
+		<?=(new \lf\nav)->buildAdminHtml( (new \LfActions)
+											->byPosition('!=', 0) // not hidden
+											->order('position + 0','ASC') // sort by position
+											->matrix(['parent', 'id']) // matrix on parent so it can loop through and handle child assignment
+		);?>
+		</nav>
 	</div>
 </div>
 

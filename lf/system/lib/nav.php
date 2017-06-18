@@ -234,4 +234,31 @@ class nav
 		
 		return $html;
 	}
+	
+	public function buildAdminHtml($menu, $parent = -1)
+	{
+		$items = $menu[$parent];
+		
+		$html = '<ul>';
+		if($items)
+		foreach($items as $item) // loop through the items
+		{
+			
+			$icon = '';
+			if(isset($menu[$item['id']]))
+				$icon = '<i class="fa fa-caret-down fsmall"></i>';
+			
+			// and generate the <li></li> element content
+			$html .= '<li><a href="'.\lf\requestGet('ActionUrl').'id/'.$item['id'].'" title="'.$item['title'].'">'.$item['label'].' '.$icon.'</a>';
+			
+			// Process any submenus before closing <li>
+			if(isset($menu[$item['id']]))
+				$html .= $this->buildHtml($menu, $item['id']);
+				
+			$html .= '</li>';
+		}
+		$html .= '</ul>';
+		
+		return $html;
+	}
 }
