@@ -7,7 +7,6 @@ $parts = $this->getSubdirParts();
 $breadcount = count($parts);
 $counter = 1;
 
-
 echo '<a href="cdparent/'.$breadcount.'">Media</a> > ';
 
 foreach($parts as $part)
@@ -16,7 +15,6 @@ foreach($parts as $part)
 		echo ' > ';
 	
 	echo '<a href="cdparent/'.($breadcount - $counter).'">'.$part.'</a>';
-	
 	$counter++;
 }
 
