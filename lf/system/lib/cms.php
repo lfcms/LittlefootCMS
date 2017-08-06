@@ -1001,10 +1001,7 @@ class cms
 			$pwd = getcwd();
 			chdir(ROOT.'system/admin/');
 			include 'controller/dashboard.php';
-			$dashboard = (new \lf\admin\dashboard)->updatenavcache();
-			// run the nav HTML generation script
-			//$this->mvc(, NULL, array('updatenavcache')); 
-			//shouldl be $this->mvc($dashboard, NULL, array('updatenavcache')); 
+			$dashboard = (new \lf\nav)->refreshCache(); // 
 			chdir($pwd);
 		}
 		
