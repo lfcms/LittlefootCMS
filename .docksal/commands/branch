@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+## Start a new branch
+##
+## Usage: fin branch BRANCH_NAME
+
+[ -z $1 ] && { echo "Usage: fin branch BRANCH_NAME" >&2; exit 1; }
+
+git fetch --all
+git checkout -b $1 origin/development

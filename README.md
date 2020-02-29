@@ -2,9 +2,23 @@
 
 The Big CMS with a little footprint.
 
-Visit http://littlefootcms.com/manual for verbose documentation.
+Visit https://github.com/lfcms/LittlefootCMS/wiki for verbose documentation.
 
-## Installation
+## Docksal Setup for Local Development
+
+1. Clone the repo locally
+1. Install Docksal
+1. Initialize project: `fin init`
+1. When prompted with setup, use [Docksal defaults](https://docs.docksal.io/service/db/access/#root-password):
+  * Host: db
+  * User: user
+  * Pass: user
+  * Database: default
+  * Admin Credentials: (your choice)
+1. Click Install
+1. To create a new branch: `fin branch MY_NEW_BRANCH_NAME_HERE`
+
+## Manual Installation
 
 1. Download <a href="http://littlefootcms.com/files/download/littlefoot.zip">littlefoot.zip</a> and unzip to your document root (eg, `public_html`)
 1. Visit http://yourdomain.com/littlefoot/
