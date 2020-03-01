@@ -5,35 +5,35 @@ namespace lf;
 /**
  * Littlefoot ORM
  * > Object-relational mapping (ORM, O/RM, and O/R mapping) in computer science is a programming technique for converting data between incompatible type systems in object-oriented programming languages. This creates, in effect, a "virtual object database" that can be used from within the programming language. - [Wikipedia, the free encyclopedia](http://en.wikipedia.org/wiki/Object-relational_mapping)
- * 
+ *
  * Littlefoot comes with a [schema-agnostic ORM class](https://github.com/eflip/LittlefootCMS/blob/development/lf/system/lib/orm.php) which offers an object oriented approach to database manipulation. The idea is to store different pieces of a query as variables in the object and allow you to manipulate those variables using various object methods before execution. This ORM [implements](https://github.com/eflip/LittlefootCMS/blob/development/lf/system/lib/orm.php#L408) PHP's magic method [__call](http://php.net/manual/en/language.oop5.overloading.php#object.call) which allows arbitrary column names to be used in the method call using regex.
- * 
+ *
  * ## Auto Load
- * 
+ *
  * You can query for all rows from any database table of format `abc_efg` (letters separated by underscore), with `(new AbcEfg)->find()`
- * 
- * 
+ *
+ *
  * There is a fun shortcut to the above where you can just call new class instances out of a given table name using `__autoload`.
- * 
+ *
  * `$users = (new LfUsers);`
- * 
+ *
  * If you were to call `(new BlogThreads)`, the autoload function would quickly define a class called `BlogThreads` extended from the `orm` on the fly with a table set as `blog_threads`.
- * 
+ *
  * ### extends
- * 
+ *
  * You can extend from orm.
- * 
+ *
  * `class myPages extends orm { public $table = 'app_pages'; }`
- * 
+ *
  * And for lulz, you can extend from an __autoload'd class name to define the table on the fly.
- * 
+ *
  * `class myPages extends AppPages {}`
- * 
+ *
  * ### Database Object
- * 
+ *
  * The first time this is called, [a new mysqli object will be created](https://github.com/eflip/LittlefootCMS/blob/0f2a55346a590cc75676f201a78403a3dd65cf1e/lf/system/lib/orm.php#L180) and stored in $_SESSION['db']. After that, the same mysqli object is simply returned. If you are in the littlefoot context, this is already likely accessible at `$this->db`.
- * 
- * 
+ *
+ *
  * Littlefoot ORM: SQLQuery
  *
  * unless you define it otherwise, new <classname> will be hijacked
@@ -63,7 +63,7 @@ class orm implements \IteratorAggregate
 
 	/** @var Database $db Database wrapper object. $this->db */
 	private $db;
-	
+
 	/** @var String $cols Should make this an array of columns for easier manipulation */
 	//private $cols = '';
 	private $columns = [];
@@ -116,7 +116,7 @@ class orm implements \IteratorAggregate
 
 	/** $var string $pkIndex default column to update on. */
 	public $pkIndex = 'id';
-	
+
 	/**
 	 * Initialize `$this->mysqli_result` with `initDb()`. Pulls from $_SESSION if a previous connection already exists.
 	 *
@@ -145,274 +145,163 @@ class orm implements \IteratorAggregate
 	}
 
 	/**
+	 * Is the ORM connected to the database?
+	 */
+	public function connected() {
+		return is_a($this->mysqli, 'mysqli');
+	}
+
+	/**
 	 * to JSON
 	 */
 	public function json()
 	{
 		return json_encode($this->result);
-	}		
-	
+	}
+
 	/**
 	 * Given a database configuration, the object is instantiated. If there is an error, it is accessible at $this->error. Configuration is saved to $this->conf
-	 * 
+	 *
 	 * leave mysqli object in session, but close it once the script finishes via ___LastSay
-	 * 
-	 *  should be a private function for __construct
+	 *
+	 * TODO: Should be a private function for __construct?
 	 */
 	public function initDb()
 	{
 		// Request the mysqli object from session
-		$mysqli = $this->fromSession();
-		
 		// If we got back an actual mysqli_request,
-		if( is_a($mysqli, 'mysqli_result') )
+		// TODO: Does this ever work? How do we save conenction in session??
+		$mysqli = $this->fromSession();
+		if( is_a($mysqli, 'mysqli') )
 		{
 			// Save this value as the internal mysqli value
 			$this->mysqli = $mysqli;
-			
-			// And return, tho this __METHOD__ only called from __construct
-			return $this;
-		} // else, just continue below:
-		
-		$this
-			// load Config,
-			->loadConfig()
-			// and connect to MySQLi
-			->connectMysqli()
-			->toSession();
-		
-		// I dont use this :\
-		// I dont even save this to session... idk if I want to use it
-		//$this->tblprefix = $database_config['prefix'];
 
+			// TODO: Better internal logging system...
+			$this->error[] = '<div class="notice"><i class="fa fa-check"></i> MySQLi recovered from session</div>';
+
+		} else {
+			// else, try to start a new connection
+
+			// Load Config
+			if($this->loadConfig() === false) {
+				return false; // doesn't matter when called from __construct, but bail out all the same...
+			}
+
+			if($this->connectMysqli() === false) {
+				return false; // doesn't matter when called from __construct, but bail out all the same...
+			}
+
+			// NOTE: ORM is not responsible for checking CMS data integrity.
+			// It is a stateless access utility.
+
+			// I dont use this :\
+			// I dont even save this to session... idk if I want to use it
+			//$this->tblprefix = $database_config['prefix'];
+
+            // If we made it this far, push the result to the session
+            // TODO: Per above... not sure this does what I think... should start logging it.
+            $this->toSession();
+		}
+
+		// this __METHOD__ only called from __construct, so no return needed?
 		return $this;
-    }
-	
+  }
+
 	private function fromSession()
 	{
 		// $mysqli = NULL;
 		// if( isset( $_SESSION['db'] ) )
 			// $mysqli = $_SESSION['db'];
-		
+
 		$this->mysqli = mem::get('db');
-		
+
 		return $this;
 	}
-	
+
 	private function toSession()
 	{
 		// save database object to session
 		//$_SESSION['db'] = $this->mysqli;
 		mem::set('db', $this->mysqli);
-		
+
 		return $this;
 	}
-	
+
 	/**
-	 * Retrieve the number of queries made during this page load. 
+	 * Retrieve the number of queries made during this page load.
 	 */
 	public function getNumQueries()
 	{
-		
+
 	}
-	
+
 	private function loadConfig()
 	{
-		// If the config file does not exist, 
+		// If the config file does not exist,
 		if( ! is_file( LF.'config.php' ) )
 		{
 			// Record this problem
 			$this->error[] = '<div class="error">No config file found, please configure MySQL Access</div>';
-			
-			// `->runInstaller()` will `exit()` before returning
-			$this->runInstaller();
+
+			// Can't connect, return false
+			return false;
 		} // else, just continue below:
-		
+
 		// Include that file we tested for earlier
 		include LF.'config.php';
-		
-		// idk if I want to make a whole separate thing for non-errors... ill fix this later. It is now 'later'. Regretting not just fixing this initially.
+
+		// idk if I want to make a whole separate thing for non-errors... ill fix this later.
+		// NOTE: It is now 'later'. Regretting not just fixing this initially.
 		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> config.php found</div>';
-		
+
 		// if we didnt find any $db set in the config file
 		if( !isset( $db ) )
 		{
 			$this->error[] = '<div class="error">$db not set in config</div>';
-			$this->runInstaller();
+			// Can't connect, return false
+			return false;
 		} // else, continue:
-		
+
 		$this->error[] = '<div class="notice"><i class="fa fa-check"></i> $db value found</div>';
-		
 		$this->conf = $db;
-		
 		return $this;
 	}
-	
+
 	private function connectMysqli()
 	{
 		// create a new mysqli instance
 		$mysqli = $this->newMysqli($this->conf);
-		
+
 		// Did we have trouble connecting to the database?
 		if($mysqli->connect_errno)
 		{
 			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> Connection failed ('.$mysqli->connect_errno.'): '.$mysqli->connect_error.'</div>';
-			$this->runInstaller();
+			// Can't connect, return false
+			return false;
 		}
-		
+
 		// do we fail to select our database?
 		if( ! $mysqli->select_db( $this->conf['name']))
 		{
 			$this->error[] = '<div class="error"><i class="fa fa-exclamation-triangle"></i> '.$mysqli->error.'</div>';
-			$this->runInstaller();
+			// Can't connect, return false
+			return false;
 		}
-		
+
 		$this->mysqli = $mysqli;
-		
+
 		return $this;
 	}
-	
-	public function postValidate()
-	{
-		if($_POST['db']['host'] == '')   $this->errors[] = "Missing 'Database Hostname' information";
-		if($_POST['db']['user'] == '')   $this->errors[] = "Missing 'Database Username' information";
-		//if($_POST['pass'] == '')   $this->errors[] = "Missing 'Database Password' information";
-		if($_POST['db']['dbname'] == '') $this->errors[] = "Missing 'Database Name' information";
-		if($_POST['admin']['user'] == '')  $this->errors[] = "Missing 'Admin Username' information";
-		if($_POST['admin']['pass'] == '')  $this->errors[] = "Missing 'Admin Password' information";
-		
-		if(count($this->errors) > 0)
-		{
-			$_POST = array();
-			return $this->runInstaller();
-		}
-		
-		return $this;
-	}
-	
+
 	public function newMysqli($database_config)
 	{
+	    // TODO: @new?, better to catch
 		return @new \mysqli(
 			$database_config['host'],
 			$database_config['user'],
 			$database_config['pass']
 		);
-	}
-	
-	private function runInstaller()
-	{
-		if( count( $_POST ) )
-		{
-			$this->postInstaller();
-		}
-		
-		// guess form field contents
-		$host = 'localhost';
-		$dbname = get_current_user().'_lf';
-		$user = get_current_user();
-		
-		include LF.'system/lib/recovery/install.form.php';
-		exit;
-	}
-	
-	private function writeConfig()
-	{
-		$this->postValidate();
-		
-		// Take config.php template, replace credentials with $_POST data
-		$dbConfigFile = file_get_contents(LF.'config-dist.php');
-		$dbCredentials = array(
-			'localhost' 		=> $_POST['db']['host'],
-			'mysql_user'		=> $_POST['db']['user'],
-			'mysql_passwd' 		=> $_POST['db']['pass'],
-			'mysql_database' 	=> $_POST['db']['dbname'],
-		);
-		
-		// Replace keys with values
-		$dbConfigFile = str_replace(
-			array_keys($dbCredentials), 
-			array_values($dbCredentials), 
-			$dbConfigFile);
-		
-		// If the config.php is not already there, write it
-		if( !is_file(LF.'config.php') || ( isset($_POST['overwrite']) && $_POST['overwrite'] == 'on' ) )
-		{
-			if(!file_put_contents(LF.'config.php', $dbConfigFile))
-			{
-				$this->errors[] = 'Unable to write to "'.LF.'config.php"';
-				
-				// Get permissions and owner of LF folder
-				$perms = substr(sprintf('%o', fileperms(LF)), -4);
-				$ownerUID = fileowner(LF);
-				
-				// Print current ownership
-				$this->errors[] = '"'.LF.'" Owner: "'.$ownerUID.'", Perms: '.$perms;
-				
-				// Print how to fix
-				if(extension_loaded('posix'))
-				{
-					$processUser = posix_getpwuid(posix_geteuid());
-					$processUserName = $processUser['name'];
-					$this->errors[] = "POSIX detected user '$processUserName' needs write access to the lf/ folder.";
-				}
-				else
-				{
-					$this->errors[] = "PHP module 'POSIX' is not loaded, so I can't auto-detect which user needs write permissions<br />"
-						.'"'.LF.'" needs to be writable by the user running this PHP script. Check the system processes to see who owns the process as it runs or find a System Administrator.';
-				}
-			}
-		}	
-		
-		// Verify that we wound up with a config.php
-		if(!is_file(LF.'config.php'))
-			$this->errors[] = 'Config file missing after write attempt.';
-		
-		if(count($this->errors) > 0) 
-		{
-			$_POST = array(); // this is so bad... but its all private, so no one should depend on this feature
-			return $this->runInstaller();
-		}
-	}
-	
-	private function postInstaller()
-	{
-		$this->writeConfig();
-		
-		if( isset($_POST['data']) 
-				&& $_POST['data'] == 'on' 
-				&& is_file('config.php') )
-			$this->importRecoveryData();
-		
-		redirect302( requestGet('AdminUrl') );
-	}
-	
-	/**
-	 * If we are to import the MySQL data...
-	 */
-	private function importRecoveryData()
-	{
-		$admin = $_POST['admin'];
-		$_POST = array(); // doing this because in ->runInstaller, there is a ->post() that will loop if this is enabled since I am using ORM again. BAAAAD :C
-		// the (new orm) will try to do an import, if it is unable to, the installform will trigger
-		
-		// Run the default lf.sql
-		(new orm)->import(ROOT.'system/lib/recovery/lf.sql', false);
-		
-		// Add admin user
-		(new user)
-			->setDisplay_name(ucfirst($admin['user']))
-			->setEmail($admin['email'])
-			->setUser($admin['user'])
-			->setPass($admin['pass'])
-			->setStatus('valid')
-			->setAccess('admin')
-			->save()
-			->toSession(); // and auto login as that new user
-		
-		
-		$_SESSION['upgrade'] = false;
-		
-		return $this;
 	}
 
 	/**
@@ -430,7 +319,7 @@ class orm implements \IteratorAggregate
 	 */
 	public function getIterator() {
 		//return new ArrayIterator( $this->result );
-		
+
 		$return = [];
 		foreach($this->getAll() as $row)
 			$return[] = (new orm($this->table))->setArray($row);
@@ -439,7 +328,7 @@ class orm implements \IteratorAggregate
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function getSchema() {
 		$schema = array();
@@ -447,7 +336,7 @@ class orm implements \IteratorAggregate
 			$schema[$row['Field']] = $row;
 		return $schema;
 	}
-	
+
 	/**
 	 * Free last database result
 	 */
@@ -536,7 +425,7 @@ class orm implements \IteratorAggregate
 			$result = $query;
 		else // if is string
 			$result = $this->query($query);
-			
+
 		return $result->fetch_assoc();
 	}
 
@@ -572,9 +461,9 @@ class orm implements \IteratorAggregate
 
 	/**
 	 * Run query, return SQL result, increment SQL counter
-	 * 
+	 *
 	 * `$sqlResult = (new orm)->query('SELECT * FROM lf_users');`
-	 * 
+	 *
 	 * @param string $q MySQL Query
 	 * @param bool $big If the request is big
 	 */
@@ -586,7 +475,7 @@ class orm implements \IteratorAggregate
 		$this->query_count++;
 		if($this->mysqli->error)
 			$this->error[] = $this->mysqli->connect_errno.": " .$this->mysqli->connect_error;
-		
+
 		endTimer($method_name);
 		return $this->mysqli_result;
 	}
@@ -657,7 +546,7 @@ class orm implements \IteratorAggregate
 		return orm::$method($magic, $args);
     }
 
-	
+
 	public function distinct($column)
 	{
 		$this->distinctCol = $column;
@@ -691,49 +580,49 @@ class orm implements \IteratorAggregate
 			'q',
 			'(?:lo?J|ro?J|fo?J|io?J|o?j)oin'
 		];
-		
-		// grab the prefix used as capture group 1, 
+
+		// grab the prefix used as capture group 1,
 		// grab whatever else the user said in capture group 2
 		// must be like setAsCamel()
 		$prefixMatchPattern = '/^('.implode('|', $magicPrefixList).')([A-Z].*)/';
-		
-		// test the pattern, 
+
+		// test the pattern,
 		if(!preg_match($prefixMatchPattern, $magicMethod, $captures))
-			// return on fail, 
+			// return on fail,
 			return $this->throwException('Invalid method called');
 		// but proceed with match otherwise
-		
+
 		// this choses the magic method to process...
 		$magicPrefix = $captures[1];
-		
+
 		// the user supplied, captured suffix of the method they used
 		$magicSuffix = $captures[2];
-		
-		// Lets do magic with what we parsed!		
+
+		// Lets do magic with what we parsed!
 
 		// handle joinMagic()
 		if(preg_match('/^(lo?J|ro?J|fo?J|io?J|o?j)oin$/', $magicPrefix, $match))
 			return $this->joinMagic($match[1], $magicSuffix, $args);
-		
+
 		// SetAs
 		if($magicPrefix == 'setAs')
 			return $this->setAsMagic($magicSuffix, $args);
-		
-		
+
+
 		// Run a find after the by()
-		if($magicPrefix == 'findBy') 
+		if($magicPrefix == 'findBy')
 			return $this
 				->filterBy($magicSuffix, $args)
 				->find();
 
 		// Run a delete after the by()
-		if($magicPrefix == 'deleteBy') 
+		if($magicPrefix == 'deleteBy')
 			return $this
 				->filterBy($magicSuffix, $args)
 				->delete();
 
 		// Run a get after the by()
-		if($magicPrefix == 'getBy') 
+		if($magicPrefix == 'getBy')
 			return $this
 				->filterBy($magicSuffix, $args)
 				->get();
@@ -743,37 +632,37 @@ class orm implements \IteratorAggregate
 			return $this
 				->filterBy($magicSuffix, $args)
 				->getAll();
-		
+
 		// I really should keep returning like above, but this is less code
-		
+
 		// 'by' is an alias to filterBy()
-		if($magicPrefix == 'by') 
+		if($magicPrefix == 'by')
 			$magicPrefix = 'filterBy';
-		
+
 		// if we match a "find" prefix to the magic method, we have to pass it through the magic funciton handler
 		if($magicPrefix == 'find')
 			$magicPrefix = 'findMagic';
-		
+
 		// This is really old. Lets you set a table. 'q' is an alias
-		if($magicPrefix == 'query' || $magicSuffix == 'q') 
+		if($magicPrefix == 'query' || $magicSuffix == 'q')
 			$magicPrefix = 'queryMagic';
 
 		// if we get this far, we are just running a single method from the above match and passing the arguments
 		return $this->$magicPrefix($magicSuffix, $args);
     }
-	
+
 	/**
 	 * Generate a matrix by organizing query result set based on key hierarchy
-	 * 
+	 *
 	 * Instead of doing
-	 * 
+	 *
 	 * ~~~
 	 * $comments = (new \MyComment)->getAll();
 	 * $recursedComments = [];
 	 * foreach($comments as $comment)
 	 * 		$recursedComments[$comment['reply']][$comment['id']] = $comment;
 	 * ~~~
-	 * 
+	 *
 	 * Just do `$recursedComments = (new \MyComment)->matrix(['reply','id']);`
 	 */
 	public function matrix($keys)
@@ -783,38 +672,38 @@ class orm implements \IteratorAggregate
 			$this->errors[] = 'matrix() $keys should be an array';
 			return NULL;
 		}
-		
+
 		if( count($keys) == 0 )
 		{
 			$this->errors[] = 'matrix() $keys has no elements';
 			return NULL;
 		}
-		
+
 		$results = $this->getAll();
-		
+
 		// grab the last key name so we can use it to store the whole row data
 		$lastKey = array_pop($keys);
-		
+
 		$matrix = [];
 		foreach($results as $row)
 		{
 			// reset pointer back to matrix root
 			$matrixPointer =& $matrix;
-			
+
 			// build the initial hierarchy: $matrix[reply][id] = $comment;
 			foreach($keys as $key)
 			{
 				// gotta have something to point to
 				if( ! isset( $matrixPointer[$row[$key]] ) )
 					$matrixPointer[$row[$key]] = [];
-				
+
 				// set pointer as last child for next iteration
 				$matrixPointer =& $matrixPointer[$row[$key]];
 			}
-			
+
 			$matrixPointer[$row[$lastKey]] = $row;
 		}
-		
+
 		return $matrix;
 	}
 
@@ -857,11 +746,11 @@ class orm implements \IteratorAggregate
 		if( ! is_null($by) )
 		{
 			pre($by);
-			
+
 			foreach($by as $field => $value)
 				$this->filterBy($field, $value);
 		}
-		
+
 		// temp variable for method call below
 		$crud = $this->crud;
 
@@ -874,7 +763,7 @@ class orm implements \IteratorAggregate
 
 		return $this;
 	}
-	
+
 	public function search($field, $value)
 	{
 		$search_result = array();
@@ -915,8 +804,8 @@ class orm implements \IteratorAggregate
 		return $this;
 	}
 
-	//private function findByMagic($key, 
-	
+	//private function findByMagic($key,
+
 	private function findMagic($columns, $args)
 	{
 		if(preg_match_all('/[A-Z][a-z]*/', $columns, $match))
@@ -952,7 +841,7 @@ class orm implements \IteratorAggregate
 	{
 		// easier than a 10 variable method argument list
 		extract($cmd);
-		
+
 		// define join command
 		$join = 'JOIN';
 		if(isset($prefix))
@@ -966,23 +855,23 @@ class orm implements \IteratorAggregate
 			if($prefix == 'loJ') $join = 'LEFT OUTER JOIN';
 			if($prefix == 'foJ') $join = 'FULL OUTER JOIN';
 		}
-		
+
 		if(isset($select))
 		{
 			// make sure we also select from the other table (in case they didnt provide columns yet
 			if($this->columns == array())
 				$this->columns[] = $this->table.".*";
-			
+
 			// add the select columns to the list as this table's field
 			foreach($select as $column)
 				$this->columns[] = "$table.$column";
 		}
 
 		$this->joins[] = $join.' '.$table.' ON '.$table.'.'.$foreignkey.' = '.$this->table.'.'.$localkey;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * ## Example
 	 *
@@ -997,7 +886,7 @@ class orm implements \IteratorAggregate
 	 * @param string $foreignKey The local column to use with a join
 	 *
 	 * @param string $args `$args[0]` is the table.column string (ideally generated with `$this->withFk`).
-	 * 
+	 *
 	 * ~~~
 	 * $posts = (new \ForumPosts)
 	 * 				->joinAuthorOnId('lf_users', ['display_name', 'email'])
@@ -1008,18 +897,18 @@ class orm implements \IteratorAggregate
 	{
 		// will be [irlf] or j, join() handles the prefix if its not J
 		$joinData['prefix'] = $prefix;
-		
+
 		// table set from arg0
 		$joinData['table'] = $args[0];
-		
+
 		// cols set from arg1
 		if(isset($args[1]))
 			$joinData['select'] = $args[1];
-		
+
 		//ljoin(AuthorOnId)
 		/*
 		 * # Usage
-		 * 
+		 *
 		 * ~~~
 		 * $posts = (new \ForumPosts)
 		 * 				->joinAuthorOnId('lf_users', ['display_name', 'email'])
@@ -1031,9 +920,9 @@ class orm implements \IteratorAggregate
 			$joinData['localkey'] = $keys[1];
 			$joinData['foreignkey'] = $keys[2];
 		}
-		
+
 		$this->join($joinData);
-		
+
 		// TODO: Add functionality to handle objects passed as $args[0]
 
 		/*if(preg_match('/^'.$table.'On(.+)/', $table, $match))
@@ -1050,12 +939,12 @@ class orm implements \IteratorAggregate
 
 		return $this;
 	}
-	
+
 	// RESTful API - may be extended to actually work against HTTP requests...
 	public function api($verb, $resource, $payload = null)
 	{
 		$resource = '\\orm\\'.$resource;
-		
+
 		switch($verb)
 		{
 			case 'GET':
@@ -1068,15 +957,15 @@ class orm implements \IteratorAggregate
 				return (new $resource)->deleteById($id);
 		}
 	}
-	
+
 	public function desc($table = null)
 	{
 		if( is_null( $table ) )
 			$table = $this->table;
-		
+
 		if( !is_null( $table ) )
 			return $this->fetchall('DESC `'.$table.'`');
-		
+
 		return $table; // this will be null if it gets to here
 	}
 
@@ -1134,7 +1023,7 @@ class orm implements \IteratorAggregate
 	// {
 		// if( is_null($table) )
 			// $table = $this->table;
-		
+
 		// $this->columns = array();
 		// if(is_array($cols))
 		// {
@@ -1152,7 +1041,7 @@ class orm implements \IteratorAggregate
 	{
 		return count($this->result);
 	}
-	
+
 	// number of rows in table
 	public function rowCount()
 	{
@@ -1161,10 +1050,10 @@ class orm implements \IteratorAggregate
 
 		$crud = $this->crud;
 		$result = $this->$crud();
-		
+
 		if(isset($result[0]))
 			$result = $result[0];
-		
+
 		$this->columns = $save; // I just wanted a row count, no need to trash my object
 		return $result['count'];
 	}
@@ -1203,13 +1092,13 @@ class orm implements \IteratorAggregate
 		$this->data[$column] = 'NOW()';
 		return $this;
 	}*/
-	
+
 	public function setAsMagic($suffix, $args)
-	{		
+	{
 		$column = $args[0]; // eg, `id`
 		$sqlFunction = $suffix; //eg, `NOW()`
 		$this->data[$column] = $sqlFunction.'()';
-		
+
 		return $this;
 	}
 
@@ -1284,24 +1173,24 @@ class orm implements \IteratorAggregate
 		return $this->sql;
 	}
 
-	/** 
+	/**
 	 * Return first row
-	 * 
+	 *
 	 * $andOnly = true (default), adds ->limit(1) to the query before find()
 	 * $andOnly = false, runs find to get full result set, returns first row.
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
+	 *
 	 */
 	public function first($andOnly = true)
 	{
 		if($andOnly)
 			$this->limit(1);
-		
+
 		return $this->find()->get(0);
 	}
 
@@ -1313,7 +1202,7 @@ class orm implements \IteratorAggregate
 	// Low level CRUD functions.
 	private function insert() //create
 	{
-		if(!count($this->data)) 
+		if(!count($this->data))
 			return null;
 
 		$cols = '`'.implode('`, `', array_keys($this->data)).'`';
@@ -1435,7 +1324,7 @@ class orm implements \IteratorAggregate
 			//$this->errors[] = 'Row counter out of bounds';
 			return null; // should be returning null when there isnt something
 		}
-		
+
 		return $this->result[$this->row];
 	}
 
@@ -1540,9 +1429,9 @@ class ___LastSay
 		ob_start();
 		pre($db, 'var_dump');
 		$pre = ob_get_clean();
-		
+
 		stderr($pre);*/
-		
+
 		if( ! is_null( $db ) )
 			$db->close();
 	}
@@ -1567,76 +1456,76 @@ $varNameDoesntMatterSoLongAsItDestructsAfterTheScriptEnds = new ___LastSay();
  * There is a fun shortcut to the above where you can just call new class instances out of a given table name using `__autoload`.
  *
  * Try it: `var_dump(new LfUsers);`
- * 
+ *
  * If you were to call `(new BlogThreads)`, the autoload function would quickly define a class called `BlogThreads` extended from the `orm` on the fly with a table set as `blog_threads`.
- * 
+ *
  * ### Dev Note
- * 
+ *
  * Just noticed that this will catch things like `(new User)` when people meant `(new \lf\user)` or anything else they meant to type instead. Its a convenient way to call, but needs fixed. Maybe a namespace?
  */
 spl_autoload_register( function ($class_name) {
-	
+
 	// orm\blog_threads format
 	if(preg_match('/^orm\\\(.+)/', $class_name, $match))
 	{
 		// no support for more than just table yet
 		$rawuri = $match[1];
-		
+
 		preg_match_all('/([^\\\]+)\\\?/', $rawuri, $match);
 		$args = $match[1];
-		$table = $args[0]; 
-		
-		
+		$table = $args[0];
+
+
 		$guts['table'] = 'public $table = "'.$table.'";';
-			
+
 		$namespace = '';
 		// $namespace = '\\orm\\first_table\\on\\next_table
-		
+
 		// ty chelmertz http://stackoverflow.com/a/13504972
 		$jitClassDefinition = sprintf(
 			'namespace orm; class %s extends \\lf\\orm { '.implode(' ', $guts).' }'
-			, $table 
+			, $table
 		);
-			
+
 		#strdump($jitClassDefinition);
-		eval($jitClassDefinition);  
-		
+		eval($jitClassDefinition);
+
 		return;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	// to let other autoload registers load things from namespaced things.
 	if( strpos($class_name, '\\') !== false )
 		return;
-	
+
 	// BlogThreads will use the table 'blog_threads'
 	if(preg_match_all('/^([A-Z][^A-Z]+)+$/', $class_name, $matches))
 	{
 		//pre($matches);
-		
-		
+
+
 		$capitalFollowing = '/([a-z])([A-Z])/';
 		$separate = '\1_\2';
 		$camelCaseTable = $matches[0][0];
 		$table = strtolower(
 			preg_replace($capitalFollowing, $separate, $camelCaseTable)
 		);
-		
+
 		$guts['table'] = 'public $table = "'.$table.'";';
 		$guts['method'] = 'public function dynamicfunction() { echo "This example function was eval\'d at '.date('Y-M-d h:m:s').'"; }';
 
 		//pre('class %s extends \\lf\\orm { '.implode(' ', $guts).' }');
-		
+
 		// ty chelmertz http://stackoverflow.com/a/13504972
 		eval(sprintf(
 			'class %s extends \\lf\\orm { '.implode(' ', $guts).' }',
 			$class_name
-		));    
+		));
 	}
 });
 
@@ -1646,7 +1535,7 @@ spl_autoload_register( function ($class_name) {
  * Made another one that catches stuff like `\table\lf_settings` rather than autoloading in the global namespace
  */
 spl_autoload_register( function ($class_name) {
-	
+
 	// lmk if you think this is too strict of a pattern. also idk how 3 backslashes makes this work... but it works
 	if( ! preg_match('/^db\\\([a-zA-Z0-9_\-]+)$/', $class_name, $match) )
 		return;
@@ -1654,7 +1543,7 @@ spl_autoload_register( function ($class_name) {
 	$guts['table'] = 'public $table = "'.strtolower($match[1]).'";';
 
 	//$guts['method'] = 'public function test() { echo "Hey there"; }';
-	
+
 	// using HEREDOC because backslashes are tedious to escape
 	$classDefinition = <<<HEREDOC
 	namespace db;
@@ -1664,12 +1553,12 @@ spl_autoload_register( function ($class_name) {
 		%guts%
 	}
 HEREDOC;
-	
+
 	eval(str_replace(
-		'%guts%', 
-		implode(' ', $guts), 
+		'%guts%',
+		implode(' ', $guts),
 		$classDefinition
-	));		
+	));
 });
 
 //backward compatible after db methods were taken by orm

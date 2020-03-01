@@ -15,9 +15,11 @@
 					</div>
 					<div class="col-6">
 						<?php
-							$this->error[] = '';
-							echo implode($this->error);
-						?>					
+							if(isset($this->log['err'])) {
+								echo implode($this->log['err']);
+								pre((new \lf\orm));
+							}
+						?>
 						<h3>What?</h3>
 						<p>Littlefoot uses an ORM to communicate with the database. It relies on a configuration file at <code><?=LF;?>config.php</code>. If this file is missing, or it does not have valid configuration information, this Setup page will pop up and allow you to set a new config. This is normal for new installations.</p>
 						<h4>Frequently Asked Questions</h4>
@@ -35,7 +37,7 @@
 								<p><i class="fa fa-info-circle"></i> Enter your database credentials</p>
 								<ul class="vlist">
 									<li>
-										<?php if(is_file('config.php')): 
+										<?php if(is_file('config.php')):
 											include 'config.php';
 											$host = $db['host'];
 											$user = $db['user'];
@@ -86,12 +88,12 @@
 								</ul>
 							</div>
 						</div>
-						
-						
-						
+
+
+
 					</div>
 					<div class="col-3">
-						
+
 					</div>
 				</div>
 			</form>
