@@ -7,6 +7,10 @@ Options -Indexes
 	
 	# ty http://www.zeilenwechsel.de/it/articles/8/Using-mod_rewrite-in-.htaccess-files-without-knowing-the-RewriteBase.html
 	RewriteBase /
+	# Don't rewrite favicon to CMS
+	RewriteCond %{REQUEST_URI} !^/favicon\.ico [NC]
+    RewriteCond %{REQUEST_URI} favicon\.ico    [NC]
+    # Any other path that doesn't exist, route to CMS
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond $1#%{REQUEST_URI} ([^#]*)#(.*)\1$
