@@ -3,14 +3,18 @@ Options -Indexes
 # BEGIN LF
 <IfModule mod_rewrite.c>
 
-	RewriteEngine On
-	
-	# ty http://www.zeilenwechsel.de/it/articles/8/Using-mod_rewrite-in-.htaccess-files-without-knowing-the-RewriteBase.html
-	RewriteBase /
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond $1#%{REQUEST_URI} ([^#]*)#(.*)\1$
-	RewriteRule ^(.*)$ %2index.php [QSA,L]
+    RewriteEngine On
+
+    # ty http://www.zeilenwechsel.de/it/articles/8/Using-mod_rewrite-in-.htaccess-files-without-knowing-the-RewriteBase.html
+    RewriteBase /
+    # Don't rewrite favicon, css, or js to CMS
+    RewriteCond %{REQUEST_URI} !.*\.(css|js|ico) [NC]
+    #RewriteCond %{REQUEST_URI} favicon\.ico    [NC]
+    # Any other path that doesn't exist, route to CMS
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond $1#%{REQUEST_URI} ([^#]*)#(.*)\1$
+    RewriteRule ^(.*)$ %2index.php [QSA,L]
 
 </IfModule>
 # END LF
