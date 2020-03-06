@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 fin project rm -f
-rm -f ${PROJECT_ROOT}/lf/config.php
+rm -vf ${PROJECT_ROOT}/lf/config.php
+rm -vrf ${PROJECT_ROOT}/lf/{apps,skins,plugins}/*
 fin project start

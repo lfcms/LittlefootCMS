@@ -9,10 +9,10 @@
 			<input type="text" name="download[url]" placeholder="Install .zip from URL" />
 		</li>
 		<li>
-			Type: 
-			<input type="radio" name="download[type]" value="apps" /> App 
+			Type:
+			<input type="radio" name="download[type]" value="apps" /> App
 			<input type="radio" name="download[type]" value="skins" /> Skin
-			<input type="radio" name="download[type]" value="plugins" /> Plugin 
+			<input type="radio" name="download[type]" value="plugins" /> Plugin
 		</li>
 		<li>
 			<input type="submit" value="Download" class="blue" />
@@ -46,12 +46,12 @@
 		</form>-->
 		<h4>Available Apps</h4>
 		<ul class="efvlist white">
-		<?php foreach($apps as $app => $ignore): ?> 	
+		<?php foreach($apps as $app => $ignore): ?>
 			<li>
 			<?php if(!isset($app_files[$app])): ?>
 				<a href="%appurl%dlapp/<?=$app;?>/"><?=$app;?></a>
 			<?php else: ?>
-				<?=$app;?> 
+				<?=$app;?>
 				<a class="pull-right" href="%appurl%dlapp/<?=$app;?>/update/" title="Update"><i class="fa fa-refresh"></i></a>
 			<?php endif; ?>
 			</li>
@@ -81,7 +81,7 @@
 		</form>-->
 		<h4>Available Skins</h4>
 		<ul class="efvlist white">
-		<?php foreach($skins as $skin => $ignore): ?> 	
+		<?php foreach($skins as $skin => $ignore): ?>
 			<li>
 			<?php if(!isset($skin_files[$skin])): ?>
 				<a href="%appurl%dlskin/<?=$skin;?>/"><?=$skin;?></a>
@@ -115,7 +115,7 @@
 		</form>-->
 		<h4>Available Plugins</h4>
 		<ul class="efvlist white">
-		<?php foreach($plugins as $plugin => $ignore): ?> 	
+		<?php foreach($plugins as $plugin => $ignore): ?>
 			<li>
 			<?php if(!isset($plugin_files[$plugin])): ?>
 				<a href="%appurl%dlplugin/<?=$plugin;?>/"><?=$plugin;?></a>
@@ -124,12 +124,6 @@
 			</li>
 			<?php endif; ?>
 		 <?php endforeach; ?>
-		</ul>	
+		</ul>
 	</div>
 </div>
-
-
-
-
-
-
